@@ -122,9 +122,10 @@ The plan for the replacement — invariants, reader registry, write-path contrac
 reading and the acceptance gate — is [`rebuild-spec.md`](rebuild-spec.md). This section is the
 increment log; that file is the design.
 
-There is no version control here (`git rev-parse` reports this is not a repository), so there is
-no branch to fork and no checkout to undo a bad swap. The method follows from that: rewrite **one
-reader at a time**, in place, with both gates green after each file. Never a big-bang replacement.
+This workspace is a repository as of the rebuild (`7ce29c9`, tag `pre-rebuild`), so each increment is
+a commit that can be read and reverted, and the work happened on a `rebuild` branch. The method is
+unchanged: rewrite **one piece at a time**, in place, with both gates green after each step. Never a
+big-bang replacement.
 
 **Done: `src/lib/note.js`.** Reimplemented from this document rather than from itself. The notice
 reader is the largest and least certain in the build (68 predicted, 50 measured), and until this
@@ -133,9 +134,14 @@ could have broken every one of them with both gates still green. `notice-addmult
 closed that hole (19 → 20 goldens); the rewrite then reproduced its model byte-for-byte, with the
 six `note.test.mjs` tests and the twelve `choose.test.mjs` tests unchanged.
 
-Remaining, in the order I mean to take them — each still required to reproduce its goldens and
-tests exactly: `actions`, `list`, `sheet`, `settings`, `report`, `task`, `calendar`, `form` and
-`tabs`, `bar`, `confirmation`, then the `page` dispatcher.
+**Done after that:** one model layer (`model/root.js`, `table.js`, `fields.js`, `diff.js`,
+`press.js`), the reader registry with its gates as data, one route decision for the five entry
+points, and a `kind → component` view map. The write paths share one diff and one applier that names
+a field it could not write instead of claiming success. Deltas, the two guards that caught
+regressions, and the one step deliberately not taken (live-first reading, which needs a signed-in
+session to verify) are in [`rebuild-plan.md`](rebuild-plan.md).
+
+Remaining: live-first reading (the plan's §4) and the live hand-checks it lists.
 
 ## What a rewrite should design out
 

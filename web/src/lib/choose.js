@@ -12,7 +12,7 @@
 //
 // Deliberately pure: the DOM reading that feeds it (`contradictsNote` on a live
 // document, `readLiveView`'s polling) stays in main.js, because that part needs
-// a browser. What is decided here needs nothing but the two verdicts.
+// a browser. What is decided here needs nothing but the verdicts.
 
 // Is a second look at the browser worth taking? False means mount the fetched
 // model as it stands, which is the common case and costs nothing.
@@ -42,6 +42,22 @@ export function decideMount({ fetchedView, liveView = null }) {
   }
 
   return { source: 'fetched', why: 'the fetched copy answered' };
+}
+
+// Where a page's model should be read from, as one decision.
+//
+// `live` when the browser already shows something a reader claims — that is the
+// whole point of preferring it: no second GET, no second parse, and the model
+// describes the same tree the edits will be written into.
+//
+// `fetch` only when the live read found nothing AND the page is one the server
+// was supposed to fill in: a shell with no content, or a screen that arrives
+// empty and is drawn by script. `app` when the live page simply is what it is —
+// a page this build has nothing to say about.
+export function chooseSource({ liveView = null, liveHasShell = true, liveIsEmpty = false } = {}) {
+  if (liveView) return 'live';
+  if (!liveHasShell || liveIsEmpty) return 'fetch';
+  return 'app';
 }
 
 // A print window has no shell at all: no rail, no top bar, often no `form#idForm`

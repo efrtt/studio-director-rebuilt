@@ -1,7 +1,9 @@
 // ==UserScript==
 // @name         Studio Director - rebuilt week + records
 // @namespace    local.sd.rebuilt
-// @version      0.2.0
+// @version      __SD_VERSION__
+// @updateURL    __SD_UPDATE_URL__
+// @downloadURL  __SD_DOWNLOAD_URL__
 // @description  Rebuilt week calendar and record lists for The Studio Director. Reads the app's own pages with your existing session; never writes data and never handles credentials.
 // @author       you
 // @match        https://app.thestudiodirector.com/*/*

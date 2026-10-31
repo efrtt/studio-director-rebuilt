@@ -1,8 +1,9 @@
 import App from './App.svelte';
 import { injectStyles, removeStyles } from './lib/styles.js';
 import {
-  fetchPage, hasShell, isRecordPage, pageName, railLinks, parseHtml, SessionExpired
+  fetchPage, hasShell, railLinks, parseHtml, SessionExpired
 } from './lib/shell.js';
+import { routeOf } from './lib/route.js';
 import { readList } from './lib/list.js';
 import { expandInApp, showAllTrigger } from './lib/expand.js';
 import { runSearch } from './lib/search.js';
@@ -84,14 +85,20 @@ export async function autoMount(opts = {}) {
   // app actually drew. After mounting, the original content is covered.
   probeTick();
 
-  if (pageName(location.href) === 'SearchResults') return mountSearchResults(onOriginal);
-
-  if (isRecordPage(location.href)) return mountRecord(onOriginal);
-
-  // A save posts the editor and the app answers with a bare `admin.sd` page.
-  // That response is already in the browser — a GET of the same URL would not
-  // be it — so this one page is read live instead of fetched.
-  if (!pageName(location.href)) return mountLive(onOriginal);
+  // One decision, five cases (lib/route.js). The order is the contract: search
+  // results are read live because the app draws their rows, a record page is
+  // read with readForm and never through the chain, and the bare `admin.sd`
+  // response is already in the browser so it is never fetched.
+  switch (routeOf(location.href)) {
+    case 'search':
+      return mountSearchResults(onOriginal);
+    case 'record':
+      return mountRecord(onOriginal);
+    case 'admin':
+      return mountLive(onOriginal);
+    default:
+      break;
+  }
 
   let page;
   try {
