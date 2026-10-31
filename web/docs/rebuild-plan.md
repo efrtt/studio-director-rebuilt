@@ -102,10 +102,11 @@ layout (list beside editor/confirmation) as a `SPLIT` set rather than a nested b
 | registry + routing | 181,293 | 177,715 | 49,607 | 14 / 158 |
 | view map | 172,763 | 169,185 | 48,784 | 14 / 158 |
 | live-first | 173,202 | 169,624 | 48,919 | 14 / 159 |
+| record live-first | 173,379 | 169,722 | 49,289 | 14 / 160 |
 
-The bundle is **7,554 bytes smaller** than the reference build and 521 bytes smaller gzipped, after
-gaining five model modules, two test suites and the live-first decision — the old `{#if}` chain and
-the duplicated readers were most of what went.
+The bundle is **7,377 bytes smaller** than the reference build and 151 bytes smaller gzipped, after
+gaining five model modules, two test suites and the live-first decision, for records as well as for
+the page routes — the old `{#if}` chain and the duplicated readers were most of what went.
 
 No test and no golden was edited. The new coverage lives in two new suites (`model.test.mjs`,
 `readers.test.mjs`), added to the `test` script; the twelve original suites pass unchanged.
@@ -120,4 +121,5 @@ claimed:
 - `Unenroll` leaving the app untouched;
 - the report, task and settings write transports, none of which has ever been measured against the
   real site;
-- the live-first read path (§4), now the default and still unexercised against the real app.
+- the live-first read path (§4), now the default for records too and still unexercised against the
+  real app beyond the field count that prompted it (19 instead of 22, see §4).

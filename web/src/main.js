@@ -8,7 +8,7 @@ import { readList } from './lib/list.js';
 import { expandInApp, showAllTrigger } from './lib/expand.js';
 import { runSearch } from './lib/search.js';
 import { readPage } from './lib/page.js';
-import { readForm } from './lib/form.js';
+import { readForm, hasForm } from './lib/form.js';
 import { readBar } from './lib/bar.js';
 import { readTabs } from './lib/tabs.js';
 import { runReportInApp } from './lib/report.js';
@@ -290,7 +290,16 @@ function mountLive(onOriginal) {
 // readForm, never readPage: the class editor contains a Calendar tab with seven
 // TimeBlock tables, and the week adapter would read that tab as the calendar.
 function mountRecord(onOriginal) {
-  return fetchPage(location.href)
+  // Live first, copy second. The form is server-rendered, but the app's JS fills
+  // part of it after the response lands (the phone-label selects start empty),
+  // and an empty select is skipped as uneditable: the fetched copy of EditFamily
+  // came back with 19 fields where the page has 22. Reading where it stands is
+  // also the tree the edits get written into.
+  const source = hasForm(document)
+    ? Promise.resolve({ doc: document, finalUrl: location.href })
+    : fetchPage(location.href);
+
+  return source
     .then((page) => {
       const nav = railLinks(page.doc);
       const list = readList(page.doc);

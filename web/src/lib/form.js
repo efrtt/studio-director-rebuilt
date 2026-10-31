@@ -166,3 +166,15 @@ export function readForm(doc) {
     fields: best.fields
   };
 }
+
+// Is this document a record editor already?
+//
+// The form is server-rendered, but the app's own JS fills parts of it after the
+// response arrives: the phone-label selects are empty in the HTML. Since an
+// empty select is skipped as uneditable, a *copy* of an editor can come back
+// with fields the page itself has (EditFamily lost its three phone labels that
+// way, 19 fields instead of 22). So the live page is read first and the copy is
+// the fallback, the same way the other routes already work.
+export function hasForm(doc) {
+  return !!readForm(doc);
+}

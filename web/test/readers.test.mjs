@@ -12,6 +12,7 @@ import { READERS, readPage } from '../src/readers/index.js';
 import { ROUTES, routeOf } from '../src/lib/route.js';
 import { chooseSource } from '../src/lib/choose.js';
 import { liveIsBare } from '../src/lib/shell.js';
+import { readForm, hasForm } from '../src/lib/form.js';
 
 const doc = (html) => new DOMParser().parseFromString(html, 'text/html');
 
@@ -123,4 +124,32 @@ test('a live page with nothing in it is the one case worth fetching', () => {
   assert.equal(liveIsBare(doc('<body><p>bare</p></body>')), true);
   // Our own overlay is in the tree once a view is mounted: not content.
   assert.equal(liveIsBare(shell('<div id="sd-root"><p>rebuilt</p></div>')), true);
+});
+
+test('an editor is read where it stands, because its copy can be missing fields', () => {
+  // The app fills the phone-label selects after the response lands; the copy the
+  // script could fetch has the same markup with those selects still empty.
+  const editor = (label1, label2) => doc(`<body><a id="save" href="#">Save</a><table class="Form">
+    <tr><td>Guardian</td><td><input id="guardian" name="guardian" type="text" value="Ada"></td></tr>
+    <tr><td>Phone 1</td><td>${label1}<input id="phone1" name="phone1" type="text"></td></tr>
+    <tr><td>Phone 2</td><td>${label2}<input id="phone2" name="phone2" type="text"></td></tr>
+    <tr><td>Email</td><td><input id="email" name="email" type="text"></td></tr>
+  </table></body>`);
+  const filled = (n) => `<select name="phone${n}_label"><option>Home</option><option>Work</option></select>`;
+  const empty = (n) => `<select name="phone${n}_label"></select>`;
+
+  // The live page: every control is editable, so every field is offered.
+  const live = editor(filled(1), filled(2));
+  assert.equal(hasForm(live), true);
+  assert.equal(readForm(live).fields.length, 6);
+
+  // The same page before its script has run: the two selects are skipped, and
+  // the field count silently drops. That is the copy's 19 against the page's 22.
+  const copy = editor(empty(1), empty(2));
+  assert.equal(readForm(copy).fields.length, 4);
+  // Still a form, so the fetch fallback still knows what it is looking at.
+  assert.equal(hasForm(copy), true);
+
+  // A table page is not an editor, and must not be claimed as one.
+  assert.equal(hasForm(doc('<body><table class="ReportTable"><tr><td>Ada</td></tr></table></body>')), false);
 });
