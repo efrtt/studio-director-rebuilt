@@ -169,12 +169,14 @@ export function readForm(doc) {
 
 // Is this document a record editor already?
 //
-// The form is server-rendered, but the app's own JS fills parts of it after the
-// response arrives: the phone-label selects are empty in the HTML. Since an
-// empty select is skipped as uneditable, a *copy* of an editor can come back
-// with fields the page itself has (EditFamily lost its three phone labels that
-// way, 19 fields instead of 22). So the live page is read first and the copy is
-// the fallback, the same way the other routes already work.
+// The editor arrives server-rendered, so the page can be read where it stands
+// and the copy fetched only when there is no form: one request less, and the
+// tree that is read is the tree the edits are written into.
+//
+// Do not expect this to change a field count. EditFamily reports 19 fields
+// because it has 19 editable controls: its three phone-type values arrive as
+// `input[type=hidden]`, which this reader drops. The live page said so row by
+// row; see the note in docs/rebuild-plan.md.
 export function hasForm(doc) {
   return !!readForm(doc);
 }

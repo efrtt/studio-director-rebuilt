@@ -63,10 +63,9 @@ note, and it is a promise, not decoration.
 - **Record pages.** `isRecordPage(url)` → `readForm` + `a#save` (or more than one tab). Read with
   `readForm` directly, never `readPage`: the class editor carries a Calendar tab with seven
   `TimeBlock` tables, which `readWeek` would claim.
-  Read from `document` when the form is already there, and fetch only when it is not: the app's JS
-  fills part of the form after load (the phone-label selects start empty, and an empty select is
-  skipped as uneditable), so the fetched copy of `EditFamily` came back with 19 fields where the
-  page has 22.
+  Read from `document` when the form is already there, and fetch only when it is not: the editor is
+  server-rendered, so the live page is the same form, one request cheaper, and it is the tree the
+  edits are written into.
 - **The bare `admin.sd` URL.** That is what the app returns after a POST, so it is read **live**
   from `document`, never fetched — a GET of the same URL returns something else.
 - **Search results.** The rows are drawn by the app after load; the page is polled for
@@ -147,9 +146,10 @@ session to verify) are in [`rebuild-plan.md`](rebuild-plan.md).
 
 **Then live-first reading.** `main.js` reads the live document before fetching, and fetches only when
 `chooseSource` says the live page cannot answer (no shell, or an empty content root). A claimed live
-page costs no request at all. Record editors joined it in 0.15.0, for a reason the fetched copy
-created: three fields missing from an editor the page itself has. The hand-checks in the plan still
-apply, and the field count is the one live result so far.
+page costs no request at all. Record editors joined it in 0.15.0. The live check that followed then
+settled the count that prompted it: `EditFamily` has 19 editable fields, and the three phone-type
+values arrive as `input[type=hidden]`. So the renderer was right and the golden that says 22 models
+a page the app does not serve (see the note in `rebuild-plan.md`).
 
 Remaining: the live hand-checks listed in [`rebuild-plan.md`](rebuild-plan.md).
 

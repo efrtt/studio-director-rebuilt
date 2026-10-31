@@ -126,9 +126,10 @@ test('a live page with nothing in it is the one case worth fetching', () => {
   assert.equal(liveIsBare(shell('<div id="sd-root"><p>rebuilt</p></div>')), true);
 });
 
-test('an editor is read where it stands, because its copy can be missing fields', () => {
-  // The app fills the phone-label selects after the response lands; the copy the
-  // script could fetch has the same markup with those selects still empty.
+test('an editor is read where it stands, and an empty select is still skipped', () => {
+  // Reading the live page is about the tree the edits are written into (and one
+  // request less), not about recovering fields: an empty select cannot be
+  // edited either way, so it is dropped from the live page just as from a copy.
   const editor = (label1, label2) => doc(`<body><a id="save" href="#">Save</a><table class="Form">
     <tr><td>Guardian</td><td><input id="guardian" name="guardian" type="text" value="Ada"></td></tr>
     <tr><td>Phone 1</td><td>${label1}<input id="phone1" name="phone1" type="text"></td></tr>
@@ -143,8 +144,8 @@ test('an editor is read where it stands, because its copy can be missing fields'
   assert.equal(hasForm(live), true);
   assert.equal(readForm(live).fields.length, 6);
 
-  // The same page before its script has run: the two selects are skipped, and
-  // the field count silently drops. That is the copy's 19 against the page's 22.
+  // The same page with the two selects empty (the class page's date pickers
+  // arrive that way): they are skipped, and the smaller count is the right one.
   const copy = editor(empty(1), empty(2));
   assert.equal(readForm(copy).fields.length, 4);
   // Still a form, so the fetch fallback still knows what it is looking at.
