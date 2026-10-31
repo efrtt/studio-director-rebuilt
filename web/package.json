@@ -1,0 +1,23 @@
+{
+  "name": "sd-rebuilt",
+  "private": true,
+  "version": "0.13.0",
+  "type": "module",
+  "description": "Rebuilt UI for The Studio Director: week calendar plus the record lists the app puts beside its forms.",
+  "scripts": {
+    "build": "vite build",
+    "test": "node test/parse.test.mjs && node test/tabs.test.mjs && node test/report.test.mjs && node test/task.test.mjs && node test/sheet.test.mjs && node test/settings.test.mjs && node test/index.test.mjs && node test/bar.test.mjs && node test/scrape.test.mjs && node test/note.test.mjs && node test/choose.test.mjs && node test/probe.test.mjs",
+    "demo": "vite build && node tools/build-demo.mjs",
+    "userscript": "vite build && node tools/build-userscript.mjs",
+    "serve": "node tools/serve.mjs . 4800",
+    "map": "node tools/crawl-report.mjs ../studio-director-pages.json docs/crawl-map.md",
+    "golden": "node tools/golden.mjs check",
+    "golden:write": "node tools/golden.mjs write"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.1.2",
+    "linkedom": "^0.18.14",
+    "svelte": "^4.2.19",
+    "vite": "^5.4.11"
+  }
+}

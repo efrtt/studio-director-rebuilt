@@ -1,0 +1,30 @@
+{
+  "file": "fetched-familynotes.html",
+  "form": null,
+  "model": {
+    "confirm": null,
+    "index": null,
+    "list": null,
+    "nav": [
+      {
+        "href": "admin.sd?page=HomePage",
+        "label": "Home"
+      },
+      {
+        "href": "admin.sd?page=NewFamily",
+        "label": "Families"
+      }
+    ],
+    "note": null,
+    "report": null,
+    "settings": null,
+    "sheet": null,
+    "task": null,
+    "title": "",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=fetched-familynotes",
+    "view": null,
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=fetched-familynotes",
+  "view": null
+}

@@ -1,0 +1,100 @@
+{
+  "file": "index-charges.html",
+  "form": null,
+  "model": {
+    "confirm": null,
+    "index": {
+      "breadcrumb": [
+        "Home"
+      ],
+      "count": 10,
+      "groups": [
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=NewFamilyCharge",
+              "label": "Enter new family charge"
+            },
+            {
+              "href": "admin.sd?page=NewClassCharge",
+              "label": "Enter new charge for a class"
+            },
+            {
+              "href": "admin.sd?page=NewClassTypeCharge",
+              "label": "Enter new charge for enrolled students"
+            },
+            {
+              "href": "admin.sd?page=AddChargeByTag",
+              "label": "Enter new charge for families or students that have a tag"
+            }
+          ],
+          "label": "Charges"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=AddMultiplePayments",
+              "label": "Enter multiple payments"
+            },
+            {
+              "href": "admin.sd?page=ListPaymentsDue",
+              "label": "Enter late fees for families with a balance due"
+            },
+            {
+              "href": "admin.sd?page=DepositListForm",
+              "label": "Deposit list"
+            },
+            {
+              "href": "admin.sd?page=ChargesDetail",
+              "label": "Charges detail"
+            }
+          ],
+          "label": "Payments"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=NewEditDel",
+              "label": "Charge categories"
+            },
+            {
+              "href": "admin.sd?page=SetOnlineRegOK",
+              "label": "Set online registration allowed"
+            }
+          ],
+          "label": "Settings"
+        }
+      ],
+      "kind": "index",
+      "limit": 300,
+      "title": "Charges & Payments",
+      "truncated": false
+    },
+    "list": null,
+    "nav": [
+      {
+        "href": "admin.sd?page=HomePage&clicktab=Home",
+        "label": "Home"
+      },
+      {
+        "href": "admin.sd?page=ChargesHome&clicktab=Charges",
+        "label": "Charges & Payments"
+      },
+      {
+        "href": "admin.sd?page=ReportsHome&clicktab=Reports",
+        "label": "Reports"
+      }
+    ],
+    "note": null,
+    "report": null,
+    "settings": null,
+    "sheet": null,
+    "task": null,
+    "title": "Charges & Payments",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=ChargesHome",
+    "view": "index",
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=ChargesHome",
+  "view": "index"
+}

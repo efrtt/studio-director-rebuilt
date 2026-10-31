@@ -1,0 +1,36 @@
+<!doctype html>
+<!--
+  A notice screen: `AddMultiplePayments`, the shape the whole bucket has — a
+  breadcrumb, a title, a button bar, and a `contentInfo` block holding the
+  instruction and the app's own control. No table, no field to edit.
+
+  This is the fixture the golden set was missing: the 19 that preceded it cover
+  the calendar, the lists, the editors, reports, sheets, the index, settings, a
+  task and a confirmation — but not a single notice, even though notices are the
+  largest and least certain reader in the build (68 screens predicted, 50
+  measured). A rewrite could have broken `readNote` with every gate still green.
+
+  Markup follows the structure recorded for the page; the two links are the
+  breadcrumb and the app's own "Pick a family" control, both of which count
+  against `readNote`'s six-link refusal.
+-->
+<html lang="en"><body>
+<form id="idForm">
+  <div id="sideNavBar">
+    <a class="sideNavLink" href="admin.sd?page=HomePage">Home</a>
+    <a class="sideNavLink" href="admin.sd?page=ChargesHome">Charges &amp; Payments</a>
+    <a class="sideNavLink" href="admin.sd?page=NewClass">Classes</a>
+  </div>
+  <div class="topBarContainer"><div class="topBar"></div></div>
+  <div id="mainContent"><div class="contentContainer"><div class="Content">
+    <div class="Breadcrumb"><a href="admin.sd?page=ChargesHome">Charges</a></div>
+    <div class="formTitle">Add Multiple Payments</div>
+    <div class="ButtonBar"></div>
+    <div class="contentInfo">
+      <b>Add Multiple Payments</b>
+      <p>Pick the family that is paying.</p>
+      <p><a class="Btn" id="pickfamily" href="admin.sd?page=PickFamily">Pick a family</a></p>
+    </div>
+  </div></div></div>
+</form>
+</body></html>

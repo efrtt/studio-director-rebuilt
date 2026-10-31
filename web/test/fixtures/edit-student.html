@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html><body>
+<form id="idForm" action="admin.sd" method="post">
+  <input id="idPage" type="hidden" value="EditStudent">
+  <input id="idMeth" type="hidden">
+  <input id="idMethArgs" type="hidden">
+  <div class="standardMainContent">
+    <div id="sideNavBar" class="sideNavCollapsed">
+      <a class="sideNavLink" href="admin.sd?page=HomePage&clicktab=Home">HomeHome</a>
+      <a class="sideNavLink" href="admin.sd?page=CalendarPage&clicktab=Class+Calendar">Class CalendarClass Calendar</a>
+      <a class="sideNavLink" href="admin.sd?page=NewClass&clicktab=Classes">ClassesClasses</a>
+      <a class="sideNavLink" href="admin.sd?page=NewFamily&clicktab=Families">FamiliesFamilies</a>
+      <a class="sideNavLink" href="admin.sd?page=NewStudent&clicktab=Students">StudentsStudents</a>
+      <a class="sideNavLink" href="admin.sd?page=NewInstructor&clicktab=Instructors">InstructorsInstructors</a>
+      <a class="sideNavLink" href="admin.sd?page=ChargesHome&clicktab=Charges">Charges &amp; PaymentsCharges &amp; Payments</a>
+      <a class="sideNavLink" href="admin.sd?page=EmailTextHome&clicktab=Communications">CommunicationsCommunications</a>
+      <a class="sideNavLink" href="admin.sd?page=AdvSearch&clicktab=Advanced+Search">Advanced SearchAdvanced Search</a>
+      <a class="sideNavLink" href="admin.sd?page=ReportsHome&clicktab=Reports">ReportsReports</a>
+      <a class="sideNavLink" href="admin.sd?page=AdminHome&clicktab=Settings">SettingsSettings</a>
+      <div class="copyright">©</div>
+    </div>
+    <div id="mainContent" class="mainContent wideContent">
+      <div class="contentContainer">
+        <div id="idSearchSpan" class="searchResultPanel">
+          <div class="searchResultBar">
+            <div class="searchResultLabel">Students</div>
+            <div class="searchResultNav">
+              <i class="fa-solid fa-angle-up"></i>
+              <a href="#"><i class="fa-solid fa-angle-down"></i><span class="Tooltip">Next</span></a>
+              <a href="#"><i class="fa-solid fa-xmark"></i><span class="Tooltip">Close</span></a>
+            </div>
+          </div>
+          <div class="searchResultLabel">
+            <input id="filter" name="filter" type="text">
+            <p>1 of 1</p>
+          </div>
+          <div class="searchResultList">
+            <div class="searchResultItem"><a href="admin.sd?page=EditStudent&amp;sident=9001">Ada Lovelace</a></div>
+          </div>
+        </div>
+        <div class="Content">
+          <div class="Breadcrumb"><a href="#">Students</a><i class="fa-solid fa-angle-right"></i></div>
+          <div class="formTitle">Edit Student</div>
+          <div class="ButtonBar">
+            <a id="new" href="#">New</a>
+            <a id="save" href="#">Save</a>
+            <a id="print" href="#">Print</a>
+            <a id="email" href="#">Email</a>
+            <a id="delete" href="#">Delete</a>
+            <a id="editfamily" href="#">Family</a>
+            <div id="menuBtn" class="menuButton"><a class="menuLink" href="#"><span>More</span><i class="fa-solid fa-angle-down"></i></a><div class="menu"><a href="#">A</a><a href="#">B</a><a href="#">C</a><a href="#">D</a><a href="#">E</a><a href="#">F</a><a href="#">G</a><a href="#">H</a></div></div>
+          </div>
+          <div class="contentInfo">
+            <div class="tabContainer">
+              <div id="tab-overview" class="tab">Overview</div>
+              <div id="tab-enrollment" class="tab selectedTab">Enrollment</div>
+              <div id="tab-family" class="tab">Family</div>
+              <div id="tab-skills" class="tab">Skills</div>
+            </div>
+            <div id="tab-overview-content" class="tabContent" style="display:none">
+              <div><div></div><div></div><div></div></div>
+              <table class="Form"><tbody>
+                <tr><td>First Name</td><td><input id="first_name" name="first_name" type="text" value="Ada"></td></tr>
+                <tr><td>Last Name</td><td><input id="student_last_name" name="student_last_name" type="text" value="Lovelace"></td></tr>
+                <tr><td>Family</td><td><select name="family"><option value="4401" selected>Lovelace Family</option><option value="4402">Hopper Family</option></select></td></tr>
+                <tr><td>Birthday</td><td><select id="birthday__mon" name="birthday__mon"><option value="1">Jan</option><option value="12" selected>Dec</option></select><select id="birthday__day" name="birthday__day"><option value="10" selected>10</option></select><select id="birthday__year" name="birthday__year"><option value="2016" selected>2016</option></select></td></tr>
+                <tr><td>Sex</td><td><select id="sex" name="sex"><option value="F" selected>Female</option><option value="M">Male</option></select></td></tr>
+                <tr><td>Medical</td><td><input id="medcond" name="medcond" type="text" value=""></td></tr>
+                <tr><td>Comments</td><td><input id="comments" name="comments" type="text" value="Loves tap"></td></tr>
+                <tr><td>Waiver</td><td><select id="waiver" name="waiver"><option value="0">No</option><option value="1" selected>Yes</option></select></td></tr>
+                <tr><td></td><td><input name="-" type="text"></td></tr>
+                <tr><td>Performing</td><td><select id="performing" name="performing"><option value="0" selected>No</option><option value="1">Yes</option></select></td></tr>
+                <tr><td>Field 1</td><td><input id="field1" name="field1" type="text" value=""></td></tr>
+                <tr><td>Field 2</td><td><input id="field2" name="field2" type="text" value=""></td></tr>
+                <tr><td>Field 3</td><td><input id="field3" name="field3" type="text" value=""></td></tr>
+                <tr><td></td><td><input name="-" type="text"></td></tr>
+                <tr><td>Tags</td><td><select id="tags" class="hidden" name="tags"><option>None</option><option selected>Competition</option></select></td></tr>
+                <tr><td></td><td><input class="input" name="-" type="text"></td></tr>
+              </tbody></table>
+            </div>
+            <div id="tab-enrollment-content" class="tabContent" style="display:block">
+              <div><a id="enrollinnewclass" class="Btn" href="#">Enroll in a new class</a></div>
+              <div class="MultiTable"></div>
+              <table class="SimpleSD"><tbody>
+                <tr><th>Day</th><th>Time</th><th>Description</th><th>Length</th><th>Type</th><th>Instructor</th><th class="AR">Actions</th></tr>
+                <tr><td>Mon</td><td>4:00p</td><td><a href="admin.sd?page=EditClass&amp;cident=101">Ballet III</a></td><td>60</td><td><img src="x.png" alt=""></td><td>Ms. Rivera</td><td class="action-cell"><a href="admin.sd?page=EditClass&amp;cident=101">Edit</a></td></tr>
+              </tbody></table>
+            </div>
+            <div id="tab-family-content" class="tabContent" style="display:none">
+              <div class="MultiTable"></div>
+              <table class="SimpleSD"><tbody>
+                <tr><td>Guardian</td><td>Dana Lovelace</td></tr>
+              </tbody></table>
+            </div>
+            <div id="tab-skills-content" class="tabContent" style="display:none">
+              <table class="ReportTable"><tbody>
+                <tr><th>Level</th><th>Skill Category</th><th>Skill Name</th><th>Score</th><th class="AR">Date Achieved</th><th>Signed Off By</th><th>Private Notes</th><th>Public Notes</th></tr>
+              </tbody></table>
+              <div class="ReportTableNoItemsMsg">No skills.</div>
+            </div>
+            <input id="searchidx" type="hidden" value="0">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</body></html>

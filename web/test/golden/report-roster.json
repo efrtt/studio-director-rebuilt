@@ -1,0 +1,1579 @@
+{
+  "file": "report-roster.html",
+  "form": {
+    "breadcrumb": [
+      "Reports",
+      "Class Roster"
+    ],
+    "fields": [
+      {
+        "checked": null,
+        "id": "classes_season",
+        "key": "classes_season",
+        "label": null,
+        "masked": false,
+        "name": "classes_season",
+        "options": [
+          {
+            "label": "All seasons",
+            "selected": false,
+            "value": ""
+          },
+          {
+            "label": "Fall 2026",
+            "selected": true,
+            "value": "Fall 2026"
+          },
+          {
+            "label": "Winter 2026",
+            "selected": false,
+            "value": "Winter 2026"
+          }
+        ],
+        "selector": "#classes_season",
+        "type": "select",
+        "value": "Fall 2026"
+      },
+      {
+        "checked": null,
+        "id": "classes_name",
+        "key": "classes_name",
+        "label": null,
+        "masked": false,
+        "name": "classes_name",
+        "options": null,
+        "selector": "#classes_name",
+        "type": "text",
+        "value": ""
+      },
+      {
+        "checked": null,
+        "id": "classes_type",
+        "key": "classes_type",
+        "label": null,
+        "masked": false,
+        "name": "classes_type",
+        "options": [
+          {
+            "label": "All types",
+            "selected": true,
+            "value": "All types"
+          },
+          {
+            "label": "Ballet",
+            "selected": false,
+            "value": "Ballet"
+          },
+          {
+            "label": "Jazz",
+            "selected": false,
+            "value": "Jazz"
+          },
+          {
+            "label": "Tap",
+            "selected": false,
+            "value": "Tap"
+          }
+        ],
+        "selector": "#classes_type",
+        "type": "select",
+        "value": "All types"
+      },
+      {
+        "checked": null,
+        "id": "classes_location",
+        "key": "classes_location",
+        "label": null,
+        "masked": false,
+        "name": "classes_location",
+        "options": [
+          {
+            "label": "All studios",
+            "selected": true,
+            "value": "All studios"
+          },
+          {
+            "label": "Studio A",
+            "selected": false,
+            "value": "Studio A"
+          },
+          {
+            "label": "Studio B",
+            "selected": false,
+            "value": "Studio B"
+          }
+        ],
+        "selector": "#classes_location",
+        "type": "select",
+        "value": "All studios"
+      },
+      {
+        "checked": null,
+        "id": "classes_instructor",
+        "key": "classes_instructor",
+        "label": null,
+        "masked": false,
+        "name": "classes_instructor",
+        "options": [
+          {
+            "label": "All instructors",
+            "selected": true,
+            "value": "All instructors"
+          },
+          {
+            "label": "Ms. Rivera",
+            "selected": false,
+            "value": "Ms. Rivera"
+          }
+        ],
+        "selector": "#classes_instructor",
+        "type": "select",
+        "value": "All instructors"
+      },
+      {
+        "checked": false,
+        "id": "classes_day__1",
+        "key": "classes_day__1",
+        "label": "Sun",
+        "masked": false,
+        "name": "days",
+        "options": null,
+        "selector": "#classes_day__1",
+        "type": "checkbox",
+        "value": null
+      },
+      {
+        "checked": false,
+        "id": "classes_day__2",
+        "key": "classes_day__2",
+        "label": "Mon",
+        "masked": false,
+        "name": "days",
+        "options": null,
+        "selector": "#classes_day__2",
+        "type": "checkbox",
+        "value": null
+      },
+      {
+        "checked": false,
+        "id": "classes_day__4",
+        "key": "classes_day__4",
+        "label": "Tue",
+        "masked": false,
+        "name": "days",
+        "options": null,
+        "selector": "#classes_day__4",
+        "type": "checkbox",
+        "value": null
+      },
+      {
+        "checked": false,
+        "id": "classes_day__8",
+        "key": "classes_day__8",
+        "label": "Wed",
+        "masked": false,
+        "name": "days",
+        "options": null,
+        "selector": "#classes_day__8",
+        "type": "checkbox",
+        "value": null
+      },
+      {
+        "checked": false,
+        "id": "classes_day__16",
+        "key": "classes_day__16",
+        "label": "Thu",
+        "masked": false,
+        "name": "days",
+        "options": null,
+        "selector": "#classes_day__16",
+        "type": "checkbox",
+        "value": null
+      },
+      {
+        "checked": false,
+        "id": "classes_day__32",
+        "key": "classes_day__32",
+        "label": "Fri",
+        "masked": false,
+        "name": "days",
+        "options": null,
+        "selector": "#classes_day__32",
+        "type": "checkbox",
+        "value": null
+      },
+      {
+        "checked": false,
+        "id": "classes_day__64",
+        "key": "classes_day__64",
+        "label": "Sat",
+        "masked": false,
+        "name": "days",
+        "options": null,
+        "selector": "#classes_day__64",
+        "type": "checkbox",
+        "value": null
+      },
+      {
+        "checked": null,
+        "id": "virtual_enrolled",
+        "key": "virtual_enrolled",
+        "label": null,
+        "masked": false,
+        "name": "virtual_enrolled",
+        "options": [
+          {
+            "label": "Any",
+            "selected": true,
+            "value": "Any"
+          },
+          {
+            "label": "Has students",
+            "selected": false,
+            "value": "Has students"
+          }
+        ],
+        "selector": "#virtual_enrolled",
+        "type": "select",
+        "value": "Any"
+      }
+    ],
+    "kind": "form",
+    "rows": [
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "classes_season",
+            "key": "classes_season",
+            "label": null,
+            "masked": false,
+            "name": "classes_season",
+            "options": [
+              {
+                "label": "All seasons",
+                "selected": false,
+                "value": ""
+              },
+              {
+                "label": "Fall 2026",
+                "selected": true,
+                "value": "Fall 2026"
+              },
+              {
+                "label": "Winter 2026",
+                "selected": false,
+                "value": "Winter 2026"
+              }
+            ],
+            "selector": "#classes_season",
+            "type": "select",
+            "value": "Fall 2026"
+          }
+        ],
+        "label": "Season"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "classes_name",
+            "key": "classes_name",
+            "label": null,
+            "masked": false,
+            "name": "classes_name",
+            "options": null,
+            "selector": "#classes_name",
+            "type": "text",
+            "value": ""
+          }
+        ],
+        "label": "Class Name"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "classes_type",
+            "key": "classes_type",
+            "label": null,
+            "masked": false,
+            "name": "classes_type",
+            "options": [
+              {
+                "label": "All types",
+                "selected": true,
+                "value": "All types"
+              },
+              {
+                "label": "Ballet",
+                "selected": false,
+                "value": "Ballet"
+              },
+              {
+                "label": "Jazz",
+                "selected": false,
+                "value": "Jazz"
+              },
+              {
+                "label": "Tap",
+                "selected": false,
+                "value": "Tap"
+              }
+            ],
+            "selector": "#classes_type",
+            "type": "select",
+            "value": "All types"
+          }
+        ],
+        "label": "Class Type"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "classes_location",
+            "key": "classes_location",
+            "label": null,
+            "masked": false,
+            "name": "classes_location",
+            "options": [
+              {
+                "label": "All studios",
+                "selected": true,
+                "value": "All studios"
+              },
+              {
+                "label": "Studio A",
+                "selected": false,
+                "value": "Studio A"
+              },
+              {
+                "label": "Studio B",
+                "selected": false,
+                "value": "Studio B"
+              }
+            ],
+            "selector": "#classes_location",
+            "type": "select",
+            "value": "All studios"
+          }
+        ],
+        "label": "Location"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "classes_instructor",
+            "key": "classes_instructor",
+            "label": null,
+            "masked": false,
+            "name": "classes_instructor",
+            "options": [
+              {
+                "label": "All instructors",
+                "selected": true,
+                "value": "All instructors"
+              },
+              {
+                "label": "Ms. Rivera",
+                "selected": false,
+                "value": "Ms. Rivera"
+              }
+            ],
+            "selector": "#classes_instructor",
+            "type": "select",
+            "value": "All instructors"
+          }
+        ],
+        "label": "Instructor"
+      },
+      {
+        "fields": [
+          {
+            "checked": false,
+            "id": "classes_day__1",
+            "key": "classes_day__1",
+            "label": "Sun",
+            "masked": false,
+            "name": "days",
+            "options": null,
+            "selector": "#classes_day__1",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "classes_day__2",
+            "key": "classes_day__2",
+            "label": "Mon",
+            "masked": false,
+            "name": "days",
+            "options": null,
+            "selector": "#classes_day__2",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "classes_day__4",
+            "key": "classes_day__4",
+            "label": "Tue",
+            "masked": false,
+            "name": "days",
+            "options": null,
+            "selector": "#classes_day__4",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "classes_day__8",
+            "key": "classes_day__8",
+            "label": "Wed",
+            "masked": false,
+            "name": "days",
+            "options": null,
+            "selector": "#classes_day__8",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "classes_day__16",
+            "key": "classes_day__16",
+            "label": "Thu",
+            "masked": false,
+            "name": "days",
+            "options": null,
+            "selector": "#classes_day__16",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "classes_day__32",
+            "key": "classes_day__32",
+            "label": "Fri",
+            "masked": false,
+            "name": "days",
+            "options": null,
+            "selector": "#classes_day__32",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "classes_day__64",
+            "key": "classes_day__64",
+            "label": "Sat",
+            "masked": false,
+            "name": "days",
+            "options": null,
+            "selector": "#classes_day__64",
+            "type": "checkbox",
+            "value": null
+          }
+        ],
+        "label": "Day"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "virtual_enrolled",
+            "key": "virtual_enrolled",
+            "label": null,
+            "masked": false,
+            "name": "virtual_enrolled",
+            "options": [
+              {
+                "label": "Any",
+                "selected": true,
+                "value": "Any"
+              },
+              {
+                "label": "Has students",
+                "selected": false,
+                "value": "Has students"
+              }
+            ],
+            "selector": "#virtual_enrolled",
+            "type": "select",
+            "value": "Any"
+          }
+        ],
+        "label": "Enrolled"
+      }
+    ],
+    "title": "Class Roster"
+  },
+  "model": {
+    "confirm": null,
+    "index": null,
+    "list": null,
+    "nav": [
+      {
+        "href": "admin.sd?page=HomePage&clicktab=Home",
+        "label": "Home"
+      },
+      {
+        "href": "admin.sd?page=ReportsHome&clicktab=Reports",
+        "label": "Reports"
+      }
+    ],
+    "note": null,
+    "report": {
+      "breadcrumb": [
+        "Reports",
+        "Class Roster"
+      ],
+      "fields": [
+        {
+          "checked": null,
+          "id": "classes_season",
+          "key": "classes_season",
+          "label": null,
+          "masked": false,
+          "name": "classes_season",
+          "options": [
+            {
+              "label": "All seasons",
+              "selected": false,
+              "value": ""
+            },
+            {
+              "label": "Fall 2026",
+              "selected": true,
+              "value": "Fall 2026"
+            },
+            {
+              "label": "Winter 2026",
+              "selected": false,
+              "value": "Winter 2026"
+            }
+          ],
+          "selector": "#classes_season",
+          "type": "select",
+          "value": "Fall 2026"
+        },
+        {
+          "checked": null,
+          "id": "classes_name",
+          "key": "classes_name",
+          "label": null,
+          "masked": false,
+          "name": "classes_name",
+          "options": null,
+          "selector": "#classes_name",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "classes_type",
+          "key": "classes_type",
+          "label": null,
+          "masked": false,
+          "name": "classes_type",
+          "options": [
+            {
+              "label": "All types",
+              "selected": true,
+              "value": "All types"
+            },
+            {
+              "label": "Ballet",
+              "selected": false,
+              "value": "Ballet"
+            },
+            {
+              "label": "Jazz",
+              "selected": false,
+              "value": "Jazz"
+            },
+            {
+              "label": "Tap",
+              "selected": false,
+              "value": "Tap"
+            }
+          ],
+          "selector": "#classes_type",
+          "type": "select",
+          "value": "All types"
+        },
+        {
+          "checked": null,
+          "id": "classes_location",
+          "key": "classes_location",
+          "label": null,
+          "masked": false,
+          "name": "classes_location",
+          "options": [
+            {
+              "label": "All studios",
+              "selected": true,
+              "value": "All studios"
+            },
+            {
+              "label": "Studio A",
+              "selected": false,
+              "value": "Studio A"
+            },
+            {
+              "label": "Studio B",
+              "selected": false,
+              "value": "Studio B"
+            }
+          ],
+          "selector": "#classes_location",
+          "type": "select",
+          "value": "All studios"
+        },
+        {
+          "checked": null,
+          "id": "classes_instructor",
+          "key": "classes_instructor",
+          "label": null,
+          "masked": false,
+          "name": "classes_instructor",
+          "options": [
+            {
+              "label": "All instructors",
+              "selected": true,
+              "value": "All instructors"
+            },
+            {
+              "label": "Ms. Rivera",
+              "selected": false,
+              "value": "Ms. Rivera"
+            }
+          ],
+          "selector": "#classes_instructor",
+          "type": "select",
+          "value": "All instructors"
+        },
+        {
+          "checked": false,
+          "id": "classes_day__1",
+          "key": "classes_day__1",
+          "label": "Sun",
+          "masked": false,
+          "name": "days",
+          "options": null,
+          "selector": "#classes_day__1",
+          "type": "checkbox",
+          "value": null
+        },
+        {
+          "checked": false,
+          "id": "classes_day__2",
+          "key": "classes_day__2",
+          "label": "Mon",
+          "masked": false,
+          "name": "days",
+          "options": null,
+          "selector": "#classes_day__2",
+          "type": "checkbox",
+          "value": null
+        },
+        {
+          "checked": false,
+          "id": "classes_day__4",
+          "key": "classes_day__4",
+          "label": "Tue",
+          "masked": false,
+          "name": "days",
+          "options": null,
+          "selector": "#classes_day__4",
+          "type": "checkbox",
+          "value": null
+        },
+        {
+          "checked": false,
+          "id": "classes_day__8",
+          "key": "classes_day__8",
+          "label": "Wed",
+          "masked": false,
+          "name": "days",
+          "options": null,
+          "selector": "#classes_day__8",
+          "type": "checkbox",
+          "value": null
+        },
+        {
+          "checked": false,
+          "id": "classes_day__16",
+          "key": "classes_day__16",
+          "label": "Thu",
+          "masked": false,
+          "name": "days",
+          "options": null,
+          "selector": "#classes_day__16",
+          "type": "checkbox",
+          "value": null
+        },
+        {
+          "checked": false,
+          "id": "classes_day__32",
+          "key": "classes_day__32",
+          "label": "Fri",
+          "masked": false,
+          "name": "days",
+          "options": null,
+          "selector": "#classes_day__32",
+          "type": "checkbox",
+          "value": null
+        },
+        {
+          "checked": false,
+          "id": "classes_day__64",
+          "key": "classes_day__64",
+          "label": "Sat",
+          "masked": false,
+          "name": "days",
+          "options": null,
+          "selector": "#classes_day__64",
+          "type": "checkbox",
+          "value": null
+        },
+        {
+          "checked": null,
+          "id": "virtual_enrolled",
+          "key": "virtual_enrolled",
+          "label": null,
+          "masked": false,
+          "name": "virtual_enrolled",
+          "options": [
+            {
+              "label": "Any",
+              "selected": true,
+              "value": "Any"
+            },
+            {
+              "label": "Has students",
+              "selected": false,
+              "value": "Has students"
+            }
+          ],
+          "selector": "#virtual_enrolled",
+          "type": "select",
+          "value": "Any"
+        }
+      ],
+      "form": {
+        "breadcrumb": [
+          "Reports",
+          "Class Roster"
+        ],
+        "fields": [
+          {
+            "checked": null,
+            "id": "classes_season",
+            "key": "classes_season",
+            "label": null,
+            "masked": false,
+            "name": "classes_season",
+            "options": [
+              {
+                "label": "All seasons",
+                "selected": false,
+                "value": ""
+              },
+              {
+                "label": "Fall 2026",
+                "selected": true,
+                "value": "Fall 2026"
+              },
+              {
+                "label": "Winter 2026",
+                "selected": false,
+                "value": "Winter 2026"
+              }
+            ],
+            "selector": "#classes_season",
+            "type": "select",
+            "value": "Fall 2026"
+          },
+          {
+            "checked": null,
+            "id": "classes_name",
+            "key": "classes_name",
+            "label": null,
+            "masked": false,
+            "name": "classes_name",
+            "options": null,
+            "selector": "#classes_name",
+            "type": "text",
+            "value": ""
+          },
+          {
+            "checked": null,
+            "id": "classes_type",
+            "key": "classes_type",
+            "label": null,
+            "masked": false,
+            "name": "classes_type",
+            "options": [
+              {
+                "label": "All types",
+                "selected": true,
+                "value": "All types"
+              },
+              {
+                "label": "Ballet",
+                "selected": false,
+                "value": "Ballet"
+              },
+              {
+                "label": "Jazz",
+                "selected": false,
+                "value": "Jazz"
+              },
+              {
+                "label": "Tap",
+                "selected": false,
+                "value": "Tap"
+              }
+            ],
+            "selector": "#classes_type",
+            "type": "select",
+            "value": "All types"
+          },
+          {
+            "checked": null,
+            "id": "classes_location",
+            "key": "classes_location",
+            "label": null,
+            "masked": false,
+            "name": "classes_location",
+            "options": [
+              {
+                "label": "All studios",
+                "selected": true,
+                "value": "All studios"
+              },
+              {
+                "label": "Studio A",
+                "selected": false,
+                "value": "Studio A"
+              },
+              {
+                "label": "Studio B",
+                "selected": false,
+                "value": "Studio B"
+              }
+            ],
+            "selector": "#classes_location",
+            "type": "select",
+            "value": "All studios"
+          },
+          {
+            "checked": null,
+            "id": "classes_instructor",
+            "key": "classes_instructor",
+            "label": null,
+            "masked": false,
+            "name": "classes_instructor",
+            "options": [
+              {
+                "label": "All instructors",
+                "selected": true,
+                "value": "All instructors"
+              },
+              {
+                "label": "Ms. Rivera",
+                "selected": false,
+                "value": "Ms. Rivera"
+              }
+            ],
+            "selector": "#classes_instructor",
+            "type": "select",
+            "value": "All instructors"
+          },
+          {
+            "checked": false,
+            "id": "classes_day__1",
+            "key": "classes_day__1",
+            "label": "Sun",
+            "masked": false,
+            "name": "days",
+            "options": null,
+            "selector": "#classes_day__1",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "classes_day__2",
+            "key": "classes_day__2",
+            "label": "Mon",
+            "masked": false,
+            "name": "days",
+            "options": null,
+            "selector": "#classes_day__2",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "classes_day__4",
+            "key": "classes_day__4",
+            "label": "Tue",
+            "masked": false,
+            "name": "days",
+            "options": null,
+            "selector": "#classes_day__4",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "classes_day__8",
+            "key": "classes_day__8",
+            "label": "Wed",
+            "masked": false,
+            "name": "days",
+            "options": null,
+            "selector": "#classes_day__8",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "classes_day__16",
+            "key": "classes_day__16",
+            "label": "Thu",
+            "masked": false,
+            "name": "days",
+            "options": null,
+            "selector": "#classes_day__16",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "classes_day__32",
+            "key": "classes_day__32",
+            "label": "Fri",
+            "masked": false,
+            "name": "days",
+            "options": null,
+            "selector": "#classes_day__32",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "classes_day__64",
+            "key": "classes_day__64",
+            "label": "Sat",
+            "masked": false,
+            "name": "days",
+            "options": null,
+            "selector": "#classes_day__64",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": null,
+            "id": "virtual_enrolled",
+            "key": "virtual_enrolled",
+            "label": null,
+            "masked": false,
+            "name": "virtual_enrolled",
+            "options": [
+              {
+                "label": "Any",
+                "selected": true,
+                "value": "Any"
+              },
+              {
+                "label": "Has students",
+                "selected": false,
+                "value": "Has students"
+              }
+            ],
+            "selector": "#virtual_enrolled",
+            "type": "select",
+            "value": "Any"
+          }
+        ],
+        "kind": "form",
+        "rows": [
+          {
+            "fields": [
+              {
+                "checked": null,
+                "id": "classes_season",
+                "key": "classes_season",
+                "label": null,
+                "masked": false,
+                "name": "classes_season",
+                "options": [
+                  {
+                    "label": "All seasons",
+                    "selected": false,
+                    "value": ""
+                  },
+                  {
+                    "label": "Fall 2026",
+                    "selected": true,
+                    "value": "Fall 2026"
+                  },
+                  {
+                    "label": "Winter 2026",
+                    "selected": false,
+                    "value": "Winter 2026"
+                  }
+                ],
+                "selector": "#classes_season",
+                "type": "select",
+                "value": "Fall 2026"
+              }
+            ],
+            "label": "Season"
+          },
+          {
+            "fields": [
+              {
+                "checked": null,
+                "id": "classes_name",
+                "key": "classes_name",
+                "label": null,
+                "masked": false,
+                "name": "classes_name",
+                "options": null,
+                "selector": "#classes_name",
+                "type": "text",
+                "value": ""
+              }
+            ],
+            "label": "Class Name"
+          },
+          {
+            "fields": [
+              {
+                "checked": null,
+                "id": "classes_type",
+                "key": "classes_type",
+                "label": null,
+                "masked": false,
+                "name": "classes_type",
+                "options": [
+                  {
+                    "label": "All types",
+                    "selected": true,
+                    "value": "All types"
+                  },
+                  {
+                    "label": "Ballet",
+                    "selected": false,
+                    "value": "Ballet"
+                  },
+                  {
+                    "label": "Jazz",
+                    "selected": false,
+                    "value": "Jazz"
+                  },
+                  {
+                    "label": "Tap",
+                    "selected": false,
+                    "value": "Tap"
+                  }
+                ],
+                "selector": "#classes_type",
+                "type": "select",
+                "value": "All types"
+              }
+            ],
+            "label": "Class Type"
+          },
+          {
+            "fields": [
+              {
+                "checked": null,
+                "id": "classes_location",
+                "key": "classes_location",
+                "label": null,
+                "masked": false,
+                "name": "classes_location",
+                "options": [
+                  {
+                    "label": "All studios",
+                    "selected": true,
+                    "value": "All studios"
+                  },
+                  {
+                    "label": "Studio A",
+                    "selected": false,
+                    "value": "Studio A"
+                  },
+                  {
+                    "label": "Studio B",
+                    "selected": false,
+                    "value": "Studio B"
+                  }
+                ],
+                "selector": "#classes_location",
+                "type": "select",
+                "value": "All studios"
+              }
+            ],
+            "label": "Location"
+          },
+          {
+            "fields": [
+              {
+                "checked": null,
+                "id": "classes_instructor",
+                "key": "classes_instructor",
+                "label": null,
+                "masked": false,
+                "name": "classes_instructor",
+                "options": [
+                  {
+                    "label": "All instructors",
+                    "selected": true,
+                    "value": "All instructors"
+                  },
+                  {
+                    "label": "Ms. Rivera",
+                    "selected": false,
+                    "value": "Ms. Rivera"
+                  }
+                ],
+                "selector": "#classes_instructor",
+                "type": "select",
+                "value": "All instructors"
+              }
+            ],
+            "label": "Instructor"
+          },
+          {
+            "fields": [
+              {
+                "checked": false,
+                "id": "classes_day__1",
+                "key": "classes_day__1",
+                "label": "Sun",
+                "masked": false,
+                "name": "days",
+                "options": null,
+                "selector": "#classes_day__1",
+                "type": "checkbox",
+                "value": null
+              },
+              {
+                "checked": false,
+                "id": "classes_day__2",
+                "key": "classes_day__2",
+                "label": "Mon",
+                "masked": false,
+                "name": "days",
+                "options": null,
+                "selector": "#classes_day__2",
+                "type": "checkbox",
+                "value": null
+              },
+              {
+                "checked": false,
+                "id": "classes_day__4",
+                "key": "classes_day__4",
+                "label": "Tue",
+                "masked": false,
+                "name": "days",
+                "options": null,
+                "selector": "#classes_day__4",
+                "type": "checkbox",
+                "value": null
+              },
+              {
+                "checked": false,
+                "id": "classes_day__8",
+                "key": "classes_day__8",
+                "label": "Wed",
+                "masked": false,
+                "name": "days",
+                "options": null,
+                "selector": "#classes_day__8",
+                "type": "checkbox",
+                "value": null
+              },
+              {
+                "checked": false,
+                "id": "classes_day__16",
+                "key": "classes_day__16",
+                "label": "Thu",
+                "masked": false,
+                "name": "days",
+                "options": null,
+                "selector": "#classes_day__16",
+                "type": "checkbox",
+                "value": null
+              },
+              {
+                "checked": false,
+                "id": "classes_day__32",
+                "key": "classes_day__32",
+                "label": "Fri",
+                "masked": false,
+                "name": "days",
+                "options": null,
+                "selector": "#classes_day__32",
+                "type": "checkbox",
+                "value": null
+              },
+              {
+                "checked": false,
+                "id": "classes_day__64",
+                "key": "classes_day__64",
+                "label": "Sat",
+                "masked": false,
+                "name": "days",
+                "options": null,
+                "selector": "#classes_day__64",
+                "type": "checkbox",
+                "value": null
+              }
+            ],
+            "label": "Day"
+          },
+          {
+            "fields": [
+              {
+                "checked": null,
+                "id": "virtual_enrolled",
+                "key": "virtual_enrolled",
+                "label": null,
+                "masked": false,
+                "name": "virtual_enrolled",
+                "options": [
+                  {
+                    "label": "Any",
+                    "selected": true,
+                    "value": "Any"
+                  },
+                  {
+                    "label": "Has students",
+                    "selected": false,
+                    "value": "Has students"
+                  }
+                ],
+                "selector": "#virtual_enrolled",
+                "type": "select",
+                "value": "Any"
+              }
+            ],
+            "label": "Enrolled"
+          }
+        ],
+        "title": "Class Roster"
+      },
+      "kind": "report",
+      "results": {
+        "rows": 0,
+        "tables": [
+          {
+            "caption": "",
+            "cls": "ReportTable",
+            "headings": [
+              "Class",
+              "Day",
+              "Time",
+              "Instructor",
+              "Enrolled"
+            ],
+            "id": "",
+            "rowTotal": 0,
+            "rows": []
+          }
+        ]
+      },
+      "rows": [
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "classes_season",
+              "key": "classes_season",
+              "label": null,
+              "masked": false,
+              "name": "classes_season",
+              "options": [
+                {
+                  "label": "All seasons",
+                  "selected": false,
+                  "value": ""
+                },
+                {
+                  "label": "Fall 2026",
+                  "selected": true,
+                  "value": "Fall 2026"
+                },
+                {
+                  "label": "Winter 2026",
+                  "selected": false,
+                  "value": "Winter 2026"
+                }
+              ],
+              "selector": "#classes_season",
+              "type": "select",
+              "value": "Fall 2026"
+            }
+          ],
+          "label": "Season"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "classes_name",
+              "key": "classes_name",
+              "label": null,
+              "masked": false,
+              "name": "classes_name",
+              "options": null,
+              "selector": "#classes_name",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Class Name"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "classes_type",
+              "key": "classes_type",
+              "label": null,
+              "masked": false,
+              "name": "classes_type",
+              "options": [
+                {
+                  "label": "All types",
+                  "selected": true,
+                  "value": "All types"
+                },
+                {
+                  "label": "Ballet",
+                  "selected": false,
+                  "value": "Ballet"
+                },
+                {
+                  "label": "Jazz",
+                  "selected": false,
+                  "value": "Jazz"
+                },
+                {
+                  "label": "Tap",
+                  "selected": false,
+                  "value": "Tap"
+                }
+              ],
+              "selector": "#classes_type",
+              "type": "select",
+              "value": "All types"
+            }
+          ],
+          "label": "Class Type"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "classes_location",
+              "key": "classes_location",
+              "label": null,
+              "masked": false,
+              "name": "classes_location",
+              "options": [
+                {
+                  "label": "All studios",
+                  "selected": true,
+                  "value": "All studios"
+                },
+                {
+                  "label": "Studio A",
+                  "selected": false,
+                  "value": "Studio A"
+                },
+                {
+                  "label": "Studio B",
+                  "selected": false,
+                  "value": "Studio B"
+                }
+              ],
+              "selector": "#classes_location",
+              "type": "select",
+              "value": "All studios"
+            }
+          ],
+          "label": "Location"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "classes_instructor",
+              "key": "classes_instructor",
+              "label": null,
+              "masked": false,
+              "name": "classes_instructor",
+              "options": [
+                {
+                  "label": "All instructors",
+                  "selected": true,
+                  "value": "All instructors"
+                },
+                {
+                  "label": "Ms. Rivera",
+                  "selected": false,
+                  "value": "Ms. Rivera"
+                }
+              ],
+              "selector": "#classes_instructor",
+              "type": "select",
+              "value": "All instructors"
+            }
+          ],
+          "label": "Instructor"
+        },
+        {
+          "fields": [
+            {
+              "checked": false,
+              "id": "classes_day__1",
+              "key": "classes_day__1",
+              "label": "Sun",
+              "masked": false,
+              "name": "days",
+              "options": null,
+              "selector": "#classes_day__1",
+              "type": "checkbox",
+              "value": null
+            },
+            {
+              "checked": false,
+              "id": "classes_day__2",
+              "key": "classes_day__2",
+              "label": "Mon",
+              "masked": false,
+              "name": "days",
+              "options": null,
+              "selector": "#classes_day__2",
+              "type": "checkbox",
+              "value": null
+            },
+            {
+              "checked": false,
+              "id": "classes_day__4",
+              "key": "classes_day__4",
+              "label": "Tue",
+              "masked": false,
+              "name": "days",
+              "options": null,
+              "selector": "#classes_day__4",
+              "type": "checkbox",
+              "value": null
+            },
+            {
+              "checked": false,
+              "id": "classes_day__8",
+              "key": "classes_day__8",
+              "label": "Wed",
+              "masked": false,
+              "name": "days",
+              "options": null,
+              "selector": "#classes_day__8",
+              "type": "checkbox",
+              "value": null
+            },
+            {
+              "checked": false,
+              "id": "classes_day__16",
+              "key": "classes_day__16",
+              "label": "Thu",
+              "masked": false,
+              "name": "days",
+              "options": null,
+              "selector": "#classes_day__16",
+              "type": "checkbox",
+              "value": null
+            },
+            {
+              "checked": false,
+              "id": "classes_day__32",
+              "key": "classes_day__32",
+              "label": "Fri",
+              "masked": false,
+              "name": "days",
+              "options": null,
+              "selector": "#classes_day__32",
+              "type": "checkbox",
+              "value": null
+            },
+            {
+              "checked": false,
+              "id": "classes_day__64",
+              "key": "classes_day__64",
+              "label": "Sat",
+              "masked": false,
+              "name": "days",
+              "options": null,
+              "selector": "#classes_day__64",
+              "type": "checkbox",
+              "value": null
+            }
+          ],
+          "label": "Day"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "virtual_enrolled",
+              "key": "virtual_enrolled",
+              "label": null,
+              "masked": false,
+              "name": "virtual_enrolled",
+              "options": [
+                {
+                  "label": "Any",
+                  "selected": true,
+                  "value": "Any"
+                },
+                {
+                  "label": "Has students",
+                  "selected": false,
+                  "value": "Has students"
+                }
+              ],
+              "selector": "#virtual_enrolled",
+              "type": "select",
+              "value": "Any"
+            }
+          ],
+          "label": "Enrolled"
+        }
+      ],
+      "title": "Class Roster",
+      "trigger": {
+        "id": "runreport",
+        "js": true,
+        "label": "Run Report"
+      }
+    },
+    "settings": null,
+    "sheet": null,
+    "task": null,
+    "title": "Class Roster",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=ClassRosterForm",
+    "view": "report",
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=ClassRosterForm",
+  "view": "report"
+}

@@ -1,0 +1,1062 @@
+{
+  "file": "calendar-page.html",
+  "form": null,
+  "model": {
+    "confirm": null,
+    "index": null,
+    "list": null,
+    "nav": [
+      {
+        "href": "admin.sd?page=HomePage&clicktab=Home",
+        "label": "Home"
+      },
+      {
+        "href": "admin.sd?page=CalendarPage&clicktab=Class+Calendar",
+        "label": "Class Calendar"
+      },
+      {
+        "href": "admin.sd?page=NewClass&clicktab=Classes",
+        "label": "Classes"
+      },
+      {
+        "href": "admin.sd?page=NewFamily&clicktab=Families",
+        "label": "Families"
+      },
+      {
+        "href": "admin.sd?page=NewStudent&clicktab=Students",
+        "label": "Students"
+      },
+      {
+        "href": "admin.sd?page=NewInstructor&clicktab=Instructors",
+        "label": "Instructors"
+      },
+      {
+        "href": "admin.sd?page=ChargesHome&clicktab=Charges",
+        "label": "Charges & Payments"
+      },
+      {
+        "href": "admin.sd?page=EmailTextHome&clicktab=Communications",
+        "label": "Communications"
+      },
+      {
+        "href": "admin.sd?page=AdvSearch&clicktab=Advanced+Search",
+        "label": "Advanced Search"
+      },
+      {
+        "href": "admin.sd?page=ReportsHome&clicktab=Reports",
+        "label": "Reports"
+      },
+      {
+        "href": "admin.sd?page=AdminHome&clicktab=Settings",
+        "label": "Settings"
+      }
+    ],
+    "note": null,
+    "report": null,
+    "settings": null,
+    "sheet": null,
+    "task": null,
+    "title": "Class Calendar",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=CalendarPage",
+    "view": "week",
+    "week": {
+      "days": [
+        {
+          "blocks": [
+            {
+              "ages": "6-7",
+              "capacity": 15,
+              "code": "3:45p",
+              "color": "#00ffff",
+              "details": [
+                "Ballet",
+                "Ms. Rivera",
+                "Studio 1",
+                "0 spots available",
+                "0 waitlisted",
+                "Ages: 6-7"
+              ],
+              "endsAt": 990,
+              "height": 90,
+              "href": "admin.sd?page=EditClass&cident=818",
+              "instructor": "Ms. Rivera",
+              "label": "Ballet",
+              "lane": {
+                "height": 90,
+                "left": 0,
+                "top": 90,
+                "width": 25
+              },
+              "location": "Studio 1",
+              "meta": "3:45p–4:30p · Full",
+              "name": "Ballet",
+              "note": null,
+              "seats": "Full",
+              "spotsLeft": 0,
+              "startsAt": 945,
+              "status": "full",
+              "studio": 1,
+              "taken": 15,
+              "text": "Stu 1 - 818 Ballet - 6-7 - HM - 3:45 PM - 4:30 PM - 15 of 15 spots taken",
+              "textColor": "#000",
+              "timeLabel": "3:45p–4:30p",
+              "top": 90,
+              "waitlisted": 0
+            },
+            {
+              "ages": "12+",
+              "capacity": 20,
+              "code": "4:00p",
+              "color": "#d9ead3",
+              "details": [
+                "Pre-Pointe",
+                "Mr. Cole",
+                "Studio 2",
+                "12 spots available",
+                "0 waitlisted",
+                "Ages: 12+"
+              ],
+              "endsAt": 1050,
+              "height": 180,
+              "href": "admin.sd?page=EditClass&cident=130",
+              "instructor": "Mr. Cole",
+              "label": "Pre-Pointe",
+              "lane": {
+                "height": 180,
+                "left": 25,
+                "top": 120,
+                "width": 25
+              },
+              "location": "Studio 2",
+              "meta": "4:00p–5:30p · 12 left",
+              "name": "Pre-Pointe",
+              "note": null,
+              "seats": "12 left",
+              "spotsLeft": 12,
+              "startsAt": 960,
+              "status": "open",
+              "studio": 2,
+              "taken": 8,
+              "text": "Stu 2 - 130 Pre-Pointe - 12+ - JM - 4:00 PM - 5:30 PM - 8 of 20 spots taken",
+              "textColor": "#000",
+              "timeLabel": "4:00p–5:30p",
+              "top": 120,
+              "waitlisted": 0
+            },
+            {
+              "ages": "12+",
+              "capacity": 5,
+              "code": "4:00p",
+              "color": "#e06666",
+              "details": [
+                "Teen Company",
+                "Ms. Ortiz",
+                "Studio 3",
+                "4 spots available",
+                "2 waitlisted",
+                "Ages: 12+"
+              ],
+              "endsAt": 1005,
+              "height": 90,
+              "href": "admin.sd?page=EditClass&cident=322",
+              "instructor": "Ms. Ortiz",
+              "label": "Teen Company",
+              "lane": {
+                "height": 90,
+                "left": 50,
+                "top": 120,
+                "width": 25
+              },
+              "location": "Studio 3",
+              "meta": "4:00p–4:45p · 4 left",
+              "name": "Teen Company",
+              "note": null,
+              "seats": "4 left",
+              "spotsLeft": 4,
+              "startsAt": 960,
+              "status": "open",
+              "studio": 3,
+              "taken": 1,
+              "text": "Stu 3 - 322 Teen Company - 12+ - RO - 4:00 PM - 4:45 PM - 1 of 5 spots taken",
+              "textColor": "#fff",
+              "timeLabel": "4:00p–4:45p",
+              "top": 120,
+              "waitlisted": 2
+            },
+            {
+              "ages": "7-9",
+              "capacity": 16,
+              "code": "3:45p",
+              "color": "#6fa8dc",
+              "details": [
+                "Jazz Company Prep",
+                "Mr. Bell",
+                "Studio 4",
+                "9 spots available",
+                "0 waitlisted",
+                "Ages: 7-9"
+              ],
+              "endsAt": 1005,
+              "height": 120,
+              "href": "admin.sd?page=EditClass&cident=530",
+              "instructor": "Mr. Bell",
+              "label": "Jazz Company Prep",
+              "lane": {
+                "height": 120,
+                "left": 75,
+                "top": 90,
+                "width": 25
+              },
+              "location": "Studio 4",
+              "meta": "3:45p–4:45p · 9 left",
+              "name": "Jazz Company Prep",
+              "note": null,
+              "seats": "9 left",
+              "spotsLeft": 9,
+              "startsAt": 945,
+              "status": "open",
+              "studio": 4,
+              "taken": 7,
+              "text": "Stu 4 - 530 Jazz Company Prep - 7-9 - JB - 3:45 PM - 4:45 PM - 7 of 16 spots taken",
+              "textColor": "#fff",
+              "timeLabel": "3:45p–4:45p",
+              "top": 90,
+              "waitlisted": 0
+            },
+            {
+              "ages": "14+",
+              "capacity": 18,
+              "code": "4:45p",
+              "color": "#00ffff",
+              "details": [
+                "Senior Ballet Co Tech",
+                "Ms. Rivera",
+                "Studio 1",
+                "17 spots available",
+                "0 waitlisted",
+                "Ages: 14+"
+              ],
+              "endsAt": 1080,
+              "height": 150,
+              "href": "admin.sd?page=EditClass&cident=180",
+              "instructor": "Ms. Rivera",
+              "label": "Senior Ballet Co Tech",
+              "lane": {
+                "height": 150,
+                "left": 0,
+                "top": 210,
+                "width": 25
+              },
+              "location": "Studio 1",
+              "meta": "4:45p–6:00p · 17 left",
+              "name": "Senior Ballet Co Tech",
+              "note": null,
+              "seats": "17 left",
+              "spotsLeft": 17,
+              "startsAt": 1005,
+              "status": "open",
+              "studio": 1,
+              "taken": 1,
+              "text": "Stu 1 - 180 Senior Ballet Co Tech - 14+ - HM - 4:45 PM - 6:00 PM - 1 of 18 spots taken",
+              "textColor": "#000",
+              "timeLabel": "4:45p–6:00p",
+              "top": 210,
+              "waitlisted": 0
+            },
+            {
+              "ages": "14+",
+              "capacity": 20,
+              "code": "5:30p",
+              "color": "#d9ead3",
+              "details": [
+                "Ballet 8",
+                "Mr. Cole",
+                "Studio 2",
+                "13 spots available",
+                "0 waitlisted",
+                "Ages: 14+"
+              ],
+              "endsAt": 1125,
+              "height": 150,
+              "href": "admin.sd?page=EditClass&cident=122",
+              "instructor": "Mr. Cole",
+              "label": "Ballet 8",
+              "lane": {
+                "height": 120,
+                "left": 25,
+                "top": 300,
+                "width": 25
+              },
+              "location": "Studio 2",
+              "meta": "5:30p–6:45p · 13 left",
+              "name": "Ballet 8",
+              "note": null,
+              "seats": "13 left",
+              "spotsLeft": 13,
+              "startsAt": 1050,
+              "status": "open",
+              "studio": 2,
+              "taken": 7,
+              "text": "Stu 2 - 122 Ballet 8 - 14+ - JM - 5:30 PM - 6:45 PM - 7 of 20 spots taken",
+              "textColor": "#000",
+              "timeLabel": "5:30p–6:45p",
+              "top": 300,
+              "waitlisted": 0
+            },
+            {
+              "ages": "11+",
+              "capacity": 15,
+              "code": "5:30p",
+              "color": "#e06666",
+              "details": [
+                "Tap 4 & 5",
+                "Ms. Ortiz",
+                "Studio 3",
+                "14 spots available",
+                "0 waitlisted",
+                "Ages: 11+"
+              ],
+              "endsAt": 1110,
+              "height": 120,
+              "href": "admin.sd?page=EditClass&cident=306",
+              "instructor": "Ms. Ortiz",
+              "label": "Tap 4 & 5",
+              "lane": {
+                "height": 120,
+                "left": 50,
+                "top": 300,
+                "width": 25
+              },
+              "location": "Studio 3",
+              "meta": "5:30p–6:30p · 14 left",
+              "name": "Tap 4 & 5",
+              "note": null,
+              "seats": "14 left",
+              "spotsLeft": 14,
+              "startsAt": 1050,
+              "status": "open",
+              "studio": 3,
+              "taken": 1,
+              "text": "Stu 3 - 306 Tap 4 & 5 - 11+ - RO - 5:30 PM - 6:30 PM - 1 of 15 spots taken",
+              "textColor": "#fff",
+              "timeLabel": "5:30p–6:30p",
+              "top": 300,
+              "waitlisted": 0
+            },
+            {
+              "ages": "9+",
+              "capacity": 21,
+              "code": "5:30p",
+              "color": "#f6b26b",
+              "details": [
+                "Lyrical 1",
+                "Ms. Sandoval",
+                "Studio 4",
+                "21 spots available",
+                "0 waitlisted",
+                "Ages: 9+"
+              ],
+              "endsAt": 1110,
+              "height": 120,
+              "href": "admin.sd?page=EditClass&cident=534",
+              "instructor": "Ms. Sandoval",
+              "label": "Lyrical 1",
+              "lane": {
+                "height": 120,
+                "left": 75,
+                "top": 300,
+                "width": 25
+              },
+              "location": "Studio 4",
+              "meta": "5:30p–6:30p · 21 left",
+              "name": "Lyrical 1",
+              "note": null,
+              "seats": "21 left",
+              "spotsLeft": 21,
+              "startsAt": 1050,
+              "status": "open",
+              "studio": 4,
+              "taken": 0,
+              "text": "Stu 4 - 534 Lyrical 1 - 9+ - BS - 5:30 PM - 6:30 PM - 0 of 21 spots taken",
+              "textColor": "#000",
+              "timeLabel": "5:30p–6:30p",
+              "top": 300,
+              "waitlisted": 0
+            }
+          ],
+          "columns": [
+            {
+              "blocks": [
+                {
+                  "ages": "6-7",
+                  "capacity": 15,
+                  "code": "3:45p",
+                  "color": "#00ffff",
+                  "details": [
+                    "Ballet",
+                    "Ms. Rivera",
+                    "Studio 1",
+                    "0 spots available",
+                    "0 waitlisted",
+                    "Ages: 6-7"
+                  ],
+                  "endsAt": 990,
+                  "height": 90,
+                  "href": "admin.sd?page=EditClass&cident=818",
+                  "instructor": "Ms. Rivera",
+                  "label": "Ballet",
+                  "lane": {
+                    "height": 90,
+                    "left": 0,
+                    "top": 90,
+                    "width": 25
+                  },
+                  "location": "Studio 1",
+                  "meta": "3:45p–4:30p · Full",
+                  "name": "Ballet",
+                  "note": null,
+                  "seats": "Full",
+                  "spotsLeft": 0,
+                  "startsAt": 945,
+                  "status": "full",
+                  "studio": 1,
+                  "taken": 15,
+                  "text": "Stu 1 - 818 Ballet - 6-7 - HM - 3:45 PM - 4:30 PM - 15 of 15 spots taken",
+                  "textColor": "#000",
+                  "timeLabel": "3:45p–4:30p",
+                  "top": 90,
+                  "waitlisted": 0
+                },
+                {
+                  "ages": "14+",
+                  "capacity": 18,
+                  "code": "4:45p",
+                  "color": "#00ffff",
+                  "details": [
+                    "Senior Ballet Co Tech",
+                    "Ms. Rivera",
+                    "Studio 1",
+                    "17 spots available",
+                    "0 waitlisted",
+                    "Ages: 14+"
+                  ],
+                  "endsAt": 1080,
+                  "height": 150,
+                  "href": "admin.sd?page=EditClass&cident=180",
+                  "instructor": "Ms. Rivera",
+                  "label": "Senior Ballet Co Tech",
+                  "lane": {
+                    "height": 150,
+                    "left": 0,
+                    "top": 210,
+                    "width": 25
+                  },
+                  "location": "Studio 1",
+                  "meta": "4:45p–6:00p · 17 left",
+                  "name": "Senior Ballet Co Tech",
+                  "note": null,
+                  "seats": "17 left",
+                  "spotsLeft": 17,
+                  "startsAt": 1005,
+                  "status": "open",
+                  "studio": 1,
+                  "taken": 1,
+                  "text": "Stu 1 - 180 Senior Ballet Co Tech - 14+ - HM - 4:45 PM - 6:00 PM - 1 of 18 spots taken",
+                  "textColor": "#000",
+                  "timeLabel": "4:45p–6:00p",
+                  "top": 210,
+                  "waitlisted": 0
+                }
+              ],
+              "label": "Studio 1",
+              "studio": 1
+            },
+            {
+              "blocks": [
+                {
+                  "ages": "12+",
+                  "capacity": 20,
+                  "code": "4:00p",
+                  "color": "#d9ead3",
+                  "details": [
+                    "Pre-Pointe",
+                    "Mr. Cole",
+                    "Studio 2",
+                    "12 spots available",
+                    "0 waitlisted",
+                    "Ages: 12+"
+                  ],
+                  "endsAt": 1050,
+                  "height": 180,
+                  "href": "admin.sd?page=EditClass&cident=130",
+                  "instructor": "Mr. Cole",
+                  "label": "Pre-Pointe",
+                  "lane": {
+                    "height": 180,
+                    "left": 25,
+                    "top": 120,
+                    "width": 25
+                  },
+                  "location": "Studio 2",
+                  "meta": "4:00p–5:30p · 12 left",
+                  "name": "Pre-Pointe",
+                  "note": null,
+                  "seats": "12 left",
+                  "spotsLeft": 12,
+                  "startsAt": 960,
+                  "status": "open",
+                  "studio": 2,
+                  "taken": 8,
+                  "text": "Stu 2 - 130 Pre-Pointe - 12+ - JM - 4:00 PM - 5:30 PM - 8 of 20 spots taken",
+                  "textColor": "#000",
+                  "timeLabel": "4:00p–5:30p",
+                  "top": 120,
+                  "waitlisted": 0
+                },
+                {
+                  "ages": "14+",
+                  "capacity": 20,
+                  "code": "5:30p",
+                  "color": "#d9ead3",
+                  "details": [
+                    "Ballet 8",
+                    "Mr. Cole",
+                    "Studio 2",
+                    "13 spots available",
+                    "0 waitlisted",
+                    "Ages: 14+"
+                  ],
+                  "endsAt": 1125,
+                  "height": 150,
+                  "href": "admin.sd?page=EditClass&cident=122",
+                  "instructor": "Mr. Cole",
+                  "label": "Ballet 8",
+                  "lane": {
+                    "height": 120,
+                    "left": 25,
+                    "top": 300,
+                    "width": 25
+                  },
+                  "location": "Studio 2",
+                  "meta": "5:30p–6:45p · 13 left",
+                  "name": "Ballet 8",
+                  "note": null,
+                  "seats": "13 left",
+                  "spotsLeft": 13,
+                  "startsAt": 1050,
+                  "status": "open",
+                  "studio": 2,
+                  "taken": 7,
+                  "text": "Stu 2 - 122 Ballet 8 - 14+ - JM - 5:30 PM - 6:45 PM - 7 of 20 spots taken",
+                  "textColor": "#000",
+                  "timeLabel": "5:30p–6:45p",
+                  "top": 300,
+                  "waitlisted": 0
+                }
+              ],
+              "label": "Studio 2",
+              "studio": 2
+            },
+            {
+              "blocks": [
+                {
+                  "ages": "12+",
+                  "capacity": 5,
+                  "code": "4:00p",
+                  "color": "#e06666",
+                  "details": [
+                    "Teen Company",
+                    "Ms. Ortiz",
+                    "Studio 3",
+                    "4 spots available",
+                    "2 waitlisted",
+                    "Ages: 12+"
+                  ],
+                  "endsAt": 1005,
+                  "height": 90,
+                  "href": "admin.sd?page=EditClass&cident=322",
+                  "instructor": "Ms. Ortiz",
+                  "label": "Teen Company",
+                  "lane": {
+                    "height": 90,
+                    "left": 50,
+                    "top": 120,
+                    "width": 25
+                  },
+                  "location": "Studio 3",
+                  "meta": "4:00p–4:45p · 4 left",
+                  "name": "Teen Company",
+                  "note": null,
+                  "seats": "4 left",
+                  "spotsLeft": 4,
+                  "startsAt": 960,
+                  "status": "open",
+                  "studio": 3,
+                  "taken": 1,
+                  "text": "Stu 3 - 322 Teen Company - 12+ - RO - 4:00 PM - 4:45 PM - 1 of 5 spots taken",
+                  "textColor": "#fff",
+                  "timeLabel": "4:00p–4:45p",
+                  "top": 120,
+                  "waitlisted": 2
+                },
+                {
+                  "ages": "11+",
+                  "capacity": 15,
+                  "code": "5:30p",
+                  "color": "#e06666",
+                  "details": [
+                    "Tap 4 & 5",
+                    "Ms. Ortiz",
+                    "Studio 3",
+                    "14 spots available",
+                    "0 waitlisted",
+                    "Ages: 11+"
+                  ],
+                  "endsAt": 1110,
+                  "height": 120,
+                  "href": "admin.sd?page=EditClass&cident=306",
+                  "instructor": "Ms. Ortiz",
+                  "label": "Tap 4 & 5",
+                  "lane": {
+                    "height": 120,
+                    "left": 50,
+                    "top": 300,
+                    "width": 25
+                  },
+                  "location": "Studio 3",
+                  "meta": "5:30p–6:30p · 14 left",
+                  "name": "Tap 4 & 5",
+                  "note": null,
+                  "seats": "14 left",
+                  "spotsLeft": 14,
+                  "startsAt": 1050,
+                  "status": "open",
+                  "studio": 3,
+                  "taken": 1,
+                  "text": "Stu 3 - 306 Tap 4 & 5 - 11+ - RO - 5:30 PM - 6:30 PM - 1 of 15 spots taken",
+                  "textColor": "#fff",
+                  "timeLabel": "5:30p–6:30p",
+                  "top": 300,
+                  "waitlisted": 0
+                }
+              ],
+              "label": "Studio 3",
+              "studio": 3
+            },
+            {
+              "blocks": [
+                {
+                  "ages": "7-9",
+                  "capacity": 16,
+                  "code": "3:45p",
+                  "color": "#6fa8dc",
+                  "details": [
+                    "Jazz Company Prep",
+                    "Mr. Bell",
+                    "Studio 4",
+                    "9 spots available",
+                    "0 waitlisted",
+                    "Ages: 7-9"
+                  ],
+                  "endsAt": 1005,
+                  "height": 120,
+                  "href": "admin.sd?page=EditClass&cident=530",
+                  "instructor": "Mr. Bell",
+                  "label": "Jazz Company Prep",
+                  "lane": {
+                    "height": 120,
+                    "left": 75,
+                    "top": 90,
+                    "width": 25
+                  },
+                  "location": "Studio 4",
+                  "meta": "3:45p–4:45p · 9 left",
+                  "name": "Jazz Company Prep",
+                  "note": null,
+                  "seats": "9 left",
+                  "spotsLeft": 9,
+                  "startsAt": 945,
+                  "status": "open",
+                  "studio": 4,
+                  "taken": 7,
+                  "text": "Stu 4 - 530 Jazz Company Prep - 7-9 - JB - 3:45 PM - 4:45 PM - 7 of 16 spots taken",
+                  "textColor": "#fff",
+                  "timeLabel": "3:45p–4:45p",
+                  "top": 90,
+                  "waitlisted": 0
+                },
+                {
+                  "ages": "9+",
+                  "capacity": 21,
+                  "code": "5:30p",
+                  "color": "#f6b26b",
+                  "details": [
+                    "Lyrical 1",
+                    "Ms. Sandoval",
+                    "Studio 4",
+                    "21 spots available",
+                    "0 waitlisted",
+                    "Ages: 9+"
+                  ],
+                  "endsAt": 1110,
+                  "height": 120,
+                  "href": "admin.sd?page=EditClass&cident=534",
+                  "instructor": "Ms. Sandoval",
+                  "label": "Lyrical 1",
+                  "lane": {
+                    "height": 120,
+                    "left": 75,
+                    "top": 300,
+                    "width": 25
+                  },
+                  "location": "Studio 4",
+                  "meta": "5:30p–6:30p · 21 left",
+                  "name": "Lyrical 1",
+                  "note": null,
+                  "seats": "21 left",
+                  "spotsLeft": 21,
+                  "startsAt": 1050,
+                  "status": "open",
+                  "studio": 4,
+                  "taken": 0,
+                  "text": "Stu 4 - 534 Lyrical 1 - 9+ - BS - 5:30 PM - 6:30 PM - 0 of 21 spots taken",
+                  "textColor": "#000",
+                  "timeLabel": "5:30p–6:30p",
+                  "top": 300,
+                  "waitlisted": 0
+                }
+              ],
+              "label": "Studio 4",
+              "studio": 4
+            }
+          ],
+          "height": 480,
+          "hours": [
+            {
+              "label": "3 PM",
+              "top": 0
+            },
+            {
+              "label": "4 PM",
+              "top": 120
+            },
+            {
+              "label": "5 PM",
+              "top": 240
+            },
+            {
+              "label": "6 PM",
+              "top": 360
+            },
+            {
+              "label": "7 PM",
+              "top": 480
+            }
+          ],
+          "label": "Monday",
+          "untimed": []
+        },
+        {
+          "blocks": [
+            {
+              "ages": "4-5",
+              "capacity": 14,
+              "code": "3:30p",
+              "color": "#00ffff",
+              "details": [
+                "Pre Ballet",
+                "Ms. Ruiz",
+                "Studio 1",
+                "11 spots available",
+                "0 waitlisted",
+                "Ages: 4-5",
+                "Bring ballet shoes"
+              ],
+              "endsAt": 975,
+              "height": 90,
+              "href": "admin.sd?page=EditClass&cident=806",
+              "instructor": "Ms. Ruiz",
+              "label": "Pre Ballet",
+              "lane": {
+                "height": 90,
+                "left": 0,
+                "top": 60,
+                "width": 25
+              },
+              "location": "Studio 1",
+              "meta": "3:30p–4:15p · 11 left",
+              "name": "Pre Ballet",
+              "note": "Bring ballet shoes",
+              "seats": "11 left",
+              "spotsLeft": 11,
+              "startsAt": 930,
+              "status": "open",
+              "studio": 1,
+              "taken": 3,
+              "text": "Stu 1 - 806 Pre Ballet - 4-5 - RR - 3:30 PM - 4:15 PM - 3 of 14 spots taken",
+              "textColor": "#000",
+              "timeLabel": "3:30p–4:15p",
+              "top": 60,
+              "waitlisted": 0
+            },
+            {
+              "ages": "0",
+              "capacity": 40,
+              "code": "3:30p",
+              "color": "#f4cccc",
+              "details": [
+                "Faculty",
+                "Front Desk",
+                "Studio 3",
+                "40 spots available",
+                "0 waitlisted",
+                "Ages: 0"
+              ],
+              "endsAt": 945,
+              "height": 30,
+              "href": "admin.sd?page=EditClass&cident=12",
+              "instructor": "Front Desk",
+              "label": "Faculty",
+              "lane": {
+                "height": 30,
+                "left": 50,
+                "top": 60,
+                "width": 25
+              },
+              "location": "Studio 3",
+              "meta": "3:30p–3:45p · 40 left",
+              "name": "Faculty",
+              "note": null,
+              "seats": "40 left",
+              "spotsLeft": 40,
+              "startsAt": 930,
+              "status": "open",
+              "studio": 3,
+              "taken": 0,
+              "text": "Stu 3 - 12 - 0 - Fac - 3:30 PM - 3:45 PM - 0 of 40 spots taken",
+              "textColor": "#000",
+              "timeLabel": "3:30p–3:45p",
+              "top": 60,
+              "waitlisted": 0
+            }
+          ],
+          "columns": [
+            {
+              "blocks": [
+                {
+                  "ages": "4-5",
+                  "capacity": 14,
+                  "code": "3:30p",
+                  "color": "#00ffff",
+                  "details": [
+                    "Pre Ballet",
+                    "Ms. Ruiz",
+                    "Studio 1",
+                    "11 spots available",
+                    "0 waitlisted",
+                    "Ages: 4-5",
+                    "Bring ballet shoes"
+                  ],
+                  "endsAt": 975,
+                  "height": 90,
+                  "href": "admin.sd?page=EditClass&cident=806",
+                  "instructor": "Ms. Ruiz",
+                  "label": "Pre Ballet",
+                  "lane": {
+                    "height": 90,
+                    "left": 0,
+                    "top": 60,
+                    "width": 25
+                  },
+                  "location": "Studio 1",
+                  "meta": "3:30p–4:15p · 11 left",
+                  "name": "Pre Ballet",
+                  "note": "Bring ballet shoes",
+                  "seats": "11 left",
+                  "spotsLeft": 11,
+                  "startsAt": 930,
+                  "status": "open",
+                  "studio": 1,
+                  "taken": 3,
+                  "text": "Stu 1 - 806 Pre Ballet - 4-5 - RR - 3:30 PM - 4:15 PM - 3 of 14 spots taken",
+                  "textColor": "#000",
+                  "timeLabel": "3:30p–4:15p",
+                  "top": 60,
+                  "waitlisted": 0
+                }
+              ],
+              "label": "Studio 1",
+              "studio": 1
+            },
+            {
+              "blocks": [],
+              "label": "Studio 2",
+              "studio": 2
+            },
+            {
+              "blocks": [
+                {
+                  "ages": "0",
+                  "capacity": 40,
+                  "code": "3:30p",
+                  "color": "#f4cccc",
+                  "details": [
+                    "Faculty",
+                    "Front Desk",
+                    "Studio 3",
+                    "40 spots available",
+                    "0 waitlisted",
+                    "Ages: 0"
+                  ],
+                  "endsAt": 945,
+                  "height": 30,
+                  "href": "admin.sd?page=EditClass&cident=12",
+                  "instructor": "Front Desk",
+                  "label": "Faculty",
+                  "lane": {
+                    "height": 30,
+                    "left": 50,
+                    "top": 60,
+                    "width": 25
+                  },
+                  "location": "Studio 3",
+                  "meta": "3:30p–3:45p · 40 left",
+                  "name": "Faculty",
+                  "note": null,
+                  "seats": "40 left",
+                  "spotsLeft": 40,
+                  "startsAt": 930,
+                  "status": "open",
+                  "studio": 3,
+                  "taken": 0,
+                  "text": "Stu 3 - 12 - 0 - Fac - 3:30 PM - 3:45 PM - 0 of 40 spots taken",
+                  "textColor": "#000",
+                  "timeLabel": "3:30p–3:45p",
+                  "top": 60,
+                  "waitlisted": 0
+                }
+              ],
+              "label": "Studio 3",
+              "studio": 3
+            },
+            {
+              "blocks": [],
+              "label": "Studio 4",
+              "studio": 4
+            }
+          ],
+          "height": 240,
+          "hours": [
+            {
+              "label": "3 PM",
+              "top": 0
+            },
+            {
+              "label": "4 PM",
+              "top": 120
+            },
+            {
+              "label": "5 PM",
+              "top": 240
+            }
+          ],
+          "label": "Tuesday",
+          "untimed": []
+        },
+        {
+          "blocks": [
+            {
+              "ages": "10-18",
+              "capacity": null,
+              "code": "10:00a",
+              "color": "#ffffff",
+              "details": [
+                "Company Rehearsal",
+                "Mr. Cole",
+                "Studio 3",
+                "1 spots available",
+                "0 waitlisted",
+                "Ages: 10-18"
+              ],
+              "endsAt": null,
+              "href": "admin.sd?page=EditClass&cident=906",
+              "instructor": "Mr. Cole",
+              "label": "Company Rehearsal",
+              "lane": {
+                "height": 59,
+                "left": 0,
+                "top": 0,
+                "width": 25
+              },
+              "location": "Studio 3",
+              "name": "Company Rehearsal",
+              "note": null,
+              "spotsLeft": 1,
+              "startsAt": null,
+              "status": "open",
+              "studio": 1,
+              "taken": null,
+              "text": "Company Rehearsal",
+              "textColor": "#000",
+              "waitlisted": 0
+            }
+          ],
+          "columns": [],
+          "height": 0,
+          "hours": [],
+          "label": "Sunday",
+          "untimed": [
+            {
+              "ages": "10-18",
+              "capacity": null,
+              "code": "10:00a",
+              "color": "#ffffff",
+              "details": [
+                "Company Rehearsal",
+                "Mr. Cole",
+                "Studio 3",
+                "1 spots available",
+                "0 waitlisted",
+                "Ages: 10-18"
+              ],
+              "endsAt": null,
+              "href": "admin.sd?page=EditClass&cident=906",
+              "instructor": "Mr. Cole",
+              "label": "Company Rehearsal",
+              "lane": {
+                "height": 59,
+                "left": 0,
+                "top": 0,
+                "width": 25
+              },
+              "location": "Studio 3",
+              "name": "Company Rehearsal",
+              "note": null,
+              "spotsLeft": 1,
+              "startsAt": null,
+              "status": "open",
+              "studio": 1,
+              "taken": null,
+              "text": "Company Rehearsal",
+              "textColor": "#000",
+              "waitlisted": 0
+            }
+          ]
+        }
+      ],
+      "hidden": 0,
+      "kind": "week",
+      "studioCount": 4,
+      "title": "Class Calendar",
+      "totals": {
+        "classes": 11,
+        "full": 1,
+        "spots": 142,
+        "waitlisted": 2
+      },
+      "week": "Week of October 26"
+    }
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=CalendarPage",
+  "view": "week"
+}

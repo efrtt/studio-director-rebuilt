@@ -1,0 +1,221 @@
+// Tab panels on a record page.
+//
+// A record page (EditClass, EditFamily, EditStudent, EditInstructor) is not one
+// screen: it ships all of its tabs in the same HTML, every panel after the first
+// hidden with `display:none`.
+//
+//   .tabContainer > .tab                     "Overview" "Enrollment" "Skills"
+//   #tab-enrollment-content.tabContent       the panel for the tab above it
+//
+// That is why one fetch is enough to rebuild them all — and why the crawl could
+// report them without clicking anything.
+//
+// The panels are tables, not forms: `table.SimpleSD` for a class roster,
+// `table.ReportTable` for skills, one `table.TimeBlock` per weekday on the
+// calendar tab. They share a shape (a `<th>` row, then `<tr>` rows whose cells
+// hold text and sometimes a link), so one reader serves all of them.
+//
+// Nothing here is written back: these panels are read-only views of what the app
+// already rendered. Anything that changes them ("Add student", "Add skill") is a
+// JS control, listed as an action rather than faked.
+
+import { qsa, qs, textOf } from './shell.js';
+
+// A panel is a tab: not the whole record, so it is not paged like a list.
+const MAX_ROWS = 300;
+
+// Text that introduces the table under it ("Waitlist"), rather than a table of
+// its own.
+const SECTION = '.WithinSectionSpace, .sectionHeader, .sectionTitle, h3, h4';
+const MESSAGE = '.ReportTableNoItemsMsg, .NoItems, .empty';
+
+function keyOf(id) {
+  const m = /^tab-(.+?)(?:-content)?$/.exec(id || '');
+  return m ? m[1] : (id || '');
+}
+
+const isRight = (el) => /(^|\s)AR(\s|$)/.test((el && el.getAttribute('class')) || '');
+
+function cellOf(td, index, rightCols) {
+  const anchor = qs(td, 'a[href]');
+  // A calendar cell carries the class link *plus* the app's hidden tooltip,
+  // which repeats the class, its instructor, its studio and its seats. The
+  // link's own words are the readable part; the tooltip is read properly by the
+  // week view, not echoed here.
+  const raw = anchor ? textOf(anchor) : textOf(td);
+  return {
+    text: raw.replace(/^(\d{1,2}:\d{2}\s*[ap]\.?m?\.?)(?=[A-Za-z\u2013-])/i, '$1 ').replace(/\s+/g, ' ').trim(),
+    href: anchor ? anchor.getAttribute('href') : null,
+    // The app right-aligns its action column on the heading (`th.AR`) and only
+    // sometimes repeats it on the cells, so the column is what is remembered.
+    right: rightCols.has(index) || isRight(td)
+  };
+}
+
+// One table, read the same way everywhere a panel or a report prints one.
+export function readTable(table) {
+  const rows = [];
+  const rightCols = new Set();
+  let headings = [];
+  // Every data row on the page, including the ones past MAX_ROWS: a view that
+  // shows 300 of 1,142 rows has to be able to say so.
+  let rowTotal = 0;
+  // A table can have two heading rows: a single-cell title ("Current Class
+  // Roster") and then the real columns, date by date, on `PrintClassRoster`. The
+  // widest heading row is the column labels; the single-cell ones are a caption,
+  // because one heading over ten cells misaligns every row.
+  const captionRows = [];
+  let headingWidth = 0;
+
+  for (const tr of Array.from(table.children).flatMap((c) =>
+    c.tagName === 'TBODY' || c.tagName === 'THEAD' ? Array.from(c.children) : [c]
+  )) {
+    if (tr.tagName !== 'TR') continue;
+
+    // Only this table's rows: a panel can nest a table inside a cell.
+    if (tr.closest && tr.closest('table') !== table) continue;
+
+    const head = Array.from(tr.children).filter((c) => c.tagName === 'TH');
+    if (head.length) {
+      if (head.length > headingWidth) {
+        // A one-cell row seen before the real columns was the title, not the
+        // headings: it becomes the caption instead of being dropped.
+        if (headingWidth === 1 && headings.length === 1 && headings[0]) captionRows.push(headings[0]);
+        headingWidth = head.length;
+        headings = head.map(textOf);
+        rightCols.clear();
+        head.forEach((th, i) => { if (isRight(th)) rightCols.add(i); });
+      } else if (head.length === 1 && head.length < headingWidth) {
+        captionRows.push(textOf(head[0]));
+      }
+      continue;
+    }
+
+    const cells = Array.from(tr.children).filter((c) => c.tagName === 'TD');
+    if (!cells.length) continue;
+    rowTotal += 1;
+    if (rows.length >= MAX_ROWS) continue;
+    rows.push(cells.map((td, i) => cellOf(td, i, rightCols)));
+  }
+
+  return {
+    id: table.id || '',
+    cls: (table.getAttribute('class') || '').trim(),
+    headings,
+    // The title row above the columns, when the app prints one.
+    caption: captionRows.join(' ').trim(),
+    rows,
+    rowTotal
+  };
+}
+
+// One panel: its tables in order, each under the section label that precedes it,
+// plus the panel's own buttons and any "No skills." style message.
+function panelOf(panel) {
+  const blocks = [];
+  const actions = [];
+  let section = '';
+  let note = '';
+
+  // Tables are not always direct children: the family's Students tab wraps its
+  // roster in two divs and a `MultiTable` spacer. One query in document order
+  // fixes that, and keeps each table under the section label above it.
+  const ordered = qsa(panel, ['table', SECTION, MESSAGE].join(', '));
+
+  for (const el of ordered) {
+    if (el.tagName === 'TABLE') {
+      // A table nested inside another one's cell belongs to that table, not here.
+      if (el.closest && el.closest('table') !== el) continue;
+      blocks.push({ section, ...readTable(el) });
+      continue;
+    }
+    if (el.matches && el.matches(MESSAGE)) {
+      note = textOf(el);
+      continue;
+    }
+    if (el.matches && el.matches(SECTION)) section = textOf(el);
+  }
+
+  // The button row above a table ("Add student", "Tags").
+  for (const a of qsa(panel, 'a[href]')) {
+    if (a.closest && a.closest('table')) continue;
+    actions.push({
+      label: textOf(a),
+      id: a.id || '',
+      href: a.getAttribute('href'),
+      // `href="#"` means the app's own JS does the work.
+      js: !a.getAttribute('href') || a.getAttribute('href') === '#'
+    });
+  }
+
+  // A table with headings but no rows still says what it would hold.
+  for (const block of blocks) {
+    if (block.rows.length || !block.headings.length) continue;
+    if (!note) note = block.section ? `${block.section}: nothing here yet.` : 'Nothing here yet.';
+  }
+
+  const controls = panel.querySelectorAll('input,select,textarea,button').length;
+
+  return {
+    blocks: blocks.filter((b) => b.headings.length || b.rows.length),
+    actions: actions.filter((a) => a.label),
+    note,
+    controls
+  };
+}
+
+// The strip's own children are the tabs. The *selected* one is marked
+// `class="selectedTab"` and has no `tab` class at all — on the live pages the
+// first tab is exactly that — so a `.tab`-only selector silently drops it and
+// shifts every label one place.
+function tabElements(strip) {
+  const direct = Array.from(strip.children || []).filter((el) => {
+    if (/^(SCRIPT|STYLE|INPUT|SELECT|TABLE)$/.test(el.tagName)) return false;
+    if (el.querySelector && el.querySelector('.tabContent')) return false;
+    // An icon-only tab has no text but is still a tab: keep the app's own class.
+    return !!textOf(el) || /(^|\s)(tab|tabButton|selectedTab)(\s|$)/.test(el.getAttribute('class') || '');
+  });
+  if (direct.length >= 2) return direct;
+
+  return qsa(strip, '.tab, .tabButton, .selectedTab');
+}
+
+// Returns null when the page has no tab strip: an editor without tabs (or a list
+// page) should not grow an empty tab bar.
+export function readTabs(doc) {
+  const strip = qs(doc, '.tabContainer');
+  if (!strip) return null;
+
+  const tabEls = tabElements(strip);
+  if (tabEls.length < 2) return null;
+
+  const panels = new Map();
+  for (const panel of qsa(doc, '.tabContent')) panels.set(keyOf(panel.id), panel);
+
+  const panelsInOrder = qsa(doc, '.tabContent');
+
+  const tabs = tabEls.map((el, i) => {
+    const key = keyOf(el.id);
+    const label = textOf(el) || key || `Tab ${i + 1}`;
+    // Matched by id when the tab has one, otherwise by position: the panels are
+    // in the same order as the tabs that open them.
+    const panel = (key && panels.get(key)) || panelsInOrder[i] || null;
+
+    // The first tab is the record itself: it is the form the editor already
+    // renders, not a panel to read.
+    const isForm = i === 0 || /^overview$/i.test(key) || /^overview$/i.test(label);
+    const read = panel && !isForm
+      ? panelOf(panel)
+      : { blocks: [], actions: [], note: '', controls: 0 };
+
+    return {
+      key: key || String(i),
+      label,
+      selected: /selectedTab|selected|active/i.test(el.getAttribute('class') || ''),
+      kind: isForm ? 'form' : 'table',
+      ...read
+    };
+  });
+
+  return { kind: 'tabs', tabs };
+}

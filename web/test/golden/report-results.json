@@ -1,0 +1,142 @@
+{
+  "file": "report-results.html",
+  "form": null,
+  "model": {
+    "confirm": null,
+    "index": null,
+    "list": null,
+    "nav": [
+      {
+        "href": "admin.sd?page=HomePage&clicktab=Home",
+        "label": "Home"
+      },
+      {
+        "href": "admin.sd?page=ReportsHome&clicktab=Reports",
+        "label": "Reports"
+      }
+    ],
+    "note": null,
+    "report": {
+      "breadcrumb": [
+        "Reports",
+        "Class Roster"
+      ],
+      "fields": [],
+      "form": null,
+      "kind": "report",
+      "results": {
+        "rows": 3,
+        "tables": [
+          {
+            "caption": "",
+            "cls": "ReportTable",
+            "headings": [
+              "Class",
+              "Day",
+              "Time",
+              "Instructor",
+              "Enrolled"
+            ],
+            "id": "",
+            "rowTotal": 3,
+            "rows": [
+              [
+                {
+                  "href": "admin.sd?page=EditClass&cident=101",
+                  "right": false,
+                  "text": "Ballet III"
+                },
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "Monday"
+                },
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "4:00p"
+                },
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "Ms. Rivera"
+                },
+                {
+                  "href": null,
+                  "right": true,
+                  "text": "8"
+                }
+              ],
+              [
+                {
+                  "href": "admin.sd?page=EditClass&cident=102",
+                  "right": false,
+                  "text": "Jazz I"
+                },
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "Tuesday"
+                },
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "5:30p"
+                },
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "Mr. Cole"
+                },
+                {
+                  "href": null,
+                  "right": true,
+                  "text": "5"
+                }
+              ],
+              [
+                {
+                  "href": "admin.sd?page=EditClass&cident=104",
+                  "right": false,
+                  "text": "Hip Hop"
+                },
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "Monday"
+                },
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "4:00p"
+                },
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "Alex Vaughn"
+                },
+                {
+                  "href": null,
+                  "right": true,
+                  "text": "0"
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      "rows": [],
+      "title": "Class Roster - Fall 2026",
+      "trigger": null
+    },
+    "settings": null,
+    "sheet": null,
+    "task": null,
+    "title": "Class Roster - Fall 2026",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=ClassRosterForm",
+    "view": "report",
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=ClassRosterForm",
+  "view": "report"
+}

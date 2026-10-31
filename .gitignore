@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+web/node_modules/
+
+# build output - regenerate with npm run build / userscript / demo
+web/dist/
+web/demo/
+web/studio-director-rebuilt.user.js
+
+# captured screenshots (regenerable, binary)
+web/screenshots/
+
+# workspace metadata
+.freebuff/
+
+# noise
+*.log
+.DS_Store
+Thumbs.db

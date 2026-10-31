@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Studio Director - harness (roster)</title>
+<!-- the real stylesheet, so we verify against true specificity/values -->
+<link rel="stylesheet" href="https://app.thestudiodirector.com/studio1/html/admin.css">
+</head>
+<body>
+
+<form id="idForm" method="post" action="admin.sd">
+  <input type="hidden" id="idPage" value="EditClass">
+  <input type="hidden" id="idMeth" value="">
+  <input type="hidden" id="idMethArgs" value="">
+
+  <div class="topBarContainer">
+    <div id="sideBarTop" class="sideNavTopCollapsed"><div class="sideNavCtrlBar"></div></div>
+    <div class="topBar">
+      <a href="admin.sd?page=Home">The Studio Director</a>
+      <div class="topBarSeparator"></div>
+      <div class="searchBox"><input type="search" placeholder="Search"></div>
+      <a class="menuLink" href="admin.sd?page=Help">Help</a>
+      <div class="menu helpMenu"></div>
+      <a class="menuLink" href="admin.sd?page=Account">Account</a>
+      <div class="menu accountMenu"></div>
+    </div>
+  </div>
+
+  <div class="standardMainContent">
+    <div id="sideNavBar" class="sideNavCollapsed" style="width:210px">
+      <a class="sideNavLink" href="admin.sd?page=Home">Home</a>
+      <a class="sideNavLink" href="admin.sd?page=Classes">Classes</a>
+      <a class="sideNavLink" href="admin.sd?page=Students">Students</a>
+      <a class="sideNavLink" href="admin.sd?page=Families">Families</a>
+      <a class="sideNavLink" href="admin.sd?page=Instructors">Instructors</a>
+      <a class="sideNavLink" href="admin.sd?page=ChargesPayments">Charges/Payments</a>
+      <a class="sideNavLink" href="admin.sd?page=EmailText">Email/Text</a>
+      <a class="sideNavLink" href="admin.sd?page=Reports">Reports</a>
+      <a class="sideNavLink" href="admin.sd?page=Store">Store</a>
+      <a class="sideNavLink" href="admin.sd?page=Admin">Admin</a>
+      <a class="sideNavLink" href="admin.sd?page=Logout">Log out</a>
+      <div class="copyright">Copyright 2004-2026</div>
+    </div>
+
+    <div id="mainContent" class="mainContent wideContent">
+      <div class="contentContainer">
+
+        <!-- 0: left detail pane - contains controls, must NEVER be folded -->
+        <div class="MultiTable" style="width:280px">
+          <div>Ballet III &mdash; Mon/Wed 4:00</div>
+          <div class="WithinMultiTable">
+            <select name="season"><option>Fall 2026</option><option>Spring 2027</option></select>
+            <input type="text" name="classSearch" placeholder="Find student">
+            <button type="button">Apply</button>
+          </div>
+          <div class="contentInfo">Two meetings per week. Room capacity 14.</div>
+          <table width="100%">
+            <tbody>
+              <tr><th>Meeting</th><th>Room</th></tr>
+              <tr><td>Mon 4:00</td><td>Studio A</td></tr>
+              <tr><td>Wed 4:00</td><td>Studio A</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 1: inert banner clutter - should be folded -->
+        <div class="regMsgGlobal">
+          Reminder: recital fees are due. Update your costume order before Friday.
+        </div>
+
+        <!-- 2: the primary table (12 rows) -->
+        <div>
+          <div class="ReportName">Class Roster</div>
+          <table width="100%">
+            <tbody>
+              <tr><th>Student</th><th>Age</th><th>Guardian</th><th>Balance</th><th>Status</th></tr>
+              <tr><td>Ada Lovelace</td><td>11</td><td>Byron</td><td>$145.00</td><td><span class="openClass">Enrolled</span></td></tr>
+              <tr><td>Grace Hopper</td><td>10</td><td>Walter</td><td>$0.00</td><td><span class="openClass">Enrolled</span></td></tr>
+              <tr><td>Katherine Johnson</td><td>12</td><td>Joshua</td><td>$320.50</td><td><span class="fullClass">Waitlist</span></td></tr>
+              <tr><td>Margaret Hamilton</td><td>9</td><td>Ralph</td><td>$12.00</td><td><span class="openClass">Enrolled</span></td></tr>
+              <tr><td>Dorothy Vaughan</td><td>13</td><td>Leonard</td><td>$88.25</td><td><span class="openClass">Enrolled</span></td></tr>
+              <tr><td>Mary Jackson</td><td>11</td><td>Levi</td><td>$0.00</td><td><span class="notApplied">Not applied</span></td></tr>
+              <tr><td>Annie Easley</td><td>10</td><td>Buddy</td><td>$45.00</td><td><span class="openClass">Enrolled</span></td></tr>
+              <tr><td>Jean Bartik</td><td>12</td><td>Henry</td><td>$230.00</td><td><span class="openClass">Enrolled</span></td></tr>
+              <tr><td>Frances Allen</td><td>14</td><td>Frank</td><td>$0.00</td><td><span class="openClass">Enrolled</span></td></tr>
+              <tr><td>Barbara Liskov</td><td>13</td><td>Samuel</td><td>$96.00</td><td><span class="openClass">Enrolled</span></td></tr>
+              <tr><td>Radia Perlman</td><td>12</td><td>Julius</td><td>$0.00</td><td><span class="openClass">Enrolled</span></td></tr>
+              <tr><td>Shafi Goldwasser</td><td>11</td><td>David</td><td>$54.00</td><td><span class="openClass">Enrolled</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+          <!-- inert footer detail inside the primary pane -->
+          <div class="contentInfo">Last modified by office on 10/28/2026.</div>
+
+      </div>
+    </div>
+  </div>
+</form>
+
+<script src="studio-director-skin.user.js"></script>
+</body>
+</html>

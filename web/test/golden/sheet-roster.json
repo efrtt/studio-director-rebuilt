@@ -1,0 +1,212 @@
+{
+  "file": "sheet-roster.html",
+  "form": null,
+  "model": {
+    "confirm": null,
+    "index": null,
+    "list": null,
+    "nav": [],
+    "note": null,
+    "report": null,
+    "settings": null,
+    "sheet": {
+      "actions": [],
+      "breadcrumb": [
+        "Home",
+        "Classes",
+        "Junior Tap Company"
+      ],
+      "kind": "sheet",
+      "rows": 3,
+      "shown": 3,
+      "tables": [
+        {
+          "caption": "Current Class Roster",
+          "cls": "AttendanceRoster",
+          "headings": [
+            "Student",
+            "Age",
+            "Guardian",
+            "Phone",
+            "Cell",
+            "Classes",
+            "Fri, Oct 2",
+            "Fri, Oct 9",
+            "Fri, Oct 16",
+            "Fri, Oct 23"
+          ],
+          "id": "",
+          "rowTotal": 3,
+          "rows": [
+            [
+              {
+                "href": null,
+                "right": false,
+                "text": "Ada Lovelace"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "9"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "Hopper"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "555-0100"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "555-0101"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "3"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              }
+            ],
+            [
+              {
+                "href": null,
+                "right": false,
+                "text": "Grace Hopper"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "10"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "Hopper"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "555-0100"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "555-0102"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "2"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              }
+            ],
+            [
+              {
+                "href": null,
+                "right": false,
+                "text": "Katherine Johnson"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "11"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "Goble"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "555-0103"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "555-0104"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "1"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              }
+            ]
+          ],
+          "section": ""
+        }
+      ],
+      "title": "Class Roster for Junior Tap Company",
+      "truncated": false
+    },
+    "task": null,
+    "title": "Class Roster for Junior Tap Company",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=PrintClassRoster",
+    "view": "sheet",
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=PrintClassRoster",
+  "view": "sheet"
+}

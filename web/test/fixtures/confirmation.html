@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html><body>
+<form id="idForm" action="admin.sd" method="post">
+  <div class="topBarContainer"><div class="topBar"><a class="menuLink" href="admin.sd?page=Help">Help</a></div></div>
+  <div class="standardMainContent">
+    <div id="sideNavBar">
+      <a class="sideNavLink" href="admin.sd?page=HomePage&clicktab=Home">HomeHome</a>
+      <a class="sideNavLink" href="admin.sd?page=CalendarPage&clicktab=Class+Calendar">Class CalendarClass Calendar</a>
+      <a class="sideNavLink" href="admin.sd?page=NewClass&clicktab=Classes">ClassesClasses</a>
+      <a class="sideNavLink" href="admin.sd?page=NewFamily&clicktab=Families">FamiliesFamilies</a>
+      <a class="sideNavLink" href="admin.sd?page=NewStudent&clicktab=Students">StudentsStudents</a>
+      <div class="copyright">©</div>
+    </div>
+    <div id="mainContent" class="mainContent wideContent">
+      <div class="contentContainer">
+        <!-- The record panel is on this screen too: the app's own list, which is
+             how you carry on to the next record after saving. -->
+        <div id="idSearchSpan" class="searchResultPanel">
+          <div class="searchResultBar"><div class="searchResultLabel">4291 Items</div></div>
+          <div class="searchResultLabel">
+            <input id="filter" name="filter" type="text" placeholder="New Name Search">
+            <p>3 of 3</p>
+          </div>
+          <div class="searchResultList">
+            <div class="searchResultItem"><a href="admin.sd?page=EditFamily&amp;fident=4401">Lovelace Family</a></div>
+            <div class="searchResultItem"><a href="admin.sd?page=EditFamily&amp;fident=4402">Hopper Family</a></div>
+            <div class="searchResultItem"><a href="admin.sd?page=EditFamily&amp;fident=4403">Rivera Family</a></div>
+          </div>
+          <div class="showAll">Show All</div>
+        </div>
+
+        <div class="Content">
+          <div class="Breadcrumb">
+            <a href="admin.sd?page=NewFamily">Families</a>
+            <i class="fa-solid fa-angle-right"></i>
+            <a href="admin.sd?page=EditFamily&amp;fident=4402">Hopper Family</a>
+          </div>
+          <!-- The message carries no class of its own: the adapter finds the
+               sentence, not a selector. -->
+          <div class="contentInfo">
+            <div>Hopper Family has been updated.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</body></html>

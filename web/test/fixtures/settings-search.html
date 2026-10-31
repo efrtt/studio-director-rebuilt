@@ -1,0 +1,60 @@
+<!doctype html>
+<html><head><title>Studio Director</title></head>
+<body>
+<!-- A toggle screen from the crawl: SearchDisplayFormat (two selects, no
+     table.Form, no rows) with the other control shapes those pages use: a
+     checkbox, a radio pair, a text field and a textarea. The labels are the four
+     ways the app prints them — a block above the control, a table cell, an
+     aria-label, and nothing at all. -->
+<form id="idForm" action="admin.sd" method="post">
+  <input type="hidden" id="idPage" name="idPage" value="SearchDisplayFormat">
+  <input type="hidden" id="idMeth" name="idMeth" value="">
+  <div class="topBarContainer">
+    <div class="searchBox"><input type="text" id="searchText" name="searchText"></div>
+  </div>
+  <div class="standardMainContent">
+    <div id="sideNavBar">
+      <a class="sideNavLink" href="admin.sd?page=HomePage">HomeHome</a>
+      <a class="sideNavLink" href="admin.sd?page=AdminHome">SettingsSettings</a>
+    </div>
+    <div id="mainContent">
+      <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a> / <a href="admin.sd?page=AdminHome">Settings</a></div>
+      <div class="contentContainer">
+        <div class="Content">
+          <div class="formTitle">Search Display Format</div>
+          <div class="contentInfo">
+            <div class="SettingRow">
+              <div class="SettingLabel">Format</div>
+              <select name="fmt"><option value="table" selected>Table</option><option value="list">List</option></select>
+            </div>
+            <div class="SettingRow">
+              <div class="SettingLabel">Order by</div>
+              <select name="orderBy"><option value="name">Name</option><option value="family" selected>Family</option></select>
+            </div>
+            <table class="SimpleLayout"><tbody>
+              <tr><td>Show inactive</td><td><input type="checkbox" id="show_inactive" name="show_inactive" checked></td></tr>
+              <tr><td>Page size</td><td><input type="text" id="page_size" name="page_size" value="50"></td></tr>
+            </tbody></table>
+            <div class="SettingRow">
+              <div class="SettingLabel">Calendar style</div>
+              <div class="RadioSet">
+                <label class="radio"><input type="radio" name="admincal" value="admincal" checked> Admin calendar</label>
+                <label class="radio"><input type="radio" name="admincal" value="caltable"> Calendar table</label>
+              </div>
+            </div>
+            <div class="SettingRow">
+              <textarea name="note" rows="4" aria-label="Notice shown above results"></textarea>
+            </div>
+            <div class="SettingRow">
+              <input type="text" name="legacy_header" value="">
+            </div>
+            <div class="ButtonBar">
+              <a id="save" href="#" onclick="StudioDir.onSubmit('SaveSettings');return false;">Save</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</body></html>

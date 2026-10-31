@@ -1,0 +1,59 @@
+{
+  "file": "notice-addmultiplepayments.html",
+  "form": null,
+  "model": {
+    "confirm": null,
+    "index": null,
+    "list": null,
+    "nav": [
+      {
+        "href": "admin.sd?page=HomePage",
+        "label": "Home"
+      },
+      {
+        "href": "admin.sd?page=ChargesHome",
+        "label": "Charges & Payments"
+      },
+      {
+        "href": "admin.sd?page=NewClass",
+        "label": "Classes"
+      }
+    ],
+    "note": {
+      "actions": [
+        {
+          "href": "admin.sd?page=PickFamily",
+          "id": "pickfamily",
+          "js": false,
+          "label": "Pick a family",
+          "onclick": ""
+        }
+      ],
+      "breadcrumb": [
+        "Charges"
+      ],
+      "kind": "note",
+      "lines": [
+        "Pick the family that is paying."
+      ],
+      "primary": {
+        "href": "admin.sd?page=PickFamily",
+        "id": "pickfamily",
+        "js": false,
+        "label": "Pick a family",
+        "onclick": ""
+      },
+      "title": "Add Multiple Payments"
+    },
+    "report": null,
+    "settings": null,
+    "sheet": null,
+    "task": null,
+    "title": "Add Multiple Payments",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=notice-addmultiplepayments",
+    "view": "note",
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=notice-addmultiplepayments",
+  "view": "note"
+}

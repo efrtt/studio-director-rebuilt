@@ -1,0 +1,913 @@
+{
+  "file": "edit-family.html",
+  "form": {
+    "breadcrumb": [
+      "Families",
+      "Lovelace"
+    ],
+    "fields": [
+      {
+        "checked": null,
+        "id": "guardian",
+        "key": "guardian",
+        "label": null,
+        "masked": false,
+        "name": "guardian",
+        "options": null,
+        "selector": "#guardian",
+        "type": "text",
+        "value": "Dana Lovelace"
+      },
+      {
+        "checked": null,
+        "id": "last_name",
+        "key": "last_name",
+        "label": null,
+        "masked": false,
+        "name": "last_name",
+        "options": null,
+        "selector": "#last_name",
+        "type": "text",
+        "value": "Lovelace"
+      },
+      {
+        "checked": null,
+        "id": "address1",
+        "key": "address1",
+        "label": null,
+        "masked": false,
+        "name": "address1",
+        "options": null,
+        "selector": "#address1",
+        "type": "text",
+        "value": "12 Ada Way"
+      },
+      {
+        "checked": null,
+        "id": "address2",
+        "key": "address2",
+        "label": null,
+        "masked": false,
+        "name": "address2",
+        "options": null,
+        "selector": "#address2",
+        "type": "text",
+        "value": ""
+      },
+      {
+        "checked": null,
+        "id": "city",
+        "key": "city",
+        "label": null,
+        "masked": false,
+        "name": "city",
+        "options": null,
+        "selector": "#city",
+        "type": "text",
+        "value": "Springfield"
+      },
+      {
+        "checked": null,
+        "id": "state",
+        "key": "state",
+        "label": null,
+        "masked": false,
+        "name": "state",
+        "options": [
+          {
+            "label": "California",
+            "selected": false,
+            "value": "CA"
+          },
+          {
+            "label": "New York",
+            "selected": true,
+            "value": "NY"
+          }
+        ],
+        "selector": "#state",
+        "type": "select",
+        "value": "NY"
+      },
+      {
+        "checked": null,
+        "id": "zip",
+        "key": "zip",
+        "label": null,
+        "masked": false,
+        "name": "zip",
+        "options": null,
+        "selector": "#zip",
+        "type": "text",
+        "value": "10001"
+      },
+      {
+        "checked": null,
+        "id": null,
+        "key": "name:phone1_label",
+        "label": null,
+        "masked": false,
+        "name": "phone1_label",
+        "options": [
+          {
+            "label": "Home",
+            "selected": true,
+            "value": "Home"
+          },
+          {
+            "label": "Work",
+            "selected": false,
+            "value": "Work"
+          }
+        ],
+        "selector": "[name=\"phone1_label\"]",
+        "type": "select",
+        "value": "Home"
+      },
+      {
+        "checked": null,
+        "id": "phone1",
+        "key": "phone1",
+        "label": null,
+        "masked": true,
+        "name": "phone1",
+        "options": null,
+        "selector": "#phone1",
+        "type": "text",
+        "value": "(555) 010-2000"
+      },
+      {
+        "checked": null,
+        "id": null,
+        "key": "name:phone2_label",
+        "label": null,
+        "masked": false,
+        "name": "phone2_label",
+        "options": [
+          {
+            "label": "Home",
+            "selected": false,
+            "value": "Home"
+          },
+          {
+            "label": "Work",
+            "selected": false,
+            "value": "Work"
+          }
+        ],
+        "selector": "[name=\"phone2_label\"]",
+        "type": "select",
+        "value": "Home"
+      },
+      {
+        "checked": null,
+        "id": "phone2",
+        "key": "phone2",
+        "label": null,
+        "masked": true,
+        "name": "phone2",
+        "options": null,
+        "selector": "#phone2",
+        "type": "text",
+        "value": ""
+      },
+      {
+        "checked": null,
+        "id": null,
+        "key": "name:phone3_label",
+        "label": null,
+        "masked": false,
+        "name": "phone3_label",
+        "options": [
+          {
+            "label": "Home",
+            "selected": false,
+            "value": "Home"
+          },
+          {
+            "label": "Work",
+            "selected": false,
+            "value": "Work"
+          }
+        ],
+        "selector": "[name=\"phone3_label\"]",
+        "type": "select",
+        "value": "Home"
+      },
+      {
+        "checked": null,
+        "id": "phone3",
+        "key": "phone3",
+        "label": null,
+        "masked": true,
+        "name": "phone3",
+        "options": null,
+        "selector": "#phone3",
+        "type": "text",
+        "value": ""
+      },
+      {
+        "checked": null,
+        "id": "email",
+        "key": "email",
+        "label": null,
+        "masked": false,
+        "name": "email",
+        "options": null,
+        "selector": "#email",
+        "type": "text",
+        "value": "dana@example.com"
+      },
+      {
+        "checked": null,
+        "id": "extra_emails",
+        "key": "extra_emails",
+        "label": null,
+        "masked": false,
+        "name": "extra_emails",
+        "options": null,
+        "selector": "#extra_emails",
+        "type": "text",
+        "value": ""
+      },
+      {
+        "checked": null,
+        "id": "opt_out",
+        "key": "opt_out",
+        "label": null,
+        "masked": false,
+        "name": "opt_out",
+        "options": [
+          {
+            "label": "No",
+            "selected": false,
+            "value": "0"
+          },
+          {
+            "label": "Yes",
+            "selected": true,
+            "value": "1"
+          }
+        ],
+        "selector": "#opt_out",
+        "type": "select",
+        "value": "1"
+      },
+      {
+        "checked": null,
+        "id": "emergency_contact",
+        "key": "emergency_contact",
+        "label": null,
+        "masked": false,
+        "name": "emergency_contact",
+        "options": null,
+        "selector": "#emergency_contact",
+        "type": "text",
+        "value": "Sam Rivera"
+      },
+      {
+        "checked": null,
+        "id": "emergency_contact_phone",
+        "key": "emergency_contact_phone",
+        "label": null,
+        "masked": true,
+        "name": "emergency_contact_phone",
+        "options": null,
+        "selector": "#emergency_contact_phone",
+        "type": "text",
+        "value": "(555) 010-3000"
+      },
+      {
+        "checked": null,
+        "id": "howheard",
+        "key": "howheard",
+        "label": null,
+        "masked": false,
+        "name": "howheard",
+        "options": [
+          {
+            "label": "Friend",
+            "selected": true,
+            "value": "Friend"
+          },
+          {
+            "label": "Web search",
+            "selected": false,
+            "value": "Web search"
+          }
+        ],
+        "selector": "#howheard",
+        "type": "select",
+        "value": "Friend"
+      },
+      {
+        "checked": null,
+        "id": "howheard_details",
+        "key": "howheard_details",
+        "label": null,
+        "masked": false,
+        "name": "howheard_details",
+        "options": null,
+        "selector": "#howheard_details",
+        "type": "text",
+        "value": ""
+      },
+      {
+        "checked": null,
+        "id": "enrollment_blocked",
+        "key": "enrollment_blocked",
+        "label": null,
+        "masked": false,
+        "name": "enrollment_blocked",
+        "options": [
+          {
+            "label": "No",
+            "selected": true,
+            "value": "0"
+          },
+          {
+            "label": "Yes",
+            "selected": false,
+            "value": "1"
+          }
+        ],
+        "selector": "#enrollment_blocked",
+        "type": "select",
+        "value": "0"
+      },
+      {
+        "checked": null,
+        "id": "tags",
+        "key": "tags",
+        "label": null,
+        "masked": false,
+        "name": "tags",
+        "options": [
+          {
+            "label": "None",
+            "selected": false,
+            "value": "None"
+          },
+          {
+            "label": "Recital",
+            "selected": true,
+            "value": "Recital"
+          },
+          {
+            "label": "Competition",
+            "selected": false,
+            "value": "Competition"
+          }
+        ],
+        "selector": "#tags",
+        "type": "select",
+        "value": "Recital"
+      }
+    ],
+    "kind": "form",
+    "rows": [
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "guardian",
+            "key": "guardian",
+            "label": null,
+            "masked": false,
+            "name": "guardian",
+            "options": null,
+            "selector": "#guardian",
+            "type": "text",
+            "value": "Dana Lovelace"
+          }
+        ],
+        "label": "Guardian"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "last_name",
+            "key": "last_name",
+            "label": null,
+            "masked": false,
+            "name": "last_name",
+            "options": null,
+            "selector": "#last_name",
+            "type": "text",
+            "value": "Lovelace"
+          }
+        ],
+        "label": "Last Name"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "address1",
+            "key": "address1",
+            "label": null,
+            "masked": false,
+            "name": "address1",
+            "options": null,
+            "selector": "#address1",
+            "type": "text",
+            "value": "12 Ada Way"
+          }
+        ],
+        "label": "Address"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "address2",
+            "key": "address2",
+            "label": null,
+            "masked": false,
+            "name": "address2",
+            "options": null,
+            "selector": "#address2",
+            "type": "text",
+            "value": ""
+          }
+        ],
+        "label": "Address 2"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "city",
+            "key": "city",
+            "label": null,
+            "masked": false,
+            "name": "city",
+            "options": null,
+            "selector": "#city",
+            "type": "text",
+            "value": "Springfield"
+          }
+        ],
+        "label": "City"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "state",
+            "key": "state",
+            "label": null,
+            "masked": false,
+            "name": "state",
+            "options": [
+              {
+                "label": "California",
+                "selected": false,
+                "value": "CA"
+              },
+              {
+                "label": "New York",
+                "selected": true,
+                "value": "NY"
+              }
+            ],
+            "selector": "#state",
+            "type": "select",
+            "value": "NY"
+          }
+        ],
+        "label": "State"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "zip",
+            "key": "zip",
+            "label": null,
+            "masked": false,
+            "name": "zip",
+            "options": null,
+            "selector": "#zip",
+            "type": "text",
+            "value": "10001"
+          }
+        ],
+        "label": "Zip"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": null,
+            "key": "name:phone1_label",
+            "label": null,
+            "masked": false,
+            "name": "phone1_label",
+            "options": [
+              {
+                "label": "Home",
+                "selected": true,
+                "value": "Home"
+              },
+              {
+                "label": "Work",
+                "selected": false,
+                "value": "Work"
+              }
+            ],
+            "selector": "[name=\"phone1_label\"]",
+            "type": "select",
+            "value": "Home"
+          },
+          {
+            "checked": null,
+            "id": "phone1",
+            "key": "phone1",
+            "label": null,
+            "masked": true,
+            "name": "phone1",
+            "options": null,
+            "selector": "#phone1",
+            "type": "text",
+            "value": "(555) 010-2000"
+          }
+        ],
+        "label": "Phone 1"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": null,
+            "key": "name:phone2_label",
+            "label": null,
+            "masked": false,
+            "name": "phone2_label",
+            "options": [
+              {
+                "label": "Home",
+                "selected": false,
+                "value": "Home"
+              },
+              {
+                "label": "Work",
+                "selected": false,
+                "value": "Work"
+              }
+            ],
+            "selector": "[name=\"phone2_label\"]",
+            "type": "select",
+            "value": "Home"
+          },
+          {
+            "checked": null,
+            "id": "phone2",
+            "key": "phone2",
+            "label": null,
+            "masked": true,
+            "name": "phone2",
+            "options": null,
+            "selector": "#phone2",
+            "type": "text",
+            "value": ""
+          }
+        ],
+        "label": "Phone 2"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": null,
+            "key": "name:phone3_label",
+            "label": null,
+            "masked": false,
+            "name": "phone3_label",
+            "options": [
+              {
+                "label": "Home",
+                "selected": false,
+                "value": "Home"
+              },
+              {
+                "label": "Work",
+                "selected": false,
+                "value": "Work"
+              }
+            ],
+            "selector": "[name=\"phone3_label\"]",
+            "type": "select",
+            "value": "Home"
+          },
+          {
+            "checked": null,
+            "id": "phone3",
+            "key": "phone3",
+            "label": null,
+            "masked": true,
+            "name": "phone3",
+            "options": null,
+            "selector": "#phone3",
+            "type": "text",
+            "value": ""
+          }
+        ],
+        "label": "Phone 3"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "email",
+            "key": "email",
+            "label": null,
+            "masked": false,
+            "name": "email",
+            "options": null,
+            "selector": "#email",
+            "type": "text",
+            "value": "dana@example.com"
+          }
+        ],
+        "label": "Email"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "extra_emails",
+            "key": "extra_emails",
+            "label": null,
+            "masked": false,
+            "name": "extra_emails",
+            "options": null,
+            "selector": "#extra_emails",
+            "type": "text",
+            "value": ""
+          }
+        ],
+        "label": "Extra Emails"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "opt_out",
+            "key": "opt_out",
+            "label": null,
+            "masked": false,
+            "name": "opt_out",
+            "options": [
+              {
+                "label": "No",
+                "selected": false,
+                "value": "0"
+              },
+              {
+                "label": "Yes",
+                "selected": true,
+                "value": "1"
+              }
+            ],
+            "selector": "#opt_out",
+            "type": "select",
+            "value": "1"
+          }
+        ],
+        "label": "Opt Out"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "emergency_contact",
+            "key": "emergency_contact",
+            "label": null,
+            "masked": false,
+            "name": "emergency_contact",
+            "options": null,
+            "selector": "#emergency_contact",
+            "type": "text",
+            "value": "Sam Rivera"
+          }
+        ],
+        "label": "Emergency Contact"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "emergency_contact_phone",
+            "key": "emergency_contact_phone",
+            "label": null,
+            "masked": true,
+            "name": "emergency_contact_phone",
+            "options": null,
+            "selector": "#emergency_contact_phone",
+            "type": "text",
+            "value": "(555) 010-3000"
+          }
+        ],
+        "label": "Emergency Phone"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "howheard",
+            "key": "howheard",
+            "label": null,
+            "masked": false,
+            "name": "howheard",
+            "options": [
+              {
+                "label": "Friend",
+                "selected": true,
+                "value": "Friend"
+              },
+              {
+                "label": "Web search",
+                "selected": false,
+                "value": "Web search"
+              }
+            ],
+            "selector": "#howheard",
+            "type": "select",
+            "value": "Friend"
+          }
+        ],
+        "label": "How Heard"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "howheard_details",
+            "key": "howheard_details",
+            "label": null,
+            "masked": false,
+            "name": "howheard_details",
+            "options": null,
+            "selector": "#howheard_details",
+            "type": "text",
+            "value": ""
+          }
+        ],
+        "label": "Details"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "enrollment_blocked",
+            "key": "enrollment_blocked",
+            "label": null,
+            "masked": false,
+            "name": "enrollment_blocked",
+            "options": [
+              {
+                "label": "No",
+                "selected": true,
+                "value": "0"
+              },
+              {
+                "label": "Yes",
+                "selected": false,
+                "value": "1"
+              }
+            ],
+            "selector": "#enrollment_blocked",
+            "type": "select",
+            "value": "0"
+          }
+        ],
+        "label": "Enrollment Blocked"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "tags",
+            "key": "tags",
+            "label": null,
+            "masked": false,
+            "name": "tags",
+            "options": [
+              {
+                "label": "None",
+                "selected": false,
+                "value": "None"
+              },
+              {
+                "label": "Recital",
+                "selected": true,
+                "value": "Recital"
+              },
+              {
+                "label": "Competition",
+                "selected": false,
+                "value": "Competition"
+              }
+            ],
+            "selector": "#tags",
+            "type": "select",
+            "value": "Recital"
+          }
+        ],
+        "label": "Tags"
+      }
+    ],
+    "title": "Edit Family"
+  },
+  "model": {
+    "confirm": null,
+    "index": null,
+    "list": {
+      "items": [
+        {
+          "href": "admin.sd?page=EditFamily&fident=4401",
+          "label": "Lovelace Family",
+          "type": "Family"
+        },
+        {
+          "href": "admin.sd?page=EditFamily&fident=4402",
+          "label": "Hopper Family",
+          "type": "Family"
+        },
+        {
+          "href": "admin.sd?page=EditFamily&fident=4403",
+          "label": "Rivera Family",
+          "type": "Family"
+        }
+      ],
+      "kind": "list",
+      "label": "Families",
+      "mixed": false,
+      "title": "Edit Family",
+      "total": 4291,
+      "truncated": true,
+      "types": [
+        "Family"
+      ]
+    },
+    "nav": [
+      {
+        "href": "admin.sd?page=HomePage&clicktab=Home",
+        "label": "Home"
+      },
+      {
+        "href": "admin.sd?page=CalendarPage&clicktab=Class+Calendar",
+        "label": "Class Calendar"
+      },
+      {
+        "href": "admin.sd?page=NewClass&clicktab=Classes",
+        "label": "Classes"
+      },
+      {
+        "href": "admin.sd?page=NewFamily&clicktab=Families",
+        "label": "Families"
+      },
+      {
+        "href": "admin.sd?page=NewStudent&clicktab=Students",
+        "label": "Students"
+      },
+      {
+        "href": "admin.sd?page=NewInstructor&clicktab=Instructors",
+        "label": "Instructors"
+      },
+      {
+        "href": "admin.sd?page=ChargesHome&clicktab=Charges",
+        "label": "Charges & Payments"
+      },
+      {
+        "href": "admin.sd?page=EmailTextHome&clicktab=Communications",
+        "label": "Communications"
+      },
+      {
+        "href": "admin.sd?page=AdvSearch&clicktab=Advanced+Search",
+        "label": "Advanced Search"
+      },
+      {
+        "href": "admin.sd?page=ReportsHome&clicktab=Reports",
+        "label": "Reports"
+      },
+      {
+        "href": "admin.sd?page=AdminHome&clicktab=Settings",
+        "label": "Settings"
+      }
+    ],
+    "note": null,
+    "report": null,
+    "settings": null,
+    "sheet": null,
+    "task": null,
+    "title": "Edit Family",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EditFamily&fident=1503525685676",
+    "view": "list",
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EditFamily&fident=1503525685676",
+  "view": "list"
+}

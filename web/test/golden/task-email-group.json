@@ -1,0 +1,751 @@
+{
+  "file": "task-email-group.html",
+  "form": {
+    "breadcrumb": [
+      "Home",
+      "Communications"
+    ],
+    "fields": [
+      {
+        "checked": null,
+        "id": "from_address",
+        "key": "from_address",
+        "label": null,
+        "masked": false,
+        "name": "from_address",
+        "options": [
+          {
+            "label": "Studio Office",
+            "selected": true,
+            "value": "0"
+          },
+          {
+            "label": "Billing",
+            "selected": false,
+            "value": "1"
+          }
+        ],
+        "selector": "#from_address",
+        "type": "select",
+        "value": "0"
+      },
+      {
+        "checked": null,
+        "id": "group",
+        "key": "group",
+        "label": null,
+        "masked": false,
+        "name": "group",
+        "options": [
+          {
+            "label": "Everyone",
+            "selected": true,
+            "value": "all"
+          },
+          {
+            "label": "Active students",
+            "selected": false,
+            "value": "active"
+          }
+        ],
+        "selector": "#group",
+        "type": "select",
+        "value": "all"
+      },
+      {
+        "checked": null,
+        "id": "subject",
+        "key": "subject",
+        "label": null,
+        "masked": false,
+        "name": "subject",
+        "options": null,
+        "selector": "#subject",
+        "type": "text",
+        "value": ""
+      },
+      {
+        "checked": null,
+        "id": "body",
+        "key": "body",
+        "label": null,
+        "masked": false,
+        "name": "body",
+        "options": null,
+        "selector": "#body",
+        "type": "textarea",
+        "value": ""
+      },
+      {
+        "checked": false,
+        "id": "attach",
+        "key": "attach",
+        "label": null,
+        "masked": false,
+        "name": "attach",
+        "options": null,
+        "selector": "#attach",
+        "type": "checkbox",
+        "value": null
+      },
+      {
+        "checked": true,
+        "id": "copy",
+        "key": "copy",
+        "label": null,
+        "masked": false,
+        "name": "copy",
+        "options": null,
+        "selector": "#copy",
+        "type": "checkbox",
+        "value": null
+      }
+    ],
+    "kind": "form",
+    "rows": [
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "from_address",
+            "key": "from_address",
+            "label": null,
+            "masked": false,
+            "name": "from_address",
+            "options": [
+              {
+                "label": "Studio Office",
+                "selected": true,
+                "value": "0"
+              },
+              {
+                "label": "Billing",
+                "selected": false,
+                "value": "1"
+              }
+            ],
+            "selector": "#from_address",
+            "type": "select",
+            "value": "0"
+          }
+        ],
+        "label": "From"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "group",
+            "key": "group",
+            "label": null,
+            "masked": false,
+            "name": "group",
+            "options": [
+              {
+                "label": "Everyone",
+                "selected": true,
+                "value": "all"
+              },
+              {
+                "label": "Active students",
+                "selected": false,
+                "value": "active"
+              }
+            ],
+            "selector": "#group",
+            "type": "select",
+            "value": "all"
+          }
+        ],
+        "label": "Send to"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "subject",
+            "key": "subject",
+            "label": null,
+            "masked": false,
+            "name": "subject",
+            "options": null,
+            "selector": "#subject",
+            "type": "text",
+            "value": ""
+          }
+        ],
+        "label": "Subject"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "body",
+            "key": "body",
+            "label": null,
+            "masked": false,
+            "name": "body",
+            "options": null,
+            "selector": "#body",
+            "type": "textarea",
+            "value": ""
+          }
+        ],
+        "label": "Message"
+      },
+      {
+        "fields": [
+          {
+            "checked": false,
+            "id": "attach",
+            "key": "attach",
+            "label": null,
+            "masked": false,
+            "name": "attach",
+            "options": null,
+            "selector": "#attach",
+            "type": "checkbox",
+            "value": null
+          }
+        ],
+        "label": "Attach"
+      },
+      {
+        "fields": [
+          {
+            "checked": true,
+            "id": "copy",
+            "key": "copy",
+            "label": null,
+            "masked": false,
+            "name": "copy",
+            "options": null,
+            "selector": "#copy",
+            "type": "checkbox",
+            "value": null
+          }
+        ],
+        "label": "Send a copy to myself"
+      }
+    ],
+    "title": "Email to Group"
+  },
+  "model": {
+    "confirm": null,
+    "index": null,
+    "list": null,
+    "nav": [
+      {
+        "href": "admin.sd?page=HomePage",
+        "label": "Home"
+      },
+      {
+        "href": "admin.sd?page=NewClass",
+        "label": "Class"
+      },
+      {
+        "href": "admin.sd?page=EmailTextHome",
+        "label": "Communications"
+      }
+    ],
+    "note": null,
+    "report": null,
+    "settings": null,
+    "sheet": null,
+    "task": {
+      "actions": [
+        {
+          "href": "#",
+          "id": "composeemail",
+          "js": true,
+          "label": "Compose Email",
+          "onclick": "StudioDir.onSubmit('SendEmail');;return false;"
+        },
+        {
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "Display family/instructor email addresses to select from",
+          "onclick": "StudioDir.onSubmit('showList');;return false;"
+        }
+      ],
+      "breadcrumb": [
+        "Home",
+        "Communications"
+      ],
+      "fields": [
+        {
+          "checked": null,
+          "id": "from_address",
+          "key": "from_address",
+          "label": null,
+          "masked": false,
+          "name": "from_address",
+          "options": [
+            {
+              "label": "Studio Office",
+              "selected": true,
+              "value": "0"
+            },
+            {
+              "label": "Billing",
+              "selected": false,
+              "value": "1"
+            }
+          ],
+          "selector": "#from_address",
+          "type": "select",
+          "value": "0"
+        },
+        {
+          "checked": null,
+          "id": "group",
+          "key": "group",
+          "label": null,
+          "masked": false,
+          "name": "group",
+          "options": [
+            {
+              "label": "Everyone",
+              "selected": true,
+              "value": "all"
+            },
+            {
+              "label": "Active students",
+              "selected": false,
+              "value": "active"
+            }
+          ],
+          "selector": "#group",
+          "type": "select",
+          "value": "all"
+        },
+        {
+          "checked": null,
+          "id": "subject",
+          "key": "subject",
+          "label": null,
+          "masked": false,
+          "name": "subject",
+          "options": null,
+          "selector": "#subject",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "body",
+          "key": "body",
+          "label": null,
+          "masked": false,
+          "name": "body",
+          "options": null,
+          "selector": "#body",
+          "type": "textarea",
+          "value": ""
+        },
+        {
+          "checked": false,
+          "id": "attach",
+          "key": "attach",
+          "label": null,
+          "masked": false,
+          "name": "attach",
+          "options": null,
+          "selector": "#attach",
+          "type": "checkbox",
+          "value": null
+        },
+        {
+          "checked": true,
+          "id": "copy",
+          "key": "copy",
+          "label": null,
+          "masked": false,
+          "name": "copy",
+          "options": null,
+          "selector": "#copy",
+          "type": "checkbox",
+          "value": null
+        }
+      ],
+      "form": {
+        "breadcrumb": [
+          "Home",
+          "Communications"
+        ],
+        "fields": [
+          {
+            "checked": null,
+            "id": "from_address",
+            "key": "from_address",
+            "label": null,
+            "masked": false,
+            "name": "from_address",
+            "options": [
+              {
+                "label": "Studio Office",
+                "selected": true,
+                "value": "0"
+              },
+              {
+                "label": "Billing",
+                "selected": false,
+                "value": "1"
+              }
+            ],
+            "selector": "#from_address",
+            "type": "select",
+            "value": "0"
+          },
+          {
+            "checked": null,
+            "id": "group",
+            "key": "group",
+            "label": null,
+            "masked": false,
+            "name": "group",
+            "options": [
+              {
+                "label": "Everyone",
+                "selected": true,
+                "value": "all"
+              },
+              {
+                "label": "Active students",
+                "selected": false,
+                "value": "active"
+              }
+            ],
+            "selector": "#group",
+            "type": "select",
+            "value": "all"
+          },
+          {
+            "checked": null,
+            "id": "subject",
+            "key": "subject",
+            "label": null,
+            "masked": false,
+            "name": "subject",
+            "options": null,
+            "selector": "#subject",
+            "type": "text",
+            "value": ""
+          },
+          {
+            "checked": null,
+            "id": "body",
+            "key": "body",
+            "label": null,
+            "masked": false,
+            "name": "body",
+            "options": null,
+            "selector": "#body",
+            "type": "textarea",
+            "value": ""
+          },
+          {
+            "checked": false,
+            "id": "attach",
+            "key": "attach",
+            "label": null,
+            "masked": false,
+            "name": "attach",
+            "options": null,
+            "selector": "#attach",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": true,
+            "id": "copy",
+            "key": "copy",
+            "label": null,
+            "masked": false,
+            "name": "copy",
+            "options": null,
+            "selector": "#copy",
+            "type": "checkbox",
+            "value": null
+          }
+        ],
+        "kind": "form",
+        "rows": [
+          {
+            "fields": [
+              {
+                "checked": null,
+                "id": "from_address",
+                "key": "from_address",
+                "label": null,
+                "masked": false,
+                "name": "from_address",
+                "options": [
+                  {
+                    "label": "Studio Office",
+                    "selected": true,
+                    "value": "0"
+                  },
+                  {
+                    "label": "Billing",
+                    "selected": false,
+                    "value": "1"
+                  }
+                ],
+                "selector": "#from_address",
+                "type": "select",
+                "value": "0"
+              }
+            ],
+            "label": "From"
+          },
+          {
+            "fields": [
+              {
+                "checked": null,
+                "id": "group",
+                "key": "group",
+                "label": null,
+                "masked": false,
+                "name": "group",
+                "options": [
+                  {
+                    "label": "Everyone",
+                    "selected": true,
+                    "value": "all"
+                  },
+                  {
+                    "label": "Active students",
+                    "selected": false,
+                    "value": "active"
+                  }
+                ],
+                "selector": "#group",
+                "type": "select",
+                "value": "all"
+              }
+            ],
+            "label": "Send to"
+          },
+          {
+            "fields": [
+              {
+                "checked": null,
+                "id": "subject",
+                "key": "subject",
+                "label": null,
+                "masked": false,
+                "name": "subject",
+                "options": null,
+                "selector": "#subject",
+                "type": "text",
+                "value": ""
+              }
+            ],
+            "label": "Subject"
+          },
+          {
+            "fields": [
+              {
+                "checked": null,
+                "id": "body",
+                "key": "body",
+                "label": null,
+                "masked": false,
+                "name": "body",
+                "options": null,
+                "selector": "#body",
+                "type": "textarea",
+                "value": ""
+              }
+            ],
+            "label": "Message"
+          },
+          {
+            "fields": [
+              {
+                "checked": false,
+                "id": "attach",
+                "key": "attach",
+                "label": null,
+                "masked": false,
+                "name": "attach",
+                "options": null,
+                "selector": "#attach",
+                "type": "checkbox",
+                "value": null
+              }
+            ],
+            "label": "Attach"
+          },
+          {
+            "fields": [
+              {
+                "checked": true,
+                "id": "copy",
+                "key": "copy",
+                "label": null,
+                "masked": false,
+                "name": "copy",
+                "options": null,
+                "selector": "#copy",
+                "type": "checkbox",
+                "value": null
+              }
+            ],
+            "label": "Send a copy to myself"
+          }
+        ],
+        "title": "Email to Group"
+      },
+      "kind": "task",
+      "links": [
+        {
+          "href": "admin.sd?page=EmailTemplates",
+          "label": "Email templates"
+        }
+      ],
+      "primary": {
+        "href": "#",
+        "id": "composeemail",
+        "js": true,
+        "label": "Compose Email",
+        "onclick": "StudioDir.onSubmit('SendEmail');;return false;"
+      },
+      "rows": [
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "from_address",
+              "key": "from_address",
+              "label": null,
+              "masked": false,
+              "name": "from_address",
+              "options": [
+                {
+                  "label": "Studio Office",
+                  "selected": true,
+                  "value": "0"
+                },
+                {
+                  "label": "Billing",
+                  "selected": false,
+                  "value": "1"
+                }
+              ],
+              "selector": "#from_address",
+              "type": "select",
+              "value": "0"
+            }
+          ],
+          "label": "From"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "group",
+              "key": "group",
+              "label": null,
+              "masked": false,
+              "name": "group",
+              "options": [
+                {
+                  "label": "Everyone",
+                  "selected": true,
+                  "value": "all"
+                },
+                {
+                  "label": "Active students",
+                  "selected": false,
+                  "value": "active"
+                }
+              ],
+              "selector": "#group",
+              "type": "select",
+              "value": "all"
+            }
+          ],
+          "label": "Send to"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "subject",
+              "key": "subject",
+              "label": null,
+              "masked": false,
+              "name": "subject",
+              "options": null,
+              "selector": "#subject",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Subject"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "body",
+              "key": "body",
+              "label": null,
+              "masked": false,
+              "name": "body",
+              "options": null,
+              "selector": "#body",
+              "type": "textarea",
+              "value": ""
+            }
+          ],
+          "label": "Message"
+        },
+        {
+          "fields": [
+            {
+              "checked": false,
+              "id": "attach",
+              "key": "attach",
+              "label": null,
+              "masked": false,
+              "name": "attach",
+              "options": null,
+              "selector": "#attach",
+              "type": "checkbox",
+              "value": null
+            }
+          ],
+          "label": "Attach"
+        },
+        {
+          "fields": [
+            {
+              "checked": true,
+              "id": "copy",
+              "key": "copy",
+              "label": null,
+              "masked": false,
+              "name": "copy",
+              "options": null,
+              "selector": "#copy",
+              "type": "checkbox",
+              "value": null
+            }
+          ],
+          "label": "Send a copy to myself"
+        }
+      ],
+      "title": "Email to Group"
+    },
+    "title": "Email to Group",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EmailToGroupForm",
+    "view": "task",
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EmailToGroupForm",
+  "view": "task"
+}

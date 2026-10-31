@@ -1,0 +1,138 @@
+// Everything that is true of every page, and nothing that is true of one.
+//
+// The shell below is taken from live dumps of the app:
+//
+//   form#idForm > .topBarContainer + .standardMainContent
+//   .standardMainContent > #sideNavBar (a.sideNavLink ...) + #mainContent
+//   #mainContent > .contentContainer > .Content > .formTitle / .contentInfo
+
+export function parseHtml(html) {
+  return new DOMParser().parseFromString(html, 'text/html');
+}
+
+export function textOf(node) {
+  if (!node) return '';
+  return String(node.textContent || '').replace(/\s+/g, ' ').trim();
+}
+
+export function qs(root, sel) {
+  return root ? root.querySelector(sel) : null;
+}
+
+export function qsa(root, sel) {
+  return root ? Array.from(root.querySelectorAll(sel)) : [];
+}
+
+export function pageName(href) {
+  try {
+    return new URL(href, 'http://x/').searchParams.get('page') || '';
+  } catch (e) {
+    return '';
+  }
+}
+
+// The app navigates with `?page=<name>&clicktab=<tab>`, the record list filters
+// client-side with `filter`, and global search puts the query in `searchText`.
+// Any *other* query parameter means the page is showing one specific record: the
+// calendar's own links look like `admin.sd?page=EditClass&cident=…`, and a list
+// item's link takes the same shape. Keys are compared lower-cased because the
+// app's own casing is not consistent (`searchText`).
+const NAV_PARAMS = new Set(['page', 'clicktab', 'filter', 'searchtext']);
+
+function isNavParam(key) {
+  return NAV_PARAMS.has(String(key).toLowerCase());
+}
+
+export function recordParams(href) {
+  try {
+    const url = new URL(href, 'http://x/');
+    const out = [];
+    for (const [key, value] of url.searchParams) {
+      if (!isNavParam(key) && value !== '') out.push(key);
+    }
+    return out;
+  } catch (e) {
+    return [];
+  }
+}
+
+// The value of the record parameter, so the list can mark the row you are on.
+export function recordId(href) {
+  try {
+    const url = new URL(href, 'http://x/');
+    for (const [key, value] of url.searchParams) {
+      if (!isNavParam(key) && value !== '') return value;
+    }
+  } catch (e) { /* not a url */ }
+  return '';
+}
+
+// A page that is editing one record is handed back to the app untouched: it is
+// the editor, and covering a form with the list is how you end up unable to
+// edit anything. `EditClass`-style page names count even without a parameter.
+export function isRecordPage(href) {
+  if (recordParams(href).length) return true;
+  return /^Edit/i.test(pageName(href));
+}
+
+export function titleOf(doc) {
+  return textOf(qs(doc, '.formTitle, .ReportName, h1'));
+}
+
+// The sign-in screen is never replaced: that is where the session is created.
+export function isLoginPage(doc) {
+  const form = qs(doc, 'form#idForm');
+  if (form && /login\.sd/i.test(form.getAttribute('action') || '')) return true;
+  return !!qs(doc, '.LoginContainer');
+}
+
+export function hasShell(doc) {
+  return !!(qs(doc, '#mainContent') || qs(doc, '.standardMainContent'));
+}
+
+// The app prints each rail label twice ("HomeHome", "Class CalendarClass
+// Calendar"), so a label that is exactly its own second half is folded back.
+export function oneLabel(label) {
+  const s = String(label || '').trim();
+  const n = s.length;
+  if (n >= 4 && n % 2 === 0 && s.slice(0, n / 2) === s.slice(n / 2)) return s.slice(0, n / 2).trim();
+  return s;
+}
+
+export function railLinks(doc) {
+  const out = [];
+  const seen = new Set();
+  for (const a of qsa(doc, '#sideNavBar a.sideNavLink')) {
+    const href = a.getAttribute('href') || '';
+    const label = oneLabel(textOf(a));
+    if (!href || !label) continue;
+    const key = pageName(href) || href;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({ label, href });
+  }
+  return out;
+}
+
+export class SessionExpired extends Error {
+  constructor() {
+    super('Session expired');
+    this.name = 'SessionExpired';
+  }
+}
+
+// One same-origin GET, with the browser's own cookies. No credentials are read,
+// stored or sent anywhere else.
+export async function fetchPage(url) {
+  let res;
+  try {
+    res = await fetch(url, { credentials: 'same-origin', redirect: 'follow' });
+  } catch (err) {
+    throw new Error('Network error: ' + (err && err.message ? err.message : String(err)));
+  }
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const html = await res.text();
+  const doc = parseHtml(html);
+  if (isLoginPage(doc)) throw new SessionExpired();
+  return { doc, finalUrl: res.url || url };
+}

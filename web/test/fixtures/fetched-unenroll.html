@@ -1,0 +1,43 @@
+<!doctype html>
+<!--
+  The FETCHED copy of Unenroll(cident,sident), as the crawler recorded it:
+  title "Drop Student", 0 tables, 0 rows, 0 controls, 5 links, 1 form.
+
+  This is not a capture of the rendered page. The live one is drawn by the app's
+  own JS and is measured in docs/live-sample.json (5 controls, 5 links, 1 button,
+  196 chars), which is why no fixture of it is written here: hand-authored markup
+  of a JS-drawn screen would be invention, and a test that passes against
+  invented markup is worse than no test.
+
+  What this pins is the *fetched* verdict, and it is not what the map predicted:
+  the content root holds six links — five actions plus the breadcrumb — which is
+  exactly readNote's six-link gate, so the note refuses. readIndex excludes the
+  breadcrumb as chrome and sees only five items, so it refuses too, and the page
+  lands on no view at all. main.js then takes its `!model.view` live re-read
+  branch: that, not the note tiebreaker, is the path this screen really travels.
+-->
+<html lang="en"><body>
+<form id="idForm">
+  <div id="sideNavBar">
+    <a class="sideNavLink" href="admin.sd?page=HomePage">Home</a>
+    <a class="sideNavLink" href="admin.sd?page=NewClass">Classes</a>
+    <a class="sideNavLink" href="admin.sd?page=NewStudent">Students</a>
+  </div>
+  <div class="topBarContainer"><div class="topBar"></div></div>
+  <div id="mainContent"><div class="contentContainer"><div class="Content">
+    <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a> / Classes</div>
+    <div class="formTitle">Drop Student</div>
+    <div class="ButtonBar"></div>
+    <div class="contentInfo">
+      <p>Dropping the student removes them from this class. The charge stays on the family unless it is removed too.</p>
+      <p>
+        <a href="admin.sd?page=HomePage">Home</a>
+        <a href="admin.sd?page=SwitchClasses&amp;sident=1629799984805">Switch Classes</a>
+        <a class="Btn" href="#" id="continue">Continue</a>
+        <a href="admin.sd?page=EditFamily&amp;fident=1503525685676">Go to Karmen</a>
+        <a href="admin.sd?page=EditClass&amp;cident=1782910697458">Go to 818 Ballet</a>
+      </p>
+    </div>
+  </div></div></div>
+</form>
+</body></html>

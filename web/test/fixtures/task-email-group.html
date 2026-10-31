@@ -1,0 +1,44 @@
+<!doctype html>
+<html><head><title>Studio Director</title></head>
+<body>
+<form id="idForm" action="admin.sd" method="post">
+  <input type="hidden" id="idPage" name="idPage" value="EmailToGroupForm">
+  <input type="hidden" id="idMeth" name="idMeth" value="">
+  <input type="hidden" id="idMethArgs" name="idMethArgs" value="">
+  <input type="hidden" id="searchidx" name="searchidx" value="0">
+  <div class="topBarContainer">
+    <div class="searchBox"><input type="text" id="searchText" name="searchText"><a id="search" href="#">Search</a></div>
+    <a id="save" href="#">Save</a>
+  </div>
+  <div class="standardMainContent">
+    <div id="sideNavBar">
+      <a class="sideNavLink" href="admin.sd?page=HomePage">HomeHome</a>
+      <a class="sideNavLink" href="admin.sd?page=NewClass">ClassClass</a>
+      <a class="sideNavLink" href="admin.sd?page=EmailTextHome">CommunicationsCommunications</a>
+    </div>
+    <div id="mainContent">
+      <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a> / <a href="admin.sd?page=EmailTextHome">Communications</a></div>
+      <div class="contentContainer">
+        <div class="Content">
+          <div class="formTitle">Email to Group</div>
+          <table class="FormEx">
+            <tbody>
+              <tr><td>From</td><td><select id="from_address" name="from_address"><option value="0" selected>Studio Office</option><option value="1">Billing</option></select></td></tr>
+              <tr><td>Send to</td><td><select id="group" name="group"><option value="all" selected>Everyone</option><option value="active">Active students</option></select></td></tr>
+              <tr><td>Subject</td><td><input id="subject" name="subject" type="text" value=""></td></tr>
+              <tr><td>Message</td><td><textarea id="body" name="body" rows="6"></textarea></td></tr>
+              <tr><td>Attach</td><td><input id="attach" name="attach" type="checkbox"></td></tr>
+              <tr><td>Send a copy to myself</td><td><input id="copy" name="copy" type="checkbox" checked></td></tr>
+            </tbody>
+          </table>
+          <div class="ButtonBar">
+            <a id="composeemail" class="Btn" href="#" onclick="StudioDir.onSubmit('SendEmail');;return false;">Compose Email</a>
+            <a href="#" onclick="StudioDir.onSubmit('showList');;return false;">Display family/instructor email addresses to select from</a>
+          </div>
+          <a href="admin.sd?page=EmailTemplates">Email templates</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</body></html>

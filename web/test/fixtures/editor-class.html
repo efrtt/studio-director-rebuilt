@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html><body>
+<form id="idForm" action="admin.sd" method="post">
+  <div class="standardMainContent">
+    <div id="sideNavBar">
+      <a class="sideNavLink" href="admin.sd?page=HomePage&clicktab=Home">HomeHome</a>
+      <a class="sideNavLink" href="admin.sd?page=CalendarPage&clicktab=Class+Calendar">Class CalendarClass Calendar</a>
+      <a class="sideNavLink" href="admin.sd?page=NewClass&clicktab=Classes">ClassesClasses</a>
+      <a class="sideNavLink" href="admin.sd?page=NewFamily&clicktab=Families">FamiliesFamilies</a>
+      <a class="sideNavLink" href="admin.sd?page=NewStudent&clicktab=Students">StudentsStudents</a>
+      <a class="sideNavLink" href="admin.sd?page=NewInstructor&clicktab=Instructors">InstructorsInstructors</a>
+      <a class="sideNavLink" href="admin.sd?page=ChargesHome&clicktab=Charges">Charges &amp; PaymentsCharges &amp; Payments</a>
+      <a class="sideNavLink" href="admin.sd?page=EmailTextHome&clicktab=Communications">CommunicationsCommunications</a>
+      <a class="sideNavLink" href="admin.sd?page=AdvSearch&clicktab=Advanced+Search">Advanced SearchAdvanced Search</a>
+      <a class="sideNavLink" href="admin.sd?page=ReportsHome&clicktab=Reports">ReportsReports</a>
+      <a class="sideNavLink" href="admin.sd?page=AdminHome&clicktab=Settings">SettingsSettings</a>
+      <div class="copyright">©</div>
+    </div>
+    <div id="mainContent" class="mainContent wideContent">
+      <div class="contentContainer">
+        <div id="idSearchSpan" class="searchResultPanel">
+          <div class="searchResultBar"><div class="searchResultLabel">Classes</div></div>
+          <div class="searchResultLabel">
+            <input id="filter" name="filter" type="text">
+            <p>3 of 288</p>
+          </div>
+          <div class="searchResultList">
+            <div class="searchResultItem"><a href="admin.sd?page=NewClass&amp;cident=101">Ballet III - Mon 4:00p</a></div>
+            <div class="searchResultItem"><a href="admin.sd?page=NewClass&amp;cident=102">Jazz I - Tue 5:30p</a></div>
+            <div class="searchResultItem"><a href="admin.sd?page=NewClass&amp;cident=104">Hip Hop - Mon 4:00p</a></div>
+          </div>
+        </div>
+        <div class="Content">
+          <div class="formTitle">New Class</div>
+          <div class="contentInfo">
+            <table class="FormEx"><tbody>
+              <tr><td><span id="name__label">Name</span></td><td><span id="name__field"><input id="name" name="name" type="text"></span></td></tr>
+              <tr><td><span id="season__label">Season</span></td><td><select id="season" name="season"><option>Fall</option><option>Winter</option></select></td></tr>
+              <tr><td><span id="max_size__label">Max Size</span></td><td><input id="max_size" name="max_size" type="text"></td></tr>
+            </tbody></table>
+            <table class="WeekdayCheckboxes"><tbody>
+              <tr><td><input id="day__1" name="day" type="checkbox"></td><td><input id="day__2" name="day" type="checkbox"></td></tr>
+            </tbody></table>
+            <table id="weeklyregtable" class="FormEx table-hidden"><tbody>
+              <tr><td>x</td><td><input id="weeklyregopen" type="checkbox"></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</body></html>

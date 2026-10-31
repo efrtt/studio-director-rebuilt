@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html><body>
+<form id="idForm" action="admin.sd" method="post">
+  <input id="idPage" type="hidden" value="ClassRosterForm">
+  <input id="idMeth" type="hidden">
+  <input id="idMethArgs" type="hidden">
+  <div class="standardMainContent">
+    <div id="sideNavBar">
+      <a class="sideNavLink" href="admin.sd?page=HomePage&clicktab=Home">HomeHome</a>
+      <a class="sideNavLink" href="admin.sd?page=ReportsHome&clicktab=Reports">ReportsReports</a>
+    </div>
+    <div id="mainContent" class="mainContent wideContent">
+      <div class="contentContainer">
+        <div class="Content">
+          <div class="Breadcrumb"><a href="admin.sd?page=ReportsHome">Reports</a><a href="#">Class Roster</a></div>
+          <div class="formTitle">Class Roster</div>
+          <div class="ButtonBar">
+            <a id="runreport" class="Btn" href="#">Run Report</a>
+            <a id="reset" class="BtnOutln" href="#">Reset</a>
+          </div>
+          <div class="contentInfo">
+            <table class="Form"><tbody>
+              <tr><td><span id="classes_season__label">Season</span></td><td><select id="classes_season" name="classes_season"><option value="">All seasons</option><option selected>Fall 2026</option><option>Winter 2026</option></select></td></tr>
+              <tr><td><span id="classes_names__label">Class Name</span></td><td><input id="classes_name" name="classes_name" type="text" value=""></td></tr>
+              <tr><td><span id="classes_type__label">Class Type</span></td><td><select id="classes_type" name="classes_type"><option selected>All types</option><option>Ballet</option><option>Jazz</option><option>Tap</option></select></td></tr>
+              <tr><td><span id="classes_location__label">Location</span></td><td><select id="classes_location" name="classes_location"><option selected>All studios</option><option>Studio A</option><option>Studio B</option></select></td></tr>
+              <tr><td><span id="classes_instructor__label">Instructor</span></td><td><select id="classes_instructor" name="classes_instructor"><option selected>All instructors</option><option>Ms. Rivera</option></select></td></tr>
+              <tr><td><span id="classes_day__label">Day</span></td><td>
+                <table class="WeekdayCheckboxes"><tbody>
+                  <tr><td><input id="classes_day__1" name="days" type="checkbox"></td><td><input id="classes_day__2" name="days" type="checkbox"></td><td><input id="classes_day__4" name="days" type="checkbox"></td><td><input id="classes_day__8" name="days" type="checkbox"></td><td><input id="classes_day__16" name="days" type="checkbox"></td><td><input id="classes_day__32" name="days" type="checkbox"></td><td><input id="classes_day__64" name="days" type="checkbox"></td></tr>
+                </tbody></table>
+              </td></tr>
+              <tr><td><span id="virtual_enrolled__label">Enrolled</span></td><td><select id="virtual_enrolled" name="virtual_enrolled"><option selected>Any</option><option>Has students</option></select></td></tr>
+            </tbody></table>
+            <table class="ReportTable"><tbody>
+              <tr><th>Class</th><th>Day</th><th>Time</th><th>Instructor</th><th class="AR">Enrolled</th></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</body></html>

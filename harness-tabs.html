@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Studio Director - harness (tabs)</title>
+<link rel="stylesheet" href="https://app.thestudiodirector.com/studio1/html/admin.css">
+</head>
+<body>
+
+<form id="idForm" method="post" action="admin.sd">
+  <input type="hidden" id="idPage" value="EditFamily">
+
+  <div class="topBarContainer">
+    <div id="sideBarTop" class="sideNavTopCollapsed"><div class="sideNavCtrlBar"></div></div>
+    <div class="topBar">
+      <a href="admin.sd?page=Home">The Studio Director</a>
+      <div class="topBarSeparator"></div>
+      <div class="searchBox"><input type="search" placeholder="Search"></div>
+      <a class="menuLink" href="admin.sd?page=Help">Help</a>
+    </div>
+  </div>
+
+  <div class="standardMainContent">
+    <div id="sideNavBar" class="sideNavCollapsed" style="width:210px">
+      <a class="sideNavLink" href="admin.sd?page=Home">Home</a>
+      <a class="sideNavLink" href="admin.sd?page=Classes">Classes</a>
+      <a class="sideNavLink" href="admin.sd?page=Families">Families</a>
+      <a class="sideNavLink" href="admin.sd?page=Reports">Reports</a>
+    </div>
+
+    <div id="mainContent" class="mainContent wideContent">
+      <div class="contentContainer">
+        <div class="Content">
+
+          <div class="Breadcrumb">
+            <a href="admin.sd?page=Families">Families</a>
+            <i class="fa-solid fa-angle-right"></i>
+            <a href="#">Lovelace</a>
+          </div>
+
+          <div class="formTitle">Lovelace, Ada</div>
+
+          <div class="ButtonBar">
+            <a id="new" class="Btn" href="#">New</a>
+            <a id="save" class="Btn" href="#">Save</a>
+            <a id="print" class="BtnOutln" href="#">Print</a>
+          </div>
+
+          <div class="contentInfo">
+            <input type="hidden" id="ResetPwdFlag" value="0">
+
+            <div class="tabContainer">
+              <div id="tab-overview" class="tab">Overview</div>
+              <div id="tab-students" class="tab">Students</div>
+              <div id="tab-ledger" class="tab selectedTab">Ledger</div>
+              <div id="tab-notes" class="tab">Notes</div>
+            </div>
+
+            <div id="tab-overview-content" class="tabContent" style="display:none">
+              <table width="100%">
+                <tbody>
+                  <tr><th>Student</th><th>Age</th><th>Balance</th></tr>
+                  <tr><td>Ada Lovelace</td><td>11</td><td>$145.00</td></tr>
+                  <tr><td>Grace Hopper</td><td>10</td><td>$0.00</td></tr>
+                  <tr><td>Katherine Johnson</td><td>12</td><td>$320.50</td></tr>
+                  <tr><td>Margaret Hamilton</td><td>9</td><td>$12.00</td></tr>
+                  <tr><td>Dorothy Vaughan</td><td>13</td><td>$88.25</td></tr>
+                  <tr><td>Mary Jackson</td><td>11</td><td>$0.00</td></tr>
+                  <tr><td>Annie Easley</td><td>10</td><td>$45.00</td></tr>
+                  <tr><td>Jean Bartik</td><td>12</td><td>$230.00</td></tr>
+                  <tr><td>Frances Allen</td><td>14</td><td>$0.00</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="tab-students-content" class="tabContent" style="display:none">
+              <table width="100%">
+                <tbody>
+                  <tr><th>Student</th><th>Class</th></tr>
+                  <tr><td>Ada Lovelace</td><td>Ballet III</td></tr>
+                  <tr><td>Grace Hopper</td><td>Ballet II</td></tr>
+                  <tr><td>Katherine Johnson</td><td>Jazz I</td></tr>
+                  <tr><td>Margaret Hamilton</td><td>Ballet III</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="tab-ledger-content" class="tabContent">
+              <div>
+                <div class="ChargePaymentButtons"></div>
+                <div class="ChargePaymentButtons"></div>
+              </div>
+              <table class="LedgerHeader">
+                <tbody>
+                  <tr><td>Balance</td><td>$840.70</td></tr>
+                </tbody>
+              </table>
+              <table id="Ledger" class="Ledger" width="100%">
+                <tbody>
+                  <tr><th>Date</th><th>Description</th><th>Amount</th></tr>
+                  <tr><td>09/02/2026</td><td>Tuition - Fall</td><td>$320.00</td></tr>
+                  <tr><td>09/04/2026</td><td>Costume fee</td><td>$85.00</td></tr>
+                  <tr><td>09/11/2026</td><td>Payment - card</td><td>-$120.00</td></tr>
+                  <tr><td>09/18/2026</td><td>Recital tickets</td><td>$60.00</td></tr>
+                  <tr><td>09/25/2026</td><td>Tuition - Fall</td><td>$320.00</td></tr>
+                  <tr><td>10/02/2026</td><td>Late fee</td><td>$15.00</td></tr>
+                  <tr><td>10/09/2026</td><td>Payment - cash</td><td>-$200.00</td></tr>
+                  <tr><td>10/16/2026</td><td>Competition fee</td><td>$150.00</td></tr>
+                  <tr><td>10/23/2026</td><td>Payment - card</td><td>-$340.30</td></tr>
+                </tbody>
+              </table>
+              <table class="Layout">
+                <tbody>
+                  <tr><td class="Top">Left</td><td class="RHS">Right</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="tab-notes-content" class="tabContent" style="display:none">
+              <p>Notes are kept here.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<script>
+/* Stand-in for the app's own tab switcher: clicking a .tab makes it the
+   selectedTab and shows only its matching -content panel. The skin must never
+   do this itself - it only clicks the tab and lets this run. */
+(function () {
+  var container = document.querySelector('.tabContainer');
+  container.addEventListener('click', function (e) {
+    var tab = e.target.closest('.tab');
+    if (!tab) return;
+    var tabs = container.querySelectorAll('.tab');
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].className = 'tab';
+      var panel = document.getElementById(tabs[i].id + '-content');
+      if (panel) panel.style.display = 'none';
+    }
+    tab.className = 'tab selectedTab';
+    var mine = document.getElementById(tab.id + '-content');
+    if (mine) mine.style.display = '';
+  });
+})();
+</script>
+
+<script src="studio-director-skin.user.js"></script>
+</body>
+</html>

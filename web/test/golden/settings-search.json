@@ -1,0 +1,163 @@
+{
+  "file": "settings-search.html",
+  "form": null,
+  "model": {
+    "confirm": null,
+    "index": null,
+    "list": null,
+    "nav": [
+      {
+        "href": "admin.sd?page=HomePage",
+        "label": "Home"
+      },
+      {
+        "href": "admin.sd?page=AdminHome",
+        "label": "Settings"
+      }
+    ],
+    "note": null,
+    "report": null,
+    "settings": {
+      "actions": [
+        {
+          "href": "#",
+          "id": "save",
+          "js": true,
+          "label": "Save",
+          "onclick": "StudioDir.onSubmit('SaveSettings');return false;"
+        }
+      ],
+      "breadcrumb": [
+        "Home",
+        "Settings"
+      ],
+      "fields": [
+        {
+          "at": 0,
+          "key": "name:fmt",
+          "label": "Format",
+          "options": [
+            {
+              "label": "Table",
+              "selected": true,
+              "value": "table"
+            },
+            {
+              "label": "List",
+              "selected": false,
+              "value": "list"
+            }
+          ],
+          "selector": "[name=\"fmt\"]",
+          "source": "block",
+          "type": "select",
+          "value": "table"
+        },
+        {
+          "at": 1,
+          "key": "name:orderBy",
+          "label": "Order by",
+          "options": [
+            {
+              "label": "Name",
+              "selected": false,
+              "value": "name"
+            },
+            {
+              "label": "Family",
+              "selected": true,
+              "value": "family"
+            }
+          ],
+          "selector": "[name=\"orderBy\"]",
+          "source": "block",
+          "type": "select",
+          "value": "family"
+        },
+        {
+          "at": 2,
+          "key": "show_inactive",
+          "label": "Show inactive",
+          "selector": "#show_inactive",
+          "source": "cell",
+          "type": "checkbox",
+          "value": true
+        },
+        {
+          "at": 3,
+          "key": "page_size",
+          "label": "Page size",
+          "selector": "#page_size",
+          "source": "cell",
+          "type": "text",
+          "value": "50"
+        },
+        {
+          "at": 4,
+          "group": "admincal",
+          "key": "radio:admincal",
+          "label": "Calendar style",
+          "options": [
+            {
+              "checked": true,
+              "label": "Admin calendar",
+              "selector": "[name=\"admincal\"]",
+              "value": "admincal"
+            },
+            {
+              "checked": false,
+              "label": "Calendar table",
+              "selector": "[name=\"admincal\"]",
+              "value": "caltable"
+            }
+          ],
+          "selector": "[name=\"admincal\"]",
+          "source": "block",
+          "type": "radio",
+          "value": "admincal"
+        },
+        {
+          "at": 6,
+          "key": "name:note",
+          "label": "Notice shown above results",
+          "selector": "[name=\"note\"]",
+          "source": "title",
+          "type": "textarea",
+          "value": ""
+        },
+        {
+          "at": 7,
+          "key": "name:legacy_header",
+          "label": "Legacy header",
+          "selector": "[name=\"legacy_header\"]",
+          "source": "name",
+          "type": "text",
+          "value": ""
+        }
+      ],
+      "kind": "settings",
+      "primary": {
+        "href": "#",
+        "id": "save",
+        "js": true,
+        "label": "Save",
+        "onclick": "StudioDir.onSubmit('SaveSettings');return false;"
+      },
+      "save": {
+        "href": "#",
+        "id": "save",
+        "js": true,
+        "label": "Save"
+      },
+      "title": "Search Display Format"
+    },
+    "sheet": null,
+    "task": null,
+    "title": "Search Display Format",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=SearchDisplayFormat",
+    "view": "settings",
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=SearchDisplayFormat",
+  "view": "settings"
+}

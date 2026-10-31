@@ -1,0 +1,1016 @@
+{
+  "file": "edit-class.html",
+  "form": {
+    "breadcrumb": [
+      "Classes",
+      "Ballet III"
+    ],
+    "fields": [
+      {
+        "checked": null,
+        "id": "name",
+        "key": "name",
+        "label": null,
+        "masked": false,
+        "name": "name",
+        "options": null,
+        "selector": "#name",
+        "type": "text",
+        "value": "Ballet III - Ages 6-9"
+      },
+      {
+        "checked": null,
+        "id": "season",
+        "key": "season",
+        "label": null,
+        "masked": false,
+        "name": "season",
+        "options": [
+          {
+            "label": "Fall",
+            "selected": false,
+            "value": "Fall"
+          },
+          {
+            "label": "Winter",
+            "selected": true,
+            "value": "Winter"
+          },
+          {
+            "label": "Spring",
+            "selected": false,
+            "value": "Spring"
+          },
+          {
+            "label": "Summer",
+            "selected": false,
+            "value": "Summer"
+          },
+          {
+            "label": "Year-round",
+            "selected": false,
+            "value": "Year-round"
+          }
+        ],
+        "selector": "#season",
+        "type": "select",
+        "value": "Winter"
+      },
+      {
+        "checked": false,
+        "id": "day__1",
+        "key": "day__1",
+        "label": "Sun",
+        "masked": false,
+        "name": "day",
+        "options": null,
+        "selector": "#day__1",
+        "type": "checkbox",
+        "value": null
+      },
+      {
+        "checked": true,
+        "id": "day__2",
+        "key": "day__2",
+        "label": "Mon",
+        "masked": false,
+        "name": "day",
+        "options": null,
+        "selector": "#day__2",
+        "type": "checkbox",
+        "value": null
+      },
+      {
+        "checked": false,
+        "id": "day__4",
+        "key": "day__4",
+        "label": "Tue",
+        "masked": false,
+        "name": "day",
+        "options": null,
+        "selector": "#day__4",
+        "type": "checkbox",
+        "value": null
+      },
+      {
+        "checked": false,
+        "id": "day__8",
+        "key": "day__8",
+        "label": "Wed",
+        "masked": false,
+        "name": "day",
+        "options": null,
+        "selector": "#day__8",
+        "type": "checkbox",
+        "value": null
+      },
+      {
+        "checked": false,
+        "id": "day__16",
+        "key": "day__16",
+        "label": "Thu",
+        "masked": false,
+        "name": "day",
+        "options": null,
+        "selector": "#day__16",
+        "type": "checkbox",
+        "value": null
+      },
+      {
+        "checked": false,
+        "id": "day__32",
+        "key": "day__32",
+        "label": "Fri",
+        "masked": false,
+        "name": "day",
+        "options": null,
+        "selector": "#day__32",
+        "type": "checkbox",
+        "value": null
+      },
+      {
+        "checked": false,
+        "id": "day__64",
+        "key": "day__64",
+        "label": "Sat",
+        "masked": false,
+        "name": "day",
+        "options": null,
+        "selector": "#day__64",
+        "type": "checkbox",
+        "value": null
+      },
+      {
+        "checked": null,
+        "id": "start_time",
+        "key": "start_time",
+        "label": null,
+        "masked": false,
+        "name": "start_time",
+        "options": [
+          {
+            "label": "3:00p",
+            "selected": false,
+            "value": "3:00p"
+          },
+          {
+            "label": "4:00p",
+            "selected": true,
+            "value": "4:00p"
+          },
+          {
+            "label": "5:30p",
+            "selected": false,
+            "value": "5:30p"
+          }
+        ],
+        "selector": "#start_time",
+        "type": "select",
+        "value": "4:00p"
+      },
+      {
+        "checked": null,
+        "id": "length",
+        "key": "length",
+        "label": null,
+        "masked": false,
+        "name": "length",
+        "options": [
+          {
+            "label": "45",
+            "selected": false,
+            "value": "45"
+          },
+          {
+            "label": "60",
+            "selected": true,
+            "value": "60"
+          },
+          {
+            "label": "75",
+            "selected": false,
+            "value": "75"
+          }
+        ],
+        "selector": "#length",
+        "type": "select",
+        "value": "60"
+      },
+      {
+        "checked": null,
+        "id": "instructor",
+        "key": "instructor",
+        "label": null,
+        "masked": false,
+        "name": "instructor",
+        "options": [
+          {
+            "label": "Ms. Rivera",
+            "selected": true,
+            "value": "Ms. Rivera"
+          },
+          {
+            "label": "Mr. Cole",
+            "selected": false,
+            "value": "Mr. Cole"
+          }
+        ],
+        "selector": "#instructor",
+        "type": "select",
+        "value": "Ms. Rivera"
+      },
+      {
+        "checked": null,
+        "id": "assistant_instructors",
+        "key": "assistant_instructors",
+        "label": null,
+        "masked": false,
+        "name": "assistant_instructors",
+        "options": null,
+        "selector": "#assistant_instructors",
+        "type": "text",
+        "value": ""
+      },
+      {
+        "checked": null,
+        "id": "type",
+        "key": "type",
+        "label": null,
+        "masked": false,
+        "name": "type",
+        "options": [
+          {
+            "label": "Ballet",
+            "selected": true,
+            "value": "Ballet"
+          },
+          {
+            "label": "Jazz",
+            "selected": false,
+            "value": "Jazz"
+          },
+          {
+            "label": "Tap",
+            "selected": false,
+            "value": "Tap"
+          }
+        ],
+        "selector": "#type",
+        "type": "select",
+        "value": "Ballet"
+      },
+      {
+        "checked": null,
+        "id": "description",
+        "key": "description",
+        "label": null,
+        "masked": false,
+        "name": "description",
+        "options": null,
+        "selector": "#description",
+        "type": "textarea",
+        "value": "Ballet technique for ages 6-9."
+      },
+      {
+        "checked": null,
+        "id": "class_notes",
+        "key": "class_notes",
+        "label": null,
+        "masked": false,
+        "name": "class_notes",
+        "options": null,
+        "selector": "#class_notes",
+        "type": "textarea",
+        "value": "Bring sneakers."
+      },
+      {
+        "checked": null,
+        "id": "max_size",
+        "key": "max_size",
+        "label": null,
+        "masked": false,
+        "name": "max_size",
+        "options": null,
+        "selector": "#max_size",
+        "type": "text",
+        "value": "12"
+      },
+      {
+        "checked": null,
+        "id": "location",
+        "key": "location",
+        "label": null,
+        "masked": false,
+        "name": "location",
+        "options": [
+          {
+            "label": "Studio A",
+            "selected": true,
+            "value": "Studio A"
+          },
+          {
+            "label": "Studio B",
+            "selected": false,
+            "value": "Studio B"
+          }
+        ],
+        "selector": "#location",
+        "type": "select",
+        "value": "Studio A"
+      },
+      {
+        "checked": null,
+        "id": "ages",
+        "key": "ages",
+        "label": null,
+        "masked": false,
+        "name": "ages",
+        "options": null,
+        "selector": "#ages",
+        "type": "text",
+        "value": "6-9"
+      },
+      {
+        "checked": null,
+        "id": "restrict_gender",
+        "key": "restrict_gender",
+        "label": null,
+        "masked": false,
+        "name": "restrict_gender",
+        "options": [
+          {
+            "label": "No",
+            "selected": true,
+            "value": "No"
+          },
+          {
+            "label": "Female",
+            "selected": false,
+            "value": "Female"
+          },
+          {
+            "label": "Male",
+            "selected": false,
+            "value": "Male"
+          }
+        ],
+        "selector": "#restrict_gender",
+        "type": "select",
+        "value": "No"
+      },
+      {
+        "checked": null,
+        "id": "prereqs",
+        "key": "prereqs",
+        "label": null,
+        "masked": false,
+        "name": "prereqs",
+        "options": null,
+        "selector": "#prereqs",
+        "type": "text",
+        "value": ""
+      },
+      {
+        "checked": null,
+        "id": "allow_dropins",
+        "key": "allow_dropins",
+        "label": null,
+        "masked": false,
+        "name": "allow_dropins",
+        "options": [
+          {
+            "label": "Yes",
+            "selected": true,
+            "value": "Yes"
+          },
+          {
+            "label": "No",
+            "selected": false,
+            "value": "No"
+          }
+        ],
+        "selector": "#allow_dropins",
+        "type": "select",
+        "value": "Yes"
+      },
+      {
+        "checked": null,
+        "id": "password",
+        "key": "password",
+        "label": null,
+        "masked": false,
+        "name": "password",
+        "options": null,
+        "selector": "#password",
+        "type": "text",
+        "value": ""
+      },
+      {
+        "checked": null,
+        "id": "session_charge",
+        "key": "session_charge",
+        "label": null,
+        "masked": false,
+        "name": "session_charge",
+        "options": null,
+        "selector": "#session_charge",
+        "type": "text",
+        "value": "120.00"
+      }
+    ],
+    "kind": "form",
+    "rows": [
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "name",
+            "key": "name",
+            "label": null,
+            "masked": false,
+            "name": "name",
+            "options": null,
+            "selector": "#name",
+            "type": "text",
+            "value": "Ballet III - Ages 6-9"
+          }
+        ],
+        "label": "Name"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "season",
+            "key": "season",
+            "label": null,
+            "masked": false,
+            "name": "season",
+            "options": [
+              {
+                "label": "Fall",
+                "selected": false,
+                "value": "Fall"
+              },
+              {
+                "label": "Winter",
+                "selected": true,
+                "value": "Winter"
+              },
+              {
+                "label": "Spring",
+                "selected": false,
+                "value": "Spring"
+              },
+              {
+                "label": "Summer",
+                "selected": false,
+                "value": "Summer"
+              },
+              {
+                "label": "Year-round",
+                "selected": false,
+                "value": "Year-round"
+              }
+            ],
+            "selector": "#season",
+            "type": "select",
+            "value": "Winter"
+          }
+        ],
+        "label": "Season"
+      },
+      {
+        "fields": [
+          {
+            "checked": false,
+            "id": "day__1",
+            "key": "day__1",
+            "label": "Sun",
+            "masked": false,
+            "name": "day",
+            "options": null,
+            "selector": "#day__1",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": true,
+            "id": "day__2",
+            "key": "day__2",
+            "label": "Mon",
+            "masked": false,
+            "name": "day",
+            "options": null,
+            "selector": "#day__2",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "day__4",
+            "key": "day__4",
+            "label": "Tue",
+            "masked": false,
+            "name": "day",
+            "options": null,
+            "selector": "#day__4",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "day__8",
+            "key": "day__8",
+            "label": "Wed",
+            "masked": false,
+            "name": "day",
+            "options": null,
+            "selector": "#day__8",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "day__16",
+            "key": "day__16",
+            "label": "Thu",
+            "masked": false,
+            "name": "day",
+            "options": null,
+            "selector": "#day__16",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "day__32",
+            "key": "day__32",
+            "label": "Fri",
+            "masked": false,
+            "name": "day",
+            "options": null,
+            "selector": "#day__32",
+            "type": "checkbox",
+            "value": null
+          },
+          {
+            "checked": false,
+            "id": "day__64",
+            "key": "day__64",
+            "label": "Sat",
+            "masked": false,
+            "name": "day",
+            "options": null,
+            "selector": "#day__64",
+            "type": "checkbox",
+            "value": null
+          }
+        ],
+        "label": "Day"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "start_time",
+            "key": "start_time",
+            "label": null,
+            "masked": false,
+            "name": "start_time",
+            "options": [
+              {
+                "label": "3:00p",
+                "selected": false,
+                "value": "3:00p"
+              },
+              {
+                "label": "4:00p",
+                "selected": true,
+                "value": "4:00p"
+              },
+              {
+                "label": "5:30p",
+                "selected": false,
+                "value": "5:30p"
+              }
+            ],
+            "selector": "#start_time",
+            "type": "select",
+            "value": "4:00p"
+          }
+        ],
+        "label": "Start Time"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "length",
+            "key": "length",
+            "label": null,
+            "masked": false,
+            "name": "length",
+            "options": [
+              {
+                "label": "45",
+                "selected": false,
+                "value": "45"
+              },
+              {
+                "label": "60",
+                "selected": true,
+                "value": "60"
+              },
+              {
+                "label": "75",
+                "selected": false,
+                "value": "75"
+              }
+            ],
+            "selector": "#length",
+            "type": "select",
+            "value": "60"
+          }
+        ],
+        "label": "Length"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "instructor",
+            "key": "instructor",
+            "label": null,
+            "masked": false,
+            "name": "instructor",
+            "options": [
+              {
+                "label": "Ms. Rivera",
+                "selected": true,
+                "value": "Ms. Rivera"
+              },
+              {
+                "label": "Mr. Cole",
+                "selected": false,
+                "value": "Mr. Cole"
+              }
+            ],
+            "selector": "#instructor",
+            "type": "select",
+            "value": "Ms. Rivera"
+          }
+        ],
+        "label": "Instructor"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "assistant_instructors",
+            "key": "assistant_instructors",
+            "label": null,
+            "masked": false,
+            "name": "assistant_instructors",
+            "options": null,
+            "selector": "#assistant_instructors",
+            "type": "text",
+            "value": ""
+          }
+        ],
+        "label": "Assistant Instructors"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "type",
+            "key": "type",
+            "label": null,
+            "masked": false,
+            "name": "type",
+            "options": [
+              {
+                "label": "Ballet",
+                "selected": true,
+                "value": "Ballet"
+              },
+              {
+                "label": "Jazz",
+                "selected": false,
+                "value": "Jazz"
+              },
+              {
+                "label": "Tap",
+                "selected": false,
+                "value": "Tap"
+              }
+            ],
+            "selector": "#type",
+            "type": "select",
+            "value": "Ballet"
+          }
+        ],
+        "label": "Type"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "description",
+            "key": "description",
+            "label": null,
+            "masked": false,
+            "name": "description",
+            "options": null,
+            "selector": "#description",
+            "type": "textarea",
+            "value": "Ballet technique for ages 6-9."
+          }
+        ],
+        "label": "Description"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "class_notes",
+            "key": "class_notes",
+            "label": null,
+            "masked": false,
+            "name": "class_notes",
+            "options": null,
+            "selector": "#class_notes",
+            "type": "textarea",
+            "value": "Bring sneakers."
+          }
+        ],
+        "label": "Class Notes"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "max_size",
+            "key": "max_size",
+            "label": null,
+            "masked": false,
+            "name": "max_size",
+            "options": null,
+            "selector": "#max_size",
+            "type": "text",
+            "value": "12"
+          }
+        ],
+        "label": "Max Size"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "location",
+            "key": "location",
+            "label": null,
+            "masked": false,
+            "name": "location",
+            "options": [
+              {
+                "label": "Studio A",
+                "selected": true,
+                "value": "Studio A"
+              },
+              {
+                "label": "Studio B",
+                "selected": false,
+                "value": "Studio B"
+              }
+            ],
+            "selector": "#location",
+            "type": "select",
+            "value": "Studio A"
+          }
+        ],
+        "label": "Location"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "ages",
+            "key": "ages",
+            "label": null,
+            "masked": false,
+            "name": "ages",
+            "options": null,
+            "selector": "#ages",
+            "type": "text",
+            "value": "6-9"
+          }
+        ],
+        "label": "Ages"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "restrict_gender",
+            "key": "restrict_gender",
+            "label": null,
+            "masked": false,
+            "name": "restrict_gender",
+            "options": [
+              {
+                "label": "No",
+                "selected": true,
+                "value": "No"
+              },
+              {
+                "label": "Female",
+                "selected": false,
+                "value": "Female"
+              },
+              {
+                "label": "Male",
+                "selected": false,
+                "value": "Male"
+              }
+            ],
+            "selector": "#restrict_gender",
+            "type": "select",
+            "value": "No"
+          }
+        ],
+        "label": "Restrict Gender"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "prereqs",
+            "key": "prereqs",
+            "label": null,
+            "masked": false,
+            "name": "prereqs",
+            "options": null,
+            "selector": "#prereqs",
+            "type": "text",
+            "value": ""
+          }
+        ],
+        "label": "Prerequisites"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "allow_dropins",
+            "key": "allow_dropins",
+            "label": null,
+            "masked": false,
+            "name": "allow_dropins",
+            "options": [
+              {
+                "label": "Yes",
+                "selected": true,
+                "value": "Yes"
+              },
+              {
+                "label": "No",
+                "selected": false,
+                "value": "No"
+              }
+            ],
+            "selector": "#allow_dropins",
+            "type": "select",
+            "value": "Yes"
+          }
+        ],
+        "label": "Allow Drop-ins"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "password",
+            "key": "password",
+            "label": null,
+            "masked": false,
+            "name": "password",
+            "options": null,
+            "selector": "#password",
+            "type": "text",
+            "value": ""
+          }
+        ],
+        "label": "Password"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "session_charge",
+            "key": "session_charge",
+            "label": null,
+            "masked": false,
+            "name": "session_charge",
+            "options": null,
+            "selector": "#session_charge",
+            "type": "text",
+            "value": "120.00"
+          }
+        ],
+        "label": "Session Charge"
+      }
+    ],
+    "title": "Edit Class"
+  },
+  "model": {
+    "confirm": null,
+    "index": null,
+    "list": {
+      "items": [
+        {
+          "href": "admin.sd?page=EditClass&cident=101&searchidx=0",
+          "label": "Ballet III - Mon 4:00p",
+          "type": "Class"
+        },
+        {
+          "href": "admin.sd?page=EditClass&cident=102&searchidx=1",
+          "label": "Jazz I - Tue 5:30p",
+          "type": "Class"
+        },
+        {
+          "href": "admin.sd?page=EditClass&cident=104&searchidx=2",
+          "label": "Hip Hop - Mon 4:00p",
+          "type": "Class"
+        }
+      ],
+      "kind": "list",
+      "label": "Classes",
+      "mixed": false,
+      "title": "Edit Class",
+      "total": null,
+      "truncated": false,
+      "types": [
+        "Class"
+      ]
+    },
+    "nav": [
+      {
+        "href": "admin.sd?page=HomePage&clicktab=Home",
+        "label": "Home"
+      },
+      {
+        "href": "admin.sd?page=CalendarPage&clicktab=Class+Calendar",
+        "label": "Class Calendar"
+      },
+      {
+        "href": "admin.sd?page=NewClass&clicktab=Classes",
+        "label": "Classes"
+      },
+      {
+        "href": "admin.sd?page=NewFamily&clicktab=Families",
+        "label": "Families"
+      },
+      {
+        "href": "admin.sd?page=NewStudent&clicktab=Students",
+        "label": "Students"
+      },
+      {
+        "href": "admin.sd?page=NewInstructor&clicktab=Instructors",
+        "label": "Instructors"
+      },
+      {
+        "href": "admin.sd?page=ChargesHome&clicktab=Charges",
+        "label": "Charges & Payments"
+      },
+      {
+        "href": "admin.sd?page=EmailTextHome&clicktab=Communications",
+        "label": "Communications"
+      },
+      {
+        "href": "admin.sd?page=AdvSearch&clicktab=Advanced+Search",
+        "label": "Advanced Search"
+      },
+      {
+        "href": "admin.sd?page=ReportsHome&clicktab=Reports",
+        "label": "Reports"
+      },
+      {
+        "href": "admin.sd?page=AdminHome&clicktab=Settings",
+        "label": "Settings"
+      }
+    ],
+    "note": null,
+    "report": null,
+    "settings": null,
+    "sheet": null,
+    "task": null,
+    "title": "Edit Class",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EditClass&cident=1782910697458",
+    "view": "list",
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EditClass&cident=1782910697458",
+  "view": "list"
+}

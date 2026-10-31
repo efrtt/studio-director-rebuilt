@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html><body>
+<form id="idForm" action="admin.sd" method="post">
+  <input id="idPage" type="hidden" value="SearchResults">
+  <input id="idMeth" type="hidden">
+  <input id="idMethArgs" type="hidden">
+  <div class="topBarContainer"><div class="topBar">
+    <div class="searchBox"><input id="searchtext" name="searchText" type="text"></div>
+  </div></div>
+  <div class="standardMainContent">
+    <div id="sideNavBar" class="sideNavCollapsed">
+      <a class="sideNavLink" href="admin.sd?page=HomePage&clicktab=Home">HomeHome</a>
+      <a class="sideNavLink" href="admin.sd?page=NewClass&clicktab=Classes">ClassesClasses</a>
+      <a class="sideNavLink" href="admin.sd?page=NewFamily&clicktab=Families">FamiliesFamilies</a>
+      <a class="sideNavLink" href="admin.sd?page=NewStudent&clicktab=Students">StudentsStudents</a>
+      <a class="sideNavLink" href="admin.sd?page=NewInstructor&clicktab=Instructors">InstructorsInstructors</a>
+      <div class="copyright">©</div>
+    </div>
+    <div id="mainContent" class="mainContent wideContent">
+      <div class="contentContainer">
+        <!-- Same panel as every other list: results of every record type, mixed. -->
+        <div id="idSearchSpan" class="searchResultPanel">
+          <div class="searchResultBar"><div class="searchResultLabel">Search Results</div></div>
+          <div class="searchResultList">
+            <div class="searchResultItem"><a href="admin.sd?page=EditFamily&amp;fident=4402">Hopper Family</a></div>
+            <div class="searchResultItem"><a href="admin.sd?page=EditStudent&amp;sident=9002">Grace Hopper</a></div>
+            <div class="searchResultItem"><a href="admin.sd?page=EditClass&amp;cident=101">Ballet III - Ages 6-9</a></div>
+          </div>
+        </div>
+        <div class="Content">
+          <div class="Breadcrumb">
+            <a href="admin.sd?page=HomePage">Home</a>
+            <i class="fa-solid fa-angle-right"></i>
+          </div>
+          <div class="formTitle">Search Results</div>
+          <div class="ButtonBar">3 results for &ldquo;hopper&rdquo;</div>
+          <div class="contentInfo"><script>/* the app fills the panel by JS */</script></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</body></html>

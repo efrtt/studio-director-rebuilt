@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html><body>
+<form id="idForm" action="admin.sd" method="post">
+  <input id="idPage" type="hidden" value="EditFamily">
+  <input id="idMeth" type="hidden">
+  <input id="idMethArgs" type="hidden">
+  <div class="standardMainContent">
+    <div id="sideNavBar" class="sideNavCollapsed">
+      <a class="sideNavLink" href="admin.sd?page=HomePage&clicktab=Home">HomeHome</a>
+      <a class="sideNavLink" href="admin.sd?page=CalendarPage&clicktab=Class+Calendar">Class CalendarClass Calendar</a>
+      <a class="sideNavLink" href="admin.sd?page=NewClass&clicktab=Classes">ClassesClasses</a>
+      <a class="sideNavLink" href="admin.sd?page=NewFamily&clicktab=Families">FamiliesFamilies</a>
+      <a class="sideNavLink" href="admin.sd?page=NewStudent&clicktab=Students">StudentsStudents</a>
+      <a class="sideNavLink" href="admin.sd?page=NewInstructor&clicktab=Instructors">InstructorsInstructors</a>
+      <a class="sideNavLink" href="admin.sd?page=ChargesHome&clicktab=Charges">Charges &amp; PaymentsCharges &amp; Payments</a>
+      <a class="sideNavLink" href="admin.sd?page=EmailTextHome&clicktab=Communications">CommunicationsCommunications</a>
+      <a class="sideNavLink" href="admin.sd?page=AdvSearch&clicktab=Advanced+Search">Advanced SearchAdvanced Search</a>
+      <a class="sideNavLink" href="admin.sd?page=ReportsHome&clicktab=Reports">ReportsReports</a>
+      <a class="sideNavLink" href="admin.sd?page=AdminHome&clicktab=Settings">SettingsSettings</a>
+      <div class="copyright">©</div>
+    </div>
+    <div id="mainContent" class="mainContent wideContent">
+      <div class="contentContainer">
+        <div id="idSearchSpan" class="searchResultPanel">
+          <div class="searchResultBar">
+            <div class="searchResultLabel">Families</div>
+            <div class="searchResultNav">
+              <a href="#"><i class="fa-solid fa-angle-up"></i><span class="Tooltip">Previous</span></a>
+              <a href="#"><i class="fa-solid fa-angle-down"></i><span class="Tooltip">Next</span></a>
+              <a href="#"><i class="fa-solid fa-xmark"></i><span class="Tooltip">Close</span></a>
+            </div>
+          </div>
+          <div class="searchResultLabel">
+            <input id="filter" name="filter" type="text" placeholder="Filter 4291 items">
+            <p>3 of 3</p>
+          </div>
+          <div class="searchResultList">
+            <div class="searchResultItem"><a href="admin.sd?page=EditFamily&amp;fident=4401">Lovelace Family</a></div>
+            <div class="searchResultItem"><a href="admin.sd?page=EditFamily&amp;fident=4402">Hopper Family</a></div>
+            <div class="searchResultItem"><a href="admin.sd?page=EditFamily&amp;fident=4403">Rivera Family</a></div>
+          </div>
+        </div>
+        <div class="Content">
+          <div class="Breadcrumb"><a href="#">Families</a><i class="fa-solid fa-angle-right"></i><a href="#">Lovelace</a><i class="fa-solid fa-angle-right"></i></div>
+          <div class="formTitle">Edit Family</div>
+          <div class="ButtonBar">
+            <a id="new" href="#">New</a>
+            <a id="save" href="#">Save</a>
+            <a id="print" href="#">Print</a>
+            <a id="email" href="#">Email</a>
+            <a id="delete" href="#">Delete</a>
+            <div id="menuBtn" class="menuButton"><a class="menuLink" href="#"><span>More</span><i class="fa-solid fa-angle-down"></i></a><div class="menu"><a href="#">A</a><a href="#">B</a><a href="#">C</a><a href="#">D</a><a href="#">E</a><a href="#">F</a><a href="#">G</a></div></div>
+          </div>
+          <div class="contentInfo">
+            <input id="ResetPwdFlag" type="hidden">
+            <div class="tabContainer">
+              <div id="tab-overview" class="tab">Overview</div>
+              <div id="tab-students" class="tab selectedTab">Students</div>
+              <div id="tab-ledger" class="tab">Ledger</div>
+              <div id="tab-notes" class="tab">Notes</div>
+            </div>
+            <div id="tab-overview-content" class="tabContent" style="display:none">
+              <table class="Form"><tbody>
+                <tr><td>Guardian</td><td><input id="guardian" name="guardian" type="text" value="Dana Lovelace"></td></tr>
+                <tr><td>Last Name</td><td><input id="last_name" name="last_name" type="text" value="Lovelace"></td></tr>
+                <tr><td>Address</td><td><input id="address1" name="address1" type="text" value="12 Ada Way"></td></tr>
+                <tr><td>Address 2</td><td><input id="address2" name="address2" type="text" value=""></td></tr>
+                <tr><td>City</td><td><input id="city" name="city" type="text" value="Springfield"></td></tr>
+                <tr><td>State</td><td><select id="state" name="state"><option value="CA">California</option><option value="NY" selected>New York</option></select></td></tr>
+                <tr><td>Zip</td><td><input id="zip" name="zip" type="text" value="10001"></td></tr>
+                <tr><td>Phone 1</td><td><select name="phone1_label"><option selected>Home</option><option>Work</option></select><input id="phone1" class="masked" name="phone1" type="text" value="(555) 010-2000"></td></tr>
+                <tr><td>Phone 2</td><td><select name="phone2_label"><option>Home</option><option>Work</option></select><input id="phone2" class="masked" name="phone2" type="text" value=""></td></tr>
+                <tr><td>Phone 3</td><td><select name="phone3_label"><option>Home</option><option>Work</option></select><input id="phone3" class="masked" name="phone3" type="text" value=""></td></tr>
+                <tr><td>Email</td><td><input id="email" name="email" type="text" value="dana@example.com"></td></tr>
+                <tr><td>Extra Emails</td><td><input id="extra_emails" name="extra_emails" type="text" value=""></td></tr>
+                <tr><td>Opt Out</td><td><select id="opt_out" name="opt_out"><option value="0">No</option><option value="1" selected>Yes</option></select></td></tr>
+                <tr><td>Emergency Contact</td><td><input id="emergency_contact" name="emergency_contact" type="text" value="Sam Rivera"></td></tr>
+                <tr><td>Emergency Phone</td><td><input id="emergency_contact_phone" class="masked" name="emergency_contact_phone" type="text" value="(555) 010-3000"></td></tr>
+                <tr><td>How Heard</td><td><select id="howheard" name="howheard"><option selected>Friend</option><option>Web search</option></select></td></tr>
+                <tr><td>Details</td><td><input id="howheard_details" name="howheard_details" type="text" value=""></td></tr>
+                <tr><td>Enrollment Blocked</td><td><select id="enrollment_blocked" name="enrollment_blocked"><option value="0" selected>No</option><option value="1">Yes</option></select></td></tr>
+                <tr><td>Tags</td><td><select id="tags" class="hidden" name="tags"><option>None</option><option selected>Recital</option><option>Competition</option></select></td></tr>
+                <tr><td></td><td><input class="input" name="-" type="text"></td></tr>
+              </tbody></table>
+              <div class="SectionSpace"></div>
+              <div class="modifiedBy"><br>Modified</div>
+            </div>
+            <div id="tab-students-content" class="tabContent" style="display:block">
+              <div><div><div class="MultiTable"></div>
+                <table class="SimpleSD"><tbody>
+                  <tr><th>First Name</th><th>Last Name</th><th>Age</th><th>Gender</th><th>Medical Conditions, Allergies</th><th>Performing</th><th>Comments</th><th class="AR">Actions</th></tr>
+                  <tr><td><a href="admin.sd?page=EditStudent&amp;sident=9001">Ada</a></td><td>Lovelace</td><td>9</td><td>F</td><td></td><td></td><td></td><td class="action-cell"><a href="admin.sd?page=EditStudent&amp;sident=9001">Edit</a></td></tr>
+                </tbody></table>
+              </div></div>
+            </div>
+            <div id="tab-ledger-content" class="tabContent" style="display:none">
+              <table class="LedgerHeader"><tbody><tr><td>Balance</td><td><span id="current-balance"><b>$120.00</b></span></td></tr></tbody></table>
+              <table id="Ledger" class="Ledger"><tbody>
+                <tr><th>Due/Payment Date</th><th>Description</th><th>Student</th><th>Class</th><th class="R">Charge $</th><th class="R">Payment $</th><th>Payment Method</th><th>Paid Toward</th><th>Notes</th><th class="R">Balance</th></tr>
+                <tr><td>10/01</td><td><a href="admin.sd?page=EditCharge&amp;xident=77">Tuition</a></td><td>Ada</td><td>Ballet III</td><td class="N">120.00</td><td></td><td></td><td></td><td></td><td class="N">120.00</td></tr>
+              </tbody></table>
+            </div>
+            <div id="tab-notes-content" class="tabContent" style="display:none">
+              <div><a id="addnote" class="Btn" href="#">Add note</a></div>
+              <div class="MultiTable"></div>
+              <table class="ReportTable"><tbody>
+                <tr><th>Note Text</th><th>Created By</th><th>Created Date</th><th>Modified By</th><th>Modified Date</th><th class="AR">Actions</th></tr>
+              </tbody></table>
+              <div class="ReportTableNoItemsMsg">No notes.</div>
+            </div>
+            <input id="searchidx" type="hidden" value="2">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</body></html>

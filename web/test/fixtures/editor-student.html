@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html><body>
+<form id="idForm" action="admin.sd" method="post">
+  <input id="idPage" type="hidden" value="NewStudent">
+  <input id="idMeth" type="hidden">
+  <input id="idMethArgs" type="hidden">
+  <div class="standardMainContent">
+    <div id="sideNavBar" class="sideNavCollapsed">
+      <a class="sideNavLink" href="admin.sd?page=HomePage&clicktab=Home">HomeHome</a>
+      <a class="sideNavLink" href="admin.sd?page=CalendarPage&clicktab=Class+Calendar">Class CalendarClass Calendar</a>
+      <a class="sideNavLink" href="admin.sd?page=NewClass&clicktab=Classes">ClassesClasses</a>
+      <a class="sideNavLink" href="admin.sd?page=NewFamily&clicktab=Families">FamiliesFamilies</a>
+      <a class="sideNavLink" href="admin.sd?page=NewStudent&clicktab=Students">StudentsStudents</a>
+      <a class="sideNavLink" href="admin.sd?page=NewInstructor&clicktab=Instructors">InstructorsInstructors</a>
+      <a class="sideNavLink" href="admin.sd?page=ChargesHome&clicktab=Charges">Charges &amp; PaymentsCharges &amp; Payments</a>
+      <a class="sideNavLink" href="admin.sd?page=EmailTextHome&clicktab=Communications">CommunicationsCommunications</a>
+      <a class="sideNavLink" href="admin.sd?page=AdvSearch&clicktab=Advanced+Search">Advanced SearchAdvanced Search</a>
+      <a class="sideNavLink" href="admin.sd?page=ReportsHome&clicktab=Reports">ReportsReports</a>
+      <a class="sideNavLink" href="admin.sd?page=AdminHome&clicktab=Settings">SettingsSettings</a>
+      <div class="copyright">©</div>
+    </div>
+    <div id="mainContent" class="mainContent wideContent">
+      <div class="contentContainer">
+        <div id="idSearchSpan" class="searchResultPanel">
+          <div class="searchResultBar"><div class="searchResultLabel">Students</div></div>
+          <div class="searchResultLabel">
+            <input id="filter" name="filter" type="text">
+            <p>3 of 3</p>
+          </div>
+          <div class="searchResultList">
+            <div class="searchResultItem"><a href="admin.sd?page=NewStudent&amp;sid=9001">Ada Lovelace</a></div>
+            <div class="searchResultItem"><a href="admin.sd?page=NewStudent&amp;sid=9002">Grace Hopper</a></div>
+            <div class="searchResultItem"><a href="admin.sd?page=NewStudent&amp;sid=9003">Katherine Johnson</a></div>
+          </div>
+        </div>
+        <div class="Content">
+          <div class="Breadcrumb"><a href="#">Students</a><i class="fa-solid fa-angle-right"></i></div>
+          <div class="formTitle">New Student</div>
+          <div class="ButtonBar"><a id="save" href="#">Save</a></div>
+          <div class="contentInfo">
+            <table class="Form"><tbody>
+              <tr><td>First Name</td><td><input id="first_name" name="first_name" type="text"></td></tr>
+              <tr><td>Last Name</td><td><input id="student_last_name" name="student_last_name" type="text"></td></tr>
+              <tr><td>Family</td><td><select name="family"><option>Lovelace Family</option><option>Hopper Family</option></select></td></tr>
+              <tr><td>Birthday</td><td><select id="birthday__mon" name="birthday__mon"><option>Jan</option></select><select id="birthday__day" name="birthday__day"><option>1</option></select><select id="birthday__year" name="birthday__year"><option>2015</option></select></td></tr>
+              <tr><td>Sex</td><td><select id="sex" name="sex"><option>F</option><option>M</option></select></td></tr>
+              <tr><td>Medical</td><td><input id="medcond" name="medcond" type="text"></td></tr>
+              <tr><td>Comments</td><td><input id="comments" name="comments" type="text"></td></tr>
+              <tr><td>Waiver</td><td><select id="waiver" name="waiver"><option>No</option><option>Yes</option></select></td></tr>
+              <tr><td>Performing</td><td><select id="performing" name="performing"><option>No</option></select></td></tr>
+              <tr><td>Field 1</td><td><input id="field1" name="field1" type="text"></td></tr>
+              <tr><td>Field 2</td><td><input id="field2" name="field2" type="text"></td></tr>
+              <tr><td>Field 3</td><td><input id="field3" name="field3" type="text"></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</body></html>
