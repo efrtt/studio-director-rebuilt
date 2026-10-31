@@ -71,13 +71,21 @@ directly, never through the chain.
 What is left of the spec's §3 is the *note tiebreaker* and the shell-less case, which still run in
 `main.js` because they need the live document and a timeout. They call the same tested helpers.
 
-## 4. Live DOM first — **not done**
+## 4. Live DOM first — done
 
-`chooseSource({ liveView, liveHasShell, liveIsEmpty })` is implemented and tested, but `main.js`
-still fetches first and reads live as the fallback. Flipping the default changes which document
-every model comes from on all 447 crawled screens, and no fixture or golden can see the difference —
-only a signed-in browser can. Shipping that blind, in a build whose whole premise is not guessing
-about client records, would be the wrong trade. It needs one session against the real app first.
+`main.js` now reads the live document first and only fetches when `chooseSource` says the live page
+cannot answer: no shell, or a content root with nothing in it (`liveIsBare`, which is the
+JS-drawn-before-its-script case). A reader that claims the live page skips the GET entirely, so the
+common screen now costs zero requests and the model describes the same tree the edits are written
+into.
+
+`fetch` and `app` both fall through to the fetched path on purpose. The fetched HTML can carry a
+view the live tree has not drawn yet, and `decideMount` already owns what to mount; only `live` is
+allowed to skip the GET. The budget is unchanged: one same-origin GET per view at most.
+
+**Still unverified against the real app.** The decision function is tested and the wiring is small,
+but which document a model comes from on 447 screens is not something a fixture can see. This is the
+first thing to check in a signed-in session.
 
 ## 5. Views keyed by kind — done
 
@@ -93,10 +101,11 @@ layout (list beside editor/confirmation) as a `SPLIT` set rather than a nested b
 | shared model | 181,293 | 177,715 | 49,607 | 13 / 152 |
 | registry + routing | 181,293 | 177,715 | 49,607 | 14 / 158 |
 | view map | 172,763 | 169,185 | 48,784 | 14 / 158 |
+| live-first | 173,202 | 169,624 | 48,919 | 14 / 159 |
 
-The bundle is **7,993 bytes smaller** than the reference build and 656 bytes smaller gzipped, after
-gaining five model modules and two test suites — the old `{#if}` chain and the duplicated readers
-were most of what went.
+The bundle is **7,554 bytes smaller** than the reference build and 521 bytes smaller gzipped, after
+gaining five model modules, two test suites and the live-first decision — the old `{#if}` chain and
+the duplicated readers were most of what went.
 
 No test and no golden was edited. The new coverage lives in two new suites (`model.test.mjs`,
 `readers.test.mjs`), added to the `test` script; the twelve original suites pass unchanged.
@@ -111,4 +120,4 @@ claimed:
 - `Unenroll` leaving the app untouched;
 - the report, task and settings write transports, none of which has ever been measured against the
   real site;
-- the live-first read path (§4), which is why it was not switched on.
+- the live-first read path (§4), now the default and still unexercised against the real app.

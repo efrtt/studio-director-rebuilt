@@ -90,6 +90,22 @@ export function hasShell(doc) {
   return !!(qs(doc, '#mainContent') || qs(doc, '.standardMainContent'));
 }
 
+// Is there nothing on this page a reader could claim? Asked of the *live*
+// document, before deciding whether a GET is worth paying for: a page that
+// arrived empty and is filled in by the app's own script looks like this until
+// that script runs, and "nothing yet" is exactly when the fetched copy is worth
+// reading. A page that has a content root and text in it is a screen this build
+// either reads now or leaves alone — fetching it again would return the same
+// thing the browser already has.
+export function liveIsBare(doc) {
+  if (!doc) return true;
+  // Our own overlay is in the tree once a view is mounted; it is not content.
+  if (qs(doc, '#sd-root')) return true;
+  const root = qs(doc, '.contentContainer') || qs(doc, '#mainContent');
+  if (!root) return true;
+  return !root.querySelector('table tr, input, select, textarea, a[href], p');
+}
+
 // The app prints each rail label twice ("HomeHome", "Class CalendarClass
 // Calendar"), so a label that is exactly its own second half is folded back.
 export function oneLabel(label) {

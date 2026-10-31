@@ -141,7 +141,12 @@ a field it could not write instead of claiming success. Deltas, the two guards t
 regressions, and the one step deliberately not taken (live-first reading, which needs a signed-in
 session to verify) are in [`rebuild-plan.md`](rebuild-plan.md).
 
-Remaining: live-first reading (the plan's §4) and the live hand-checks it lists.
+**Then live-first reading.** `main.js` reads the live document before fetching, and fetches only when
+`chooseSource` says the live page cannot answer (no shell, or an empty content root). A claimed live
+page costs no request at all. The hand-checks in the plan still apply, and this one is unverified
+against the real app.
+
+Remaining: the live hand-checks listed in [`rebuild-plan.md`](rebuild-plan.md).
 
 ## What a rewrite should design out
 

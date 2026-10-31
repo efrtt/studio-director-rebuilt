@@ -11,6 +11,7 @@ import { DOMParser } from 'linkedom';
 import { READERS, readPage } from '../src/readers/index.js';
 import { ROUTES, routeOf } from '../src/lib/route.js';
 import { chooseSource } from '../src/lib/choose.js';
+import { liveIsBare } from '../src/lib/shell.js';
 
 const doc = (html) => new DOMParser().parseFromString(html, 'text/html');
 
@@ -105,4 +106,21 @@ test('the source choice prefers the live page and fetches only when it must', ()
   assert.equal(chooseSource({ liveView: null }), 'app');
   // No arguments at all is not a crash.
   assert.equal(chooseSource(), 'app');
+});
+
+test('a live page with nothing in it is the one case worth fetching', () => {
+  const shell = (inner) => doc(`<body><div id="mainContent"><div class="contentContainer">${inner}</div></div></body>`);
+
+  // A reader's raw material: rows, controls, links or prose.
+  assert.equal(liveIsBare(shell('<table><tr><td>Ada</td></tr></table>')), false);
+  assert.equal(liveIsBare(shell('<input id="name" value="Ada">')), false);
+  assert.equal(liveIsBare(shell('<a href="/admin.sd?page=HomePage">Home</a>')), false);
+  assert.equal(liveIsBare(shell('<p>Choose a family.</p>')), false);
+
+  // An empty content root is the JS-drawn page before its script runs.
+  assert.equal(liveIsBare(shell('')), true);
+  // No content root at all: a print popup, or a page that is not the app's.
+  assert.equal(liveIsBare(doc('<body><p>bare</p></body>')), true);
+  // Our own overlay is in the tree once a view is mounted: not content.
+  assert.equal(liveIsBare(shell('<div id="sd-root"><p>rebuilt</p></div>')), true);
 });

@@ -1,7 +1,7 @@
 import App from './App.svelte';
 import { injectStyles, removeStyles } from './lib/styles.js';
 import {
-  fetchPage, hasShell, railLinks, parseHtml, SessionExpired
+  fetchPage, hasShell, liveIsBare, railLinks, parseHtml, SessionExpired
 } from './lib/shell.js';
 import { routeOf } from './lib/route.js';
 import { readList } from './lib/list.js';
@@ -19,7 +19,7 @@ import { clickActionInApp } from './lib/actions.js';
 import { changesFrom, saveInApp } from './lib/save.js';
 import { probeTick, recordView } from './lib/probe.js';
 import { contradictsNote } from './lib/note.js';
-import { wantsLiveLook, decideMount, decideShellLess, hasReadyView } from './lib/choose.js';
+import { wantsLiveLook, decideMount, decideShellLess, hasReadyView, chooseSource } from './lib/choose.js';
 
 export { readPage };
 // Probe mode's two ends: `SD.probeDump()` returns every screen measured so far,
@@ -99,6 +99,22 @@ export async function autoMount(opts = {}) {
     default:
       break;
   }
+
+  // Live first. The browser is already showing this page, so reading it costs
+  // nothing and saves the GET this path used to pay on every single view — and
+  // the model then describes the same tree the edits are written into.
+  //
+  // `fetch` and `app` both fall through to the fetched path below on purpose:
+  // the fetched HTML can carry a view the live tree has not drawn yet, and
+  // decideMount already owns the question of what to mount. Only `live` is
+  // allowed to skip the GET, so the budget stays one GET per view at most.
+  const liveModel = readPage(document, location.href);
+  const source = chooseSource({
+    liveView: liveModel && liveModel.view ? liveModel : null,
+    liveHasShell: hasShell(document),
+    liveIsEmpty: liveIsBare(document)
+  });
+  if (source === 'live') return mountView(liveModel, onOriginal, 'live');
 
   let page;
   try {
