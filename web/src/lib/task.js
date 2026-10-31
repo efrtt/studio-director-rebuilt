@@ -18,11 +18,8 @@
 import { qs, qsa, textOf } from './shell.js';
 import { readForm } from './form.js';
 import { readActions, primaryAction, clickActionInApp } from './actions.js';
-import { applyChanges } from './save.js';
-
-function contentRoot(doc) {
-  return qs(doc, '.contentContainer') || qs(doc, '#mainContent') || doc.body;
-}
+import { diffFields, applyFields } from '../model/diff.js';
+import { contentRoot } from '../model/root.js';
 
 export function readTask(doc) {
   const root = contentRoot(doc);
@@ -62,21 +59,12 @@ export function readTask(doc) {
 export function runTaskInApp(doc, task, values, action) {
   if (!task || !task.form) return { applied: [], submitted: false, reason: 'no-fields' };
 
-  const changed = [];
-  for (const field of task.form.fields) {
-    const next = values[field.key];
-    const same = field.type === 'checkbox'
-      ? !!next === !!field.checked
-      : String(next == null ? '' : next) === String(field.value == null ? '' : field.value);
-    if (same) continue;
-    changed.push(
-      field.type === 'checkbox'
-        ? { selector: field.selector, checked: !!next, key: field.key }
-        : { selector: field.selector, value: String(next == null ? '' : next), key: field.key }
-    );
-  }
+  const changed = diffFields(task.form.fields, values);
 
-  const applied = applyChanges(doc, changed);
+  const { applied, missing } = applyFields(doc, changed);
+  // The app would build its request from values this screen does not show, so a
+  // field that could not be written refuses the press instead of guessing.
+  if (missing.length) return { applied, missing, submitted: false, reason: 'missing' };
 
   // The caller passes the action that was pressed; without one, the page's own
   // primary control is used. Finding and pressing it is shared with the sheet

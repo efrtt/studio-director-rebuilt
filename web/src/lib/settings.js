@@ -26,7 +26,9 @@
 // `admincal` is one setting with two choices, not two settings.
 
 import { qs, qsa, textOf } from './shell.js';
-import { applyChanges } from './save.js';
+import { diffFields, applyFields } from '../model/diff.js';
+import { contentRoot } from '../model/root.js';
+import { optionsOf, humanise } from '../model/fields.js';
 import { readActions, primaryAction, clickActionInApp } from './actions.js';
 
 // At most this many fields: a screen with more is a form (or a table), and the
@@ -37,10 +39,6 @@ const SKIP_IDS = new Set(['filter', 'filterInput', 'searchidx', 'idPage', 'idMet
 const SKIP_TYPES = new Set(['hidden', 'file', 'submit', 'button', 'reset', 'image']);
 // The record panel's own filter and the global search box are not settings.
 const SKIP_NAMES = new Set(['filter', 'searchText', 'idPage', 'idMeth']);
-
-function contentRoot(doc) {
-  return qs(doc, '.contentContainer') || qs(doc, '#mainContent') || doc.body;
-}
 
 function skipped(el) {
   const tag = el.tagName.toLowerCase();
@@ -53,15 +51,6 @@ function skipped(el) {
   // The app marks its own non-settings chrome this way.
   if (/(^|\s)(hidden|searchinput)(\s|$)/.test(el.getAttribute('class') || '')) return true;
   return false;
-}
-
-function humanise(raw) {
-  const s = String(raw || '')
-    .replace(/[_-]+/g, ' ')
-    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
-    .replace(/\s+/g, ' ')
-    .trim();
-  return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
 }
 
 const CONTROL = 'input, select, textarea, button';
@@ -126,14 +115,6 @@ export function labelFor(el, doc) {
   if (wrapText) return { label: wrapText.slice(0, 120), source: 'label' };
 
   return blockLabel(el, doc);
-}
-
-function optionsOf(select) {
-  return qsa(select, 'option').map((o) => ({
-    value: o.getAttribute('value') != null ? o.getAttribute('value') : textOf(o),
-    label: textOf(o),
-    selected: o.hasAttribute('selected')
-  }));
 }
 
 function controlOf(el) {
@@ -288,28 +269,10 @@ export function readSettings(doc) {
   };
 }
 
-// Only what changed, as { selector, value|checked } pairs the live page can be
-// written with — plus the radio form, where the choice is which input is
-// checked rather than a value on one control.
+// Only what changed, as { selector, value|checked|radio } pairs the live page can
+// be written with. The comparison itself is shared with the editor (model/diff.js).
 export function settingsChanges(settings, values) {
-  const changes = [];
-  for (const field of settings.fields) {
-    const next = values[field.key];
-    if (field.type === 'checkbox') {
-      if (!!next !== !!field.value) changes.push({ selector: field.selector, checked: !!next, key: field.key });
-      continue;
-    }
-    if (field.type === 'radio') {
-      if (String(next == null ? '' : next) === String(field.value == null ? '' : field.value)) continue;
-      changes.push({ selector: field.selector, radio: true, value: String(next), key: field.key });
-      continue;
-    }
-    const value = next == null ? '' : String(next);
-    if (value !== String(field.value == null ? '' : field.value)) {
-      changes.push({ selector: field.selector, value, key: field.key });
-    }
-  }
-  return changes;
+  return diffFields(settings.fields, values);
 }
 
 // Write the edits into the live page and press the chosen control — the app's
@@ -320,9 +283,12 @@ export function settingsChanges(settings, values) {
 // step's are divs carrying the app's own onclick.
 export function saveSettingsInApp(doc, settings, values, action) {
   const changes = settingsChanges(settings, values);
-  const applied = applyChanges(doc, changes);
+  const { applied, missing } = applyFields(doc, changes);
   const target = action || settings.primary || settings.save;
 
+  // A setting that could not be written stops the press: the app would save the
+  // value it already holds while this screen shows the one the user picked.
+  if (missing.length) return { applied, missing, submitted: false, reason: 'missing' };
   if (!target) return { applied, submitted: false, reason: 'no-action' };
   if (target === settings.save || target.id === 'save') {
     const save = doc.getElementById('save');

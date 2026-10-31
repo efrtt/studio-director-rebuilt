@@ -17,8 +17,8 @@
 
 import { qs, qsa, textOf } from './shell.js';
 import { readForm } from './form.js';
-import { applyChanges } from './save.js';
-import { readTable } from './tabs.js';
+import { diffFields, applyFields } from '../model/diff.js';
+import { readTable } from '../model/table.js';
 
 // The app's own label on every report page seen so far.
 const RUN = /^(run|generate|create|show|view|update|apply)\s+(the\s+)?report$|^run$/i;
@@ -96,21 +96,13 @@ export function readReport(doc) {
 export function runReportInApp(doc, report, values) {
   if (!report || !report.form) return { applied: [], submitted: false, reason: 'no-filters' };
 
-  const changed = [];
-  for (const field of report.form.fields) {
-    const next = values[field.key];
-    const same = field.type === 'checkbox'
-      ? !!next === !!field.checked
-      : String(next == null ? '' : next) === String(field.value == null ? '' : field.value);
-    if (same) continue;
-    changed.push(
-      field.type === 'checkbox'
-        ? { selector: field.selector, checked: !!next, key: field.key }
-        : { selector: field.selector, value: String(next == null ? '' : next), key: field.key }
-    );
-  }
+  const changed = diffFields(report.form.fields, values);
 
-  const applied = applyChanges(doc, changed);
+  const { applied, missing } = applyFields(doc, changed);
+  // A filter that could not be written must not run the report: the app would
+  // build a request from values this screen does not show.
+  if (missing.length) return { applied, missing, submitted: false, reason: 'missing' };
+
   const trigger = reportTrigger(doc);
   if (!trigger) return { applied, submitted: false, reason: 'no-trigger' };
 

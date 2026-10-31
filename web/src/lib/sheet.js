@@ -5,7 +5,7 @@
 // `Print*` sheet. They are one shape: one or more tables with headings and
 // rows, no writer of its own. Nothing here is edited, so the view is a reading
 // surface: a filter, the tables with their own column labels, and the page's
-// controls where they can be pressed safely (see actions.js).
+// controls where they can be pressed safely (see model/press.js).
 //
 // Two kinds of table are never read here:
 //   - the week calendar's `table.TimeBlock`, which has its own view;
@@ -16,8 +16,9 @@
 // is why routing tries this after task.
 
 import { qs, qsa, textOf } from './shell.js';
-import { readTable } from './tabs.js';
+import { readTable } from '../model/table.js';
 import { readActions } from './actions.js';
+import { contentRoot } from '../model/root.js';
 
 const MIN_ROWS = 2;
 
@@ -25,10 +26,6 @@ const MIN_ROWS = 2;
 // the form itself (label column, control column), and the layout table the app
 // wraps whole pages in.
 const NOT_DATA = /^(WeekdayCheckboxes|Layout|TimeBlock|Form|FormEx)$/i;
-
-function contentRoot(doc) {
-  return qs(doc, '.contentContainer') || qs(doc, '#mainContent') || doc.body;
-}
 
 function isDataTable(table) {
   for (const cls of String(table.getAttribute('class') || '').split(/\s+/)) {

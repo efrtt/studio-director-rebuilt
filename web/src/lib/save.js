@@ -13,113 +13,41 @@
 // for the app's own masks and dirty tracking, not for the payload — which is why
 // no event ladder is needed for a record save.
 //
-// That is the whole reason this file is small: guessing `#idMeth` and the POST
-// body would mean silently dropping a field on a real client record.
+// The diff and the write now live in `model/diff.js`; this module is the save
+// step and nothing else. The defect fixed here: `submitted: true` used to be
+// returned whenever the app's Save existed, even when a change had not been
+// written — a selector that missed the live page produced "saved" for an edit
+// that never happened. A missing field now refuses, and says which one.
 
+import { diffFields, applyFields } from '../model/diff.js';
+
+// Kept for the editor view, which asks "what changed?" to enable its button.
 export function changesFrom(form, values) {
-  const changes = [];
-
-  for (const field of form.fields) {
-    const next = values[field.key];
-
-    if (field.type === 'checkbox') {
-      if (!!next !== !!field.checked) changes.push({ selector: field.selector, checked: !!next, key: field.key });
-      continue;
-    }
-
-    const value = next == null ? '' : String(next);
-    if (value !== String(field.value == null ? '' : field.value)) {
-      changes.push({ selector: field.selector, value, key: field.key });
-    }
-  }
-
-  return changes;
+  return diffFields(form ? form.fields : [], values);
 }
 
-function announce(el) {
-  // The app's own handlers (masks, dirty tracking, dependent selects) listen for
-  // these; without them a programmatic write can be invisible to them. The event
-  // constructor comes from the document's own view so this works in a browser
-  // and in a parsed document alike.
-  const view = el.ownerDocument && el.ownerDocument.defaultView;
-  const Ctor = (view && view.Event) || Event;
-  for (const name of ['input', 'change']) {
-    el.dispatchEvent(new Ctor(name, { bubbles: true }));
-  }
-}
-
+// The old name, for callers that only want the applied keys.
 export function applyChanges(doc, changes) {
-  const applied = [];
-
-  for (const change of changes) {
-    // A radio group: the choice is which input in the set is checked, so every
-    // one of them is visited and exactly one is left checked.
-    if (change.radio) {
-      const group = Array.from(doc.querySelectorAll(change.selector));
-      if (!group.length) continue;
-      let chosen = null;
-      for (const radio of group) {
-        const value = radio.getAttribute('value');
-        const on = String(value == null ? '' : value) === String(change.value);
-        radio.checked = on;
-        if (on) {
-          radio.setAttribute('checked', '');
-          chosen = radio;
-        } else {
-          radio.removeAttribute('checked');
-        }
-      }
-      if (chosen) announce(chosen);
-      applied.push(change.key);
-      continue;
-    }
-
-    const el = doc.querySelector(change.selector);
-    if (!el) continue;
-
-    if (change.checked !== undefined) {
-      // Both the property and the attribute: a form read through the DOM sees
-      // the property, a serialised one sees the attribute.
-      el.checked = change.checked;
-      if (change.checked) el.setAttribute('checked', '');
-      else el.removeAttribute('checked');
-    } else if (el.tagName === 'SELECT') {
-      // Select the option itself, in both the attribute and the property: the
-      // app reads the selected option, and a select's `value` is not writable
-      // in every DOM implementation.
-      for (const option of Array.from(el.querySelectorAll('option'))) {
-        const optionValue = option.getAttribute('value');
-        const match = optionValue != null
-          ? optionValue === change.value
-          : option.textContent.trim() === change.value;
-        // The attribute alone, on purpose: assigning `option.selected` on one
-        // option can clear its siblings' selection in some DOM implementations,
-        // and the app reads the selected option either way.
-        if (match) option.setAttribute('selected', '');
-        else option.removeAttribute('selected');
-      }
-      try { el.value = change.value; } catch (e) { /* attribute is enough */ }
-    } else {
-      el.value = change.value;
-      if (el.tagName === 'INPUT') el.setAttribute('value', change.value);
-    }
-
-    announce(el);
-    applied.push(change.key);
-  }
-
-  return applied;
+  return applyFields(doc, changes).applied;
 }
 
-// Returns what happened rather than assuming success: if the page has no Save
-// link, the caller says so instead of pretending the edit was saved.
+// Returns what happened rather than assuming success: if a change could not be
+// written, or the page has no Save link, the caller is told instead of shown a
+// confirmation for an edit that did not land.
+//
+// The no-op shapes are the ones the tests pin exactly; `missing` appears only
+// when there is something to report.
 export function saveInApp(doc, changes) {
   if (!changes.length) return { applied: [], submitted: false, reason: 'unchanged' };
 
-  const applied = applyChanges(doc, changes);
+  const { applied, missing } = applyFields(doc, changes);
+  if (missing.length) {
+    return { applied, missing, submitted: false, reason: 'missing' };
+  }
+
   const save = doc.getElementById('save');
   if (!save) return { applied, submitted: false, reason: 'no-save-link' };
 
   save.click();
-  return { applied, submitted: true, reason: 'ok' };
+  return { applied, missing, submitted: true, reason: 'ok' };
 }

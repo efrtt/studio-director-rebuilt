@@ -11,45 +11,24 @@
 // page is unverified: it is only taken over if a table of this shape is actually
 // present, and otherwise it is left to the app.
 //
+// Radios are read as a group, as of the rebuild: this reader used to skip every
+// radio input outright (`IGNORE_TYPES` held 'radio'), so a record form with a
+// radio pair lost the setting silently while the settings reader read the same
+// shape correctly. The choice is one value written to the set (see
+// model/diff.js), never to whichever input came first.
+//
 // Nothing here submits anything. Values are written back into the app's own
 // controls and its own Save link is clicked — see save.js.
 
 import { qs, qsa, textOf } from './shell.js';
+import { weekdayOf, optionsOf, valueOfSelect, selectorOf } from '../model/fields.js';
 
 const FORM_SELECTOR = 'table.Form, table.FormEx';
 const CONTROLS = 'input, select, textarea';
 const IGNORE_IDS = new Set(['filter', 'searchidx', 'ResetPwdFlag', 'idPage', 'idMeth', 'idMethArgs']);
-const IGNORE_TYPES = new Set(['hidden', 'file', 'submit', 'button', 'reset', 'image', 'radio']);
+const IGNORE_TYPES = new Set(['hidden', 'file', 'submit', 'button', 'reset', 'image']);
 
-// Weekday checkboxes are `#day__<bit>` with no label of their own; left alone
-// every one of them reads "day". 1 = Sunday keeps the bit order the app uses
-// (a Monday class has day__2 checked). It is a label only: the value is still
-// written through the control's own id.
-const WEEKDAY = { 1: 'Sun', 2: 'Mon', 4: 'Tue', 8: 'Wed', 16: 'Thu', 32: 'Fri', 64: 'Sat' };
-// The class editor names them `day__2`; the reports prefix the same ids with
-// their own subject (`classes_day__2`, `students_day__4`).
-function weekdayOf(id) {
-  const m = /(?:^|_)day__(\d+)$/.exec(id || '');
-  return m ? WEEKDAY[Number(m[1])] || null : null;
-}
-
-function optionsOf(select) {
-  const options = qsa(select, 'option').map((o) => ({
-    value: o.getAttribute('value') != null ? o.getAttribute('value') : textOf(o),
-    label: textOf(o),
-    selected: o.hasAttribute('selected')
-  }));
-  return options;
-}
-
-function valueOfSelect(options) {
-  const chosen = options.find((o) => o.selected);
-  return (chosen || options[0] || { value: '' }).value;
-}
-
-// A control is addressed by id when it has one. Some fields in the dumps carry
-// only a name (`select name="family"`), so a name is used when it is unique on
-// the page — never when it could be one of several.
+// A control is addressed by id when it has one; otherwise by a unique name.
 function controlOf(el, doc) {
   const tag = el.tagName.toLowerCase();
   const type = tag === 'input' ? (el.getAttribute('type') || 'text').toLowerCase() : tag;
@@ -59,11 +38,7 @@ function controlOf(el, doc) {
   const name = el.getAttribute('name') || '';
   if (id && IGNORE_IDS.has(id)) return null;
 
-  let selector = null;
-  if (id) selector = '#' + id;
-  else if (name && name !== '-' && qsa(doc, '[name="' + name + '"]').length === 1) {
-    selector = '[name="' + name + '"]';
-  }
+  const selector = selectorOf(el, doc);
   if (!selector) return null;
 
   const options = tag === 'select' ? optionsOf(el) : null;
@@ -93,6 +68,60 @@ function controlOf(el, doc) {
   };
 }
 
+// A radio pair inside one row is one field. Its label is the row's label, and
+// its value is the chosen input's value; the group is addressed as a set.
+function radioOf(name, radios, rowLabel) {
+  const options = radios.map((el) => ({
+    value: el.getAttribute('value') != null ? el.getAttribute('value') : '',
+    label: textOf(el.closest('label')) || el.getAttribute('title') || '',
+    checked: el.hasAttribute('checked')
+  }));
+  const chosen = options.find((o) => o.checked);
+  if (!name) return null;
+
+  return {
+    key: 'radio:' + name,
+    group: name,
+    selector: '[name="' + name + '"]',
+    id: radios[0].getAttribute('id') || '',
+    name,
+    type: 'radio',
+    label: rowLabel || null,
+    value: chosen ? chosen.value : '',
+    checked: null,
+    options,
+    masked: false
+  };
+}
+
+function fieldsIn(cell, doc, rowLabel) {
+  const fields = [];
+  const groups = new Map();
+
+  for (const el of qsa(cell, CONTROLS)) {
+    const tag = el.tagName.toLowerCase();
+    const type = tag === 'input' ? (el.getAttribute('type') || 'text').toLowerCase() : tag;
+
+    if (type === 'radio') {
+      const name = el.getAttribute('name') || el.getAttribute('id') || '';
+      if (!name) continue;
+      if (!groups.has(name)) groups.set(name, []);
+      groups.get(name).push(el);
+      continue;
+    }
+
+    const field = controlOf(el, doc);
+    if (field) fields.push(field);
+  }
+
+  for (const [name, radios] of groups) {
+    const field = radioOf(name, radios, rowLabel);
+    if (field) fields.push(field);
+  }
+
+  return fields;
+}
+
 function rowsOf(table) {
   const rows = [];
   for (const tr of qsa(table, 'tr')) {
@@ -103,10 +132,11 @@ function rowsOf(table) {
     const cells = Array.from(tr.children || []).filter((c) => c.tagName === 'TD');
     if (cells.length < 2) continue;
 
-    const fields = qsa(cells[1], CONTROLS).map((el) => controlOf(el, table.ownerDocument)).filter(Boolean);
+    const label = textOf(cells[0]);
+    const fields = fieldsIn(cells[1], table.ownerDocument, label);
     if (!fields.length) continue;
 
-    rows.push({ label: textOf(cells[0]), fields });
+    rows.push({ label, fields });
   }
   return rows;
 }

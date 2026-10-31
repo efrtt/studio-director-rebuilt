@@ -25,6 +25,7 @@
 
 import { qs, qsa, textOf } from './shell.js';
 import { readActions, primaryAction } from './actions.js';
+import { contentRoot, CHROME, FURNITURE } from '../model/root.js';
 
 // How many lines of instruction to keep. These pages say one thing; a page that
 // says more than eight is not a notice.
@@ -34,14 +35,8 @@ const MENU_LINKS = 6;
 // Two data rows is where `readSheet` starts calling a page a table.
 const TABLE_ROWS = 2;
 
-// Page furniture that is not the notice itself.
-const FURNITURE = '.formTitle, .Breadcrumb, .ButtonBar, .ButtonArea, .menu';
-// Shell navigation is never one of this page's controls.
-const CHROME = '#sideNavBar, .topBarContainer, .topBar, .Breadcrumb, .copyright, #sd-root';
-
-function rootOf(doc) {
-  return qs(doc, '.contentContainer') || qs(doc, '#mainContent') || doc.body;
-}
+// The one content-root definition (model/root.js), under this reader's name.
+const rootOf = contentRoot;
 
 function dataRows(root) {
   let rows = 0;
