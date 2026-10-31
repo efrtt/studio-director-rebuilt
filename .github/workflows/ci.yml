@@ -1,0 +1,52 @@
+name: CI
+
+# Both gates, on every push. The rebuild's whole safety argument is that the 20
+# golden models and the 14 suites do not move — and twice during the rebuild a
+# change looked fine to read and moved one of them. This makes that check happen
+# without anyone remembering to run it.
+
+on:
+  push:
+    branches: [main, rebuild]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Tests
+        run: npm test
+
+      - name: Golden models
+        run: npm run golden
+
+      - name: Build the userscript
+        run: npm run userscript
+
+      # The version in the header is injected from package.json, so this checks
+      # the injection happened rather than that someone typed the right number.
+      - name: The artifact carries the package version
+        run: |
+          version=$(sed -n 's/.*"version": "\([^"]*\)".*/\1/p' package.json | head -1)
+          echo "package version: $version"
+          grep -q "^// @version      $version$" ../studio-director-rebuilt.user.js
+
+      # A committed artifact that no longer matches the source is how the stale
+      # 0.2.0 survived. If this fails, run `npm run userscript` and commit it.
+      - name: The committed artifact is current
+        run: git diff --exit-code -- ../studio-director-rebuilt.user.js
