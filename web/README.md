@@ -510,11 +510,12 @@ It matches `https://app.thestudiodirector.com/*/*`, so it works for any tenant.
 
 ## Testing on the real site
 
-### 0. Check the one risky assumption first (no install)
+### 0. Optional: check the fetch fallback (no install)
 
-Everything here depends on the app answering a plain `GET` with the same HTML the browser
-already rendered. Prove that before installing anything: sign in, open the class calendar, and
-paste this into the DevTools console.
+Reading happens on the live page first now, so most screens cost no request at all. The `GET` is
+the fallback for pages the app draws after load, and it is still worth knowing it carries your
+session: a shell page that answers with the sign-in screen has nothing to fall back on. Sign in,
+open the class calendar, and paste this into the DevTools console.
 
 ```js
 fetch(location.href, { credentials: 'same-origin' })
@@ -579,6 +580,21 @@ silently.
 document.getElementById('sd-root')?.innerText.slice(0, 200);
 ```
 
+`SD` itself is not reachable from a console: the bundle is function-scoped inside the userscript
+wrapper, so `SD.probeDump()` is not a thing. The probe publishes its own handle instead, and only
+while armed. Visit a page with `?sdprobe=1` appended (the flag sticks for the session, and
+`?sdprobe=0` clears it), reload, then:
+
+```js
+sdProbe.log();    // every screen seen: counts, the view mounted, and its source
+sdProbe.dump();   // the same as JSON, ready to paste
+sdProbe.clear();  // forget it
+```
+
+Each entry carries `source`: `live` (read where it stood, no request), `fetched` (one `GET`), or
+`app` (declined to cover it). That column is the quickest way to tell me which screens are not
+being claimed.
+
 To inspect the page the script *fetched* rather than the one you see, suffix the URL with
 `#original`: that tears the overlay down and leaves the app's own markup. The most useful
 report back to me is the exact page name plus what the rebuilt view said versus what the
@@ -591,12 +607,13 @@ to the app, so there is nothing to clean up.
 
 ## Safety
 
-- **The app posts, not this script.** Reading is a plain same-origin `GET`. Saving writes the
-  changed values into the app's own form and clicks the app's own Save link; no POST body, no
-  method name and no token is ever constructed here.
+- **The app posts, not this script.** Reading is either the live page or a plain same-origin
+  `GET`. Saving writes the changed values into the app's own form and clicks the app's own Save
+  link; no POST body, no method name and no token is ever constructed here.
 - **Only changed fields are touched.** Everything else keeps the value the server sent.
-- **One same-origin GET per page view**, with `credentials: 'same-origin'`. Nothing is sent
-  anywhere else, and no cookie or credential is read, stored or logged.
+- **At most one same-origin GET per page view**, with `credentials: 'same-origin'`, and none at
+  all on a page the live read already answers. Nothing is sent anywhere else, and no cookie or
+  credential is read, stored or logged.
 - **The sign-in page is never replaced** — that is where the session is created.
 - **Esc** (or the **Original** button, or `#original`) returns the app's own page, form intact,
   and discards anything unsaved.
@@ -605,7 +622,8 @@ to the app, so there is nothing to clean up.
 
 ```bash
 cd web
-npm test          # adapters, routing, rail, editors, saving, forms, tables, toggles — 142 tests
+npm test          # adapters, routing, rail, editors, saving, forms, tables, toggles — 14 suites, 159 assertions
+npm run golden    # the 20 recorded screens, model for model
 npm run demo      # demo/*.html — self-contained pages, plus live-*.html
 ```
 

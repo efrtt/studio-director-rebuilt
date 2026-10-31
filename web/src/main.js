@@ -22,7 +22,10 @@ import { contradictsNote } from './lib/note.js';
 import { wantsLiveLook, decideMount, decideShellLess, hasReadyView, chooseSource } from './lib/choose.js';
 
 export { readPage };
-// Probe mode's two ends: `SD.probeDump()` returns every screen measured so far,
+// Probe mode's two ends: `probeTick` measures the page before the overlay covers it, and
+// `dump` returns every screen measured so far. Neither is reachable from a console as `SD`
+// (the bundle is function-scoped inside the userscript wrapper): arm it with `?sdprobe=1`,
+// and probe.js publishes `window.sdProbe` with `dump`/`log`/`clear` for that purpose.
 // `SD.probeClear()` forgets them. Off unless `?sdprobe=1` has been used.
 export { dump as probeDump, clear as probeClear, measure, shapeOf } from './lib/probe.js';
 
