@@ -172,9 +172,8 @@ Rules this layout enforces:
 
 ## 7. Method — one increment at a time
 
-There is no version control in this workspace (`git rev-parse` fails), so there is no branch to
-abandon. **Initialise a repository before any code moves** and commit the current green state, so
-each increment is a diff that can be read and reverted.
+The repository is `efrtt/studio-director-rebuilt` (`7ce29c9`, tag `pre-rebuild`), so each increment is
+a diff that can be read and reverted; the work happened on the `rebuild` branch.
 
 Then, per increment, exactly this loop:
 
@@ -235,3 +234,12 @@ goldens should not move at all.
   transport**; only the record save has been measured against the real site.
 - The crawl followed 96 URLs its own safety rule flagged; `crawl-map.md` does not yet explain them.
 - `readLiveView`'s polling and `contradictsNote` against a live DOM are still hand-checked only.
+
+### Status after the rebuild (2026-10-31)
+
+Section 2 (registry), section 3 (one dispatcher), section 4 (the write path) and section 6 (layout)
+are implemented; section 3's note tiebreaker and shell-less case still run in `main.js`, because they
+need the live document and a timeout. Section 5's `chooseSource` exists and is tested, but the
+live-first default is **not** switched on: it changes which document every model comes from, and no
+fixture or golden can see that difference, only a signed-in session can. The unknowns above are
+unchanged; none of them was resolved by moving code.
