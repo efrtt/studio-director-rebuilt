@@ -51,6 +51,7 @@ const URLS = {
   'search-results.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=SearchResults&searchText=smith',
   'settings-search.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=SearchDisplayFormat',
   'sheet-roster.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=PrintClassRoster',
+  'task-holidays.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=ManageHolidays',
   'task-email-group.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=EmailToGroupForm'
 };
 

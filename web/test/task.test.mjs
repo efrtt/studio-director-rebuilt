@@ -162,6 +162,21 @@ test('a form with no control of its own is left to the app', () => {
   assert.equal(readPage(settings, 'https://app.thestudiodirector.com/studio1/admin.sd?page=ManageHolidays').task, null);
 });
 
+test('a task page keeps the table it prints beside its form', () => {
+  const holidays = load('task-holidays.html');
+  const found = readTask(holidays);
+  assert.ok(found, 'ManageHolidays is a task');
+
+  // The holiday list sits in the right-hand cell of the page's layout table.
+  assert.equal(found.tables.length, 1);
+  assert.deepEqual(found.tables[0].headings, ['Holiday Desc', 'Date', 'Charge Tuition']);
+  assert.equal(found.tables[0].rowTotal, 3);
+
+  // The Date row is three selects — month, day, year — not three fields.
+  const date = found.rows.find((r) => r.label === 'Date');
+  assert.equal(date.fields.length, 3);
+});
+
 test('a report is not a task, and a list is not one either', () => {
   const report = readPage(load('report-roster.html'), 'https://x/admin.sd?page=ClassRosterForm');
   assert.equal(report.view, 'report');

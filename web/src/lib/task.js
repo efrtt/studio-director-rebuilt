@@ -12,8 +12,10 @@
 // edited fields into the live page and clicks the app's element, so the app
 // builds the request, the validation and the result.
 //
-// A page with fields but no controls at all (ManageHolidays) is not a task: it
-// yields nothing and stays with the app.
+// A form with no control of any kind is not a task: it yields nothing and stays
+// with the app. `ManageHolidays` used to be the example of that; live it carries
+// an `a#save` in its ButtonBar and is read here, which is why the task view also
+// prints the holiday list the page shows beside the form.
 
 import { qs, qsa, textOf } from './shell.js';
 import { readForm } from './form.js';
@@ -39,6 +41,10 @@ export function readTask(doc) {
     breadcrumb: form.breadcrumb,
     rows: form.rows,
     fields: form.fields,
+    // Whatever the page prints beside its form — `ManageHolidays` puts its list
+    // of holidays on the right of the holiday form. Read by the form reader, so
+    // the task view shows it too.
+    tables: form.tables || [],
     // Kept whole so pressing an action can compare against what the server sent.
     form,
     actions,
