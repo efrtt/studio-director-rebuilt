@@ -75,3 +75,23 @@ test('two submit buttons are not answered by guessing which one', () => {
   ));
   assert.equal(pendingConfirmation(twice), null);
 });
+
+test('a sentence sharing its paragraph with the button is still the sentence', () => {
+  // The live page puts the warning and Continue in one <p>; the captured fixture
+  // had them apart, so this is the case the live run caught.
+  const merged = doc(`<form id="idForm"><div class="contentContainer"><div class="Content">
+    <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a></div>
+    <div class="formTitle">Drop Student</div>
+    <div class="contentInfo">
+      <input type="hidden" name="args1" value="0">
+      <p>Dropping the student takes them out of this class.
+        <a class="Btn" id="continue" href="#" onclick="StudioDir.onCallMethodSubmit('Unenroll','confirm','args1');return false;">Continue</a>
+      </p>
+    </div>
+  </div></div></form>`);
+
+  const model = pendingConfirmation(merged);
+  assert.ok(model, 'the page is still a question');
+  assert.deepEqual(model.lines, ['Dropping the student takes them out of this class.']);
+  assert.equal(model.actions[0].label, 'Continue');
+});

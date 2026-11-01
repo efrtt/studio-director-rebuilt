@@ -25,6 +25,22 @@ const SUBMITS = /onCallMethodSubmit\s*\(/i;
 // More links than this is a menu, and a menu is not a question.
 const QUESTION_LINKS = 5;
 
+// A message is a short piece of text, not a container holding the page.
+const MAX_LENGTH = 240;
+
+// A paragraph can hold the sentence and the button that answers it - that is how
+// `Unenroll` is drawn live, though the captured fixture had them apart. So take the
+// node's own words and drop the controls, rather than dropping the node: otherwise
+// the one sentence on the page disappears along with the button.
+function textWithoutControls(node) {
+  if (!node || !node.cloneNode) return textOf(node);
+  const copy = node.cloneNode(true);
+  if (copy.querySelectorAll) {
+    copy.querySelectorAll('a[href], [onclick], .Btn').forEach((el) => el.remove());
+  }
+  return textOf(copy);
+}
+
 // A page waiting for a yes: `Unenroll` is the shape. A warning sentence, no
 // control to type into, no rows, and exactly one app button that calls back into
 // the app. It is rendered as the same card one step earlier, with the app's own
@@ -53,11 +69,7 @@ export function pendingConfirmation(doc) {
   const label = textOf(button);
   const title = textOf(qs(doc, '.formTitle, .ReportName, h1'));
   const lines = qsa(root, 'p, li')
-    // A paragraph whose text is just its own links is a row of controls, not a
-    // sentence: dropping it is why the card reads as prose instead of repeating
-    // the button labels back at you.
-    .filter((node) => !(node.querySelector && node.querySelector('a[href], [onclick], .Btn')))
-    .map(textOf)
+    .map((node) => textWithoutControls(node))
     .filter((text) => text && text !== label && text.length <= MAX_LENGTH);
 
   if (!label || !title || !lines.length) return null;
@@ -78,9 +90,6 @@ export function pendingConfirmation(doc) {
     }]
   };
 }
-
-// A message is a short piece of text, not a container holding the page.
-const MAX_LENGTH = 240;
 
 function messageIn(root, pattern) {
   const matches = qsa(root, 'div, p, span, h1, h2, h3, td, b, strong')
