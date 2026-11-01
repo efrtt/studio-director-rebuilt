@@ -36,15 +36,46 @@ export function valueOfSelect(options) {
   return (chosen || options[0] || { value: '' }).value;
 }
 
-// `familyMax` -> "Family max": the fallback label, marked as such by the view so
-// nobody reads a guess as the app's own wording.
+// The app's own field names are mostly words run together: `dropchargedate`,
+// `allowdropins`, `classroomcapacity`. Splitting camelCase and underscores covers
+// some of them; the rest are one lowercase run with no boundary to find, so the
+// only honest split is by vocabulary. These are the words this app's field names
+// are built from - not a dictionary, and not a guess: a word that does not split
+// into these stays whole rather than being chopped into nonsense.
+const SPLIT_WORDS = new Set(`
+  drop reason notes note charge charges class classes date time enroll enrolls start end close
+  allow enable disable show hide send email phone mobile address city state zip
+  country name first last middle student students family parent staff teacher
+  level skill skills balance amount payment card code type format display print
+  page size color colour theme admin calendar search filter save default active
+  inactive status group message subject title text logo header footer width
+  height count min max limit day week month year from to login password
+`.trim().split(/\s+/));
+
+// Longest head first, so `chargedate` prefers `charge` over `char`-like prefixes.
+// A tail still has to be a word (or split into them) for the break to be taken.
+function splitBare(word) {
+  if (word.length < 4 || SPLIT_WORDS.has(word)) return word;
+  for (let i = word.length - 2; i >= 3; i--) {
+    const head = word.slice(0, i);
+    if (!SPLIT_WORDS.has(head)) continue;
+    const tail = word.slice(i);
+    const rest = splitBare(tail);
+    if (rest !== tail || SPLIT_WORDS.has(tail)) return head + ' ' + rest;
+  }
+  return word;
+}
+
+// `familyMax` -> "Family max", `dropreason` -> "Drop reason": the fallback label.
 export function humanise(raw) {
   const s = String(raw || '')
     .replace(/[_-]+/g, ' ')
     .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
     .replace(/\s+/g, ' ')
     .trim();
-  return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+  if (!s) return '';
+  const out = s.split(' ').map(splitBare).join(' ');
+  return out.charAt(0).toUpperCase() + out.slice(1);
 }
 
 // A control is addressed by id when it has one. Some fields carry only a name
