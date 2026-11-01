@@ -846,3 +846,281 @@ html[data-sd-theme="wii"] #sd-root .sd-btn:active {
     animation: none !important;
   }
 }
+/* ============================================================
+ * v3: the channel menu
+ *
+ * The rail is what a sidebar thinks navigation is. The Wii does something else:
+ * you press Home and the page is replaced by a screen of channels, with the
+ * clock underneath. So in this theme the rail is gone entirely and a Home button
+ * opens `Menu.svelte`, which draws the same nav links as channels.
+ *
+ * The reference for the proportions is the Menu itself: a 4x3 grid of rounded
+ * tiles on a fine horizontal pinstripe, a coloured few among the white ones, and
+ * a band along the bottom carrying a round Wii button, the clock and date, and a
+ * second round button on the right. The band's top edge is a wide, shallow
+ * curve, which is the one shape that makes the whole thing read as a Wii screen.
+ * ============================================================ */
+
+/* No rail at all: navigation is the menu. */
+html[data-sd-theme="wii"] #sd-root .sd-rail { display: none; }
+
+/* ---- the Home button, in the blue bar ---- */
+html[data-sd-theme="wii"] #sd-root .sd-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 42px;
+  padding: 0 18px 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 50%, #eef8fe 51%, #dceffa 100%);
+  color: #2b4c5e;
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 700;
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 2px 6px rgba(14, 82, 116, 0.35);
+  flex: 0 0 auto;
+}
+html[data-sd-theme="wii"] #sd-root .sd-home:hover {
+  color: var(--wii-deep);
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 0 0 2px rgba(52, 190, 237, 0.6),
+    0 6px 12px -4px rgba(14, 82, 116, 0.45);
+}
+html[data-sd-theme="wii"] #sd-root .sd-home:active { transform: scale(0.97); }
+/* The Wii button's shape, in miniature: a disc with a blue ring. */
+html[data-sd-theme="wii"] #sd-root .sd-home-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 50% 32%, #ffffff 0%, #e8f4fb 55%, #cfe6f4 100%);
+  box-shadow: inset 0 0 0 2px #7ecdf0, 0 1px 2px rgba(14, 82, 116, 0.3);
+}
+
+/* ---- the screen ---- */
+html[data-sd-theme="wii"] #sd-root .sd-menu-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  padding: 26px 30px 0;
+  overflow: auto;
+  /* The pinstripe is the Menu's wallpaper: 2px lines over a cool grey. */
+  background:
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0 1px, rgba(226, 232, 236, 0.6) 1px 3px),
+    linear-gradient(180deg, #f2f5f7 0%, #e7edf0 62%, #dde5ea 100%);
+  animation: sd-wii-zoom 240ms cubic-bezier(0.2, 0.8, 0.3, 1.05) both;
+}
+
+html[data-sd-theme="wii"] #sd-root .sd-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  align-content: start;
+}
+
+/* A channel: white keyline, gloss cap at the halfway line, soft ambient drop. */
+html[data-sd-theme="wii"] #sd-root .sd-channel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  aspect-ratio: 1.62 / 1;
+  padding: 12px 14px;
+  border: 3px solid #ffffff;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 52%, #f4f8fa 53%, #e9f0f4 100%);
+  color: var(--wii-deep);
+  text-decoration: none;
+  text-align: center;
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 10px 18px -10px rgba(64, 100, 118, 0.45),
+    0 2px 5px rgba(90, 120, 135, 0.16);
+  transition:
+    transform 170ms cubic-bezier(0.2, 0.8, 0.3, 1),
+    box-shadow 160ms ease;
+}
+html[data-sd-theme="wii"] #sd-root .sd-channel::after {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(closest-side, rgba(90, 205, 245, 0.55), rgba(90, 205, 245, 0) 72%);
+  transition: opacity 170ms ease;
+}
+html[data-sd-theme="wii"] #sd-root .sd-channel:hover,
+html[data-sd-theme="wii"] #sd-root .sd-channel:focus-visible {
+  transform: scale(1.055);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 16px 26px -12px rgba(28, 120, 160, 0.55),
+    0 0 0 3px rgba(90, 205, 245, 0.55);
+  outline: none;
+}
+html[data-sd-theme="wii"] #sd-root .sd-channel:hover::after,
+html[data-sd-theme="wii"] #sd-root .sd-channel:focus-visible::after { opacity: 1; }
+
+html[data-sd-theme="wii"] #sd-root .sd-channel-icon { font-size: 34px; line-height: 1; }
+html[data-sd-theme="wii"] #sd-root .sd-channel-initial {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0.75;
+}
+html[data-sd-theme="wii"] #sd-root .sd-channel-name {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  /* Long section names wrap to two lines rather than truncate. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* The coloured few, as on the real grid: a saturated field with white type. */
+html[data-sd-theme="wii"] #sd-root .sd-channel--blue,
+html[data-sd-theme="wii"] #sd-root .sd-channel--green,
+html[data-sd-theme="wii"] #sd-root .sd-channel--aqua,
+html[data-sd-theme="wii"] #sd-root .sd-channel--orange { color: #ffffff; }
+html[data-sd-theme="wii"] #sd-root .sd-channel--blue .sd-channel-icon,
+html[data-sd-theme="wii"] #sd-root .sd-channel--green .sd-channel-icon,
+html[data-sd-theme="wii"] #sd-root .sd-channel--aqua .sd-channel-icon,
+html[data-sd-theme="wii"] #sd-root .sd-channel--orange .sd-channel-icon,
+html[data-sd-theme="wii"] #sd-root .sd-channel--blue .sd-channel-initial,
+html[data-sd-theme="wii"] #sd-root .sd-channel--green .sd-channel-initial,
+html[data-sd-theme="wii"] #sd-root .sd-channel--aqua .sd-channel-initial,
+html[data-sd-theme="wii"] #sd-root .sd-channel--orange .sd-channel-initial { opacity: 0.92; }
+html[data-sd-theme="wii"] #sd-root .sd-channel--blue {
+  background: linear-gradient(180deg, #2b74e0 0%, #1f63cd 52%, #1250ac 53%, #0b3f8f 100%);
+}
+html[data-sd-theme="wii"] #sd-root .sd-channel--green {
+  background: linear-gradient(180deg, #1f8a3a 0%, #177a30 52%, #0f6426 53%, #0b4d1d 100%);
+}
+html[data-sd-theme="wii"] #sd-root .sd-channel--aqua {
+  background: linear-gradient(180deg, #a8ebfa 0%, #7fdcf4 52%, #55c9ea 53%, #3fb4d8 100%);
+  color: #10475c;
+}
+html[data-sd-theme="wii"] #sd-root .sd-channel--orange {
+  background: linear-gradient(180deg, #f6a53c 0%, #ed9226 52%, #d97c15 53%, #bd6510 100%);
+}
+/* The section you are on is ringed, not filled: the Menu marks the pointer's
+   channel, and the current section is the same idea. */
+html[data-sd-theme="wii"] #sd-root .sd-channel--on {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 0 4px rgba(90, 205, 245, 0.85),
+    0 14px 22px -12px rgba(28, 120, 160, 0.6);
+}
+
+/* ---- the bottom band: Wii button, clock, close ---- */
+html[data-sd-theme="wii"] #sd-root .sd-menu-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
+  margin: auto 0 0;
+  padding: 22px 34px 18px;
+  /* The shallow curve across the top of the band. */
+  border-radius: 50% 50% 0 0 / 34px 34px 0 0;
+  background: linear-gradient(180deg, #f7fafb 0%, #e9f0f3 46%, #d8e2e8 100%);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 -8px 20px -12px rgba(64, 100, 118, 0.5);
+}
+html[data-sd-theme="wii"] #sd-root .sd-menu-round {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border: 0;
+  border-radius: 999px;
+  background: radial-gradient(circle at 50% 30%, #ffffff 0%, #f0f6f9 52%, #d6e3ea 100%);
+  box-shadow:
+    inset 0 0 0 3px #cfe6f4,
+    inset 0 2px 0 #ffffff,
+    0 6px 14px -6px rgba(52, 118, 150, 0.55);
+  color: #8c9aa2;
+  font: inherit;
+  transition:
+    transform 170ms cubic-bezier(0.2, 0.8, 0.3, 1),
+    box-shadow 160ms ease;
+}
+html[data-sd-theme="wii"] #sd-root .sd-menu-round:hover {
+  transform: scale(1.06);
+  box-shadow:
+    inset 0 0 0 3px #7ecdf0,
+    inset 0 2px 0 #ffffff,
+    0 12px 20px -8px rgba(52, 118, 150, 0.6);
+}
+html[data-sd-theme="wii"] #sd-root .sd-menu-round:active { transform: scale(0.97); }
+html[data-sd-theme="wii"] #sd-root .sd-menu-wii {
+  font-size: 22px;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: -0.02em;
+  color: #9aa7ae;
+}
+html[data-sd-theme="wii"] #sd-root .sd-menu-cross { font-size: 24px; color: #9aa7ae; }
+
+html[data-sd-theme="wii"] #sd-root .sd-menu-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: #93a1a9;
+}
+html[data-sd-theme="wii"] #sd-root .sd-menu-time {
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+}
+html[data-sd-theme="wii"] #sd-root .sd-menu-meridiem {
+  margin-left: 8px;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  vertical-align: 14px;
+}
+html[data-sd-theme="wii"] #sd-root .sd-menu-date {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Narrow windows: three channels wide, then two, and a smaller band. */
+@media (max-width: 1080px) {
+  html[data-sd-theme="wii"] #sd-root .sd-menu-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  html[data-sd-theme="wii"] #sd-root .sd-menu-time { font-size: 40px; }
+  html[data-sd-theme="wii"] #sd-root .sd-menu-date { font-size: 18px; }
+}
+@media (max-width: 760px) {
+  html[data-sd-theme="wii"] #sd-root .sd-menu-screen { padding: 16px 16px 0; }
+  html[data-sd-theme="wii"] #sd-root .sd-menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  html[data-sd-theme="wii"] #sd-root .sd-menu-round { width: 62px; height: 62px; }
+  html[data-sd-theme="wii"] #sd-root .sd-menu-bar { padding: 16px 18px 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-sd-theme="wii"] #sd-root .sd-menu-screen { animation: none !important; }
+  html[data-sd-theme="wii"] #sd-root .sd-channel:hover,
+  html[data-sd-theme="wii"] #sd-root .sd-channel:focus-visible,
+  html[data-sd-theme="wii"] #sd-root .sd-menu-round:hover { transform: none; }
+}

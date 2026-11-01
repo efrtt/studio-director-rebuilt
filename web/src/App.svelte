@@ -7,6 +7,7 @@
   import { isActiveHref } from './lib/activelink.js';
 import { readRail, writeRail } from './lib/rail.js';
   import { THEME_LABEL, readTheme, writeTheme, nextTheme, applyTheme } from './lib/theme.js';
+import Menu from './components/Menu.svelte';
 
   export let model = { nav: [], week: null, list: null, form: null, view: null, title: '', url: '' };
   export let state = 'ready';
@@ -57,11 +58,20 @@ import { readRail, writeRail } from './lib/rail.js';
   // changing it costs no re-render of a view. Dark is the default and `auto`
   // resolves to what the machine prefers.
   let theme = readTheme();
+  // The Wii's navigation is a screen, not a sidebar: Home opens it. The rail is
+  // hidden by the skin, so this button is the way in while that theme is on.
+  let menuOpen = false;
   function cycleTheme() {
     theme = nextTheme(theme);
     writeTheme(theme);
   }
-  $: applyTheme(theme);
+  // The resolved name, because the channel menu is a Wii-only affordance and the
+  // shell has to know which look is actually on.
+  let resolvedTheme = 'dark';
+  $: resolvedTheme = applyTheme(theme);
+  // Leaving the menu open across a theme change would be a screen with no way
+  // back to it in the next theme.
+  $: if (resolvedTheme !== 'wii' && menuOpen) menuOpen = false;
 
   // The rail folds to a strip of initials and remembers the choice; the current
   // section is marked, because navigation should say where you are.
@@ -124,6 +134,9 @@ import { readRail, writeRail } from './lib/rail.js';
   }
 
   function onKey(e) {
+    // While the menu is open it owns Escape: closing the menu must not also open
+    // the app's own page underneath it.
+    if (menuOpen) return;
     if (e.key === 'Escape') {
       e.preventDefault();
       openOriginal();
@@ -169,6 +182,18 @@ import { readRail, writeRail } from './lib/rail.js';
 
 <div class="sd-main">
   <header class="sd-top">
+    {#if resolvedTheme === 'wii'}
+      <button
+        class="sd-home"
+        type="button"
+        aria-label="Open the channel menu"
+        title="Channel menu"
+        on:click={() => (menuOpen = true)}
+      >
+        <span class="sd-home-dot" aria-hidden="true"></span>
+        <span class="sd-home-text">Home</span>
+      </button>
+    {/if}
     <div class="sd-heading">
       <div class="sd-title">{title}</div>
       {#if crumbs.length}
@@ -231,3 +256,7 @@ import { readRail, writeRail } from './lib/rail.js';
     <span>{foot.right}{version ? ' \u00b7 v' + version : ''}</span>
   </footer>
 </div>
+
+{#if menuOpen}
+  <Menu nav={model.nav} icons={icons} current={model.url} onClose={() => (menuOpen = false)} />
+{/if}
