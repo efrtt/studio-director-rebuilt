@@ -601,10 +601,11 @@ test('the family editor is read field by field, with its values', () => {
   assert.equal(form.title, 'Edit Family');
   assert.deepEqual(form.breadcrumb, ['Families', 'Lovelace']);
   // 19 fields by id, plus the three phone-label selects, which have no id but
-  // a unique name, so they are addressable and included.
-  assert.equal(form.fields.length, 22);
+  // The page's three phone types arrive as input[type=hidden], which this reader
+  // drops, so they are not fields.
+  assert.equal(form.fields.length, 19);
   assert.deepEqual(form.rows.map((r) => r.label).slice(0, 6),
-    ['Guardian', 'Last Name', 'Address', 'Address 2', 'City', 'State']);
+    ['Guardian Name(s)', 'Last Name', 'Address 1', 'Address 2', 'City', 'State']);
 
   const byKey = Object.fromEntries(form.fields.map((f) => [f.key, f]));
   assert.equal(byKey.guardian.value, 'Dana Lovelace');
@@ -617,9 +618,10 @@ test('the family editor is read field by field, with its values', () => {
   assert.equal(byKey.phone1.value, '(555) 010-2000');
   assert.equal(byKey.tags.options.length, 3);
 
-  // A name shared by several controls is not addressable, so it is skipped.
-  assert.equal(byKey['name:phone1_label'].selector, '[name="phone1_label"]');
-  assert.equal(byKey['name:phone1_label'].value, 'Home');
+  // The phone type is a hidden input, so it is not offered as a field and its
+  // value cannot be edited (this fixture used to invent selects for it).
+  assert.equal(byKey['name:phone1_label'], undefined);
+  assert.equal(byKey.fident, undefined);
   // The unnamed helper input is not a field.
   assert.equal(form.fields.some((f) => f.key === 'name:-'), false);
 });

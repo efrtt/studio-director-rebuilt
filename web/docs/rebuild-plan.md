@@ -111,11 +111,11 @@ the page routes — the old `{#if}` chain and the duplicated readers were most o
 No test and no golden was edited. The new coverage lives in two new suites (`model.test.mjs`,
 `readers.test.mjs`), added to the `test` script; the twelve original suites pass unchanged.
 
-## A golden that does not match the live page
+## The edit-family golden, rebuilt from the live page
 
-`test/golden/edit-family.json` models `EditFamily` with 22 fields, three of them phone-type selects
-(`name:phone1_label` ...) holding `Home`/`Work` options. A live dump of the same page says 19 fields
-and says why:
+`test/golden/edit-family.json` used to model `EditFamily` with 22 fields, three of them phone-type
+selects (`name:phone1_label` ...) holding `Home`/`Work` options. A live dump of the same page said 19
+fields, and said why:
 
 ```
 INPUT|phone1_label|hidden
@@ -123,10 +123,15 @@ Home Phone=>input[phone1]
 ```
 
 The phone type is `input[type=hidden]`, not a select. Hidden controls are dropped by `readForm`
-because they cannot be edited, so 19 is the honest count and nothing is lost: there was never a
-phone type to edit on that page. The fixture was built with selects, so the golden pins a page the
-app does not serve. Correcting it is a spec change rather than a bug fix, and it has not been made;
-the goldens stay authoritative until the model is changed deliberately.
+because they cannot be edited, so 19 is the honest count and nothing was lost: there is no phone type
+to edit on that page. The fixture has been rebuilt from that dump, row by row, so the golden now
+pins the page the app serves: 19 fields, 19 rows, real labels (`Guardian Name(s)`, `Address 1`, `ZIP`,
+three `Home Phone` rows). Values stay anonymized and option lists are trimmed, since the reader only
+distinguishes an empty select from a non-empty one.
+
+Where the invented selects came from is worth knowing: `studio-director-pages.json`, the crawl that
+first described this page, records `phone1_label` as a select with 10 options, which is not the markup
+the browser ends up with. A crawl summary is a shape, not a page; the fixture has to come from the DOM.
 
 ## Not verified here
 

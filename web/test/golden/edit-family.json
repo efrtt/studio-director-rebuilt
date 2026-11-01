@@ -103,29 +103,6 @@
       },
       {
         "checked": null,
-        "id": null,
-        "key": "name:phone1_label",
-        "label": null,
-        "masked": false,
-        "name": "phone1_label",
-        "options": [
-          {
-            "label": "Home",
-            "selected": true,
-            "value": "Home"
-          },
-          {
-            "label": "Work",
-            "selected": false,
-            "value": "Work"
-          }
-        ],
-        "selector": "[name=\"phone1_label\"]",
-        "type": "select",
-        "value": "Home"
-      },
-      {
-        "checked": null,
         "id": "phone1",
         "key": "phone1",
         "label": null,
@@ -138,29 +115,6 @@
       },
       {
         "checked": null,
-        "id": null,
-        "key": "name:phone2_label",
-        "label": null,
-        "masked": false,
-        "name": "phone2_label",
-        "options": [
-          {
-            "label": "Home",
-            "selected": false,
-            "value": "Home"
-          },
-          {
-            "label": "Work",
-            "selected": false,
-            "value": "Work"
-          }
-        ],
-        "selector": "[name=\"phone2_label\"]",
-        "type": "select",
-        "value": "Home"
-      },
-      {
-        "checked": null,
         "id": "phone2",
         "key": "phone2",
         "label": null,
@@ -170,29 +124,6 @@
         "selector": "#phone2",
         "type": "text",
         "value": ""
-      },
-      {
-        "checked": null,
-        "id": null,
-        "key": "name:phone3_label",
-        "label": null,
-        "masked": false,
-        "name": "phone3_label",
-        "options": [
-          {
-            "label": "Home",
-            "selected": false,
-            "value": "Home"
-          },
-          {
-            "label": "Work",
-            "selected": false,
-            "value": "Work"
-          }
-        ],
-        "selector": "[name=\"phone3_label\"]",
-        "type": "select",
-        "value": "Home"
       },
       {
         "checked": null,
@@ -294,6 +225,11 @@
             "label": "Web search",
             "selected": false,
             "value": "Web search"
+          },
+          {
+            "label": "Drove by",
+            "selected": false,
+            "value": "Drove by"
           }
         ],
         "selector": "#howheard",
@@ -381,7 +317,7 @@
             "value": "Dana Lovelace"
           }
         ],
-        "label": "Guardian"
+        "label": "Guardian Name(s)"
       },
       {
         "fields": [
@@ -415,7 +351,7 @@
             "value": "12 Ada Way"
           }
         ],
-        "label": "Address"
+        "label": "Address 1"
       },
       {
         "fields": [
@@ -494,33 +430,10 @@
             "value": "10001"
           }
         ],
-        "label": "Zip"
+        "label": "ZIP"
       },
       {
         "fields": [
-          {
-            "checked": null,
-            "id": null,
-            "key": "name:phone1_label",
-            "label": null,
-            "masked": false,
-            "name": "phone1_label",
-            "options": [
-              {
-                "label": "Home",
-                "selected": true,
-                "value": "Home"
-              },
-              {
-                "label": "Work",
-                "selected": false,
-                "value": "Work"
-              }
-            ],
-            "selector": "[name=\"phone1_label\"]",
-            "type": "select",
-            "value": "Home"
-          },
           {
             "checked": null,
             "id": "phone1",
@@ -534,33 +447,10 @@
             "value": "(555) 010-2000"
           }
         ],
-        "label": "Phone 1"
+        "label": "Home Phone"
       },
       {
         "fields": [
-          {
-            "checked": null,
-            "id": null,
-            "key": "name:phone2_label",
-            "label": null,
-            "masked": false,
-            "name": "phone2_label",
-            "options": [
-              {
-                "label": "Home",
-                "selected": false,
-                "value": "Home"
-              },
-              {
-                "label": "Work",
-                "selected": false,
-                "value": "Work"
-              }
-            ],
-            "selector": "[name=\"phone2_label\"]",
-            "type": "select",
-            "value": "Home"
-          },
           {
             "checked": null,
             "id": "phone2",
@@ -574,33 +464,10 @@
             "value": ""
           }
         ],
-        "label": "Phone 2"
+        "label": "Home Phone"
       },
       {
         "fields": [
-          {
-            "checked": null,
-            "id": null,
-            "key": "name:phone3_label",
-            "label": null,
-            "masked": false,
-            "name": "phone3_label",
-            "options": [
-              {
-                "label": "Home",
-                "selected": false,
-                "value": "Home"
-              },
-              {
-                "label": "Work",
-                "selected": false,
-                "value": "Work"
-              }
-            ],
-            "selector": "[name=\"phone3_label\"]",
-            "type": "select",
-            "value": "Home"
-          },
           {
             "checked": null,
             "id": "phone3",
@@ -614,7 +481,7 @@
             "value": ""
           }
         ],
-        "label": "Phone 3"
+        "label": "Home Phone"
       },
       {
         "fields": [
@@ -631,7 +498,7 @@
             "value": "dana@example.com"
           }
         ],
-        "label": "Email"
+        "label": "Email Reset Password"
       },
       {
         "fields": [
@@ -648,7 +515,7 @@
             "value": ""
           }
         ],
-        "label": "Extra Emails"
+        "label": "More Emails (comma separated list)"
       },
       {
         "fields": [
@@ -676,7 +543,7 @@
             "value": "1"
           }
         ],
-        "label": "Opt Out"
+        "label": "Opt-out of emails"
       },
       {
         "fields": [
@@ -693,7 +560,7 @@
             "value": "Sam Rivera"
           }
         ],
-        "label": "Emergency Contact"
+        "label": "Emergency Contact (other than parents)"
       },
       {
         "fields": [
@@ -710,7 +577,7 @@
             "value": "(555) 010-3000"
           }
         ],
-        "label": "Emergency Phone"
+        "label": "Emergency Contact Phone"
       },
       {
         "fields": [
@@ -731,6 +598,11 @@
                 "label": "Web search",
                 "selected": false,
                 "value": "Web search"
+              },
+              {
+                "label": "Drove by",
+                "selected": false,
+                "value": "Drove by"
               }
             ],
             "selector": "#howheard",
@@ -738,7 +610,7 @@
             "value": "Friend"
           }
         ],
-        "label": "How Heard"
+        "label": "How did you hear about us?"
       },
       {
         "fields": [
@@ -755,7 +627,7 @@
             "value": ""
           }
         ],
-        "label": "Details"
+        "label": "How did you hear details"
       },
       {
         "fields": [

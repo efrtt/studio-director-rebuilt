@@ -1,4 +1,16 @@
 <!DOCTYPE html>
+<!--
+  Rebuilt from a live EditFamily page: every row label, control tag, name and type
+  below is what the page actually renders. Two deliberate departures:
+
+  - values are anonymized placeholders (the tenant's data is not in this repo);
+  - option lists are trimmed to a few entries. The reader only distinguishes an
+    empty select from a non-empty one, and trimming keeps the golden readable.
+
+  The phone type is `input[type=hidden]` (Home/Work), not a select: an earlier
+  version of this fixture invented phone-type selects, which made the golden
+  claim 22 editable fields for a page with 19.
+-->
 <html><body>
 <form id="idForm" action="admin.sd" method="post">
   <input id="idPage" type="hidden" value="EditFamily">
@@ -61,26 +73,26 @@
             </div>
             <div id="tab-overview-content" class="tabContent" style="display:none">
               <table class="Form"><tbody>
-                <tr><td>Guardian</td><td><input id="guardian" name="guardian" type="text" value="Dana Lovelace"></td></tr>
+                <tr><td>Guardian Name(s)</td><td><input id="guardian" name="guardian" type="text" value="Dana Lovelace"></td></tr>
                 <tr><td>Last Name</td><td><input id="last_name" name="last_name" type="text" value="Lovelace"></td></tr>
-                <tr><td>Address</td><td><input id="address1" name="address1" type="text" value="12 Ada Way"></td></tr>
+                <tr><td>Address 1</td><td><input id="address1" name="address1" type="text" value="12 Ada Way"></td></tr>
                 <tr><td>Address 2</td><td><input id="address2" name="address2" type="text" value=""></td></tr>
                 <tr><td>City</td><td><input id="city" name="city" type="text" value="Springfield"></td></tr>
                 <tr><td>State</td><td><select id="state" name="state"><option value="CA">California</option><option value="NY" selected>New York</option></select></td></tr>
-                <tr><td>Zip</td><td><input id="zip" name="zip" type="text" value="10001"></td></tr>
-                <tr><td>Phone 1</td><td><select name="phone1_label"><option selected>Home</option><option>Work</option></select><input id="phone1" class="masked" name="phone1" type="text" value="(555) 010-2000"></td></tr>
-                <tr><td>Phone 2</td><td><select name="phone2_label"><option>Home</option><option>Work</option></select><input id="phone2" class="masked" name="phone2" type="text" value=""></td></tr>
-                <tr><td>Phone 3</td><td><select name="phone3_label"><option>Home</option><option>Work</option></select><input id="phone3" class="masked" name="phone3" type="text" value=""></td></tr>
-                <tr><td>Email</td><td><input id="email" name="email" type="text" value="dana@example.com"></td></tr>
-                <tr><td>Extra Emails</td><td><input id="extra_emails" name="extra_emails" type="text" value=""></td></tr>
-                <tr><td>Opt Out</td><td><select id="opt_out" name="opt_out"><option value="0">No</option><option value="1" selected>Yes</option></select></td></tr>
-                <tr><td>Emergency Contact</td><td><input id="emergency_contact" name="emergency_contact" type="text" value="Sam Rivera"></td></tr>
-                <tr><td>Emergency Phone</td><td><input id="emergency_contact_phone" class="masked" name="emergency_contact_phone" type="text" value="(555) 010-3000"></td></tr>
-                <tr><td>How Heard</td><td><select id="howheard" name="howheard"><option selected>Friend</option><option>Web search</option></select></td></tr>
-                <tr><td>Details</td><td><input id="howheard_details" name="howheard_details" type="text" value=""></td></tr>
+                <tr><td>ZIP</td><td><input id="zip" name="zip" type="text" value="10001"></td></tr>
+                <tr><td>Home Phone</td><td><input name="phone1_label" type="hidden" value="Home"><input id="phone1" class="masked" name="phone1" type="text" value="(555) 010-2000"></td></tr>
+                <tr><td>Home Phone</td><td><input name="phone2_label" type="hidden" value=""><input id="phone2" class="masked" name="phone2" type="text" value=""></td></tr>
+                <tr><td>Home Phone</td><td><input name="phone3_label" type="hidden" value=""><input id="phone3" class="masked" name="phone3" type="text" value=""></td></tr>
+                <tr><td>Email Reset Password</td><td><input id="email" name="email" type="text" value="dana@example.com"></td></tr>
+                <tr><td>More Emails (comma separated list)</td><td><input id="extra_emails" name="extra_emails" type="text" value=""></td></tr>
+                <tr><td>Opt-out of emails</td><td><select id="opt_out" name="opt_out"><option value="0">No</option><option value="1" selected>Yes</option></select></td></tr>
+                <tr><td>Emergency Contact (other than parents)</td><td><input id="emergency_contact" name="emergency_contact" type="text" value="Sam Rivera"></td></tr>
+                <tr><td>Emergency Contact Phone</td><td><input id="emergency_contact_phone" class="masked" name="emergency_contact_phone" type="text" value="(555) 010-3000"></td></tr>
+                <tr><td>How did you hear about us?</td><td><select id="howheard" name="howheard"><option selected>Friend</option><option>Web search</option><option>Drove by</option></select></td></tr>
+                <tr><td>How did you hear details</td><td><input id="howheard_details" name="howheard_details" type="text" value=""></td></tr>
                 <tr><td>Enrollment Blocked</td><td><select id="enrollment_blocked" name="enrollment_blocked"><option value="0" selected>No</option><option value="1">Yes</option></select></td></tr>
-                <tr><td>Tags</td><td><select id="tags" class="hidden" name="tags"><option>None</option><option selected>Recital</option><option>Competition</option></select></td></tr>
-                <tr><td></td><td><input class="input" name="-" type="text"></td></tr>
+                <tr><td><input name="fident" type="hidden" value="4401"></td><td></td></tr>
+                <tr><td>Tags</td><td><select id="tags" class="hidden" name="tags"><option>None</option><option selected>Recital</option><option>Competition</option></select><input class="input" name="" type="text"></td></tr>
               </tbody></table>
               <div class="SectionSpace"></div>
               <div class="modifiedBy"><br>Modified</div>
