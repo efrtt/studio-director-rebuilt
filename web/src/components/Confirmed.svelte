@@ -1,6 +1,8 @@
 <script>
   export let confirm;
   export let onPress = null;
+  // The page that posted the form, when there is one.
+  export let back = null;
 
   // The app's own sentence, verbatim. Nothing is invented: if the page said
   // "Hopper Family has been updated." that is the whole screen.
@@ -52,6 +54,11 @@
       <p class="sd-confirm-hint">
         {confirm.ok ? 'Saved by the app itself.' : 'The app did not accept the change.'}
       </p>
+      {#if back && back.href}
+        <div class="sd-editor-actions sd-confirm-actions">
+          <a class="sd-btn" href={back.href} title={back.href}>{back.label}</a>
+        </div>
+      {/if}
     </div>
   </div>
 {/if}

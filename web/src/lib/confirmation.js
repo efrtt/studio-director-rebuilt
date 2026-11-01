@@ -94,7 +94,10 @@ export function pendingConfirmation(doc) {
 function messageIn(root, pattern) {
   const matches = qsa(root, 'div, p, span, h1, h2, h3, td, b, strong')
     .filter((el) => !(el.closest && el.closest('#idSearchSpan')))
-    .map((el) => ({ el, text: textOf(el) }))
+    // The outcome line often ends in a link ("Review the account for …"), and
+    // the link's words are not part of the sentence the app is stating: read as
+    // text they ran on from the message ("… Contemporary 1Review the account").
+    .map((el) => ({ el, text: textWithoutControls(el) }))
     .filter(({ text }) => text && text.length <= MAX_LENGTH && pattern.test(text));
 
   if (!matches.length) return null;

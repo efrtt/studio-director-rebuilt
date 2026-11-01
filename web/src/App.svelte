@@ -29,6 +29,8 @@ import { readRail, writeRail } from './lib/rail.js';
   export let icons = null;
   // The build this page is running, from package.json.
   export let version = '';
+  // Where the action started, offered on a confirmation (lib/backlink.js).
+  export let back = null;
   export let onPeriod = null;
 
   // Prefilled from the results URL when there is one, so a search does not
@@ -83,7 +85,7 @@ import { readRail, writeRail } from './lib/rail.js';
   $: view = viewOf(model);
   $: entry = view ? VIEWS[view] || null : null;
   $: props = entry ? propsFor(view, model, {
-    onRun, onAct, onPress, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, registerPrimary: providePrimary
+    onRun, onAct, onPress, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, back, registerPrimary: providePrimary
   }) : {};
   $: layout = layoutFor(view, !!model.list);
   $: split = layout.split !== 'none' && !!model.list;

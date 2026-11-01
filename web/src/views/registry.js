@@ -60,7 +60,7 @@ export function propsFor(view, model, handlers) {
     case 'confirm':
       // A confirmation the app has not performed yet carries a button; an
       // outcome does not.
-      return { confirm: model.confirm, onPress: h.onPress };
+      return { confirm: model.confirm, onPress: h.onPress, back: h.back || null };
     case 'index':
       return { index: model.index };
     case 'report':

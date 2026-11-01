@@ -9,6 +9,7 @@ import { expandInApp, showAllTrigger } from './lib/expand.js';
 import { runSearch } from './lib/search.js';
 import { readPeriodControl, choosePeriodInApp } from './lib/period.js';
 import { readNavIcons } from './lib/navicons.js';
+import { backTarget } from './lib/backlink.js';
 
 // Replaced at build time by vite.config.js.
 const VERSION = typeof __SD_VERSION__ !== 'undefined' ? __SD_VERSION__ : 'dev';
@@ -72,6 +73,8 @@ export function mount(opts = {}) {
       // rail renders the model's links and the live sidebar is where the <i> is.
       icons: readNavIcons(document),
       version: VERSION,
+      // The page that posted the form, so a confirmation can offer the way back.
+      back: backTarget(document.referrer, location.href),
       // The calendar's season picker, read on the live page: its options are
       // whole URLs, so switching season is the app's own navigation.
       period: opts.period || null,
