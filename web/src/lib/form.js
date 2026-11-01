@@ -133,6 +133,15 @@ function rowsOf(table) {
     if (cells.length < 2) continue;
 
     const label = textOf(cells[0]);
+    // The app ends a record editor with its own id in a row that has no label:
+    // <tr><td></td><td><input id="item_id" value="1792595222235"></td></tr>.
+    // Measured live on EditClass (`cident`) and ManageInventoryItems
+    // (`item_id`). There is nothing to call it, and it is the record's key
+    // rather than something a person fills in, so an unlabelled row is not a
+    // field: it used to be offered as a bare number under the last one.
+    // Nothing is lost by leaving it out — the input stays in the page, and a
+    // save writes only the fields that changed.
+    if (!label) continue;
     const fields = fieldsIn(cells[1], table.ownerDocument, label);
     if (!fields.length) continue;
 

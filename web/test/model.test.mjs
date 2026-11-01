@@ -87,6 +87,39 @@ test('a record form with radios keeps them, as one field per group', () => {
   assert.equal(form.fields.filter((f) => f.name === 'kind').length, 1);
 });
 
+// The app ends some editors with its own key: measured live, EditClass ships
+// <tr><td></td><td><input id="cident" value="1782…"></td></tr> and the inventory
+// item editor the same with `item_id`.
+const ID_ROW_FORM = `
+<body><div class="contentContainer">
+  <div class="formTitle">Edit Item</div>
+  <table class="FormEx"><tbody>
+    <tr><td>Item / Style</td><td><input id="item_style" value="Leotard"></td></tr>
+    <tr><td>Color</td><td><select id="color"><option>Black</option></select></td></tr>
+    <tr><td>Deposit</td><td><input id="deposit" value="0"></td></tr>
+    <tr><td>Gender</td><td><select id="gender"><option value="both">Either</option></select></td></tr>
+    <tr><td></td><td><input id="item_id" type="text" value="1792595222235"></td></tr>
+  </tbody></table>
+  <a id="save" href="#submit">Save</a>
+</div></body>`;
+
+test('the app\'s own record id in an unlabelled row is not a field', () => {
+  const d = doc(ID_ROW_FORM);
+  const form = readForm(d);
+  assert.ok(form, 'the form is still read');
+
+  // The bare number under the last field was this row; it has no label, so it
+  // cannot be presented, and it is a key rather than something to fill in.
+  assert.deepEqual(form.fields.map((f) => f.key), ['item_style', 'color', 'deposit', 'gender']);
+  assert.equal(form.rows.length, 4);
+  // Leaving it out of the model does not remove it from the page: the app's own
+  // Save still carries the id it shipped.
+  assert.equal(d.getElementById('item_id').getAttribute('value'), '1792595222235');
+
+  const changes = changesFrom(form, valuesFor(form, { deposit: '25' }));
+  assert.deepEqual(changes.map((c) => c.key), ['deposit']);
+});
+
 test('a radio choice is written to the set, not to the first input', () => {
   const d = doc(RADIO_FORM);
   const form = readForm(d);
