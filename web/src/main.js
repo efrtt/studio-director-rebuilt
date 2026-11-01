@@ -200,8 +200,9 @@ function mountView(model, onOriginal, source = 'fetched') {
     onAct: model.task
       ? (values, action) => runTaskInApp(document, model.task, values, action)
       : null,
-    // A table screen or a notice: its controls are pressed where they stand.
-    onPress: model.sheet || model.note
+    // A table screen, a notice, or a confirmation the app is still waiting on:
+    // its controls are pressed where they stand.
+    onPress: model.sheet || model.note || (model.confirm && model.confirm.pending)
       ? (action) => clickActionInApp(document, action)
       : null,
     // A toggle screen: our controls, the app's own Save.

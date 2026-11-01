@@ -2,7 +2,26 @@
   "file": "fetched-unenroll.html",
   "form": null,
   "model": {
-    "confirm": null,
+    "confirm": {
+      "actions": [
+        {
+          "id": "continue",
+          "label": "Continue",
+          "onclick": "StudioDir.onCallMethodSubmit('Unenroll','confirm','args1792595029233');;return false;"
+        }
+      ],
+      "breadcrumb": [
+        "Home"
+      ],
+      "kind": "confirm",
+      "lines": [
+        "Dropping the student takes them out of this class. Filler sentence, roughly the length of the app's own."
+      ],
+      "message": "Dropping the student takes them out of this class. Filler sentence, roughly the length of the app's own.",
+      "ok": true,
+      "pending": true,
+      "title": "Drop Student"
+    },
     "index": null,
     "list": null,
     "nav": [
@@ -26,9 +45,9 @@
     "task": null,
     "title": "Drop Student",
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=fetched-unenroll",
-    "view": null,
+    "view": "confirm",
     "week": null
   },
   "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=fetched-unenroll",
-  "view": null
+  "view": "confirm"
 }

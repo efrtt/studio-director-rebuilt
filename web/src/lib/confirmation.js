@@ -19,6 +19,66 @@ import { qs, qsa, textOf } from './shell.js';
 const CONFIRMED = /\bhas been\s+(updated|saved|added|created|deleted|removed|changed|cloned|unenrolled|enrolled)\b/i;
 const REFUSED = /\b(has not been|was not|could not be|cannot be|unable to|not saved|not updated|error|failed|requires?|invalid)\b/i;
 
+// The screen is sometimes *before* the outcome: the app asks, then saves. The
+// button that asks is the app's own scripted control, not a link and not a save.
+const SUBMITS = /onCallMethodSubmit\s*\(/i;
+// More links than this is a menu, and a menu is not a question.
+const QUESTION_LINKS = 5;
+
+// A page waiting for a yes: `Unenroll` is the shape. A warning sentence, no
+// control to type into, no rows, and exactly one app button that calls back into
+// the app. It is rendered as the same card one step earlier, with the app's own
+// button, because pressing anything else would be inventing a save this page
+// does not have.
+export function pendingConfirmation(doc) {
+  const root = qs(doc, '.Content') || qs(doc, '#mainContent') || (doc && doc.body);
+  if (!root) return null;
+
+  const buttons = qsa(root, 'a, button').filter((el) => SUBMITS.test(el.getAttribute('onclick') || ''));
+  if (buttons.length !== 1) return null;
+
+  // A control someone could type into means a form, and a form has its own
+  // readers. Hidden inputs are record ids, not fields.
+  const typed = qsa(root, 'input, select, textarea')
+    .filter((el) => String(el.getAttribute('type') || '').toLowerCase() !== 'hidden');
+  if (typed.length) return null;
+
+  if (qs(root, 'table tr td')) return null;
+
+  const links = qsa(root, 'a[href]')
+    .filter((a) => !(a.closest && a.closest('#sideNavBar, .topBarContainer, .Breadcrumb, #idSearchSpan')));
+  if (links.length > QUESTION_LINKS) return null;
+
+  const button = buttons[0];
+  const label = textOf(button);
+  const title = textOf(qs(doc, '.formTitle, .ReportName, h1'));
+  const lines = qsa(root, 'p, li')
+    // A paragraph whose text is just its own links is a row of controls, not a
+    // sentence: dropping it is why the card reads as prose instead of repeating
+    // the button labels back at you.
+    .filter((node) => !(node.querySelector && node.querySelector('a[href], [onclick], .Btn')))
+    .map(textOf)
+    .filter((text) => text && text !== label && text.length <= MAX_LENGTH);
+
+  if (!label || !title || !lines.length) return null;
+
+  return {
+    kind: 'confirm',
+    // Not an outcome: nothing has happened yet.
+    pending: true,
+    ok: true,
+    message: lines[0],
+    lines,
+    title,
+    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    actions: [{
+      label,
+      id: button.getAttribute('id') || '',
+      onclick: button.getAttribute('onclick') || ''
+    }]
+  };
+}
+
 // A message is a short piece of text, not a container holding the page.
 const MAX_LENGTH = 240;
 
@@ -47,7 +107,13 @@ export function confirmationOf(doc, opts = {}) {
     message = messageIn(root, REFUSED);
   }
 
-  if (!message) return null;
+  if (!message) {
+    // No outcome sentence: this may be the same screen one step earlier, waiting
+    // for the app's own button.
+    const pending = pendingConfirmation(doc);
+    if (pending) return pending;
+    return null;
+  }
 
   return {
     kind: 'confirm',

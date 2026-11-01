@@ -751,6 +751,11 @@ html.sd-app form#idForm { visibility: hidden !important; }
 .sd-confirm-msg { margin: 0; font-size: 17px; font-weight: 600; }
 .sd-confirm-hint { margin: 0; color: var(--dim); font-size: 12.5px; }
 .sd-confirm-card--bad { border-color: rgba(255, 123, 114, .45); }
+.sd-confirm-mark--ask {
+  background: rgba(122, 162, 255, .16);
+  color: var(--accent);
+}
+.sd-confirm-actions { justify-content: center; margin-top: 4px; }
 .sd-confirm-card--bad .sd-confirm-mark {
   background: rgba(255, 123, 114, .16);
   color: var(--danger);
