@@ -2,8 +2,8 @@
 // @name         Studio Director - rebuilt week + records
 // @namespace    local.sd.rebuilt
 // @version      0.29.5
-// @updateURL    https://raw.githubusercontent.com/efrtt/studio-director-rebuilt/main/studio-director-rebuilt.user.js
-// @downloadURL  https://raw.githubusercontent.com/efrtt/studio-director-rebuilt/main/studio-director-rebuilt.user.js
+// @updateURL    https://raw.githubusercontent.com/efrtt/studio-director-rebuilt/wii-skin/studio-director-rebuilt.user.js
+// @downloadURL  https://raw.githubusercontent.com/efrtt/studio-director-rebuilt/wii-skin/studio-director-rebuilt.user.js
 // @description  Rebuilt week calendar and record lists for The Studio Director. Reads the app's own pages with your existing session; never writes data and never handles credentials.
 // @author       you
 // @match        https://app.thestudiodirector.com/*/*

@@ -13,10 +13,19 @@ const out = path.resolve(root, '..', 'studio-director-rebuilt.user.js');
 
 // The one place the artifact's home is named.
 const REPO = 'https://github.com/efrtt/studio-director-rebuilt';
-const RAW = REPO.replace('https://github.com/', 'https://raw.githubusercontent.com/') + '/main';
+const RAW_BASE = REPO.replace('https://github.com/', 'https://raw.githubusercontent.com/');
 const ARTIFACT = 'studio-director-rebuilt.user.js';
 
-const version = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version;
+const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+const version = pkg.version;
+
+// Which branch the artifact is served from. It is not always main: a wii build that
+// updated itself from main would replace the skin it was installed for. A detached CI
+// checkout cannot answer this, so the branch is data in package.json beside the
+// version - and both the value and the written header are asserted.
+const BRANCH = pkg.userscriptBranch || 'main';
+if (!/^[A-Za-z0-9._-]+$/.test(BRANCH)) throw new Error('bad userscriptBranch: ' + BRANCH);
+const RAW = RAW_BASE + '/' + BRANCH;
 const bundle = fs.readFileSync(path.join(root, 'dist/sd.js'), 'utf8');
 const template = fs.readFileSync(path.join(here, 'userscript.template.js'), 'utf8');
 
