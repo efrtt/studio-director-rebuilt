@@ -34,7 +34,7 @@ function isDataTable(table) {
 }
 
 // A heading above a table ("Class Trends") is the table's own section label.
-const SECTION = '.WithinSectionSpace, .sectionHeader, .sectionTitle, h2, h3, h4';
+const SECTION = '.WithinSectionSpace, .sectionHeader, .sectionTitle, .ReportTableSubtitle, h2, h3, h4';
 
 export function readSheet(doc) {
   const root = contentRoot(doc);
@@ -57,7 +57,7 @@ export function readSheet(doc) {
 
     // The nearest heading before this table, if the page puts one there.
     const heading = previousHeading(table, root);
-    tables.push({ ...read, section: heading });
+    tables.push({ ...read, section: heading, ...followingContent(table) });
     rows += read.rowTotal != null ? read.rowTotal : read.rows.length;
   }
 
@@ -75,6 +75,74 @@ export function readSheet(doc) {
     shown: tables.reduce((n, t) => n + t.rows.length, 0),
     truncated: rows > tables.reduce((n, t) => n + t.rows.length, 0),
     actions
+  };
+}
+
+// What the app prints straight after a table.
+//
+// `PerfCostumeMgmt` is the shape: why the table is empty ("No items to
+// display."), its totals ("Total Performance Fee: 0.00"), then an action bar — a
+// paragraph that is nothing but links, offering "Add New Performance" and
+// "Enter Student Measurements & Sizes". Those links are the only way to add
+// anything on that screen, and all of it was dropped: the message because
+// nothing read it, the links because `readActions` drops plain links on purpose
+// (on most screens a link is a reference, not a control).
+//
+// The links navigate, so they stay links — but they belong beside the table they
+// act on, which is where the app puts them.
+const MESSAGE = /ReportTableNoItemsMsg/i;
+const TOTAL = /WithinMultiTable/i;
+const MAX_STEPS = 5;
+
+function linksOnly(el) {
+  const anchors = qsa(el, 'a[href]');
+  if (!anchors.length) return [];
+  let rest = String(el.textContent || '');
+  for (const anchor of anchors) rest = rest.replace(anchor.textContent, '');
+  // Words of its own make it prose, and a link in prose is a reference.
+  if (rest.replace(/[\s|\u00b7,\u2022]+/g, '')) return [];
+  return anchors
+    .map((anchor) => ({ label: textOf(anchor), href: anchor.getAttribute('href') }))
+    .filter((link) => link.label);
+}
+
+function followingContent(table) {
+  const links = [];
+  let message = '';
+  let total = '';
+  let node = table.nextElementSibling;
+  let steps = 0;
+
+  while (node && steps < MAX_STEPS) {
+    // The next table's own label ends this one's run.
+    if (node.tagName === 'TABLE') break;
+    if (node.matches && (node.matches('.ReportTableSubtitle') || node.matches(SECTION))) break;
+
+    const cls = String(node.getAttribute('class') || '');
+    if (MESSAGE.test(cls)) {
+      if (!message) message = textOf(node);
+    } else if (TOTAL.test(cls)) {
+      if (!total) total = textOf(node);
+    } else if (node.tagName === 'P') {
+      const found = linksOnly(node);
+      if (found.length) {
+        for (const link of found) {
+          if (!links.some((l) => l.href === link.href && l.label === link.label)) links.push(link);
+        }
+        // One action bar per table: the app prints it last.
+        break;
+      }
+      if (/^totals?\b/i.test(textOf(node)) && !total) total = textOf(node);
+    }
+
+    node = node.nextElementSibling;
+    steps += 1;
+  }
+
+  return {
+    ...(message ? { message } : {}),
+    ...(total ? { total } : {}),
+    ...(links.length ? { links } : {})
   };
 }
 

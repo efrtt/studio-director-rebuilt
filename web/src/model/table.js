@@ -26,6 +26,12 @@ function labelOfAnchor(anchor) {
 
 function cellOf(td, index, rightCols) {
   const anchor = qs(td, 'a[href]');
+  // The app says which column is a control column: `td.action-cell` holds the
+  // row's button, drawn as an icon with the label in a tooltip. Its link
+  // navigates (`page=Unenroll`), so the href alone read as an ordinary link and
+  // the cell never got the pill every other action column gets.
+  const actionCell = /(^|\s)action-cell(\s|$)/.test(td.getAttribute('class') || '')
+    || !!qs(td, '.actionIcon');
   // A calendar cell carries the class link *plus* the app's hidden tooltip,
   // which repeats the class, its instructor, its studio and its seats. The
   // link's own words are the readable part; the tooltip is read properly by the
@@ -51,6 +57,7 @@ function cellOf(td, index, rightCols) {
     return {
     text: raw.replace(/^(\d{1,2}:\d{2}\s*[ap]\.?m?\.?)(?=[A-Za-z\u2013-])/i, '$1 ').replace(/\s+/g, ' ').trim(),
     href: anchor ? anchor.getAttribute('href') : null,
+      ...(actionCell ? { action: true } : {}),
     // The app right-aligns its action column on the heading (`th.AR`) and only
     // sometimes repeats it on the cells, so the column is what is remembered.
       right: rightCols.has(index) || isRight(td),

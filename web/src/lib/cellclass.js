@@ -18,6 +18,11 @@ export function isActionHref(href) {
 
 // 'action' | 'link' | null
 export function cellKind(cell) {
-  if (!cell || !cell.href) return null;
+  if (!cell) return null;
+  // The app marks its control column itself (`td.action-cell`), and those
+  // buttons navigate — Drop goes to `page=Unenroll` — so the href is not enough
+  // to tell a control from a link.
+  if (cell.action) return 'action';
+  if (!cell.href) return null;
   return isActionHref(cell.href) ? 'action' : 'link';
 }

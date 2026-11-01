@@ -76,7 +76,7 @@
     {#each tables as table}
       {#if table.section}<h3 class="sd-sheethead">{table.section}</h3>{/if}
       {#if table.caption}<h3 class="sd-sheetcaption">{table.caption}</h3>{/if}
-      {#if table.rows.length}
+      {#if table.headings.length || table.rows.length}
         <div class="sd-tablewrap">
           <table class="sd-table">
             {#if table.headings.length}
@@ -87,30 +87,49 @@
               </thead>
             {/if}
             <tbody>
-              {#each table.rows as row}
+              {#if table.rows.length}
+                {#each table.rows as row}
+                  <tr>
+                    {#each row as cell}
+                      <td
+                        class:sd-cell--right={cell.right}
+                        class:sd-cell--link={cellKind(cell) === 'link'}
+                        class:sd-cell--action={cellKind(cell) === 'action'}
+                      >
+                        {#if cell.actions && cell.actions.length > 1}
+                          <span class="sd-cell-actions">
+                            {#each cell.actions as action}
+                              <a class="sd-pill" href={action.href} title={action.label}>{action.label}</a>
+                            {/each}
+                          </span>
+                        {:else if cell.href}
+                          <a href={cell.href} title="Open in the app">{cell.text}</a>
+                        {:else}{cell.text}{/if}
+                      </td>
+                    {/each}
+                  </tr>
+                {/each}
+              {:else}
+                <!-- A table with headings and no rows still belongs on the page:
+                     "Performance Info" with six costumes below it is not the same
+                     screen as "Costume Info" alone. -->
                 <tr>
-                  {#each row as cell}
-                    <td
-                      class:sd-cell--right={cell.right}
-                      class:sd-cell--link={cellKind(cell) === 'link'}
-                      class:sd-cell--action={cellKind(cell) === 'action'}
-                    >
-                      {#if cell.actions && cell.actions.length > 1}
-                        <span class="sd-cell-actions">
-                          {#each cell.actions as action}
-                            <a class="sd-pill" href={action.href} title={action.label}>{action.label}</a>
-                          {/each}
-                        </span>
-                      {:else if cell.href}
-                        <a href={cell.href} title="Open in the app">{cell.text}</a>
-                      {:else}{cell.text}{/if}
-                    </td>
-                  {/each}
+                  <td class="sd-sheetempty" colspan={Math.max(table.headings.length, 1)}>
+                    {q ? 'No rows match the filter.' : (table.message || 'No items to display.')}
+                  </td>
                 </tr>
-              {/each}
+              {/if}
             </tbody>
           </table>
         </div>
+      {/if}
+      {#if table.total}<p class="sd-sheetnote">{table.total}</p>{/if}
+      {#if table.links}
+        <p class="sd-sheetlinks">
+          {#each table.links as link}
+            <a class="sd-action" href={link.href}>{link.label}</a>
+          {/each}
+        </p>
       {/if}
     {/each}
 
