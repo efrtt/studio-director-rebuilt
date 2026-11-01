@@ -327,7 +327,11 @@
       console.warn('[sd] nothing to revert');
       return null;
     }
-    var el = document.querySelector(pending.selector);
+    // The same normalisation sdSaveCheck applies, and its absence was a bug: a
+    // bare id is stored without the '#', so `querySelector('howheard_details')`
+    // was a tag selector that matched nothing and the revert could not run on
+    // the page it was told to revert.
+    var el = document.querySelector(pending.selector.charAt(0) === '#' ? pending.selector : '#' + pending.selector);
     var save = document.getElementById('save');
     if (!el || !save) {
       console.warn('[sd] cannot revert on this page — open ' + pending.url + ' and run sdSaveRevert() there');
