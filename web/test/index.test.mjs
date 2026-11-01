@@ -130,7 +130,7 @@ test('a menu whose category titles sit beside its lists keeps them', () => {
           <li><a href="admin.sd?page=ResetStaffPwd">Reset Admin/Staff Password</a></li>
         </ol>
       </div>
-      <div class="menuBlock"><b>Class / Date Administration</b>
+      <div class="menuBlock"><h6>Class / Date Administration</h6>
         <ol>
           <li><a href="admin.sd?page=Seasons">Seasons</a></li>
           <li><a href="admin.sd?page=Holidays">Holidays</a></li>
@@ -148,6 +148,36 @@ test('a menu whose category titles sit beside its lists keeps them', () => {
   assert.equal(read.count, 5);
   // The page title names the page, not a category of links.
   assert.equal(read.groups.some((g) => g.label === 'Settings'), false);
+});
+
+test('the app’s own h6 titles are the categories on the Settings menu', () => {
+  // The live page: <div class="contentInfo"><h6>…</h6><ol><li><a>…</a></li></ol>…
+  // Six heading levels, not four - that detail is what this test keeps.
+  const doc = parseHtml(`<form id="idForm"><div class="contentContainer"><div class="Content">
+    <div class="formTitle">Settings</div>
+    <div class="contentInfo">
+      <input type="text" id="filterInput">
+      <h6>Logins / Passwords / Security</h6>
+      <ol>
+        <li><a href="admin.sd?page=OfficeUserAccess">Office User Access</a></li>
+        <li><a href="admin.sd?page=RestrictedOffice">Restricted Office User Access</a></li>
+        <li><a href="admin.sd?page=InstructorAccess">Instructor User Access</a></li>
+      </ol>
+      <h6>Instructor Administration</h6>
+      <ol>
+        <li><a href="admin.sd?page=MultiInstructor">Multi-Instructor Support</a></li>
+        <li><a href="admin.sd?page=AbsenceReasons">Instructor Absence Reasons</a></li>
+        <li><a href="admin.sd?page=CustomInstructor">Custom Instructor Fields</a></li>
+      </ol>
+    </div>
+  </div></div></form>`);
+
+  const read = readIndex(doc);
+  assert.ok(read);
+  assert.deepEqual(read.groups.map((g) => g.label),
+    ['Logins / Passwords / Security', 'Instructor Administration']);
+  assert.deepEqual(read.groups.map((g) => g.items.length), [3, 3]);
+  assert.equal(read.groups[0].items[0].label, 'Office User Access');
 });
 
 test('a title inside a list item is that link’s words, not a category', () => {

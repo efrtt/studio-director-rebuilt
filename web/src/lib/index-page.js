@@ -35,7 +35,9 @@ const DRAW_LIMIT = 300;
 // What can name a group. Real headings and the app's own section classes, plus a
 // bold line - `Settings` prints its category titles beside their lists, as bold
 // text, not as an ancestor heading.
-const HEADING = 'h1, h2, h3, h4, .sectionHeader, .sectionTitle, .groupTitle';
+// `h5` and `h6` are in the list because Settings uses `h6` for its category
+// titles; stopping at `h4` is what made all 117 links look like one group.
+const HEADING = 'h1, h2, h3, h4, h5, h6, .sectionHeader, .sectionTitle, .groupTitle';
 // All the ways this app has been seen to print a category title, `b`-and-`strong`
 // lines and inline bold included. Each candidate still has to pass `titled()`:
 // short, no links inside, and not one link's own caption.
