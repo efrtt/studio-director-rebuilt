@@ -2,8 +2,9 @@
   import List from './components/List.svelte';
   import State from './components/State.svelte';
   import { queryFromUrl } from './lib/search.js';
-  import { VIEWS, viewOf, propsFor, titleOf, footerOf } from './views/registry.js';
+  import { VIEWS, viewOf, propsFor, titleOf, footerOf, crumbsOf } from './views/registry.js';
   import { layoutFor } from './views/layout.js';
+import { readRail, writeRail } from './lib/rail.js';
   import { THEME_LABEL, readTheme, writeTheme, nextTheme, applyTheme } from './lib/theme.js';
 
   export let model = { nav: [], week: null, list: null, form: null, view: null, title: '', url: '' };
@@ -49,16 +50,59 @@
   }
   $: applyTheme(theme);
 
+  // The rail folds to a strip of initials and remembers the choice; the current
+  // section is marked, because navigation should say where you are.
+  let railCollapsed = readRail();
+  function toggleRail() {
+    railCollapsed = !railCollapsed;
+    writeRail(railCollapsed);
+  }
+
+  // One letter stands in for a section when the rail is folded.
+  function initialOf(label) {
+    return String(label || '').trim().charAt(0).toUpperCase();
+  }
+
+  // The app's own nav carries a clicktab parameter; a content page reached from a
+  // nav link often does not, so a link is marked when the tab matches or when the
+  // URL is that link. No guessing from page names.
+  function isActive(link) {
+    try {
+      const here = new URL(model.url || location.href, location.origin);
+      const there = new URL(link.href, here.origin);
+      const mine = here.searchParams.get('clicktab');
+      const theirs = there.searchParams.get('clicktab');
+      if (mine && theirs) return mine === theirs;
+      return here.pathname === there.pathname && here.search === there.search;
+    } catch (e) {
+      return false;
+    }
+  }
+
   // The whole view layer is these three lines: which kind, which component, which
   // props. The title, the footer and the layout are derived from the model.
   $: view = viewOf(model);
   $: entry = view ? VIEWS[view] || null : null;
   $: props = entry ? propsFor(view, model, {
-    onRun, onAct, onPress, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll
+    onRun, onAct, onPress, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, registerPrimary: providePrimary
   }) : {};
   $: layout = layoutFor(view, !!model.list);
   $: split = layout.split !== 'none' && !!model.list;
+  // The page's main action sits in the header, so it is in the same place on
+  // every screen. Views own their own state, so they hand the shell a button
+  // description rather than the shell reaching into them.
+  let primary = null;
+  let lastView = null;
+  function providePrimary(next) {
+    primary = next || null;
+  }
+  $: if (view !== lastView) {
+    lastView = view;
+    primary = null;
+  }
+
   $: title = titleOf(model);
+  $: crumbs = crumbsOf(model);
   $: foot = footerOf(model);
 
   // Widening the list changes the model in place: the new list comes from the
@@ -85,17 +129,59 @@
 
 <svelte:window on:keydown={onKey} />
 
-<nav class="sd-rail" class:sd-rail--empty={!model.nav.length}>
-  <div class="sd-brand">Studio</div>
+<nav
+  class="sd-rail"
+  class:sd-rail--empty={!model.nav.length}
+  class:sd-rail--collapsed={railCollapsed}
+>
+  <button
+    class="sd-railtoggle"
+    type="button"
+    aria-expanded={!railCollapsed}
+    aria-label={railCollapsed ? 'Show the menu' : 'Hide the menu'}
+    title={railCollapsed ? 'Show the menu' : 'Hide the menu'}
+    on:click={toggleRail}
+  >
+    <span class="sd-railtoggleicon" aria-hidden="true">{railCollapsed ? '»' : '«'}</span>
+    {#if !railCollapsed}<span class="sd-brand">Studio</span>{/if}
+  </button>
   {#each model.nav as link}
-    <a class="sd-navlink" href={link.href} title={link.label}>{link.label}</a>
+    <a
+      class="sd-navlink"
+      class:sd-navlink--active={isActive(link)}
+      href={link.href}
+      title={link.label}
+      aria-current={isActive(link) ? 'page' : undefined}
+    >
+      <span class="sd-navinitial" aria-hidden="true">{initialOf(link.label)}</span>
+      <span class="sd-navtext">{link.label}</span>
+    </a>
   {/each}
 </nav>
 
 <div class="sd-main">
   <header class="sd-top">
-    <div class="sd-title">{title}</div>
+    <div class="sd-heading">
+      <div class="sd-title">{title}</div>
+      {#if crumbs.length}
+        <div class="sd-crumbs">
+          {#each crumbs as crumb, i}
+            <span class="sd-crumb">{crumb}</span>
+            {#if i < crumbs.length - 1}<span class="sd-crumbsep" aria-hidden="true">›</span>{/if}
+          {/each}
+        </div>
+      {/if}
+    </div>
     <div class="sd-topright">
+      {#if primary}
+        <button
+          class="sd-btn sd-primary sd-headeraction"
+          type="button"
+          disabled={primary.disabled}
+          title={primary.title || primary.label}
+          on:click={primary.run}
+        >{primary.label}</button>
+      {/if}
       <form class="sd-search" on:submit|preventDefault={submitSearch} role="search">
         <input
           class="sd-searchinput"

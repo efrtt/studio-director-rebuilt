@@ -2,6 +2,7 @@
   import { changesFrom } from '../lib/save.js';
 
   export let form;
+  export let registerPrimary = null;
   export let tabs = null;
   // The page's own button bar (New, Print, Email, Delete, Edit Family, More).
   export let bar = null;
@@ -29,6 +30,17 @@
 
   $: changes = changesFrom(form, values);
   $: dirty = changes.length > 0;
+
+  // The header owns the page's main action; this view supplies it, with its own
+  // dirty state, which the shell cannot see.
+  $: if (registerPrimary) {
+    registerPrimary({
+      label: 'Save',
+      disabled: !dirty || busy,
+      title: 'Save these changes',
+      run: submit
+    });
+  }
 
   function reset() {
     values = { ...initial };
@@ -128,7 +140,6 @@
     <span class="sd-dirty">{dirty ? `${changes.length} unsaved change${changes.length === 1 ? '' : 's'}` : 'No changes'}</span>
     <div class="sd-editor-actions">
       <button class="sd-btn" type="button" disabled={!dirty || busy} on:click={reset}>Reset</button>
-      <button class="sd-btn sd-primary" type="button" disabled={!dirty || busy} on:click={submit}>Save</button>
 
       {#if bar && (bar.items.length || bar.menu.length)}
         <span class="sd-barsep" aria-hidden="true"></span>

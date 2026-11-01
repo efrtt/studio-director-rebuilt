@@ -21,8 +21,11 @@
 export const LAYOUT = {
   // The editor is the one screen with a record list beside it: keeping the list
   // there is how you move from record to record without going back to Classes.
-  form: { split: 'beside' },
-  confirm: { split: 'beside' }
+  form: { split: 'beside', width: 'contained' },
+  confirm: { split: 'beside', width: 'contained' },
+  // Tables and report results need the width; forms and menus read better capped.
+  sheet: { width: 'wide' },
+  report: { width: 'wide' }
 };
 
 export const DEFAULT_LAYOUT = Object.freeze({

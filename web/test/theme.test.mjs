@@ -70,13 +70,16 @@ test('applying a theme writes the resolved name, not the choice', () => {
   assert.equal(applyTheme('dark', null), null);
 });
 
-test('the layout defaults reproduce the current look', () => {
-  for (const view of ['week', 'report', 'sheet', 'index', 'list', 'note', 'task', 'settings']) {
+test('most views sit in the content column, tables and reports go wide', () => {
+  for (const view of ['week', 'index', 'list', 'note', 'task', 'settings']) {
     const layout = layoutFor(view, true);
     assert.equal(layout.split, 'none', view + ' has no split');
-    assert.equal(layout.width, DEFAULT_LAYOUT.width);
+    assert.equal(layout.width, DEFAULT_LAYOUT.width, view + ' keeps the column');
     assert.equal(layout.density, DEFAULT_LAYOUT.density);
   }
+  // Data needs the width a roster or a report result takes.
+  assert.equal(layoutFor('sheet', true).width, 'wide');
+  assert.equal(layoutFor('report', false).width, 'wide');
 });
 
 test('only the views that ask for a split get one, and only with a list', () => {
@@ -89,16 +92,19 @@ test('only the views that ask for a split get one, and only with a list', () => 
 
 test('a knob can be changed for one page without touching the renderer', () => {
   // The point of the table: this is what changing a page's layout looks like.
-  const before = layoutFor('report', false);
-  assert.equal(before.width, 'contained');
+  const had = Object.prototype.hasOwnProperty.call(LAYOUT, 'week');
+  const before = LAYOUT.week;
+  const start = layoutFor('week', false);
+  assert.equal(start.width, DEFAULT_LAYOUT.width);
 
-  LAYOUT.report = { width: 'wide', density: 'compact' };
+  LAYOUT.week = { width: 'wide', density: 'compact' };
   try {
-    const after = layoutFor('report', false);
+    const after = layoutFor('week', false);
     assert.equal(after.width, 'wide');
     assert.equal(after.density, 'compact');
     assert.equal(after.split, 'none', 'an unset knob still falls back');
   } finally {
-    delete LAYOUT.report;
+    if (had) LAYOUT.week = before;
+    else delete LAYOUT.week;
   }
 });

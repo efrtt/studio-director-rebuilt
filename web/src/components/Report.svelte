@@ -1,5 +1,6 @@
 <script>
   export let report;
+  export let registerPrimary = null;
   export let onRun = null;
 
   const initial = {};
@@ -37,6 +38,17 @@
     status = 'Asked the app to run it...';
   }
 
+  // The header owns the page's main action; this view supplies it, with its own
+  // state, so the shell never reaches into a component.
+  $: if (registerPrimary) {
+    registerPrimary({
+      label: busy ? 'Running...' : (report.trigger ? report.trigger.label : 'Run Report'),
+      disabled: busy,
+      title: 'Run this report',
+      run
+    });
+  }
+
   function reset() {
     values = { ...initial };
     status = '';
@@ -60,14 +72,6 @@
     <div class="sd-editor-actions">
       {#if report.fields.length}
         <button class="sd-btn" type="button" disabled={!dirty || busy} on:click={reset}>Reset</button>
-      {/if}
-      {#if report.fields.length}
-        <!-- A report with filters always gets its Run control, even when the
-             model has no trigger: the handler re-reads the run control from the
-             live page, so the button works whether or not the copy carried it. -->
-        <button class="sd-btn sd-primary" type="button" disabled={busy} on:click={run}>
-          {busy ? 'Running...' : (report.trigger ? report.trigger.label : 'Run Report')}
-        </button>
       {/if}
     </div>
   </div>

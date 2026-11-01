@@ -64,13 +64,13 @@ export function propsFor(view, model, handlers) {
     case 'index':
       return { index: model.index };
     case 'report':
-      return { report: model.report, onRun: h.onRun };
+      return { report: model.report, onRun: h.onRun, registerPrimary: h.registerPrimary };
     case 'task':
-      return { task: model.task, onAct: h.onAct };
+      return { task: model.task, onAct: h.onAct, registerPrimary: h.registerPrimary };
     case 'sheet':
       return { sheet: model.sheet, onPress: h.onPress };
     case 'settings':
-      return { settings: model.settings, onSave: h.onSaveSettings };
+      return { settings: model.settings, onSave: h.onSaveSettings, registerPrimary: h.registerPrimary };
     case 'note':
       return { note: model.note, onPress: h.onPress };
     case 'list':
@@ -81,11 +81,23 @@ export function propsFor(view, model, handlers) {
         tabs: model.tabs || null,
         bar: model.bar,
         onSave: h.onSave,
-        onAction: h.onAction
+        onAction: h.onAction,
+        registerPrimary: h.registerPrimary
       };
     default:
       return {};
   }
+}
+
+// Where the page sits in the app's own tree. Readers put it at the top level; an
+// editor keeps it inside the form, so both are read here rather than in each view.
+export function crumbsOf(model) {
+  const m = model || {};
+  const list = m.breadcrumb
+    || (m.form && m.form.breadcrumb)
+    || (m.report && m.report.breadcrumb)
+    || [];
+  return Array.isArray(list) ? list.filter(Boolean) : [];
 }
 
 // The page's name. The form's own title wins: an editor can also carry a record
@@ -141,7 +153,8 @@ export function footerOf(model) {
     if (week.hidden) left += ` \u00b7 ${week.hidden} faculty hidden`;
   } else if (view === 'report' && report) {
     left = report.title;
-    if (report.fields.length) left += ` \u00b7 ${plural(report.fields.length, 'filter', 'filters')}`;
+    // Rows, not fields: seven weekday checkboxes are one filter row.
+    if (report.rows.length) left += ` \u00b7 ${plural(report.rows.length, 'filter', 'filters')}`;
     if (report.results.tables.length) left += ` \u00b7 ${plural(report.results.rows, 'row', 'rows')}`;
   } else if (view === 'index' && index) {
     left = `${index.count} links \u00b7 ${plural(index.groups.length, 'group', 'groups')}`;
