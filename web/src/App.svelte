@@ -25,6 +25,8 @@ import { readRail, writeRail } from './lib/rail.js';
   export let onSearch = null;
   export let onRefresh = null;
   export let period = null;
+  // href -> the app's own icon classes ("fa-solid fa-house fa-lg").
+  export let icons = null;
   export let onPeriod = null;
 
   // Prefilled from the results URL when there is one, so a search does not
@@ -148,7 +150,11 @@ import { readRail, writeRail } from './lib/rail.js';
       title={link.label}
       aria-current={isActive(link) ? 'page' : undefined}
     >
-      <span class="sd-navinitial" aria-hidden="true">{initialOf(link.label)}</span>
+      {#if icons && icons[link.href]}
+        <i class="sd-navicon {icons[link.href]}" aria-hidden="true"></i>
+      {:else}
+        <span class="sd-navinitial" aria-hidden="true">{initialOf(link.label)}</span>
+      {/if}
       <span class="sd-navtext">{link.label}</span>
     </a>
   {/each}

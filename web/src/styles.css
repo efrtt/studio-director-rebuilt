@@ -1085,3 +1085,20 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
     transition: none;
   }
 }
+
+/* ---- the app's own nav icons ---- */
+/* Font Awesome is already loaded by the app, so the rail borrows its glyphs
+   rather than inventing a set. The letter stands in when a page carries no <i>
+   (the demos, a print window), and the folded rail keeps the icon as its label. */
+.sd-navicon {
+  display: inline-block;
+  width: 20px;
+  min-width: 20px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.9;
+}
+.sd-navlink:hover .sd-navicon,
+.sd-navlink--active .sd-navicon { opacity: 1; }
+.sd-rail--collapsed .sd-navicon { margin: 0 auto; }

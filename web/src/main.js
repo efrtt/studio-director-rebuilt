@@ -8,6 +8,7 @@ import { readList } from './lib/list.js';
 import { expandInApp, showAllTrigger } from './lib/expand.js';
 import { runSearch } from './lib/search.js';
 import { readPeriodControl, choosePeriodInApp } from './lib/period.js';
+import { readNavIcons } from './lib/navicons.js';
 import { readPage } from './lib/page.js';
 import { hasForm } from './lib/form.js';
 import { runReportInApp } from './lib/report.js';
@@ -64,6 +65,9 @@ export function mount(opts = {}) {
       onSaveSettings: opts.onSaveSettings || null,
       onSearch: opts.onSearch || null,
       onRefresh: opts.onRefresh || null,
+      // The app's own nav icons, read where they live. Keyed by href, because the
+      // rail renders the model's links and the live sidebar is where the <i> is.
+      icons: readNavIcons(document),
       // The calendar's season picker, read on the live page: its options are
       // whole URLs, so switching season is the app's own navigation.
       period: opts.period || null,
