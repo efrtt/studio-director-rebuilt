@@ -150,7 +150,7 @@ pins the page the app serves: 19 fields, 19 rows, real labels (`Guardian Name(s)
 three `Home Phone` rows). Values stay anonymized and option lists are trimmed, since the reader only
 distinguishes an empty select from a non-empty one.
 
-Where the invented selects came from is worth knowing: `studio-director-pages.json`, the crawl that
+Where the invented selects came from is worth knowing: `web/data/pages.json`, the crawl that
 first described this page, records `phone1_label` as a select with 10 options, which is not the markup
 the browser ends up with. A crawl summary is a shape, not a page; the fixture has to come from the DOM.
 

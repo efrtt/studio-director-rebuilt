@@ -1,6 +1,6 @@
-// Turns studio-director-pages.json into a readable map.
+// Turns web/data/pages.json into a readable map.
 //
-// Usage: node tools/crawl-report.mjs ../studio-director-pages.json docs/crawl-map.md
+// Usage: node tools/crawl-report.mjs data/pages.json docs/crawl-map.md
 //        node tools/crawl-report.mjs --fallbacks     (just the screens nothing claims)
 //
 // The point is to answer two questions without opening 447 entries by hand:
@@ -28,7 +28,7 @@ import path from 'node:path';
 const argv = process.argv.slice(2);
 const listFallbacks = argv.includes('--fallbacks');
 const positional = argv.filter((a) => !a.startsWith('--'));
-const input = positional[0] || '../studio-director-pages.json';
+const input = positional[0] || 'data/pages.json';
 const output = positional[1] || 'docs/crawl-map.md';
 const crawl = JSON.parse(fs.readFileSync(path.resolve(input), 'utf8'));
 

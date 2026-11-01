@@ -122,7 +122,7 @@ tools read tags, classes, headings and counts only.
 
 ## Docs
 
-- [`web/README.md`](web/README.md) — the long write-up: each reader, what it claims and what it refuses.
+- [`web/docs/architecture.md`](web/docs/architecture.md) — the long write-up: each reader, what it claims and what it refuses.
 - [`web/docs/contract.md`](web/docs/contract.md) — the invariants, and the golden models that pin them.
 - [`web/docs/adding-a-page.md`](web/docs/adding-a-page.md) — how to cover a screen the rebuild misses.
 - [`web/docs/crawl-map.md`](web/docs/crawl-map.md) — every screen in the crawl and which reader owns it.

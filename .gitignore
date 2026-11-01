@@ -7,9 +7,6 @@ web/dist/
 web/demo/
 web/studio-director-rebuilt.user.js
 
-# captured screenshots (regenerable, binary)
-web/screenshots/
-
 # workspace metadata
 .freebuff/
 

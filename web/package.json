@@ -10,7 +10,7 @@
     "demo": "vite build && node tools/build-demo.mjs",
     "userscript": "vite build && node tools/build-userscript.mjs",
     "serve": "node tools/serve.mjs . 4800",
-    "map": "node tools/crawl-report.mjs ../studio-director-pages.json docs/crawl-map.md",
+    "map": "node tools/crawl-report.mjs data/pages.json docs/crawl-map.md",
     "golden": "node tools/golden.mjs check",
     "golden:write": "node tools/golden.mjs write"
   },

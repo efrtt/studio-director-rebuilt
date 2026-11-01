@@ -1,6 +1,6 @@
 # Studio Director — screen map
 
-Generated from `studio-director-pages.json` — **447 screens** crawled on 2026-10-31, 0 links deliberately not followed, 0 errors.
+Generated from `pages.json` — **447 screens** crawled on 2026-10-31, 0 links deliberately not followed, 0 errors.
 
 **96 links the safety rule flagged were followed on purpose** - see the
 section at the end of this map for what they are and why they were safe.
