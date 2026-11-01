@@ -260,12 +260,109 @@ function buildDay(label, blocks, studioCount) {
   };
 }
 
+
+// ---- the compact week ----
+//
+// The app draws a sparse week as one table, not seven TimeBlock sections:
+//
+//   <table class="WeekCal">
+//     <tr><th colspan="4">Monday 8/24</th> … seven headings, one per day
+//     <tr><td>3:00 - 4:15</td><td><a><span class="openClass">Jazz Master…
+//         <td><a><img …></a></td><td>GI</td>        one class = four cells
+//
+// Each class takes the four cells of its day in one row: time, name, a type
+// icon and the location, every one of them carrying the same href and the same
+// `title` tooltip. Those columns are a class’s parts, not studios, so this is
+// read as a list (`layout: "list"`) and drawn as one - forcing it onto the
+// studio timeline would put classes in columns that mean nothing.
+//
+// An empty week is this same table with only its heading row, which is why it
+// is a week with seven empty days rather than no view at all.
+
+const AVAIL = /Avail:\s*(\d+)\s+of\s+(\d+)\s+slots?/i;
+const WAIT = /Waitlisted:\s*(\d+)/i;
+
+function weekCalDays(table) {
+  const rows = qsa(table, "tr");
+  if (!rows.length) return null;
+  const headings = qsa(rows[0], "th");
+  if (headings.length !== 7) return null;
+
+  const days = headings.map((th) => ({ label: textOf(th), rows: [] }));
+
+  for (const tr of rows.slice(1)) {
+    const cells = qsa(tr, "td");
+    const per = Math.round(cells.length / 7);
+    if (!per) continue;
+
+    for (let d = 0; d < 7; d += 1) {
+      const group = cells.slice(d * per, d * per + per);
+      const anchor = group.map((cell) => qs(cell, "a[href]")).find(Boolean);
+      if (!anchor) continue;
+
+      const holder = group.find((cell) => cell.getAttribute("title")) || null;
+      const title = holder ? String(holder.getAttribute("title") || "") : "";
+      const nameCell = group.find((cell) => qs(cell, ".openClass")) || null;
+      const name = nameCell ? textOf(qs(nameCell, ".openClass")) : textOf(group[1] || group[0]);
+
+      const avail = title.match(AVAIL);
+      const wait = title.match(WAIT);
+      const filled = avail ? Number(avail[1]) : null;
+      const total = avail ? Number(avail[2]) : null;
+      const spotsLeft = total != null && filled != null ? total - filled : null;
+
+      days[d].rows.push({
+        time: textOf(group[0]),
+        name,
+        href: anchor.getAttribute("href") || "",
+        location: textOf(group[per - 1]),
+        details: title.split(/[\r\n]+/).map((line) => line.trim()).filter(Boolean),
+        spotsLeft,
+        waitlisted: wait ? Number(wait[1]) : null,
+        status: spotsLeft == null ? null : spotsLeft <= 0 ? "full" : "open"
+      });
+    }
+  }
+
+  return days;
+}
+
+function compactWeek(doc) {
+  const table = qsa(doc, "table.WeekCal").find((t) => !(t.closest && t.closest(".tabContent"))) || null;
+  if (!table) return null;
+  const days = weekCalDays(table);
+  if (!days) return null;
+
+  const totals = { classes: 0, spots: 0, waitlisted: 0, full: 0 };
+  for (const day of days) {
+    for (const row of day.rows) {
+      totals.classes += 1;
+      if (row.spotsLeft != null) totals.spots += row.spotsLeft;
+      if (row.waitlisted != null) totals.waitlisted += row.waitlisted;
+      if (row.status === "full") totals.full += 1;
+    }
+  }
+
+  return {
+    kind: "week",
+    layout: "list",
+    days,
+    studioCount: 0,
+    hidden: 0,
+    totals,
+    week: textOf(qs(doc, ".contentInfo p")) || null,
+    title: textOf(qs(doc, ".formTitle, .ReportName, h1")) || ""
+  };
+}
+
 export function readWeek(doc) {
   // A record page's Calendar *tab* is also seven TimeBlock tables, shipped
   // hidden in the record's HTML. Those belong to the tab, not to the week view:
   // reading them would turn an editor into a calendar.
   const tables = qsa(doc, 'table.TimeBlock').filter((table) => !(table.closest && table.closest('.tabContent')));
-  if (!tables.length) return null;
+  // No studio timeline: the app may still be drawing the week, compactly. A week
+  // with no classes at all is that same compact table with nothing in it.
+  if (!tables.length) return compactWeek(doc);
 
   const days = [];
   const allBlocks = [];

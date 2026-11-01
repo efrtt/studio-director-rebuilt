@@ -1353,3 +1353,36 @@ html[data-sd-theme="light"] .sd-event:hover { background: rgba(47, 95, 208, .12)
    the rounded corners, which read as a stray rule sitting on the table's
    outline. The frame is the edge; the row above it does not need one too. */
 .sd-listbar:has(+ .sd-tablewrap) { border-bottom: 0; }
+
+/* ---- the compact week: one row per class ---- */
+.sd-weeklist { display: flex; flex-direction: column; }
+.sd-dayblock--list .sd-dayrows {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 10px 12px 12px;
+}
+.sd-weekrow {
+  display: grid; grid-template-columns: 92px minmax(0, 1fr) auto;
+  gap: 10px; align-items: center;
+  padding: 7px 10px;
+  border: 1px solid var(--line); border-radius: 8px;
+  background: var(--panel-2);
+  color: var(--text); font-size: 13px; text-decoration: none;
+}
+.sd-weekrow:hover { border-color: var(--accent); background: rgba(122, 162, 255, .10); }
+.sd-weekrow-time {
+  font-size: 12.5px; font-weight: 600; color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}
+.sd-weekrow-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sd-weekrow-tag {
+  margin-left: 6px; padding: 1px 6px;
+  border-radius: 999px; background: rgba(255, 138, 128, .16); color: #ff9d93;
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+}
+.sd-weekrow-loc {
+  padding: 1px 8px;
+  border: 1px solid var(--line); border-radius: 999px;
+  font-size: 11.5px; color: var(--dim);
+}
+html[data-sd-theme="light"] .sd-weekrow:hover { background: rgba(47, 95, 208, .08); }
+html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12); color: #8d1f1f; }

@@ -24,7 +24,7 @@ import { TABLE_ROWS } from './thresholds.js';
 // Tables that are structure, not data: the weekday checkbox grid inside a form,
 // the form itself (label column, control column), and the layout table the app
 // wraps whole pages in.
-const NOT_DATA = /^(WeekdayCheckboxes|Layout|TimeBlock|Form|FormEx)$/i;
+const NOT_DATA = /^(WeekdayCheckboxes|Layout|TimeBlock|WeekCal|MonthCal|Form|FormEx)$/i;
 
 function isDataTable(table) {
   for (const cls of String(table.getAttribute('class') || '').split(/\s+/)) {

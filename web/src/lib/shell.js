@@ -42,7 +42,15 @@ export function pageName(href) {
 // looked exactly like `fident=…`. Measured live: with the probe armed, the
 // calendar and ChargesHome both mounted from a fetched copy, because
 // `mountRecord` owned them.
-const NAV_PARAMS = new Set(['page', 'clicktab', 'filter', 'searchtext', 'sdprobe']);
+//
+// The calendar's `SEASON`, `DATESPEC_VIEW` and `DATESPEC_VIEW_DATE` are the same
+// kind of thing: they say which week or season to draw, not which record you are
+// editing. Left out, every dated calendar URL was a "record page", and its
+// compact week grid was read as a data table instead of as a calendar.
+const NAV_PARAMS = new Set([
+  'page', 'clicktab', 'filter', 'searchtext', 'sdprobe',
+  'season', 'datespec_view', 'datespec_view_date'
+]);
 
 function isNavParam(key) {
   return NAV_PARAMS.has(String(key).toLowerCase());
