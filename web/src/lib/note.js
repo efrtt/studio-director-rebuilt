@@ -156,24 +156,25 @@ function linesOf(root, actions) {
     if (lines.length >= MAX_LINES) break;
   }
 
-  // Sometimes the instruction is bare text in `contentInfo`, with the choices in
-  // a list beside it (`EmailClass`: "What would you like to email?" above an
-  // `<ol>`). Paragraphs-only would read no instruction at all and refuse a page
-  // that says one thing clearly.
+  // Sometimes the instruction is bare text with the choices beside or below it
+  // (`EmailClass`: "What would you like to email?" above an `<ol>`; Add Class
+  // Charge: the question in its own block, the Yes/No pair in `contentInfo`
+  // underneath). Paragraphs-only would read no instruction at all and refuse a
+  // page that says one thing clearly.
+  //
+  // This reads the *root*, not just `contentInfo`: on Add Class Charge the
+  // question is not inside `contentInfo` at all, so scoping there read the two
+  // buttons' words and nothing else - the "YesNo" line.
   if (!lines.length) {
-    const info = qs(root, '.contentInfo');
-    if (info && info.cloneNode) {
-      const copy = info.cloneNode(true);
-      if (copy.querySelectorAll) {
-        // Everything the app draws a control with, not only links: on these
-        // screens the buttons are often `<div class="Btn">`, and their own words
-        // are not the page's instruction.
-        copy.querySelectorAll('a, ol, ul, li, input, select, textarea, button, script, .Btn, .BtnOutln, [onclick]')
-          .forEach((el) => el.remove());
-      }
-      const text = textOf(copy);
-      if (text && text.length <= MAX_PROSE && !onlyLabels(text, labels)) lines.push(text);
+    const copy = root.cloneNode(true);
+    if (copy && copy.querySelectorAll) {
+      // Everything the app draws a control - or a piece of page chrome - with.
+      copy.querySelectorAll('script, style, .formTitle, .ReportName, .Breadcrumb, .ButtonBar, '
+        + 'a, ol, ul, li, input, select, textarea, button, .Btn, .BtnOutln, [onclick]')
+        .forEach((el) => el.remove());
     }
+    const text = textOf(copy);
+    if (text && text.length <= MAX_PROSE && !onlyLabels(text, labels)) lines.push(text);
   }
 
   return lines;

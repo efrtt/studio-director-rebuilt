@@ -93,6 +93,29 @@ test('the app’s Yes and No buttons are controls, not a sentence', () => {
   assert.deepEqual(Array.from(note.lines), ['Charge added. Add another?']);
 });
 
+test('the question beside the Yes and No pair is the line', () => {
+  // The live page, as the original shows it: a New button, then the question on
+  // its own, then the pair. The question sits outside `.contentInfo`, so reading
+  // only that block found the buttons and said "YesNo".
+  const live = `<form id="idForm"><div class="contentContainer"><div class="Content">
+    <div class="Breadcrumb"><a href="admin.sd?page=ChargesHome">Charges &amp; Payments</a></div>
+    <div class="formTitle">Add Class Charge</div>
+    <div class="contentInfo"><div class="Btn" onclick="StudioDir.onSubmit('New')">New</div></div>
+    <div class="warning">Are you sure you want to charge $1.00 to all students that are enrolled in 1?</div>
+    <div class="contentInfo">
+      <div class="Btn" onclick="StudioDir.onSubmit('Yes')">Yes</div>
+      <div class="Btn" onclick="StudioDir.onSubmit('No')">No</div>
+    </div>
+  </div></div></form>`;
+
+  const note = readNote(docOf(live));
+  assert.ok(note, 'a question and the app’s controls is a notice screen');
+  assert.equal(note.title, 'Add Class Charge');
+  assert.deepEqual(Array.from(note.lines),
+    ['Are you sure you want to charge $1.00 to all students that are enrolled in 1?']);
+  assert.deepEqual(Array.from(note.actions.map((a) => a.label)), ['New', 'Yes', 'No']);
+});
+
 /*
  * The tiebreaker main.js uses before it trusts a note. These pages are the real
  * ones from the live walk: `ChargesHome` fetched as a shell and drew 18 links,
