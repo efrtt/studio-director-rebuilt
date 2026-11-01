@@ -201,6 +201,9 @@ and the anchor counts that made them look form-shaped were their breadcrumbs: `U
 confirmation (0.18.0) and `EmailClass` a notice (0.20.0). A rewrite that "tidied" either gate would
 start covering these screens with an editor again.
 
+When a page lands on no view because *no reader reaches it*, the route from there to a styled page is
+`adding-a-page.md`: capture the content root, freeze the model as a golden, then pick the reader.
+
 ## Reference build
 
 Frozen before any rewrite so old and new can be compared on the same URL:
