@@ -23,6 +23,8 @@ import { readRail, writeRail } from './lib/rail.js';
   export let canLoadAll = false;
   export let onSearch = null;
   export let onRefresh = null;
+  export let period = null;
+  export let onPeriod = null;
 
   // Prefilled from the results URL when there is one, so a search does not
   // vanish from the box the moment its page loads.
@@ -85,7 +87,7 @@ import { readRail, writeRail } from './lib/rail.js';
   $: view = viewOf(model);
   $: entry = view ? VIEWS[view] || null : null;
   $: props = entry ? propsFor(view, model, {
-    onRun, onAct, onPress, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, registerPrimary: providePrimary
+    onRun, onAct, onPress, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, registerPrimary: providePrimary
   }) : {};
   $: layout = layoutFor(view, !!model.list);
   $: split = layout.split !== 'none' && !!model.list;

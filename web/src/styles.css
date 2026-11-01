@@ -1010,3 +1010,25 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
 }
 #sd-root .sd-railtoggle { border: 0 !important; background: transparent !important; }
 #sd-root .sd-railtoggle:hover { background: var(--panel-2) !important; }
+
+/* ---- week: the app's own season picker ---- */
+.sd-periodpick {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+}
+.sd-periodlabel { color: var(--dim); font-size: 13px; }
+.sd-periodselect {
+  height: var(--field-h);
+  min-width: 240px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--panel-2);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+}
+.sd-periodselect:hover { border-color: var(--accent); }
+.sd-periodselect:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }

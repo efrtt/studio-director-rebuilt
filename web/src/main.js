@@ -7,6 +7,7 @@ import { routeOf } from './lib/route.js';
 import { readList } from './lib/list.js';
 import { expandInApp, showAllTrigger } from './lib/expand.js';
 import { runSearch } from './lib/search.js';
+import { readPeriodControl, choosePeriodInApp } from './lib/period.js';
 import { readPage } from './lib/page.js';
 import { hasForm } from './lib/form.js';
 import { runReportInApp } from './lib/report.js';
@@ -63,6 +64,10 @@ export function mount(opts = {}) {
       onSaveSettings: opts.onSaveSettings || null,
       onSearch: opts.onSearch || null,
       onRefresh: opts.onRefresh || null,
+      // The calendar's season picker, read on the live page: its options are
+      // whole URLs, so switching season is the app's own navigation.
+      period: opts.period || null,
+      onPeriod: opts.onPeriod || null,
       // Widening the record list uses the app's own control on the live page,
       // and only when that page actually has one.
       onLoadAll: opts.onLoadAll || null,
@@ -213,6 +218,8 @@ function mountView(model, onOriginal, source = 'fetched') {
     onLoadAll: loadAllRecords,
     onSearch: searchEverything,
     onRefresh: refreshList,
+    period: readPeriodControl(document),
+    onPeriod: (value) => choosePeriodInApp(document, value),
     canLoadAll: !!showAllTrigger(document)
   });
 }

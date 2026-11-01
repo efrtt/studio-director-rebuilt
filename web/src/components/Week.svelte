@@ -3,8 +3,17 @@
   import { inkFor } from '../lib/color.js';
 
   export let week;
+  // The app's own season picker, read on the live page (see lib/period.js).
+  // Absent on the demos and on any page without one, so nothing renders.
+  export let period = null;
+  export let onPeriod = null;
 
   $: hourHeight = 60 * PX_PER_MIN;
+
+  function switchSeason(event) {
+    const value = event.currentTarget.value;
+    if (onPeriod) onPeriod(value);
+  }
 
   function titleOf(block) {
     return block.details.length ? block.details.join('\n') : [block.name, block.meta].filter(Boolean).join('\n');
@@ -12,6 +21,17 @@
 </script>
 
 <div class="sd-week">
+  {#if period && period.options.length}
+    <div class="sd-periodpick">
+      <label class="sd-periodlabel" for="sd-period">{period.label}</label>
+      <select id="sd-period" class="sd-periodselect" on:change={switchSeason}>
+        {#each period.options as option}
+          <option value={option.value} selected={option.value === period.value}>{option.label}</option>
+        {/each}
+      </select>
+    </div>
+  {/if}
+
   {#if week.week}
     <div class="sd-period">{week.week}</div>
   {/if}

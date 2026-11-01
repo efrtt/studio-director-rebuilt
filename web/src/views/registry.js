@@ -56,7 +56,7 @@ export function propsFor(view, model, handlers) {
   const h = handlers || {};
   switch (view) {
     case 'week':
-      return { week: model.week };
+      return { week: model.week, period: h.period || null, onPeriod: h.onPeriod || null };
     case 'confirm':
       // A confirmation the app has not performed yet carries a button; an
       // outcome does not.
