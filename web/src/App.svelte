@@ -27,6 +27,8 @@ import { readRail, writeRail } from './lib/rail.js';
   export let period = null;
   // href -> the app's own icon classes ("fa-solid fa-house fa-lg").
   export let icons = null;
+  // The build this page is running, from package.json.
+  export let version = '';
   export let onPeriod = null;
 
   // Prefilled from the results URL when there is one, so a search does not
@@ -221,6 +223,6 @@ import { readRail, writeRail } from './lib/rail.js';
 
   <footer class="sd-foot">
     <span>{foot.left}</span>
-    <span>{foot.right}</span>
+    <span>{foot.right}{version ? ' \u00b7 v' + version : ''}</span>
   </footer>
 </div>

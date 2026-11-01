@@ -51,7 +51,7 @@ function fire(el, type) {
   el.dispatchEvent(new Event(type, { bubbles: true }));
 }
 
-export function runSearch(root, rawQuery) {
+export function runSearch(root, rawQuery, opts = {}) {
   const query = String(rawQuery == null ? '' : rawQuery).trim();
   if (!query) return { submitted: false, reason: 'empty' };
 
@@ -83,7 +83,27 @@ export function runSearch(root, rawQuery) {
     } catch (e) { /* fall through to Enter */ }
   }
 
-  // 3. A box the app submits from its own keydown handler.
+  // 3. The app's own search entry point, when the page has one. Its inline
+  //    handler is `StudioDir.doSearchOnEnter`, which tests charCode/which/keyCode;
+  //    a synthetic KeyboardEvent cannot carry those legacy fields in every
+  //    browser (Firefox reports 0), so Enter can be silently ignored and the page
+  //    never leaves — the symptom being "nothing happened, the old list is still
+  //    there". Calling the function that handler calls does not depend on an
+  //    event at all, and the app still performs the navigation: no URL is built
+  //    here.
+  const win = opts.window || (root && root.defaultView) || (typeof window !== 'undefined' ? window : null);
+  const app = win && win.StudioDir;
+  const appInput = root && typeof root.getElementById === 'function'
+    ? root.getElementById('idSearchText')
+    : null;
+  if (app && typeof app.doSearch === 'function' && appInput && appInput === input) {
+    try {
+      app.doSearch();
+      return { submitted: true, via: 'app-search', query };
+    } catch (e) { /* fall through to Enter */ }
+  }
+
+  // 4. A box the app submits from its own keydown handler.
   const fields = { key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true, cancelable: true };
   let sent = 0;
   for (const type of ['keydown', 'keypress', 'keyup']) {
