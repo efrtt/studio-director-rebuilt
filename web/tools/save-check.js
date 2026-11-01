@@ -27,6 +27,12 @@
  * Read-only until you call sdSaveCheck, and it only ever writes the one value
  * you name. Use a notes/memo field: it is the least consequential thing on a
  * record, and sdSaveRevert() puts it back.
+ *
+ * A masked phone (`type="phone_number"`) can be named by id too - `#phone1`,
+ * `#emergency_contact_phone` - because it is the one value the app owns twice:
+ * the masked input, its label select, and whatever its own JS normalised. It is
+ * never listed by sdSaveFields(), and it is a real number in a real record, so
+ * expect sdSaveRevert() to be needed.
  */
 (function () {
   'use strict';
@@ -178,6 +184,20 @@
     return type === 'text';
   }
 
+  // A masked phone is `type="phone_number"`, which the text test rejects on
+  // purpose: a number is not a harmless thing to overwrite. It is also the one
+  // value the app can hold twice (the masked input, its `phoneN_label` select and
+  // whatever the app's own JS normalised), which is the case a free-text field
+  // can never settle. So a phone can be named explicitly by id, and it never
+  // appears in sdSaveFields().
+  var PHONE_ID = /^phone\d+$|^emergency_contact_phone$/;
+  function isNamedPhone(el) {
+    if (!el || el.tagName !== 'INPUT') return false;
+    if (String(el.getAttribute('type') || '').toLowerCase() !== 'phone_number') return false;
+    if (el.closest && el.closest('#sd-root')) return false;
+    return PHONE_ID.test(el.getAttribute('id') || '');
+  }
+
   // The same write save.js performs, so the test measures the real path and not
   // a friendlier one.
   function writeValue(el, value) {
@@ -226,9 +246,13 @@
       console.warn('[sd] no element for ' + selector);
       return null;
     }
-    if (!isSafeText(el)) {
-      console.warn('[sd] ' + selector + ' is not a free-text field this check will write to');
+    var maskedPhone = isNamedPhone(el);
+    if (!isSafeText(el) && !maskedPhone) {
+      console.warn('[sd] ' + selector + ' is not a field this check will write to');
       return null;
+    }
+    if (maskedPhone) {
+      console.warn('[sd] ' + selector + ' is a masked phone: this writes a test number into a real record. Revert with sdSaveRevert().');
     }
     if (document.getElementById('sd-root')) {
       console.warn('[sd] the rebuilt overlay is up — press Esc first so the field and Save are the app\u2019s own');
@@ -256,8 +280,10 @@
     write(LOG, []);
 
     writeValue(el, next);
-    console.log('[sd] wrote "' + next + '" into ' + selector + ' (field held "' + current
-      + '", original was "' + old + '"), clicking Save\u2026');
+    console.log('[sd] wrote "' + next + '" into ' + selector
+      + (maskedPhone ? ' (masked phone; the previous value is kept for the revert)'
+        : ' (field held "' + current + '", original was "' + old + '")')
+      + ', clicking Save\u2026');
     save.click();
     console.log('[sd] after the page settles, run sdSaveResult()');
     return { wrote: next, was: old };

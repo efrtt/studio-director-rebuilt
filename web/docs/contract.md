@@ -229,8 +229,11 @@ Stated here so a rewrite does not assume these were solved:
   now measured on all four kinds of screen: `EditFamily` (430 bytes), `StudentContactList` (240),
   `EmailClasses` (169) and `ManagePhoneNumbersFormat` (54), each a `POST(form, scripted submit)`
   whose body carried the value written into the page's own control. What stays unproven is the
-  opposite case, a screen where the app posts its own copy, so `save.js` still refuses to press when
-  a field cannot be written.
+  opposite case, a screen where the app posts its own copy. That is now measured too, on the one
+  field type where it could show: a masked `input[type=phone_number]` on a family record, written and
+  saved, produced a 413-byte form POST that carried the written value. The browser serialises a
+  masked control from the live DOM as well, so `save.js` needs no extra event ladder; it still
+  refuses to press when a field cannot be written.
 - The crawl followed 96 URLs its own safety rule flagged. Explained at the end of
   [`crawl-map.md`](crawl-map.md): all 96 were plain GETs, every one is in the map as a charge, delete,
   reset or email *form*, and none came back with a confirmation title.

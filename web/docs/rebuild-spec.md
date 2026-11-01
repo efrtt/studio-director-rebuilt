@@ -235,7 +235,9 @@ goldens should not move at all.
   captures of the live content root, so they pin the page as well as the decision.
 - The report, task and settings write paths share a contract with record saves, and all four have
   now been measured against the real site (`EditFamily` 430 bytes, `StudentContactList` 240,
-  `EmailClasses` 169, `ManagePhoneNumbersFormat` 54); see `rebuild-plan.md`.
+  `EmailClasses` 169, `ManagePhoneNumbersFormat` 54); see `rebuild-plan.md`. A masked phone field on
+  a family record carried its written value too (413-byte form POST), which closes the
+  app-posts-its-own-copy question rather than leaving it open.
 - The crawl followed 96 URLs its own safety rule flagged; `crawl-map.md` now explains them (plain
   GETs to the charge, delete, reset and email forms, none returning a confirmation).
 - `chooseSource` has now been exercised live on 11 screens (5 mounted from the live document, 3

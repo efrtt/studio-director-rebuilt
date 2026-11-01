@@ -165,7 +165,17 @@ Every body carried the value written into the control, the record value was stil
 reload, and the setting was put back and read back as its original value. So the contract that
 `save.js`, `report.js`, `task.js` and `settings.js` all rely on holds on every kind of screen they
 serve: the app serialises the live form at submit time, and keeps no copy of the record to post in
-its place. `tools/save-check.js` measures a screen the same way.
+  its place. `tools/save-check.js` measures a screen the same way.
+
+**The masked-field case, measured 2026-11-01.** The four write-path measurements above all used free
+text, which cannot show whether the app serialises the live control or a copy of the record it keeps
+in its own JavaScript. A family record's phone is the case that can: a masked
+`input[type=phone_number]` beside a `phoneN_label` select, a value the app formats itself. Writing a
+test number into `#phone1` and clicking Save produced one 413-byte
+`POST(form, scripted submit)` whose body carried the written value, so even a masked control is
+serialised from the live DOM. `tools/save-check.js` now accepts a phone named by id for exactly this
+check, and stores the previous value so `sdSaveRevert()` can restore it; an ad-hoc probe that keeps
+only the old length, as the first run of this test did, cannot undo itself.
 
 ## The eleven misfits, walked live
 
