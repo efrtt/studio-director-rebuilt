@@ -7,6 +7,11 @@ const here = path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z
 const root = path.resolve(here, '..');
 const bundle = fs.readFileSync(path.join(root, 'dist/sd.js'), 'utf8');
 
+// demo/ is generated and gitignored, so a clean checkout does not have it. The
+// build used to assume the directory was already there, which only showed once
+// it was deleted.
+fs.mkdirSync(path.join(root, 'demo'), { recursive: true });
+
 const PAGES = [
   { fixture: 'calendar-page.html', out: 'demo/week.html', title: 'week calendar' },
   { fixture: 'editor-class.html', out: 'demo/classes.html', title: 'classes list' },
