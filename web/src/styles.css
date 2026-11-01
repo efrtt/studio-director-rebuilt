@@ -694,17 +694,6 @@ html.sd-app form#idForm { visibility: hidden !important; }
   cursor: default;
 }
 .sd-settingtext { display: block; }
-/* A note about where the name came from, not a second label: small, plain and
-   on its own line, because a chip beside the name read as another field name. */
-.sd-settingguess {
-  display: block;
-  color: var(--dim);
-  font-size: 10.5px;
-  font-weight: 400;
-  font-style: italic;
-  opacity: .75;
-  line-height: 1.2;
-}
 .sd-settingcontrol { min-width: 0; }
 .sd-settingcontrol .sd-input { max-width: 340px; }
 .sd-radios { display: flex; flex-wrap: wrap; gap: 6px 18px; }

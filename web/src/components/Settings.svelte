@@ -27,8 +27,6 @@
   $: saveTarget = buttons.length
     ? pageSave
     : (pageSave || settings.save || settings.primary);
-  // A label that came from the field's own name is a guess, and says so.
-  $: guessed = settings.fields.filter((f) => f.source === 'name').length;
   // "One button that saves" reads very differently from "a step with its own
   // two buttons", and the footnote has to say which this page is.
   $: flow = buttons.length > 0;
@@ -116,12 +114,6 @@
         <div class="sd-setting">
           <label class="sd-settinglabel" for={field.type === 'radio' ? undefined : field.selector}>
             <span class="sd-settingtext">{field.label}</span>
-            {#if field.source === 'name'}
-              <!-- Under the name, not beside it: a chip on the same line reads as
-                   a second label, which is exactly how it looked on the enroll
-                   screen. This is a note about where the name came from. -->
-              <span class="sd-settingguess" title="The page prints no label for this control; this is its field name">from field name</span>
-            {/if}
           </label>
           <div class="sd-settingcontrol">
             {#if field.type === 'radio'}
@@ -153,16 +145,6 @@
         </div>
       {/each}
     </div>
-
-    {#if guessed}
-      <p class="sd-panelnote">
-        {#if guessed === 1}
-          One control here has no label on the page, so its field name stands in — marked “from field name”.
-        {:else}
-          {guessed} controls here have no label on the page, so their field names stand in — marked “from field name”.
-        {/if}
-      </p>
-    {/if}
 
     {#if flow}
       <p class="sd-panelnote">

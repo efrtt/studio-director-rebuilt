@@ -205,8 +205,8 @@ test('the app’s buttons are divs on some screens, and they are still buttons',
   const read = readSettings(doc);
 
   assert.ok(read, 'the enroll step is a small form with a save');
-  // Nothing on the page names these two, so their field names stand in — the
-  // two rows in the screenshot, “from field name”.
+  // Nothing on the page names these two, so their field names stand in. The
+  // view no longer annotates that: the label is the label.
   assert.deepEqual(read.fields.map((f) => f.label), ['Enroll time', 'Start classes time']);
   assert.deepEqual(read.fields.map((f) => f.source), ['name', 'name']);
 
