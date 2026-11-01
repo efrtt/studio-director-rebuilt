@@ -564,6 +564,10 @@ html.sd-app form#idForm { visibility: hidden !important; }
 .sd-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .sd-tabbody { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 14px 18px 24px; }
 .sd-section { margin: 16px 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); }
+/* Two controls in one cell (the waitlist's Enroll and Drop) are two targets, not
+   one link with two words in it. */
+.sd-cellactions { display: inline-flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+.sd-cellactions .sd-action { padding: 1px 0; }
 .sd-tablewrap { overflow-x: auto; margin-bottom: 6px; }
 /* Long sheets scroll under this header instead of losing it, which is the
    difference between reading a 300-row roster and guessing which column is

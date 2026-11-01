@@ -4,12 +4,25 @@
 // imported a table parser out of the tab renderer. Moved here unchanged, so the
 // three callers share one parser instead of one of them owning it by accident.
 
-import { qs, textOf } from '../lib/shell.js';
+import { qs, qsa, textOf } from '../lib/shell.js';
 
 // A panel is a tab: not the whole record, so it is not paged like a list.
 const MAX_ROWS = 300;
 
 const isRight = (el) => /(^|\s)AR(\s|$)/.test((el && el.getAttribute('class')) || '');
+
+// A control's words: its own, else the tooltip the app puts beside an icon.
+function labelOfAnchor(anchor) {
+  const own = textOf(anchor);
+  if (own) return own;
+  const wrapper = anchor.closest ? anchor.closest('.actionIcon') : null;
+  const tooltip = wrapper ? qs(wrapper, '.Tooltip') : null;
+  if (tooltip) {
+    const words = textOf(tooltip);
+    if (words) return words;
+  }
+  return (anchor.getAttribute('title') || '').trim();
+}
 
 function cellOf(td, index, rightCols) {
   const anchor = qs(td, 'a[href]');
@@ -25,12 +38,24 @@ function cellOf(td, index, rightCols) {
   // words still wins, so tooltips elsewhere are not echoed.
   const anchorText = anchor ? textOf(anchor) : '';
   const raw = anchorText || textOf(td);
-  return {
+    // A cell can hold more than one control: the waitlist offers `Enroll` and
+    // `Drop` as two icon links side by side. Keeping only the first merged them
+    // into a single link whose words ran together and whose target was one of
+    // the two - so pressing it always went to Unenroll.
+    const anchors = qsa(td, 'a[href]');
+    const actions = anchors.length > 1
+      ? anchors.map((a) => ({ label: labelOfAnchor(a), href: a.getAttribute('href') }))
+        .filter((action) => action.label)
+      : [];
+
+    return {
     text: raw.replace(/^(\d{1,2}:\d{2}\s*[ap]\.?m?\.?)(?=[A-Za-z\u2013-])/i, '$1 ').replace(/\s+/g, ' ').trim(),
     href: anchor ? anchor.getAttribute('href') : null,
     // The app right-aligns its action column on the heading (`th.AR`) and only
     // sometimes repeats it on the cells, so the column is what is remembered.
-    right: rightCols.has(index) || isRight(td)
+      right: rightCols.has(index) || isRight(td),
+      // Only when there is something to disambiguate: one control is the cell.
+      ...(actions.length ? { actions } : {})
   };
 }
 

@@ -249,7 +249,13 @@
                 <tr>
                   {#each row as cell}
                     <td class:sd-cell--right={cell.right}>
-                      {#if cell.href}<a href={cell.href} title="Open in the app's editor">{cell.text}</a>{:else}{cell.text}{/if}
+                      {#if cell.actions && cell.actions.length}
+                        <span class="sd-cellactions">
+                          {#each cell.actions as action}
+                            <a class="sd-action" href={action.href} title={action.label}>{action.label}</a>
+                          {/each}
+                        </span>
+                      {:else if cell.href}<a href={cell.href} title="Open in the app's editor">{cell.text}</a>{:else}{cell.text}{/if}
                     </td>
                   {/each}
                 </tr>

@@ -64,3 +64,41 @@ test('a cell with no link is still its own text', () => {
   assert.equal(model.rows[0][0].text, '9');
   assert.equal(model.rows[0][0].href, null);
 });
+
+test('two controls in one cell stay two controls', () => {
+  // The class waitlist: Enroll and Drop sit side by side in the Actions cell.
+  // Keeping only the first anchor merged them into one link whose words ran
+  // together, and pressing it always went to Unenroll.
+  const model = readTable(tableOf(`<table class="SimpleSD"><tbody>
+    <tr><th>First Name</th><th class="AR">Actions</th></tr>
+    <tr>
+      <td>Sample</td>
+      <td class="action-cell">
+        <span class="actionIcon">
+          <a href="admin.sd?page=Enroll&amp;cident=42&amp;sident=9001"><i class="fa-check"></i></a>
+          <span class="Tooltip">Enroll</span>
+        </span>
+        <span class="actionIcon">
+          <a href="admin.sd?page=Unenroll&amp;cident=42&amp;sident=9001"><i class="fa-xmark"></i></a>
+          <span class="Tooltip">Drop</span>
+        </span>
+      </td>
+    </tr>
+  </tbody></table>`));
+
+  const cell = model.rows[0][1];
+  assert.equal(cell.actions.length, 2, 'both controls are kept');
+  assert.deepEqual(cell.actions.map((a) => a.label), ['Enroll', 'Drop']);
+  assert.match(cell.actions[0].href, /page=Enroll/);
+  assert.match(cell.actions[1].href, /page=Unenroll/);
+});
+
+test('a single control stays a plain cell, so old models do not grow fields', () => {
+  const model = readTable(tableOf(`<table><tbody>
+    <tr><th>Name</th><th class="AR">Actions</th></tr>
+    <tr><td>Sample</td><td class="action-cell"><span class="actionIcon"><a href="admin.sd?page=Unenroll&amp;sident=7"><i class="fa-xmark"></i></a><span class="Tooltip">Drop</span></span></td></tr>
+  </tbody></table>`));
+
+  assert.equal(model.rows[0][1].actions, undefined);
+  assert.equal(model.rows[0][1].text, 'Drop');
+});
