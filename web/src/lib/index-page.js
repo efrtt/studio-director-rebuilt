@@ -31,7 +31,18 @@ const MIN_LIST_LINKS = 3;
 // page: the tiles are filterable, so what it needs is a cap on what is *drawn*,
 // not on what is read. The filter still searches all 4,271.
 const DRAW_LIMIT = 300;
-const HEADING = 'h1, h2, h3, h4, .sectionHeader, .sectionTitle, .groupTitle, strong, b';
+
+// What can name a group. Real headings and the app's own section classes, plus a
+// bold line - `Settings` prints its category titles beside their lists, as bold
+// text, not as an ancestor heading.
+const HEADING = 'h1, h2, h3, h4, .sectionHeader, .sectionTitle, .groupTitle';
+// All the ways this app has been seen to print a category title, `b`-and-`strong`
+// lines and inline bold included. Each candidate still has to pass `titled()`:
+// short, no links inside, and not one link's own caption.
+const HEADING_LIKE = HEADING
+  + ', b, strong, [class*="Header"], [class*="Title"], [style*="font-weight"]';
+// The page's own title is not a category, however it is marked up.
+const PAGE_TITLE = '.formTitle, .ReportName';
 
 // The rail and the top bar are navigation, not content.
 const CHROME = '#sideNavBar, .topBarContainer, .topBar, .Breadcrumb, .copyright';
@@ -44,22 +55,46 @@ function isChrome(anchor) {
   return !!(anchor.closest && anchor.closest(CHROME + ', #idSearchSpan'));
 }
 
-// The heading the app puts above a group of links, if any.
-function sectionOf(anchor, root) {
-  let node = anchor.parentElement;
-  let depth = 0;
+// Each link's category: the nearest title *above it on the page*.
+//
+// This used to climb the link's ancestors looking for a heading, which works when
+// the app wraps each section (`<div class="sectionBlock"><h3>Charges</h3>…`) and
+// fails on the Settings menu, where the title sits beside the list instead:
+// nothing above the anchors contains it, so all 113 links fell into one group
+// called "Links" and the page's own categories vanished.
+//
+// One walk in document order finds the title wherever the app drew it, however
+// deeply nested, and keeps the sections in the order the page prints them.
+function sectionLabels(root) {
+  const labels = new Map();
+  let current = 'Links';
 
-  while (node && node !== root && depth < 6) {
-    // A heading in this container, but not one that *is* a link's own caption.
-    const heading = node.querySelector && node.querySelector(HEADING);
-    if (heading) {
-      const label = textOf(heading);
-      if (label && label.length <= 80) return label;
-    }
-    node = node.parentElement;
-    depth += 1;
+  function titled(el) {
+    if (el.matches && el.matches(PAGE_TITLE)) return null;
+    // A bold line captions the links under it, unless it is one link's own words
+    // ("<li><strong>Seasons</strong></a>") - that is a label, not a section.
+    if (el.closest && el.closest('a, li')) return null;
+    if (el.querySelector && el.querySelector('a[href]')) return null;
+    const text = textOf(el);
+    return text && text.length <= 80 ? text : null;
   }
-  return 'Links';
+
+  function walk(node) {
+    for (const child of node.children) {
+      if (child.matches(HEADING_LIKE)) {
+        const label = titled(child);
+        if (label) { current = label; continue; }
+      }
+      if (child.tagName === 'A') {
+        if (child.getAttribute('href')) labels.set(child, current);
+        continue;
+      }
+      walk(child);
+    }
+  }
+
+  walk(root);
+  return labels;
 }
 
 export function readIndex(doc) {
@@ -75,6 +110,7 @@ export function readIndex(doc) {
 
   const seen = new Set();
   const items = [];
+  const sections = sectionLabels(root);
 
   for (const anchor of qsa(root, 'a[href]')) {
     if (isChrome(anchor)) continue;
@@ -89,7 +125,7 @@ export function readIndex(doc) {
     items.push({
       label,
       href,
-      section: sectionOf(anchor, root),
+      section: sections.get(anchor) || 'Links',
       // Kept so the shape test below can ask whether this anchor is alone in its
       // own list item, which is what a picker looks like.
       li: anchor.closest ? anchor.closest('li') : null

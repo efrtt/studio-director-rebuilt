@@ -44,7 +44,10 @@
   <div class="sd-indexbody">
     {#each groups as group}
       <section class="sd-indexgroup">
-        <h3 class="sd-indexhead">{group.label}</h3>
+        <h3 class="sd-indexhead">
+          {group.label}
+          <span class="sd-indexcount">{group.items.length}</span>
+        </h3>
         <div class="sd-tiles">
           {#each group.items as item}
             <a class="sd-tile" href={item.href} title={item.label}>

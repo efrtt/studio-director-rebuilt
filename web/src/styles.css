@@ -460,18 +460,33 @@ html.sd-app form#idForm { visibility: hidden !important; }
 /* ---- landing pages: a searchable tile index ---- */
 .sd-index { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
 .sd-indexbody { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 14px 18px 24px; }
-.sd-indexgroup { margin-bottom: 22px; }
+.sd-indexgroup { margin-bottom: 24px; }
+.sd-indexgroup:last-child { margin-bottom: 8px; }
+/* The category is a real heading, with the count of what is under it: the page
+   this replaces prints the same titles, and losing them made 113 links look like
+   one undifferentiated wall. */
 .sd-indexhead {
-  margin: 0 0 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: .08em;
+  color: var(--text);
+}
+.sd-indexcount {
   color: var(--dim);
+  font-size: 11px;
+  letter-spacing: .04em;
+  font-variant-numeric: tabular-nums;
 }
 .sd-tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 6px;
   max-width: 1200px;
 }
 .sd-tile {
@@ -479,14 +494,14 @@ html.sd-app form#idForm { visibility: hidden !important; }
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 9px 12px;
+  padding: 8px 11px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 7px;
   background: var(--panel-2);
   color: var(--text);
   text-decoration: none;
   font-size: 13px;
-  min-height: 38px;
+  min-height: 34px;
 }
 .sd-tile:hover { border-color: var(--accent); background: #1f2a3a; }
 .sd-tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }

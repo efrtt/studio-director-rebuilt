@@ -116,3 +116,53 @@ test('javascript and placeholder links are not menu items', () => {
   assert.equal(labels.includes('Not a destination'), false);
   assert.equal(read.count, 10);
 });
+
+test('a menu whose category titles sit beside its lists keeps them', () => {
+  // The Settings menu as the app draws it: the title is a bold line before the
+  // list, not a heading wrapped around it. All 117 links used to land in one
+  // group called "Links" because the reader only looked up the family tree.
+  const doc = parseHtml(`<form id="idForm"><div class="contentContainer"><div class="Content">
+    <div class="formTitle">Settings</div>
+    <div class="contentInfo">
+      <div class="menuBlock"><b>Logins / Passwords / Security</b>
+        <ol>
+          <li><a href="admin.sd?page=AddStaffUser">Add Staff User-Account</a></li>
+          <li><a href="admin.sd?page=ResetStaffPwd">Reset Admin/Staff Password</a></li>
+        </ol>
+      </div>
+      <div class="menuBlock"><b>Class / Date Administration</b>
+        <ol>
+          <li><a href="admin.sd?page=Seasons">Seasons</a></li>
+          <li><a href="admin.sd?page=Holidays">Holidays</a></li>
+          <li><a href="admin.sd?page=ClassTypes">Class Types</a></li>
+        </ol>
+      </div>
+    </div>
+  </div></div></form>`);
+
+  const read = readIndex(doc);
+  assert.ok(read, 'a page of categorized lists is a menu');
+  assert.deepEqual(read.groups.map((g) => g.label),
+    ['Logins / Passwords / Security', 'Class / Date Administration']);
+  assert.deepEqual(read.groups.map((g) => g.items.length), [2, 3]);
+  assert.equal(read.count, 5);
+  // The page title names the page, not a category of links.
+  assert.equal(read.groups.some((g) => g.label === 'Settings'), false);
+});
+
+test('a title inside a list item is that link’s words, not a category', () => {
+  const doc = parseHtml(`<form id="idForm"><div class="contentContainer"><div class="Content">
+    <div class="formTitle">Reports</div>
+    <ul>
+      <li><a href="admin.sd?page=Roster"><strong>Class roster</strong></a></li>
+      <li><a href="admin.sd?page=Attendance"><strong>Attendance</strong></a></li>
+      <li><a href="admin.sd?page=Balances"><strong>Balances</strong></a></li>
+    </ul>
+  </div></div></form>`);
+
+  const read = readIndex(doc);
+  assert.ok(read);
+  assert.deepEqual(read.groups.map((g) => g.label), ['Links']);
+  assert.deepEqual(read.groups[0].items.map((i) => i.label),
+    ['Class roster', 'Attendance', 'Balances']);
+});
