@@ -1,0 +1,864 @@
+{
+  "file": "editor-season.html",
+  "form": {
+    "breadcrumb": [
+      "Home"
+    ],
+    "fields": [
+      {
+        "checked": null,
+        "id": "season_name",
+        "key": "season_name",
+        "label": null,
+        "masked": false,
+        "name": "season_name",
+        "options": null,
+        "selector": "#season_name",
+        "type": "text",
+        "value": "2027 Sign Ups"
+      },
+      {
+        "checked": null,
+        "id": "start_month",
+        "key": "start_month",
+        "label": null,
+        "masked": false,
+        "name": "start_month",
+        "options": [
+          {
+            "label": "Jan",
+            "selected": false,
+            "value": "Jan"
+          },
+          {
+            "label": "Aug",
+            "selected": true,
+            "value": "Aug"
+          }
+        ],
+        "selector": "#start_month",
+        "type": "select",
+        "value": "Aug"
+      },
+      {
+        "checked": null,
+        "id": "start_day",
+        "key": "start_day",
+        "label": null,
+        "masked": false,
+        "name": "start_day",
+        "options": [
+          {
+            "label": "1",
+            "selected": false,
+            "value": "1"
+          },
+          {
+            "label": "3",
+            "selected": true,
+            "value": "3"
+          }
+        ],
+        "selector": "#start_day",
+        "type": "select",
+        "value": "3"
+      },
+      {
+        "checked": null,
+        "id": "start_year",
+        "key": "start_year",
+        "label": null,
+        "masked": false,
+        "name": "start_year",
+        "options": [
+          {
+            "label": "2027",
+            "selected": true,
+            "value": "2027"
+          }
+        ],
+        "selector": "#start_year",
+        "type": "select",
+        "value": "2027"
+      },
+      {
+        "checked": null,
+        "id": "end_month",
+        "key": "end_month",
+        "label": null,
+        "masked": false,
+        "name": "end_month",
+        "options": [
+          {
+            "label": "Jan",
+            "selected": false,
+            "value": "Jan"
+          },
+          {
+            "label": "Jun",
+            "selected": true,
+            "value": "Jun"
+          }
+        ],
+        "selector": "#end_month",
+        "type": "select",
+        "value": "Jun"
+      },
+      {
+        "checked": null,
+        "id": "end_day",
+        "key": "end_day",
+        "label": null,
+        "masked": false,
+        "name": "end_day",
+        "options": [
+          {
+            "label": "1",
+            "selected": false,
+            "value": "1"
+          },
+          {
+            "label": "10",
+            "selected": false,
+            "value": "10"
+          }
+        ],
+        "selector": "#end_day",
+        "type": "select",
+        "value": "1"
+      },
+      {
+        "checked": null,
+        "id": "end_year",
+        "key": "end_year",
+        "label": null,
+        "masked": false,
+        "name": "end_year",
+        "options": [
+          {
+            "label": "2027",
+            "selected": true,
+            "value": "2027"
+          }
+        ],
+        "selector": "#end_year",
+        "type": "select",
+        "value": "2027"
+      },
+      {
+        "checked": null,
+        "id": "viewable",
+        "key": "viewable",
+        "label": null,
+        "masked": false,
+        "name": "viewable",
+        "options": [
+          {
+            "label": "yes",
+            "selected": true,
+            "value": "yes"
+          },
+          {
+            "label": "no",
+            "selected": false,
+            "value": "no"
+          }
+        ],
+        "selector": "#viewable",
+        "type": "select",
+        "value": "yes"
+      },
+      {
+        "checked": null,
+        "id": "prorate",
+        "key": "prorate",
+        "label": null,
+        "masked": false,
+        "name": "prorate",
+        "options": [
+          {
+            "label": "yes",
+            "selected": true,
+            "value": "yes"
+          },
+          {
+            "label": "no",
+            "selected": false,
+            "value": "no"
+          }
+        ],
+        "selector": "#prorate",
+        "type": "select",
+        "value": "yes"
+      },
+      {
+        "checked": null,
+        "id": "holidays",
+        "key": "holidays",
+        "label": null,
+        "masked": false,
+        "name": "holidays",
+        "options": [
+          {
+            "label": "yes",
+            "selected": true,
+            "value": "yes"
+          },
+          {
+            "label": "no",
+            "selected": false,
+            "value": "no"
+          }
+        ],
+        "selector": "#holidays",
+        "type": "select",
+        "value": "yes"
+      },
+      {
+        "checked": null,
+        "id": "reg_fee",
+        "key": "reg_fee",
+        "label": null,
+        "masked": false,
+        "name": "reg_fee",
+        "options": [
+          {
+            "label": "yes",
+            "selected": true,
+            "value": "yes"
+          },
+          {
+            "label": "no",
+            "selected": false,
+            "value": "no"
+          }
+        ],
+        "selector": "#reg_fee",
+        "type": "select",
+        "value": "yes"
+      },
+      {
+        "checked": null,
+        "id": "season_order",
+        "key": "season_order",
+        "label": null,
+        "masked": false,
+        "name": "season_order",
+        "options": [
+          {
+            "label": "1",
+            "selected": true,
+            "value": "1"
+          }
+        ],
+        "selector": "#season_order",
+        "type": "select",
+        "value": "1"
+      },
+      {
+        "checked": null,
+        "id": "season_type",
+        "key": "season_type",
+        "label": null,
+        "masked": false,
+        "name": "season_type",
+        "options": [
+          {
+            "label": "Weekly Series",
+            "selected": true,
+            "value": "Weekly Series"
+          },
+          {
+            "label": "Date Specific",
+            "selected": false,
+            "value": "Date Specific"
+          }
+        ],
+        "selector": "#season_type",
+        "type": "select",
+        "value": "Weekly Series"
+      }
+    ],
+    "kind": "form",
+    "rows": [
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "season_name",
+            "key": "season_name",
+            "label": null,
+            "masked": false,
+            "name": "season_name",
+            "options": null,
+            "selector": "#season_name",
+            "type": "text",
+            "value": "2027 Sign Ups"
+          }
+        ],
+        "label": "Season"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "start_month",
+            "key": "start_month",
+            "label": null,
+            "masked": false,
+            "name": "start_month",
+            "options": [
+              {
+                "label": "Jan",
+                "selected": false,
+                "value": "Jan"
+              },
+              {
+                "label": "Aug",
+                "selected": true,
+                "value": "Aug"
+              }
+            ],
+            "selector": "#start_month",
+            "type": "select",
+            "value": "Aug"
+          },
+          {
+            "checked": null,
+            "id": "start_day",
+            "key": "start_day",
+            "label": null,
+            "masked": false,
+            "name": "start_day",
+            "options": [
+              {
+                "label": "1",
+                "selected": false,
+                "value": "1"
+              },
+              {
+                "label": "3",
+                "selected": true,
+                "value": "3"
+              }
+            ],
+            "selector": "#start_day",
+            "type": "select",
+            "value": "3"
+          },
+          {
+            "checked": null,
+            "id": "start_year",
+            "key": "start_year",
+            "label": null,
+            "masked": false,
+            "name": "start_year",
+            "options": [
+              {
+                "label": "2027",
+                "selected": true,
+                "value": "2027"
+              }
+            ],
+            "selector": "#start_year",
+            "type": "select",
+            "value": "2027"
+          }
+        ],
+        "label": "Start Date"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "end_month",
+            "key": "end_month",
+            "label": null,
+            "masked": false,
+            "name": "end_month",
+            "options": [
+              {
+                "label": "Jan",
+                "selected": false,
+                "value": "Jan"
+              },
+              {
+                "label": "Jun",
+                "selected": true,
+                "value": "Jun"
+              }
+            ],
+            "selector": "#end_month",
+            "type": "select",
+            "value": "Jun"
+          },
+          {
+            "checked": null,
+            "id": "end_day",
+            "key": "end_day",
+            "label": null,
+            "masked": false,
+            "name": "end_day",
+            "options": [
+              {
+                "label": "1",
+                "selected": false,
+                "value": "1"
+              },
+              {
+                "label": "10",
+                "selected": false,
+                "value": "10"
+              }
+            ],
+            "selector": "#end_day",
+            "type": "select",
+            "value": "1"
+          },
+          {
+            "checked": null,
+            "id": "end_year",
+            "key": "end_year",
+            "label": null,
+            "masked": false,
+            "name": "end_year",
+            "options": [
+              {
+                "label": "2027",
+                "selected": true,
+                "value": "2027"
+              }
+            ],
+            "selector": "#end_year",
+            "type": "select",
+            "value": "2027"
+          }
+        ],
+        "label": "End Date"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "viewable",
+            "key": "viewable",
+            "label": null,
+            "masked": false,
+            "name": "viewable",
+            "options": [
+              {
+                "label": "yes",
+                "selected": true,
+                "value": "yes"
+              },
+              {
+                "label": "no",
+                "selected": false,
+                "value": "no"
+              }
+            ],
+            "selector": "#viewable",
+            "type": "select",
+            "value": "yes"
+          }
+        ],
+        "label": "Viewable"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "prorate",
+            "key": "prorate",
+            "label": null,
+            "masked": false,
+            "name": "prorate",
+            "options": [
+              {
+                "label": "yes",
+                "selected": true,
+                "value": "yes"
+              },
+              {
+                "label": "no",
+                "selected": false,
+                "value": "no"
+              }
+            ],
+            "selector": "#prorate",
+            "type": "select",
+            "value": "yes"
+          }
+        ],
+        "label": "Prorate upon Enrollment"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "holidays",
+            "key": "holidays",
+            "label": null,
+            "masked": false,
+            "name": "holidays",
+            "options": [
+              {
+                "label": "yes",
+                "selected": true,
+                "value": "yes"
+              },
+              {
+                "label": "no",
+                "selected": false,
+                "value": "no"
+              }
+            ],
+            "selector": "#holidays",
+            "type": "select",
+            "value": "yes"
+          }
+        ],
+        "label": "Charge for Holidays"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "reg_fee",
+            "key": "reg_fee",
+            "label": null,
+            "masked": false,
+            "name": "reg_fee",
+            "options": [
+              {
+                "label": "yes",
+                "selected": true,
+                "value": "yes"
+              },
+              {
+                "label": "no",
+                "selected": false,
+                "value": "no"
+              }
+            ],
+            "selector": "#reg_fee",
+            "type": "select",
+            "value": "yes"
+          }
+        ],
+        "label": "Reg Fee"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "season_order",
+            "key": "season_order",
+            "label": null,
+            "masked": false,
+            "name": "season_order",
+            "options": [
+              {
+                "label": "1",
+                "selected": true,
+                "value": "1"
+              }
+            ],
+            "selector": "#season_order",
+            "type": "select",
+            "value": "1"
+          }
+        ],
+        "label": "Order"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "season_type",
+            "key": "season_type",
+            "label": null,
+            "masked": false,
+            "name": "season_type",
+            "options": [
+              {
+                "label": "Weekly Series",
+                "selected": true,
+                "value": "Weekly Series"
+              },
+              {
+                "label": "Date Specific",
+                "selected": false,
+                "value": "Date Specific"
+              }
+            ],
+            "selector": "#season_type",
+            "type": "select",
+            "value": "Weekly Series"
+          }
+        ],
+        "label": "Season Type"
+      }
+    ],
+    "tables": [
+      {
+        "caption": "",
+        "cls": "SimpleSD",
+        "headings": [
+          "Season Name",
+          "Start Date",
+          "End Date",
+          "Viewable",
+          "Season Types",
+          "Prorate upon Enrollment",
+          "Charge for Holidays",
+          "Reg Fee",
+          "Order"
+        ],
+        "id": "",
+        "rowTotal": 2,
+        "rows": [
+          [
+            {
+              "href": "admin.sd?page=NewEditArchive&content=SeasonContent&state=edit&season_ident=101",
+              "right": false,
+              "text": "Fall 2026-Spring 2027"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "2026-Aug-03"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "2027-Jun-10"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "yes"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "Weekly Series"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "yes"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "no"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "yes"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "1"
+            }
+          ],
+          [
+            {
+              "href": "admin.sd?page=NewEditArchive&content=SeasonContent&state=edit&season_ident=102",
+              "right": false,
+              "text": "2027 Sign Ups"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "2027-Aug-07"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "2027-Sep-30"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "yes"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "Date Specific"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "yes"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "no"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "no"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "3"
+            }
+          ]
+        ],
+        "section": "Existing Season Dates"
+      }
+    ],
+    "title": "Seasons"
+  },
+  "model": {
+    "confirm": null,
+    "index": null,
+    "list": null,
+    "nav": [],
+    "note": null,
+    "report": null,
+    "settings": null,
+    "sheet": {
+      "actions": [],
+      "breadcrumb": [
+        "Home"
+      ],
+      "kind": "sheet",
+      "rows": 2,
+      "shown": 2,
+      "tables": [
+        {
+          "caption": "",
+          "cls": "SimpleSD",
+          "headings": [
+            "Season Name",
+            "Start Date",
+            "End Date",
+            "Viewable",
+            "Season Types",
+            "Prorate upon Enrollment",
+            "Charge for Holidays",
+            "Reg Fee",
+            "Order"
+          ],
+          "id": "",
+          "rowTotal": 2,
+          "rows": [
+            [
+              {
+                "href": "admin.sd?page=NewEditArchive&content=SeasonContent&state=edit&season_ident=101",
+                "right": false,
+                "text": "Fall 2026-Spring 2027"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "2026-Aug-03"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "2027-Jun-10"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "yes"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "Weekly Series"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "yes"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "no"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "yes"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "1"
+              }
+            ],
+            [
+              {
+                "href": "admin.sd?page=NewEditArchive&content=SeasonContent&state=edit&season_ident=102",
+                "right": false,
+                "text": "2027 Sign Ups"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "2027-Aug-07"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "2027-Sep-30"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "yes"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "Date Specific"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "yes"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "no"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "no"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "3"
+              }
+            ]
+          ],
+          "section": ""
+        }
+      ],
+      "title": "Seasons",
+      "truncated": false
+    },
+    "task": null,
+    "title": "Seasons",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=NewEditArchive&content=SeasonContent&state=new",
+    "view": "sheet",
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=NewEditArchive&content=SeasonContent&state=new",
+  "view": "sheet"
+}
