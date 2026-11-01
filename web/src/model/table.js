@@ -17,7 +17,14 @@ function cellOf(td, index, rightCols) {
   // which repeats the class, its instructor, its studio and its seats. The
   // link's own words are the readable part; the tooltip is read properly by the
   // week view, not echoed here.
-  const raw = anchor ? textOf(anchor) : textOf(td);
+  // An *action* cell is the opposite shape: the link is an icon and carries no
+  // words at all, and the label sits beside it in a tooltip span
+  // (`<a><i class="fa-xmark"></i></a><span class="Tooltip">Drop</span>`). Reading
+  // only the anchor left the label empty, which rendered an invisible link in the
+  // Actions column - the class enrollment page had no Drop button. An anchor with
+  // words still wins, so tooltips elsewhere are not echoed.
+  const anchorText = anchor ? textOf(anchor) : '';
+  const raw = anchorText || textOf(td);
   return {
     text: raw.replace(/^(\d{1,2}:\d{2}\s*[ap]\.?m?\.?)(?=[A-Za-z\u2013-])/i, '$1 ').replace(/\s+/g, ' ').trim(),
     href: anchor ? anchor.getAttribute('href') : null,
