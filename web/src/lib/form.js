@@ -185,6 +185,20 @@ function headingFor(table) {
   return '';
 }
 
+// Two shapes count as a table beside a form:
+//   - a grid: column headings and at least one row ("Existing Season Dates");
+//   - a one-column list of links ("Existing Class Locations" on `NewEditDel`,
+//     which has no heading row at all — just a link per location).
+// Anything else is a spacer, an empty grid, or a two-column label/value block,
+// which is a form or another reader's business.
+function isSideTable(read) {
+  if (!read.rowTotal) return false;
+  if (read.headings.length >= 2) return true;
+  if (read.headings.length) return false;
+  return read.rows.every((row) => row.length === 1)
+    && read.rows.some((row) => row[0] && row[0].href);
+}
+
 function tablesBeside(doc, formTable) {
   const root = contentRoot(doc);
   if (!root) return [];
@@ -198,8 +212,7 @@ function tablesBeside(doc, formTable) {
     if (NOT_DATA.test(String(table.getAttribute('class') || '').trim())) continue;
 
     const read = readTable(table);
-    // A heading row and a row of values: anything less is decoration.
-    if (read.headings.length < 2 || !read.rowTotal) continue;
+    if (!isSideTable(read)) continue;
     tables.push({ ...read, section: headingFor(table) });
   }
   return tables;
@@ -210,13 +223,16 @@ function tablesBeside(doc, formTable) {
 // the caller leaves the app alone rather than inventing a form.
 export function readForm(doc) {
   let best = null;
+  // The page's own Save is what makes a form an editor, so a page carrying it
+  // is an editor whatever its size: `NewEditDel(content=LocationsContent)` is a
+  // location name and a link, two fields. Four remains the floor without it —
+  // a list page's editor stub has three, and those are not records.
+  const floor = doc && doc.getElementById && doc.getElementById('save') ? 2 : 4;
 
   for (const table of qsa(doc, FORM_SELECTOR)) {
     const rows = rowsOf(table);
     const fields = rows.reduce((all, row) => all.concat(row.fields), []);
-    // Four controls minimum: a list page's editor stub has three, a real record
-    // editor has fourteen and up.
-    if (fields.length < 4) continue;
+    if (fields.length < floor) continue;
     if (!best || fields.length > best.fields.length) best = { rows, fields, table };
   }
 

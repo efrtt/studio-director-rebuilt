@@ -150,6 +150,43 @@ test('the tables that are structure are not printed as data', () => {
   assert.ok(form.tables.every((t) => !/^(Layout|Form|FormEx)$/.test(t.cls)));
 });
 
+// Two fields is a whole editor when the page says so: `NewEditDel` is a location
+// name and a link, and the four-control floor read the page as not-an-editor.
+const LOCATIONS_FIXTURE = new URL('./fixtures/editor-locations.html', import.meta.url);
+
+test('a page carrying Save is an editor however few fields it has', () => {
+  const form = readForm(doc(fs.readFileSync(LOCATIONS_FIXTURE, 'utf8')));
+  assert.ok(form, 'the locations editor is read');
+  assert.deepEqual(form.fields.map((f) => f.key), ['name', 'url']);
+  // The record id sits in a hidden input inside a hidden row: never a field.
+  assert.ok(form.fields.every((f) => f.name !== 'lident'));
+});
+
+test('a one-column list of links beside the form is read too', () => {
+  const form = readForm(doc(fs.readFileSync(LOCATIONS_FIXTURE, 'utf8')));
+  assert.equal(form.tables.length, 1);
+  const [list] = form.tables;
+  assert.equal(list.section, 'Existing Class Locations');
+  // No heading row at all on the live page — the links are the table.
+  assert.equal(list.headings.length, 0);
+  assert.equal(list.rowTotal, 4);
+  assert.equal(list.rows[1][0].text, 'Downtown');
+  assert.match(list.rows[1][0].href, /lident=101/);
+});
+
+test('a page without Save still needs four fields to be an editor', () => {
+  // The floor that keeps a list page's three-control stub out of the editor.
+  const stub = doc(`
+    <body><div class="contentContainer"><div class="formTitle">Classes</div>
+      <table class="Form">
+        <tr><td>Filter</td><td><input id="a" value=""></td></tr>
+        <tr><td>Season</td><td><select id="b"><option>1</option></select></td></tr>
+        <tr><td>Date</td><td><input id="c" value=""></td></tr>
+      </table>
+    </div></body>`);
+  assert.equal(readForm(stub), null);
+});
+
 test('a radio choice is written to the set, not to the first input', () => {
   const d = doc(RADIO_FORM);
   const form = readForm(d);
