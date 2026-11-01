@@ -78,7 +78,7 @@
     {#if report.fields.length}
       <div class="sd-filters">
         {#each report.rows as row}
-          <div class="sd-filter">
+          <div class="sd-filterrow">
             <span class="sd-filterlabel">{row.label}</span>
             <span class="sd-filterfield">
               {#each row.fields as field}
