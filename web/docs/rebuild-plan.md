@@ -148,11 +148,20 @@ Where the invented selects came from is worth knowing: `studio-director-pages.js
 first described this page, records `phone1_label` as a select with 10 options, which is not the markup
 the browser ends up with. A crawl summary is a shape, not a page; the fixture has to come from the DOM.
 
-## Not verified here
+## Measured on the live app
 
-The read-only checks above are done. These remain, because they write to a real record and need a
-deliberate decision about which one:
+Each row below was measured in a signed-in session by writing one value into the page's own control
+and pressing the page's own control:
 
-- a record save persisting (`tools/save-check.js`);
-- the report, task and settings write transports, none of which has ever been measured against the
-  real site.
+| Screen | Pressed | What the app sent |
+|---|---|---|
+| `EditFamily` | Save | `POST(form, scripted submit)` to `admin.sd`, 430 bytes |
+| `StudentContactList` | Run Report | same, 240 bytes |
+| `EmailClasses` | Select by Filter | same, 169 bytes |
+| `ManagePhoneNumbersFormat` | Save | same, 54 bytes |
+
+Every body carried the value written into the control, the record value was still there after a
+reload, and the setting was put back and read back as its original value. So the contract that
+`save.js`, `report.js`, `task.js` and `settings.js` all rely on holds on every kind of screen they
+serve: the app serialises the live form at submit time, and keeps no copy of the record to post in
+its place. `tools/save-check.js` measures a screen the same way.
