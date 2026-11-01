@@ -136,7 +136,7 @@
 
 <svelte:window on:keydown={onKey} on:click={onWindowClick} />
 
-<div class="sd-editor">
+<div class="sd-editor" class:sd-editor--wide={form.tables && form.tables.length > 0}>
   <div class="sd-editorbar">
     <span class="sd-dirty">{dirty ? `${changes.length} unsaved change${changes.length === 1 ? '' : 's'}` : 'No changes'}</span>
     <div class="sd-editor-actions">
@@ -323,6 +323,49 @@
         {/each}
       </tbody>
     </table>
+
+    <!-- A page can print a table beside its form — the seasons page lists every
+         season next to the one being edited. It is the app's own table, so it is
+         read-only here and its rows are links into the editor. -->
+    {#if form.tables && form.tables.length}
+      {#each form.tables as block}
+        {#if block.section}<h4 class="sd-section">{block.section}</h4>{/if}
+        <div class="sd-tablewrap">
+          <table class="sd-table">
+            {#if block.headings.length}
+              <thead>
+                <tr>
+                  {#each block.headings as heading}<th>{heading}</th>{/each}
+                </tr>
+              </thead>
+            {/if}
+            <tbody>
+              {#each block.rows as row}
+                <tr>
+                  {#each row as cell}
+                    <td
+                      class:sd-cell--right={cell.right}
+                      class:sd-cell--link={cellKind(cell) === 'link'}
+                      class:sd-cell--action={cellKind(cell) === 'action'}
+                    >
+                      {#if cell.actions && cell.actions.length > 1}
+                        <span class="sd-cell-actions">
+                          {#each cell.actions as action}
+                            <a class="sd-pill" href={action.href} title={action.label}>{action.label}</a>
+                          {/each}
+                        </span>
+                      {:else if cell.href}
+                        <a href={cell.href} title="Open in the app's editor">{cell.text}</a>
+                      {:else}{cell.text}{/if}
+                    </td>
+                  {/each}
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      {/each}
+    {/if}
   </div>
   {/if}
 </div>

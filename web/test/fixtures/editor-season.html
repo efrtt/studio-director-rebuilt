@@ -1,0 +1,85 @@
+<!--
+  A CAPTURE of NewEditArchive(content=SeasonContent, state=new) — the Seasons page.
+
+  Trimmed to the shape that matters: the page is not one form. Its `.contentInfo`
+  holds `table.Layout`, and that layout table has two cells: the season form on
+  the left (`table.Form`) and, on the right, a `div.formTitle` heading
+  ("Existing Season Dates") over `table.SimpleSD` listing every season with a link
+  to open it. The skin rebuilt only the form, so the table beside it vanished.
+
+  Structure and class names are the live ones. Season names and dates are
+  invented; the live rows belong to a studio.
+-->
+<!DOCTYPE html>
+<html>
+<head><title>The Studio Director</title></head>
+<body>
+<form id="idForm">
+  <div class="standardMainContent">
+    <div id="sideNavBar"></div>
+    <div id="mainContent">
+      <div class="contentContainer">
+        <div class="Content">
+          <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a></div>
+          <div class="formTitle">Seasons</div>
+          <div class="ButtonBar"><a id="save" href="#save">Save</a></div>
+          <div class="contentInfo">
+            <table class="Layout">
+              <tbody>
+                <tr>
+                  <td class="LHS">
+                    <table class="Form">
+                      <tbody>
+                        <tr><td>Season</td><td><input id="season_name" name="season_name" type="text" value="2027 Sign Ups"></td></tr>
+                        <tr><td>Start Date</td><td>
+                          <select id="start_month" name="start_month"><option>Jan</option><option selected>Aug</option></select>
+                          <select id="start_day" name="start_day"><option>1</option><option selected>3</option></select>
+                          <select id="start_year" name="start_year"><option selected>2027</option></select>
+                        </td></tr>
+                        <tr><td>End Date</td><td>
+                          <select id="end_month" name="end_month"><option>Jan</option><option selected>Jun</option></select>
+                          <select id="end_day" name="end_day"><option>1</option><option>10</option></select>
+                          <select id="end_year" name="end_year"><option selected>2027</option></select>
+                        </td></tr>
+                        <tr><td>Viewable</td><td><select id="viewable" name="viewable"><option selected>yes</option><option>no</option></select></td></tr>
+                        <tr><td>Prorate upon Enrollment</td><td><select id="prorate" name="prorate"><option selected>yes</option><option>no</option></select></td></tr>
+                        <tr><td>Charge for Holidays</td><td><select id="holidays" name="holidays"><option selected>yes</option><option>no</option></select></td></tr>
+                        <tr><td>Reg Fee</td><td><select id="reg_fee" name="reg_fee"><option selected>yes</option><option>no</option></select></td></tr>
+                        <tr><td>Order</td><td><select id="season_order" name="season_order"><option selected>1</option></select></td></tr>
+                        <tr><td>Season Type</td><td><select id="season_type" name="season_type"><option selected>Weekly Series</option><option>Date Specific</option></select></td></tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td class="RHS">
+                    <div class="formTitle">Existing Season Dates</div>
+                    <table class="SimpleSD">
+                      <tbody>
+                        <tr>
+                          <th>Season Name</th><th>Start Date</th><th>End Date</th><th>Viewable</th>
+                          <th>Season Types</th><th>Prorate upon Enrollment</th>
+                          <th>Charge for Holidays</th><th>Reg Fee</th><th>Order</th>
+                        </tr>
+                        <tr>
+                          <td><a href="admin.sd?page=NewEditArchive&amp;content=SeasonContent&amp;state=edit&amp;season_ident=101">Fall 2026-Spring 2027</a></td>
+                          <td>2026-Aug-03</td><td>2027-Jun-10</td><td>yes</td><td>Weekly Series</td>
+                          <td>yes</td><td>no</td><td>yes</td><td>1</td>
+                        </tr>
+                        <tr>
+                          <td><a href="admin.sd?page=NewEditArchive&amp;content=SeasonContent&amp;state=edit&amp;season_ident=102">2027 Sign Ups</a></td>
+                          <td>2027-Aug-07</td><td>2027-Sep-30</td><td>yes</td><td>Date Specific</td>
+                          <td>yes</td><td>no</td><td>no</td><td>3</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</body>
+</html>

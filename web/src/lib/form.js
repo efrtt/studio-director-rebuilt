@@ -22,11 +22,22 @@
 
 import { qs, qsa, textOf } from './shell.js';
 import { weekdayOf, optionsOf, valueOfSelect, selectorOf } from '../model/fields.js';
+import { readTable } from '../model/table.js';
+import { contentRoot } from '../model/root.js';
 
 const FORM_SELECTOR = 'table.Form, table.FormEx';
 const CONTROLS = 'input, select, textarea';
 const IGNORE_IDS = new Set(['filter', 'searchidx', 'ResetPwdFlag', 'idPage', 'idMeth', 'idMethArgs']);
 const IGNORE_TYPES = new Set(['hidden', 'file', 'submit', 'button', 'reset', 'image']);
+
+// Tables that are structure rather than content: the form itself, the layout
+// table the app wraps whole screens in, the weekday checkbox grid, the calendar
+// grids. Everything else beside a form is a list the page is showing.
+const NOT_DATA = /^(Form|FormEx|Layout|WeekdayCheckboxes|TimeBlock|WeekCal|MonthCal)$/i;
+
+// Where a table's own heading sits: `<div class="formTitle">Existing Season
+// Dates</div><table class="SimpleSD">` is the shape on the seasons page.
+const HEADING = '.formTitle, .ReportTableSubtitle, .sectionHeader, .sectionTitle, h2, h3, h4';
 
 // A control is addressed by id when it has one; otherwise by a unique name.
 function controlOf(el, doc) {
@@ -150,6 +161,50 @@ function rowsOf(table) {
   return rows;
 }
 
+// Tables that sit *beside* a form, which the editor used to drop.
+//
+// `NewEditArchive(content=SeasonContent)` is the shape: its `.contentInfo` holds
+// `table.Layout`, and that layout table has the season form in one cell and, in
+// the other, "Existing Season Dates" — every season with a link to open it.
+// Reading only the form left the rebuilt page with a season to edit and no sign
+// of the seasons that exist, which is half the screen.
+//
+// A table is taken when it is a real data table (headings and at least one row),
+// is not nested inside another table's cell, and is not one of the places that
+// has its own reader: a tab panel, the record list, the button bar, the rail.
+function headingFor(table) {
+  let node = table.previousElementSibling;
+  let hops = 0;
+  while (node && hops < 3) {
+    if (node.matches && node.matches(HEADING)) return textOf(node);
+    const inner = node.querySelector && node.querySelector(HEADING);
+    if (inner) return textOf(inner);
+    node = node.previousElementSibling;
+    hops += 1;
+  }
+  return '';
+}
+
+function tablesBeside(doc, formTable) {
+  const root = contentRoot(doc);
+  if (!root) return [];
+
+  const tables = [];
+  for (const table of qsa(root, 'table')) {
+    if (table === formTable) continue;
+    // A table inside another table's cell is that table's cell content.
+    if (table.closest && table.closest('table') !== table) continue;
+    if (table.closest && table.closest('.tabContent, .menu, .ButtonBar, #sideNavBar, .List')) continue;
+    if (NOT_DATA.test(String(table.getAttribute('class') || '').trim())) continue;
+
+    const read = readTable(table);
+    // A heading row and a row of values: anything less is decoration.
+    if (read.headings.length < 2 || !read.rowTotal) continue;
+    tables.push({ ...read, section: headingFor(table) });
+  }
+  return tables;
+}
+
 // The editor is the form-shaped table with the most fields on the page. A page
 // with two or three stray controls is not an editor, so it yields nothing and
 // the caller leaves the app alone rather than inventing a form.
@@ -162,17 +217,22 @@ export function readForm(doc) {
     // Four controls minimum: a list page's editor stub has three, a real record
     // editor has fourteen and up.
     if (fields.length < 4) continue;
-    if (!best || fields.length > best.fields.length) best = { rows, fields };
+    if (!best || fields.length > best.fields.length) best = { rows, fields, table };
   }
 
   if (!best) return null;
+
+  const tables = tablesBeside(doc, best.table);
 
   return {
     kind: 'form',
     title: textOf(qs(doc, '.formTitle')) || 'Edit',
     breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
     rows: best.rows,
-    fields: best.fields
+    fields: best.fields,
+    // Other tables on the page — the seasons list beside its editor. Only when
+    // the page has one, so a plain editor's model is exactly what it was.
+    ...(tables.length ? { tables } : {})
   };
 }
 

@@ -10,6 +10,7 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { DOMParser } from 'linkedom';
 
 import { contentRoot, CHROME } from '../src/model/root.js';
@@ -118,6 +119,35 @@ test('the app\'s own record id in an unlabelled row is not a field', () => {
 
   const changes = changesFrom(form, valuesFor(form, { deposit: '25' }));
   assert.deepEqual(changes.map((c) => c.key), ['deposit']);
+});
+
+// The seasons page is a form and a table side by side: `table.Layout` holds the
+// season form in one cell and "Existing Season Dates" in the other.
+const SEASON_FIXTURE = new URL('./fixtures/editor-season.html', import.meta.url);
+
+test('a table beside the form is read, not dropped', () => {
+  const d = doc(fs.readFileSync(SEASON_FIXTURE, 'utf8'));
+  const form = readForm(d);
+  assert.ok(form, 'the form is still read');
+  assert.deepEqual(form.fields.slice(0, 3).map((f) => f.key), ['season_name', 'start_month', 'start_day']);
+
+  // The seasons list beside it used to be lost entirely.
+  assert.equal(form.tables.length, 1);
+  const [list] = form.tables;
+  assert.equal(list.section, 'Existing Season Dates');
+  assert.equal(list.headings[0], 'Season Name');
+  assert.equal(list.headings.length, 9);
+  assert.equal(list.rowTotal, 2);
+  // Its first column is how you open another season, so it stays a link.
+  assert.match(list.rows[1][0].href, /season_ident=102/);
+  assert.equal(list.rows[1][0].text, '2027 Sign Ups');
+});
+
+test('the tables that are structure are not printed as data', () => {
+  // `table.Layout` wraps the whole screen and `table.Form` is the form itself;
+  // neither is a list, and neither may turn up under the fields.
+  const form = readForm(doc(fs.readFileSync(SEASON_FIXTURE, 'utf8')));
+  assert.ok(form.tables.every((t) => !/^(Layout|Form|FormEx)$/.test(t.cls)));
 });
 
 test('a radio choice is written to the set, not to the first input', () => {

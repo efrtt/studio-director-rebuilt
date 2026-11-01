@@ -994,8 +994,14 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
    width below that point never reaches the gutter. */
 .sd-editor {
   --form-max: 760px;
-  --page-gutter: max(var(--page-pad), calc((100% - 760px) / 2));
+  --page-gutter: max(var(--page-pad), calc((100% - var(--form-max)) / 2));
 }
+
+/* A page that shows a table beside its form needs the room those columns ask
+   for — the seasons page lists nine of them next to eight fields. The column
+   stays centred, it is just wider; the form inside keeps its own 760. */
+.sd-editor--wide { --form-max: 1120px; }
+.sd-editor--wide .sd-fields { max-width: 760px; }
 
 /* The tab labels meet the fields, not the window: the tab's own inset is
    subtracted so the label, rather than the tab box, sits on the gutter. */
