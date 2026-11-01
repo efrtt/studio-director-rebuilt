@@ -77,6 +77,24 @@ export function decideShellLess({ hasSheet, hasTitle }) {
 // script, the answer is usually that another reader now claims it.
 const READY = ['task', 'settings', 'sheet', 'list', 'index', 'week'];
 
+// A search results screen, as opposed to the record panel left over from the
+// page the search started on.
+//
+// Measured on the live app: a global search navigates to
+// `admin.sd?page=SearchResults&searchText=…`, but the old page's panel is still
+// in the document while the app draws the results. The first reading therefore
+// describes the list you were already looking at, which is why a search started
+// from Families or Students appeared to do nothing.
+//
+// The app titles the results page "Search Results for …"; a record panel says
+// "Families" or "2114 Items". Asking for the title, rather than for "a list",
+// is the difference between reading the results and reading the leftovers.
+export function looksLikeSearchResults(model) {
+  if (!model || !model.list) return false;
+  const named = String(model.list.label || '') + ' ' + String(model.list.title || '');
+  return /search\s*results/i.test(named);
+}
+
 export function hasReadyView(model) {
   return !!model && READY.some((key) => !!model[key]);
 }

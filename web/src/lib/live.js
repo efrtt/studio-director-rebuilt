@@ -21,17 +21,20 @@ export async function readLiveView(doc, href, opts = {}) {
   const step = opts.step === undefined ? STEP_MS : opts.step;
   const now = opts.now || (() => Date.now());
   const sleep = opts.sleep || ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
+  // What counts as "drawn yet". A caller that needs a particular screen (search
+  // results, say) passes its own test rather than accepting any view at all.
+  const ready = opts.ready || hasReadyView;
 
   // The common case costs nothing: a page a reader already claims is returned
   // before the first tick, so no screen pays a wait it did not need.
   const first = readPage(doc, href);
-  if (hasReadyView(first)) return first;
+  if (ready(first)) return first;
 
   const started = now();
   while (now() - started < maxWait) {
     await sleep(step);
     const next = readPage(doc, href);
-    if (hasReadyView(next)) return next;
+    if (ready(next)) return next;
   }
   return null;
 }
