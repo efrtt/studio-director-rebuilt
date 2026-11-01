@@ -1102,3 +1102,34 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
 .sd-navlink:hover .sd-navicon,
 .sd-navlink--active .sd-navicon { opacity: 1; }
 .sd-rail--collapsed .sd-navicon { margin: 0 auto; }
+
+/* ---- motion: every hover state, not a hand-picked list ---- */
+/* The earlier block named its selectors, so anything it missed snapped — and the
+   week's class blocks hover with `filter: brightness()`, which was not among the
+   transitioned properties at all. Everything the pointer can touch inside the
+   skin now answers at the same speed, including effects added later. */
+#sd-root a,
+#sd-root button,
+#sd-root select,
+#sd-root input,
+#sd-root label,
+#sd-root [role="button"] {
+  transition:
+    background-color 140ms ease,
+    color 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    filter 140ms ease,
+    opacity 140ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #sd-root a,
+  #sd-root button,
+  #sd-root select,
+  #sd-root input,
+  #sd-root label,
+  #sd-root [role="button"] {
+    transition: none;
+  }
+}
