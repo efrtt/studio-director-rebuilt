@@ -1,0 +1,71 @@
+<!--
+  A CAPTURE of NewEditDel(content=LocationsContent, state=new) — Class Locations.
+
+  Two things here are unlike the seasons page, and both used to lose the page:
+
+    1. the form is tiny — `name` and `url`, two controls, plus the record id in a
+       hidden input inside a `visibility:hidden` row. The reader's four-control
+       floor meant the page was never recognised as an editor at all;
+    2. the list beside it is a single column of links with no heading row, so a
+       rule that asks for column headings skipped it.
+
+  Structure and class names are the live ones. Location names here are invented;
+  the live ones belong to a studio.
+-->
+<!DOCTYPE html>
+<html>
+<head><title>The Studio Director</title></head>
+<body>
+<form id="idForm">
+  <div class="standardMainContent">
+    <div id="sideNavBar"></div>
+    <div id="mainContent">
+      <div class="contentContainer">
+        <div class="Content">
+          <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a></div>
+          <div class="formTitle">Class Locations</div>
+          <div class="ButtonBar"><a id="save" href="#save">Save</a></div>
+          <div class="contentInfo">
+            <table class="Layout">
+              <tbody>
+                <tr>
+                  <td class="Top">
+                    <table class="Form">
+                      <tbody>
+                        <tr>
+                          <td style="padding:4px 16px 4px 0px;white-space:nowrap">Location Name</td>
+                          <td><input type="text" name="name" id="name"></td>
+                        </tr>
+                        <tr>
+                          <td style="padding:4px 16px 4px 0px;white-space:nowrap">Virtual Locations Link</td>
+                          <td><input type="text" name="url" id="url"></td>
+                        </tr>
+                        <tr style="visibility:hidden">
+                          <td><input type="hidden" name="lident" value="1792595290947"></td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td class="RHS">
+                    <div class="formTitle">Existing Class Locations</div>
+                    <table class="SimpleSD">
+                      <tbody>
+                        <tr><td><a href="admin.sd?page=NewEditDel&amp;content=LocationsContent&amp;state=edit&amp;lident=0"></a></td></tr>
+                        <tr><td><a href="admin.sd?page=NewEditDel&amp;content=LocationsContent&amp;state=edit&amp;lident=101">Downtown</a></td></tr>
+                        <tr><td><a href="admin.sd?page=NewEditDel&amp;content=LocationsContent&amp;state=edit&amp;lident=102">North</a></td></tr>
+                        <tr><td><a href="admin.sd?page=NewEditDel&amp;content=LocationsContent&amp;state=edit&amp;lident=103">West</a></td></tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</body>
+</html>
