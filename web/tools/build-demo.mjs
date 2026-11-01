@@ -27,16 +27,15 @@ const PAGES = [
   { fixture: 'edit-student.html', out: null, title: 'edit student' }
 ];
 
-const read = (name) => fs.readFileSync(path.join(root, 'test/fixtures', name), 'utf8')
+const inert = (name) => fs.readFileSync(path.join(root, 'test/fixtures', name), 'utf8')
   .replace(/<\/script/gi, '<\\/script');
 
-for (const page of PAGES) {
-  if (!page.out) continue;
-  const html = `<!DOCTYPE html>
+function pageHtml(fixture, title) {
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Studio Director ${page.title} — rebuilt UI (demo)</title>
+<title>Studio Director ${title} — rebuilt UI (demo)</title>
 <style>
   html, body { margin: 0; height: 100%; }
   body { font: 14px/1.45 system-ui, sans-serif; }
@@ -44,7 +43,7 @@ for (const page of PAGES) {
 </head>
 <body>
 <!-- The page the adapters parse. Inert: never executed, never rendered. -->
-<script type="text/plain" id="source-page">${read(page.fixture)}</script>
+<script type="text/plain" id="source-page">${inert(fixture)}</script>
 <script>${bundle.replace(/<\/script/gi, '<\\/script')}</script>
 <script>
   var model = SD.modelFromHtml(document.getElementById('source-page').textContent, location.href);
@@ -58,8 +57,28 @@ for (const page of PAGES) {
 </body>
 </html>
 `;
-  fs.writeFileSync(path.join(root, page.out), html);
-  console.log(page.out, html.length, 'bytes');
+}
+
+const emit = (out, fixture, title) => {
+  const html = pageHtml(fixture, title);
+  fs.writeFileSync(path.join(root, out), html);
+  console.log(out, html.length, 'bytes');
+};
+
+for (const page of PAGES) {
+  if (!page.out) continue;
+  emit(page.out, page.fixture, page.title);
+}
+
+// Any `live-*.html` dropped into test/fixtures becomes a demo page of the same
+// name, so a fresh capture can be reviewed without touching this list. See
+// tools/capture-page.js for the console snippet that produces one.
+const captures = fs.readdirSync(path.join(root, 'test/fixtures'))
+  .filter((name) => /^live-.+\.html$/.test(name))
+  .sort();
+for (const fixture of captures) {
+  const name = fixture.replace(/^live-/, '').replace(/\.html$/, '');
+  emit('demo/' + name + '.html', fixture, name + ' (live capture)');
 }
 
 // The demo server's root is this folder, so the userscript the pages reference

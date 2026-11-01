@@ -48,6 +48,12 @@ ids, classes and column headings **only**: no names, balances, notes or emails. 
 The fixture is what the tests read, so it has to come from the live DOM, not from a
 reconstruction of what you think the page looks like. Run this on the page:
 
+**Fastest path:** paste `web/tools/capture-page.js` into the console and run
+`sdCaptureDownload()`. It applies the trimming and scrubbing below, names the file
+`live-<page>.html`, and `npm run demo` then turns it into `demo/<page>.html` with no
+edit to any list. The snippet below is the same thing by hand, if you want to change
+what is kept.
+
 ```js
 (() => {
   const root = document.querySelector('.contentContainer') || document.querySelector('#mainContent');
@@ -185,4 +191,6 @@ is pinned by a golden is a decision; one that is merely untested is a bug waitin
 - `web/test/fixtures/` and `web/test/golden/` — captures and their models.
 - `web/tools/golden.mjs` — `write` / `check`, and the fixture-to-URL map.
 - `web/tools/diagnose-page.js` — text-free structure dump for any admin page.
+- `web/tools/capture-page.js` — console snippet that captures a page as a fixture;
+  `live-*.html` fixtures become demo pages automatically on `npm run demo`.
 - `web/docs/contract.md` — the invariants a change must not break.
