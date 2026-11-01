@@ -132,7 +132,13 @@ export function record(entry, store) {
     buttons: high('buttons'),
     rows: high('rows'),
     links: high('links'),
-    text: high('text')
+    text: high('text'),
+    // The routing verdict is `recordView`'s, and this function rebuilds the entry from
+    // scratch on every look. Without carrying the two fields forward the 2.5 s second
+    // look erased the verdict a moment after it was recorded, which is why every screen
+    // in the log read `view: null` even on pages that mounted from the live document.
+    view: prev ? prev.view || null : null,
+    source: prev ? prev.source || '' : ''
   };
   log[entry.shape] = next;
   try {

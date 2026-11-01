@@ -119,6 +119,33 @@ test('the routing outcome is recorded beside the measurement', () => {
   }
 });
 
+test('the delayed second look does not erase the routing verdict', () => {
+  // Found by walking eleven screens live: every entry read `view: null`, including
+  // pages the rebuild had mounted, because `record` rebuilt the entry from scratch
+  // 2.5 s after `recordView` had written the verdict into it.
+  const store = fakeStore();
+  const had = Object.prototype.hasOwnProperty.call(globalThis, 'location');
+  globalThis.location = {
+    href: 'https://app.thestudiodirector.com/studio1/admin.sd?page=ChargesHome&clicktab=1&sdprobe=1'
+  };
+  try {
+    record({ shape: 'ChargesHome', controls: 0, links: 18, text: 779 }, store);
+    recordView('index', 'live', store);
+
+    const again = record({ shape: 'ChargesHome', controls: 1, links: 18, text: 900 }, store);
+    assert.equal(again.view, 'index', 'the verdict survives the second look');
+    assert.equal(again.source, 'live');
+    assert.equal(again.text, 900, 'and the numbers still take the later look');
+    assert.equal(again.controls, 1);
+
+    const log = JSON.parse(dump(store));
+    assert.equal(log.ChargesHome.view, 'index');
+    assert.equal(log.ChargesHome.source, 'live');
+  } finally {
+    if (had) delete globalThis.location;
+  }
+});
+
 test('nothing is recorded when the probe is not armed', () => {
   const store = fakeStore();
   const had = Object.prototype.hasOwnProperty.call(globalThis, 'location');

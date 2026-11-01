@@ -157,6 +157,15 @@ its source as well. The first pass measured `fetched` for all four, which turned
 the probe flag rather than in the routing: `sdprobe` was missing from `NAV_PARAMS`, so `?sdprobe=1`
 read as a record id and every armed page went through `mountRecord`.
 
+**Checked live, v0.15.2.** All eleven screens the crawl had mis-typed as notices were walked in one
+session. Five mount as an index - `ChargesHome` and `ManageWidgets` from the live document,
+`MergeFamily`, `EmailFamily` and `ManagePaymentMethods_studio` from a fetched copy - and six leave the
+app its own page: three real forms no reader claims, and `PrintClass`, `PrintFamily` and
+`PreapproveStudents`, which are thinner than the index gate. The walk found that the probe had been
+erasing its own verdict: `record`'s second look rebuilt each entry and dropped `view`/`source`, so no
+screen could ever have shown a source. That is fixed in 0.15.2, with a test, and the eleven-row table
+is in [`rebuild-plan.md`](rebuild-plan.md).
+
 Nothing here is waiting for a session: both hand-checks the plan had left are done, and their results
 are in [`rebuild-plan.md`](rebuild-plan.md).
 

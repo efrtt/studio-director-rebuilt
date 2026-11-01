@@ -28,14 +28,15 @@ covered is one this build takes over. `Not rebuilt` is the honest remainder.
 
 The notice row is the least certain of them, because the app fills these pages in after the
 HTML arrives. All 61 of these shapes have now been opened in a browser and measured (see
-`docs/live-sample.json`): 50 really are notices and 11 are not. Eight carry seven or more
-links, so they route as an index - `ChargesHome` (18), `MergeFamily` (9), `EmailFamily` and
-`PrintClass` and `ManageWidgets` (8), `PrintFamily`, `PreapproveStudents` and
-`ManagePaymentMethods_studio` (7). Three carry form controls - `Unenroll` (5), `EmailClass`
-(2) and `SendEmail` (1) - and no reader claims them, so the rebuilt UI now leaves the app’s
-own page in place rather than covering a real form with an empty shell. Two
-of the `AddStudentMakeup` shapes redirect to the `tidExpired` notice rather than drawing
-their own screen.
+`docs/live-sample.json`): 50 really are notices and 11 are not. Five of those eleven were
+then walked live and mounted as an index: `ChargesHome` (18 links) and `ManageWidgets` (8)
+from the live document, `MergeFamily` (9), `EmailFamily` (8) and
+`ManagePaymentMethods_studio` (7) from a fetched copy. The other six left the app its own
+page, which is the safe answer rather than a wrong one: `PrintClass` (6 links),
+`PrintFamily` (7) and `PreapproveStudents` (7) are thinner than the index reader needs, and
+`Unenroll` (5 controls), `EmailClass` (2) and `SendEmail` (1) are real forms no reader
+claims. Two of the `AddStudentMakeup` shapes redirect to the `tidExpired` notice rather than
+drawing their own screen.
 
 So the honest reading of the notice row is 50 confirmed notices, not 68: the 18-point gap is
 the cost of classifying from fetched HTML alone. The table above still reflects the crawl,

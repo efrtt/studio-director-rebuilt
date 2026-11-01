@@ -118,6 +118,7 @@ layout (list beside editor/confirmation) as a `SPLIT` set rather than a nested b
 | live-first | 173,202 | 169,624 | 48,919 | 14 / 159 |
 | record live-first | 173,379 | 169,722 | 49,289 | 14 / 160 |
 | probe routing fix | 173,429 | 169,772 | 48,984 | 14 / 160 |
+| probe verdict fix | 173,473 | 169,816 | 48,995 | 14 / 161 |
 
 The bundle is **7,327 bytes smaller** than the reference build and 456 bytes smaller gzipped, after
 gaining five model modules, two test suites, the live-first decision and the routing fix the live
@@ -165,3 +166,35 @@ reload, and the setting was put back and read back as its original value. So the
 `save.js`, `report.js`, `task.js` and `settings.js` all rely on holds on every kind of screen they
 serve: the app serialises the live form at submit time, and keeps no copy of the record to post in
 its place. `tools/save-check.js` measures a screen the same way.
+
+## The eleven misfits, walked live
+
+The crawl classified 61 link-poor screens from fetched HTML alone, and 11 of them turned out not to
+be notices. Those eleven had been measured, but what the rebuild *did* about each one had not been
+seen until v0.15.2 was put into all of them in one session:
+
+| Shape | Links | Mounted | Source |
+|---|---|---|---|
+| `ChargesHome` | 18 | index | live |
+| `ManageWidgets` | 8 | index | live |
+| `MergeFamily(fident)` | 9 | index | fetched |
+| `EmailFamily(fident)` | 8 | index | fetched |
+| `ManagePaymentMethods_studio(studioId)` | 7 | index | fetched |
+| `PrintClass(cident)` | 6 | - | app |
+| `PrintFamily(fident)` | 7 | - | app |
+| `PreapproveStudents(meth,methargs)` | 7 | - | app |
+| `Unenroll(sident,cident)` | 5 controls | - | app |
+| `EmailClass(cident)` | 2 controls | - | app |
+| `SendEmail(totype,iident)` | 1 control | - | app |
+
+Five mount as an index, three of them from a fetched copy because the live content root is drawn
+late; six leave the app its own page. The six are the right answer twice over: three are real forms
+that no reader claims, and three are thinner than the index reader's own gate, so covering them
+would have meant an empty shell over a real screen. The map's notice paragraph said all eight
+link-heavy shapes route as an index; the walk says five do, and the map now says that instead.
+
+**The walk also found the probe losing its own verdict.** Every entry came back `view: null`, on
+pages that had plainly mounted. `recordView` wrote the verdict, then `record`'s second look 2.5 s
+later rebuilt the entry from scratch and dropped the two fields, so the log could never have shown a
+source for any screen. 0.15.2 carries them forward, and a test now pins it; the table above is the
+first evidence the probe was ever able to keep.

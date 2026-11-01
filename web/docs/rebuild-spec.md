@@ -225,7 +225,8 @@ goldens should not move at all.
 
 ## 10. Unknowns carried forward — do not assume these are solved
 
-- 9 of the 11 measured misfits were never opened live (only `ChargesHome` and `Unenroll` were).
+- All 11 measured misfits have now been walked live (v0.15.2): five mount as an index, six leave the
+  app its own page. See the table in `rebuild-plan.md`.
 - 3 form-shaped screens (`Unenroll`, `EmailClass`, `SendEmail`) have no reader and defer to the app.
 - 2 screens fall back entirely: `GetOnlineRegUrl` and `ManageFamilyNotes(fident,meth)` — controls,
   but nothing that saves them. Their fixtures are reconstructions of counts, so they pin the
