@@ -25,6 +25,7 @@ const { readSheet } = await import('../src/lib/sheet.js');
 const { readPage } = await import('../src/lib/page.js');
 const { readTable } = await import('../src/lib/tabs.js');
 const { clickActionInApp } = await import('../src/lib/actions.js');
+const { cellKind } = await import('../src/lib/cellclass.js');
 
 const load = (name) => parseHtml(fs.readFileSync(path.join(here, 'fixtures', name), 'utf8'));
 
@@ -182,4 +183,51 @@ test('a control that is gone is reported, not silently pressed', () => {
   const result = clickActionInApp(parseHtml('<div></div>'), { label: 'Print', id: '', js: true });
   assert.equal(result.submitted, false);
   assert.equal(result.reason, 'missing');
+});
+
+const perf = readSheet(load('sheet-perf.html'));
+
+test('a page with an empty table keeps it, under its own label', () => {
+  // PerfCostumeMgmt: "Performance Info" is empty and the costumes below it are
+  // not. Dropping the empty one made the costume table look like the whole
+  // screen, and both labels were lost because the app writes them as
+  // `div.ReportTableSubtitle`, not a heading.
+  assert.ok(perf, 'the page is a table screen');
+  assert.equal(perf.tables.length, 2);
+  const [performance, costume] = perf.tables;
+  assert.equal(performance.section, 'Performance Info');
+  assert.equal(performance.headings[0], 'Event Name');
+  assert.equal(performance.rows.length, 0);
+  assert.equal(performance.message, 'No items to display.');
+  assert.equal(performance.total, 'Total Performance Fee: 0.00');
+  assert.equal(costume.section, 'Costume Info');
+  assert.equal(costume.rows.length, 2);
+  assert.equal(costume.total, 'Totals: Unit Cost: 0.00 List Price: 0.00 Deposit: 0.00');
+});
+
+test('the action bar under a table stays with it, as links', () => {
+  // These are the only ways to add a performance or a costume, and they are
+  // ordinary links, which the action reader drops on purpose.
+  assert.deepEqual(perf.tables[0].links.map((l) => l.label),
+    ['Add New Performance', 'Set performing flags by student']);
+  assert.match(perf.tables[0].links[0].href, /page=ClassPerformance/);
+  assert.deepEqual(perf.tables[1].links.map((l) => l.label),
+    ['Add New Costume', 'Enter Student Measurements & Sizes']);
+  assert.match(perf.tables[1].links[1].href, /page=MeasurementsByClass/);
+  assert.deepEqual(perf.actions, [], 'a link is navigation, not a press');
+});
+
+test('the app’s own action column is an action, even when its link navigates', () => {
+  // `<td class="action-cell"><a href="admin.sd?page=Unenroll">` — the href is a
+  // page, so the cell read as an ordinary link and never got its pill.
+  const cell = perf.tables[1].rows[0][10];
+  assert.equal(cell.action, true);
+  assert.equal(cellKind(cell), 'action');
+  assert.deepEqual(cell.actions.map((a) => a.label), ['Copy', 'Remove']);
+});
+
+test('a data cell is still a link, not an action', () => {
+  const cell = perf.tables[1].rows[0][1];
+  assert.equal(cell.action, undefined);
+  assert.equal(cellKind(cell), 'link');
 });

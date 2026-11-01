@@ -594,7 +594,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
 /* Two controls in one cell (the waitlist's Enroll and Drop) are two targets, not
    one link with two words in it. */
 .sd-cellactions { display: inline-flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
-.sd-cellactions .sd-action { padding: 1px 0; }
+.sd-cellactions .sd-action { padding: 3px 11px; }
 .sd-tablewrap { overflow-x: auto; margin-bottom: 6px; }
 /* Long sheets scroll under this header instead of losing it, which is the
    difference between reading a 300-row roster and guessing which column is
@@ -626,14 +626,19 @@ html.sd-app form#idForm { visibility: hidden !important; }
 .sd-table td a:hover { text-decoration: underline; }
 .sd-cell--right { text-align: right; }
 .sd-panelactions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+/* Every action control is the same pill: Copy and Remove in a ledger row, Drop
+   in a roster, Add student above a list. The row's own link is the only thing
+   that stays plain text. */
 .sd-action {
   display: inline-block;
-  padding: 5px 10px;
+  padding: 3px 11px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 999px;
   background: var(--panel-2);
   color: var(--text);
-  font-size: 12.5px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
   text-decoration: none;
 }
 .sd-action:hover { border-color: var(--accent); }
@@ -734,6 +739,13 @@ html.sd-app form#idForm { visibility: hidden !important; }
   letter-spacing: .08em;
   color: var(--dim);
 }
+/* A table with nothing in it still says so, in the app's own words. */
+.sd-sheetempty { padding: 10px 0; color: var(--dim); font-style: italic; }
+/* The app's totals line, under the table it totals. */
+.sd-sheetnote { margin: 6px 0 0; font-size: 12.5px; color: var(--dim); }
+/* The action bar the app prints under a table ("Add New Costume"). Its links
+   navigate, so they read as controls that go somewhere. */
+.sd-sheetlinks { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; }
 /* A sheet can be a print screen: printing it should print the table, not the
    chrome around it. */
 @media print {

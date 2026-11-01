@@ -25,6 +25,7 @@ const PAGES = [
   { fixture: 'settings-search.html', out: 'demo/settings.html', title: 'settings' },
   { fixture: 'report-roster.html', out: 'demo/report.html', title: 'report filters' },
   { fixture: 'report-results.html', out: 'demo/report-results.html', title: 'report results' },
+  { fixture: 'sheet-perf.html', out: 'demo/sheet-perf.html', title: 'performance and costumes' },
   // Record page: no standalone demo (the rebuilt app defers to the app here),
   // but it does get a live page to prove that deferral end to end.
   { fixture: 'edit-class.html', out: null, title: 'edit class' },

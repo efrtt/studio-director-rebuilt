@@ -1,0 +1,246 @@
+{
+  "file": "sheet-perf.html",
+  "form": null,
+  "model": {
+    "confirm": null,
+    "index": null,
+    "list": null,
+    "nav": [
+      {
+        "href": "admin.sd?page=HomePage&clicktab=1",
+        "label": "Home"
+      },
+      {
+        "href": "admin.sd?page=CalendarPage&clicktab=1",
+        "label": "Class Calendar"
+      }
+    ],
+    "note": null,
+    "report": null,
+    "settings": null,
+    "sheet": {
+      "actions": [],
+      "breadcrumb": [
+        "Home",
+        "Classes",
+        "520 Contemporary 1"
+      ],
+      "kind": "sheet",
+      "rows": 2,
+      "shown": 2,
+      "tables": [
+        {
+          "caption": "",
+          "cls": "ReportTable",
+          "headings": [
+            "Event Name",
+            "Event Date",
+            "Event Start Time",
+            "Event Venue",
+            "Performance Order",
+            "Performance Song",
+            "Performance Length",
+            "Performance Notes",
+            "Volunteer",
+            "Performance Fee",
+            "Actions"
+          ],
+          "id": "",
+          "links": [
+            {
+              "href": "admin.sd?page=ClassPerformance&cident=520",
+              "label": "Add New Performance"
+            },
+            {
+              "href": "admin.sd?page=StudentPerfPerforming&cident=520",
+              "label": "Set performing flags by student"
+            }
+          ],
+          "message": "No items to display.",
+          "rowTotal": 0,
+          "rows": [],
+          "section": "Performance Info",
+          "total": "Total Performance Fee: 0.00"
+        },
+        {
+          "caption": "",
+          "cls": "ReportTable",
+          "headings": [
+            "Vendor / Size Chart",
+            "Costume Desc",
+            "Color",
+            "Item / Style",
+            "Catalog",
+            "Page Num",
+            "Notes",
+            "Unit Cost",
+            "List Price",
+            "Deposit",
+            "Actions"
+          ],
+          "id": "",
+          "links": [
+            {
+              "href": "admin.sd?page=Costumes&cident=520",
+              "label": "Add New Costume"
+            },
+            {
+              "href": "admin.sd?page=MeasurementsByClass&cident=520",
+              "label": "Enter Student Measurements & Sizes"
+            }
+          ],
+          "rowTotal": 2,
+          "rows": [
+            [
+              {
+                "href": null,
+                "right": false,
+                "text": "Capezio/Ballet Makers/Size"
+              },
+              {
+                "href": "admin.sd?page=Costumes&ccident=1",
+                "right": false,
+                "text": "Capezio stirrup dance leggings"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "black"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "TB205W"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "Junior Ballet Co"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "action": true,
+                "actions": [
+                  {
+                    "href": "admin.sd?page=Costumes&ccident=1",
+                    "label": "Copy"
+                  },
+                  {
+                    "href": "admin.sd?page=Costumes&ccident=2",
+                    "label": "Remove"
+                  }
+                ],
+                "href": "admin.sd?page=Costumes&ccident=1",
+                "right": true,
+                "text": "Copy Remove"
+              }
+            ],
+            [
+              {
+                "href": null,
+                "right": false,
+                "text": "Weissman/Balera/Size"
+              },
+              {
+                "href": "admin.sd?page=Costumes&ccident=3",
+                "right": false,
+                "text": "Mock neck sleeveless leotard"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "Cerise"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "MT12070"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "Junior Ballet Co"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": ""
+              },
+              {
+                "action": true,
+                "actions": [
+                  {
+                    "href": "admin.sd?page=Costumes&ccident=3",
+                    "label": "Copy"
+                  },
+                  {
+                    "href": "admin.sd?page=Costumes&ccident=4",
+                    "label": "Remove"
+                  }
+                ],
+                "href": "admin.sd?page=Costumes&ccident=3",
+                "right": true,
+                "text": "Copy Remove"
+              }
+            ]
+          ],
+          "section": "Costume Info",
+          "total": "Totals: Unit Cost: 0.00 List Price: 0.00 Deposit: 0.00"
+        }
+      ],
+      "title": "Performance and Costume Management",
+      "truncated": false
+    },
+    "task": null,
+    "title": "Performance and Costume Management",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=sheet-perf",
+    "view": "sheet",
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=sheet-perf",
+  "view": "sheet"
+}
