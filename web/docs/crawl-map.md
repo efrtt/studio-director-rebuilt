@@ -36,9 +36,11 @@ page, which is the safe answer rather than a wrong one. `PrintClass` and `PrintF
 pickers of three and five list items, and since 0.17.0 the index reader takes a short menu when
 every link is alone in its own list item; both now mount as tiles. `PreapproveStudents` keeps
 three links that share a paragraph, which is a notice’s shape, so it stays with the app, as do
-`EmailClass` is four distinct destinations in 86 characters, and since 0.19.0 it mounts as tiles.
-`SendEmail` repeats one destination four times over twice the prose, so it stays with the app on
-purpose. `Unenroll` is a confirmation, and since 0.18.0 it renders as the ask-before-doing card
+`EmailClass`, read from its anchor count, looked like four destinations in 86 characters; the four
+were its breadcrumb. It offers two choices, a link and an action the app runs, and since 0.20.0 it
+renders as a note with both. `SendEmail` is the picker that count described: four links to itself
+and no action, so it stays with the app on purpose. `Unenroll` is a confirmation, and since 0.18.0
+it renders as the ask-before-doing card
 with the app’s own Continue button. Two
 of the `AddStudentMakeup` shapes redirect to the `tidExpired` notice rather than
 drawing their own screen.

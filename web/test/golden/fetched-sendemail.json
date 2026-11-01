@@ -1,0 +1,34 @@
+{
+  "file": "fetched-sendemail.html",
+  "form": null,
+  "model": {
+    "confirm": null,
+    "index": null,
+    "list": null,
+    "nav": [
+      {
+        "href": "admin.sd?page=HomePage",
+        "label": "Home"
+      },
+      {
+        "href": "admin.sd?page=NewClass",
+        "label": "Classes"
+      },
+      {
+        "href": "admin.sd?page=EmailTextHome",
+        "label": "Communications"
+      }
+    ],
+    "note": null,
+    "report": null,
+    "settings": null,
+    "sheet": null,
+    "task": null,
+    "title": "Email Note",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=fetched-sendemail",
+    "view": null,
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=fetched-sendemail",
+  "view": null
+}

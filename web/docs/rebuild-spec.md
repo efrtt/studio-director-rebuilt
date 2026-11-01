@@ -227,9 +227,10 @@ goldens should not move at all.
 
 - All 11 measured misfits have now been walked live (v0.15.2): five mount as an index, six leave the
   app its own page. See the table in `rebuild-plan.md`.
-- 3 screens (`Unenroll`, `EmailClass`, `SendEmail`) have no reader and defer to the app; opened live
-  they have no visible control at all. The crawl's "controls" on them were hidden inputs holding
-  record ids.
+- 1 screen (`SendEmail`) has no reader and defers to the app on purpose: four links to itself and no
+  action of its own. `Unenroll` and `EmailClass` were here in 0.15.2 and are now claimed - a
+  confirmation and a notice respectively. The crawl's "controls" on all three were hidden inputs
+  holding record ids.
 - 2 screens fall back entirely: `GetOnlineRegUrl` (two unnamed inputs, a link) and
   `ManageFamilyNotes(fident,meth)` (one `textarea#archivednotes`, no save). Both fixtures are
   captures of the live content root, so they pin the page as well as the decision.

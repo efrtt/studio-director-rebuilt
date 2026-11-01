@@ -186,17 +186,20 @@ Not complaints — requirements, so the same shape is not rebuilt by accident:
 - **Captures** of real pages - the calendar, the three editors, a report, a sheet, a search, a
   settings page, a task, a confirmation. These can be trusted to resemble what the app serves.
 - **`fetched-*` captures** - `fetched-unenroll.html`, `fetched-emailclass.html`,
-  `fetched-onlineregurl.html`, `fetched-familynotes.html` - taken from the live content root on
-  2026-11-01 in a signed-in session. Their tags, classes, control names and link targets are what the
-  app served; text inside the root is filler of the same length and record ids are placeholders, so no
-  record content is in them.
+  `fetched-sendemail.html`, `fetched-onlineregurl.html`, `fetched-familynotes.html` - taken from the
+  live content root on 2026-11-01 in a signed-in session. Their tags, classes, control names and link
+  targets are what the app served; text inside the root is filler of the same length and record ids
+  are placeholders, so no record content is in them. `fetched-sendemail.html` is the one that exists
+  to pin a refusal rather than a screen that has a view.
 
-All four land on **no view**, and the two reasons are worth pinning because neither is obvious:
-`Unenroll` and `EmailClass` carry five anchors each, breadcrumb included, which is where the note and
-index readers both stop; `GetOnlineRegUrl` and `ManageFamilyNotes` carry a control with nothing that
-saves it. They reach `main.js` through `!model.view` → live re-read, **not** through the note
-tiebreaker. A rewrite that "tidied" either gate would start covering these screens with a notice or
-an editor again.
+Three of the five land on **no view**, and the reasons are worth pinning because neither is obvious:
+`GetOnlineRegUrl` and `ManageFamilyNotes` carry a control with nothing that saves it, and `SendEmail`
+is a four-option picker of *navigation* - four links to itself with different parameters and no
+action the app runs - which the user asked to keep on the app's own page. They reach `main.js`
+through `!model.view` → live re-read, **not** through the note tiebreaker. The other two are claimed,
+and the anchor counts that made them look form-shaped were their breadcrumbs: `Unenroll` is a
+confirmation (0.18.0) and `EmailClass` a notice (0.20.0). A rewrite that "tidied" either gate would
+start covering these screens with an editor again.
 
 ## Reference build
 
@@ -215,10 +218,12 @@ Stated here so a rewrite does not assume these were solved:
 
 - All 11 measured misfits have now been walked live (v0.15.2): five mount as an index, six leave the
   app its own page. The table is in `rebuild-plan.md`.
-- 3 screens (`Unenroll`, `EmailClass`, `SendEmail`) have no reader and defer to the app. Opened live
-  they carry no visible control at all: `Unenroll` is five links plus `a#continue.Btn` calling
-  `onCallMethodSubmit`, `EmailClass` five links, `SendEmail` six. What the crawl counted as their
-  "controls" were hidden inputs carrying record ids, which is what made three link pages read as
+- 1 screen (`SendEmail`) has no reader and defers to the app, on purpose: four links to itself with
+  different parameters and no action of its own, which is a picker rather than a notice. `Unenroll`
+  and `EmailClass` sat here until their shape was read properly - the five anchors on each are the
+  breadcrumb, and what is left is a scripted Continue (`Unenroll`, confirm since 0.18.0) or a link
+  plus a scripted action (`EmailClass`, note since 0.20.0). What the crawl counted as their
+  "controls" were hidden inputs carrying record ids, which is what made link pages read as
   form-shaped.
 - 2 screens fall back entirely, both opened live too: **`GetOnlineRegUrl`** is two `<input>` elements
   with neither id nor name, plus a link whose text is the registration address;

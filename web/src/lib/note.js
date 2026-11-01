@@ -34,6 +34,8 @@ const MAX_LINES = 8;
 const MENU_LINKS = 6;
 // Two data rows is where `readSheet` starts calling a page a table.
 const TABLE_ROWS = 2;
+// One falling-back sentence, the same allowance `confirmation.js` makes.
+const MAX_PROSE = 240;
 
 // The one content-root definition (model/root.js), under this reader's name.
 const rootOf = contentRoot;
@@ -81,13 +83,51 @@ function linksInContent(root) {
 function actionsOf(root) {
   const seen = new Set();
   const out = [];
-  for (const action of readActions(root).concat(linksInContent(root))) {
+  for (const action of readActions(root).concat(linksInContent(root), scriptedLinks(root))) {
     const key = action.id + '|' + action.label;
     if (seen.has(key)) continue;
     seen.add(key);
     out.push(action);
   }
   return out;
+}
+
+// Choices the app runs itself: `a[href="#"]` with a StudioDir handler. They are
+// not navigation (`linksInContent` skips `#`) and not every one of them is a
+// `.Btn`, so on a picker like `EmailClass` this is where "Report Cards" lives.
+function scriptedLinks(root) {
+  const out = [];
+  for (const el of qsa(root, '[onclick]')) {
+    if (el.closest && el.closest(CHROME)) continue;
+    const onclick = el.getAttribute('onclick') || '';
+    if (!/StudioDir\./i.test(onclick)) continue;
+    const label = textOf(el);
+    if (!label) continue;
+    out.push({
+      label,
+      id: el.getAttribute('id') || '',
+      href: el.getAttribute('href') || '',
+      js: true,
+      onclick
+    });
+  }
+  return out;
+}
+
+// A control to type into is a form. Hidden inputs are record ids the app posts
+// back, not fields people fill in, and a page that carries them plus a choice of
+// its own is a notice (`EmailClass`: one link and one scripted action). Anything
+// else keeps the full refusal.
+function onlyHiddenInputs(doc) {
+  const root = rootOf(doc);
+  if (!root) return false;
+  return qsa(root, 'input, select, textarea')
+    .every((el) => String(el.getAttribute('type') || '').toLowerCase() === 'hidden');
+}
+
+function hasScriptedAction(doc) {
+  const root = rootOf(doc);
+  return !!(root && qs(root, '[onclick*="StudioDir."]'));
 }
 
 // The instruction, in document order. Paragraphs and list items first; a
@@ -110,6 +150,22 @@ function linesOf(root, actions) {
     if (lines.length >= MAX_LINES) break;
   }
 
+  // Sometimes the instruction is bare text in `contentInfo`, with the choices in
+  // a list beside it (`EmailClass`: "What would you like to email?" above an
+  // `<ol>`). Paragraphs-only would read no instruction at all and refuse a page
+  // that says one thing clearly.
+  if (!lines.length) {
+    const info = qs(root, '.contentInfo');
+    if (info && info.cloneNode) {
+      const copy = info.cloneNode(true);
+      if (copy.querySelectorAll) {
+        copy.querySelectorAll('a, ol, ul, li, input, script').forEach((el) => el.remove());
+      }
+      const text = textOf(copy);
+      if (text && text.length <= MAX_PROSE) lines.push(text);
+    }
+  }
+
   return lines;
 }
 
@@ -119,7 +175,15 @@ export function readNote(doc) {
 
   // A control to type into is a form, two rows are a table, six links are a
   // menu. This reader only ever presses.
-  if (contradictsNote(doc)) return null;
+  if (contradictsNote(doc)) {
+    const root = rootOf(doc);
+    const relaxable = !!root
+      && onlyHiddenInputs(doc)
+      && hasScriptedAction(doc)
+      && dataRows(root) < TABLE_ROWS
+      && qsa(root, 'a[href]').length < MENU_LINKS;
+    if (!relaxable) return null;
+  }
 
   const actions = actionsOf(root);
   if (!actions.length) return null;

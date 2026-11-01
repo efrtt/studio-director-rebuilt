@@ -199,14 +199,17 @@ seen until v0.15.2 was put into all of them in one session:
 | `PrintFamily(fident)` | 7 | - | app |
 | `PreapproveStudents(meth,methargs)` | 7 | - | app |
 | `Unenroll(sident,cident)` | 5 controls | - | app |
-| `EmailClass(cident)` | 2 controls | - | app |
+| `EmailClass(cident)` | 2 controls | - | note |
 | `SendEmail(totype,iident)` | 1 control | - | app |
 
 Five mount as an index, three of them from a fetched copy because the live content root is drawn
-late; six leave the app its own page. The six are the right answer twice over: three are real forms
-that no reader claims, and three are thinner than the index reader's own gate, so covering them
+late; five leave the app its own page. Those five are the right answer twice over: three are real
+forms that no reader claims, and two are thinner than the index reader's own gate, so covering them
 would have meant an empty shell over a real screen. The map's notice paragraph said all eight
 link-heavy shapes route as an index; the walk says five do, and the map now says that instead.
+`EmailClass` was one of the five left to the app that day and is a notice as of 0.20.0: it offers two
+choices, one a link and one a `StudioDir` action, and the anchors that made it look link-heavy were
+its breadcrumb.
 
 **The walk also found the probe losing its own verdict.** Every entry came back `view: null`, on
 pages that had plainly mounted. `recordView` wrote the verdict, then `record`'s second look 2.5 s

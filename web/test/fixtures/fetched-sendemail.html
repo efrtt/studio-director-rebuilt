@@ -1,0 +1,42 @@
+<!doctype html>
+<!--
+  A CAPTURE of SendEmail(totype,iident)'s content root, taken from the live page
+  (signed in) on 2026-11-01.
+
+  A four-option picker of *navigation*: every choice is an ordinary link to
+  `SendEmail` with different parameters, and none of them is an action the app has
+  to run. That is the difference from `fetched-emailclass.html`, which offers one
+  link and one `StudioDir` action. This page is left to the app on purpose: it is
+  kept here so that decision is pinned rather than assumed.
+
+  The instructor's name is replaced with a placeholder and record ids are
+  placeheld; the link structure and wording are the app's.
+-->
+<html lang="en"><body>
+<form id="idForm">
+  <div id="sideNavBar">
+    <a class="sideNavLink" href="admin.sd?page=HomePage">Home</a>
+    <a class="sideNavLink" href="admin.sd?page=NewClass">Classes</a>
+    <a class="sideNavLink" href="admin.sd?page=EmailTextHome">Communications</a>
+  </div>
+  <div class="topBarContainer"><div class="topBar"></div></div>
+  <div id="mainContent"><div class="contentContainer"><div class="Content">
+    <div class="Breadcrumb">
+      <a href="admin.sd?page=HomePage">Home</a>
+      <i class="fa-solid fa-angle-right" style="padding-left: 10px; padding-right: 10px;"></i>
+      <a href="admin.sd?page=EmailTextHome">Communications</a>
+      <i class="fa-solid fa-angle-right" style="padding-left: 10px; padding-right: 10px;"></i>
+    </div>
+    <div class="formTitle">Email Note</div>
+    <div class="ButtonBar"></div>
+    <div class="contentInfo"><input type="hidden" name="iident" value="1275125047048">Do you want to send an email to:<p></p>
+      <ol>
+        <li><a href="admin.sd?page=SendEmail&amp;totype=InstructorOnly&amp;iident=1275125047048">Instructor 1</a></li>
+        <li><a href="admin.sd?page=SendEmail&amp;totype=InstructorsStudents&amp;iident=1275125047048">All students/families enrolled in this instructor's classes</a></li>
+        <li><a href="admin.sd?page=SendEmail&amp;meth=onStartReportInstructors&amp;tid=1792595032060">A group of instructors</a></li>
+        <li><a href="admin.sd?page=SendEmail&amp;meth=onSendTeachingSchedule&amp;methargs=1275125047048&amp;tid=1792595032060">Send this instructor their teaching schedule</a></li>
+      </ol>
+    </div>
+  </div></div></div>
+</form>
+</body></html>
