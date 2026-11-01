@@ -1,5 +1,6 @@
 <script>
   import { PX_PER_MIN } from '../lib/calendar.js';
+  import { inkFor } from '../lib/color.js';
 
   export let week;
 
@@ -47,7 +48,7 @@
                     title={titleOf(block)}
                     style={`top:${block.top}px;height:${block.height}px;` +
                       `background:${block.color || 'transparent'};` +
-                      `color:${block.textColor || 'inherit'}`}
+                      `color:${block.textColor || inkFor(block.color) || 'inherit'}`}
                   >
                     <span class="sd-block-name">{block.name}</span>
                     {#if block.meta}<span class="sd-block-meta">{block.meta}</span>{/if}
