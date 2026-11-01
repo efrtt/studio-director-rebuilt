@@ -1032,3 +1032,56 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
 }
 .sd-periodselect:hover { border-color: var(--accent); }
 .sd-periodselect:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* ---- the active link is the hovered link, in bold ---- */
+/* The accent edge said "active" twice: the fill already does, and the side bar
+   read as a border on a link that is not hovered. */
+#sd-root .sd-navlink--active { box-shadow: none !important; }
+.sd-navlink--active .sd-navtext { font-weight: 600; }
+
+/* ---- motion: one place, one duration ---- */
+/* Everything a pointer can land on answers at the same speed, so the interface
+   does not feel like several interfaces. Colour properties only: nothing here
+   moves, resizes or delays a click. */
+.sd-navlink,
+.sd-railtoggle,
+.sd-btn,
+.sd-input,
+.sd-filter,
+.sd-searchinput,
+.sd-select,
+.sd-periodselect,
+.sd-records a,
+.sd-tile,
+.sd-chip,
+.sd-block,
+.sd-studiohead,
+.sd-crumb,
+.sd-go {
+  transition:
+    background-color 140ms ease,
+    color 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+/* A pointer is not the only way in, and motion is not everyone's preference. */
+@media (prefers-reduced-motion: reduce) {
+  .sd-navlink,
+  .sd-railtoggle,
+  .sd-btn,
+  .sd-input,
+  .sd-filter,
+  .sd-searchinput,
+  .sd-select,
+  .sd-periodselect,
+  .sd-records a,
+  .sd-tile,
+  .sd-chip,
+  .sd-block,
+  .sd-studiohead,
+  .sd-crumb,
+  .sd-go {
+    transition: none;
+  }
+}
