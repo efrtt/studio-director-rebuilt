@@ -739,6 +739,7 @@
           "label": "Send a copy to myself"
         }
       ],
+      "tables": [],
       "title": "Email to Group"
     },
     "title": "Email to Group",
