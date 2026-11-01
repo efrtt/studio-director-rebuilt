@@ -774,7 +774,7 @@ were named.
 
 ### What the crawl could not see, measured
 
-[`studio-director-pages.json`](../data/pages.json) was re-crawled on 2026-10-31 with the
+[`pages.json`](../data/pages.json) was re-crawled on 2026-10-31 with the
 fixed capture: **447 screens, 0 errors, queue drained.** Every root destination, every
 `Manage*` screen, every print form and every settings page is in it — but a GET cannot see three
 things, and the map now says which:
