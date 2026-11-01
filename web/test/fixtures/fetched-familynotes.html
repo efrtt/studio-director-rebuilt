@@ -1,12 +1,17 @@
 <!doctype html>
 <!--
-  A RECONSTRUCTION of ManageFamilyNotes(fident,meth), not a capture. The crawl
-  recorded: no title, 0 tables, 0 rows, 1 control, 3 links, no tabs, and no JS
-  action — the same shape as fetched-onlineregurl.html and the same reason for
-  falling back: a control with nothing that saves it.
+  A CAPTURE of ManageFamilyNotes(fident,meth)'s content root, taken from the live
+  page (`admin.sd?page=ManageFamilyNotes&meth=archived`, signed in) on 2026-11-01.
 
-  The `meth=archived` variant is the one that was crawled; the reader must not
-  care which variant this is, because a record parameter is not a shape.
+  The crawl's "1 control, 3 links" is one <textarea id="archivednotes"
+  name="familynotes" rows="20"> holding the family's archived notes, a link back
+  to the family's notes tab, and no #save anywhere: the page displays notes it
+  never saves. Offering an editor for it would promise a write the app does not
+  accept, which is why no reader claims it.
+
+  The chrome is the shared trimmed shell. No family's notes are in this file: the
+  textarea holds filler of the same length, so the fixture keeps the shape (a
+  control with no save) without keeping anybody's record.
 -->
 <html lang="en"><body>
 <form id="idForm">
@@ -16,16 +21,13 @@
   </div>
   <div class="topBarContainer"><div class="topBar"></div></div>
   <div id="mainContent"><div class="contentContainer"><div class="Content">
-    <div class="Breadcrumb"><a href="admin.sd?page=NewFamily">Families</a></div>
+    <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a><i class="fa-solid fa-angle-right" style="padding-left: 10px; padding-right: 10px;"></i><a href="admin.sd?page=NewFamily&amp;clicktab=1">Families</a><i class="fa-solid fa-angle-right" style="padding-left: 10px; padding-right: 10px;"></i></div>
+    <div class="formTitle"></div>
     <div class="ButtonBar"></div>
     <div class="contentInfo">
-      <p>Notes kept against this family, including the ones archived.</p>
-      <p><select id="notesview" name="notesview"><option>Current</option><option selected>Archived</option></select></p>
-      <p>
-        <a href="admin.sd?page=EditFamily&amp;fident=1503525685676">Back to the family</a>
-        <a href="admin.sd?page=ManageFamilyNotes&amp;fident=1503525685676">Current notes</a>
-        <a href="admin.sd?page=HomePage">Home</a>
-      </p>
+      <div class="formTitle SectionSpace">Archived notes for this family (filler heading, 37 chars)</div>
+      <a href="admin.sd?page=EditFamily&amp;fident=1503525685676&amp;tab=notes">Back to the notes tab</a>
+      <p><textarea id="archivednotes" name="familynotes" rows="20">Filler standing in for the family's archived notes, at the same length as the real textarea content so the shape of the page is unchanged. Filler standing in for the family's archived notes, at the same length as the real textarea content so the shape of the page is unchanged.</textarea></p>
     </div>
   </div></div></div>
 </form>

@@ -183,19 +183,20 @@ Not complaints — requirements, so the same shape is not rebuilt by accident:
 
 `test/fixtures` holds two kinds, and the difference matters more than it looks:
 
-- **Captures** of real pages — the calendar, the three editors, a report, a sheet, a search, a
+- **Captures** of real pages - the calendar, the three editors, a report, a sheet, a search, a
   settings page, a task, a confirmation. These can be trusted to resemble what the app serves.
-- **`fetched-*` shells** — `fetched-unenroll.html`, `fetched-emailclass.html` — reconstructed from the
-  crawler's own structure record (title, 0 tables, 0 controls, 5 links) for screens whose *rendered*
-  form is drawn by the app's JavaScript. Their live shapes are measured in `docs/live-sample.json`,
-  not here, because hand-authoring the markup of a JS-drawn page would be invention — and a test
-  that passes against invented markup is worse than no test at all.
+- **`fetched-*` captures** - `fetched-unenroll.html`, `fetched-emailclass.html`,
+  `fetched-onlineregurl.html`, `fetched-familynotes.html` - taken from the live content root on
+  2026-11-01 in a signed-in session. Their tags, classes, control names and link targets are what the
+  app served; text inside the root is filler of the same length and record ids are placeholders, so no
+  record content is in them.
 
-Both land on **no view**, which is worth pinning precisely because it is not the obvious answer:
-the breadcrumb link inside the content root puts each page at `readNote`'s six-link gate, while
-`readIndex` excludes chrome and counts only five items, so neither reader claims them. They reach
-`main.js` through `!model.view` → live re-read, **not** through the note tiebreaker. A rewrite that
-"tidied" either threshold would start covering these two screens with a notice again.
+All four land on **no view**, and the two reasons are worth pinning because neither is obvious:
+`Unenroll` and `EmailClass` carry five anchors each, breadcrumb included, which is where the note and
+index readers both stop; `GetOnlineRegUrl` and `ManageFamilyNotes` carry a control with nothing that
+saves it. They reach `main.js` through `!model.view` → live re-read, **not** through the note
+tiebreaker. A rewrite that "tidied" either gate would start covering these screens with a notice or
+an editor again.
 
 ## Reference build
 
@@ -212,13 +213,18 @@ Frozen before any rewrite so old and new can be compared on the same URL:
 
 Stated here so a rewrite does not assume these were solved:
 
-- 9 of the 11 measured misfits were never opened live (only `ChargesHome` and `Unenroll` were).
-- 3 form-shaped screens (`Unenroll`, `EmailClass`, `SendEmail`) have no reader and defer to the app.
-- 2 screens fall back entirely: **`GetOnlineRegUrl`** (2 controls, 2 links) and
-  **`ManageFamilyNotes(fident,meth)`** (1 control, 3 links). Both have controls and nothing that
-  saves them, which is exactly why no reader claims them. Their markup was recorded only as counts,
-  so `test/fixtures/fetched-onlineregurl.html` and `fetched-familynotes.html` are reconstructions of
-  that shape — they pin the decision, not the page.
+- All 11 measured misfits have now been walked live (v0.15.2): five mount as an index, six leave the
+  app its own page. The table is in `rebuild-plan.md`.
+- 3 screens (`Unenroll`, `EmailClass`, `SendEmail`) have no reader and defer to the app. Opened live
+  they carry no visible control at all: `Unenroll` is five links plus `a#continue.Btn` calling
+  `onCallMethodSubmit`, `EmailClass` five links, `SendEmail` six. What the crawl counted as their
+  "controls" were hidden inputs carrying record ids, which is what made three link pages read as
+  form-shaped.
+- 2 screens fall back entirely, both opened live too: **`GetOnlineRegUrl`** is two `<input>` elements
+  with neither id nor name, plus a link whose text is the registration address;
+  **`ManageFamilyNotes(fident,meth)`** is a `<textarea id="archivednotes" name="familynotes">` holding
+  the family's archived notes, with no save anywhere. Neither can be read or written safely, so
+  neither is claimed, and both fixtures are captures now rather than reconstructions.
 - The report, task and settings write paths share a contract with record saves, and that contract is
   now measured on all four kinds of screen: `EditFamily` (430 bytes), `StudentContactList` (240),
   `EmailClasses` (169) and `ManagePhoneNumbersFormat` (54), each a `POST(form, scripted submit)`

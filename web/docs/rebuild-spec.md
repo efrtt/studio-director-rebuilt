@@ -227,16 +227,21 @@ goldens should not move at all.
 
 - All 11 measured misfits have now been walked live (v0.15.2): five mount as an index, six leave the
   app its own page. See the table in `rebuild-plan.md`.
-- 3 form-shaped screens (`Unenroll`, `EmailClass`, `SendEmail`) have no reader and defer to the app.
-- 2 screens fall back entirely: `GetOnlineRegUrl` and `ManageFamilyNotes(fident,meth)` — controls,
-  but nothing that saves them. Their fixtures are reconstructions of counts, so they pin the
-  decision, not the page.
+- 3 screens (`Unenroll`, `EmailClass`, `SendEmail`) have no reader and defer to the app; opened live
+  they have no visible control at all. The crawl's "controls" on them were hidden inputs holding
+  record ids.
+- 2 screens fall back entirely: `GetOnlineRegUrl` (two unnamed inputs, a link) and
+  `ManageFamilyNotes(fident,meth)` (one `textarea#archivednotes`, no save). Both fixtures are
+  captures of the live content root, so they pin the page as well as the decision.
 - The report, task and settings write paths share a contract with record saves, and all four have
   now been measured against the real site (`EditFamily` 430 bytes, `StudentContactList` 240,
   `EmailClasses` 169, `ManagePhoneNumbersFormat` 54); see `rebuild-plan.md`.
 - The crawl followed 96 URLs its own safety rule flagged; `crawl-map.md` now explains them (plain
   GETs to the charge, delete, reset and email forms, none returning a confirmation).
-- `readLiveView`'s polling and `contradictsNote` against a live DOM are still hand-checked only.
+- `chooseSource` has now been exercised live on 11 screens (5 mounted from the live document, 3
+  fetched because the live content root was empty, 6 declined), but `readLiveView`'s polling and
+  `contradictsNote` against a live DOM are still hand-checked only: no screen in that set was a
+  fetched note whose live page contradicted it.
 
 ### Status after the rebuild (2026-10-31)
 

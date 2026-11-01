@@ -1,16 +1,15 @@
 <!doctype html>
 <!--
-  The FETCHED copy of EmailClass(cident), as the crawler recorded it:
-  title "Email Class", 0 tables, 0 rows, 0 controls, 5 links, 1 form.
+  A CAPTURE of EmailClass(cident)'s content root, taken from the live page (signed
+  in) on 2026-11-01.
 
-  Not a capture of the rendered page. The live one measured 2 controls, 5 links
-  and 86 chars (docs/live-sample.json), which is why the rebuild defers it to the
-  app rather than covering it — and why this fixture stops at the shell.
+  The crawl called this form-shaped: "2 controls, 5 links". Opened live the two
+  controls are hidden inputs (cident and an args record) and the page is a short
+  picker: five anchors, no visible control, no save. Offering it an editor would
+  invent a form the app does not serve, so the rebuild leaves it to the app.
 
-  Like fetched-unenroll.html this lands on no view rather than on a notice: the
-  breadcrumb link puts the content at readNote's six-link gate while readIndex
-  excludes chrome and counts only five, so neither reader claims it. That is the
-  `!model.view` re-read path in main.js, and the app keeps the page.
+  The chrome is the shared trimmed shell. Text inside the content root is filler of
+  the same length, so no class name or record id from the real page is in this file.
 -->
 <html lang="en"><body>
 <form id="idForm">
@@ -21,17 +20,18 @@
   </div>
   <div class="topBarContainer"><div class="topBar"></div></div>
   <div id="mainContent"><div class="contentContainer"><div class="Content">
-    <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a> / Classes</div>
+    <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a></div>
     <div class="formTitle">Email Class</div>
     <div class="ButtonBar"></div>
     <div class="contentInfo">
-      <p>Choose who should receive this message, then write it.</p>
+      <input type="hidden" name="cident" value="1782910697458">
+      <input type="hidden" name="args1792595029236" value="0">
+      <p>Choose who should receive this message.</p>
       <p>
-        <a href="admin.sd?page=HomePage">Home</a>
-        <a href="admin.sd?page=NewClass">Classes</a>
-        <a href="admin.sd?page=EditClass&amp;cident=1782910697458">818 Ballet</a>
-        <a href="admin.sd?page=EmailTextHome&amp;meth=note">An Email Note</a>
-        <a href="admin.sd?page=ReportCards">Report Cards</a>
+        <a href="admin.sd?page=NewClass&amp;clicktab=1">Classes</a>
+        <a href="admin.sd?page=EditClass&amp;cident=1782910697458">Back to the class</a>
+        <a href="admin.sd?page=SendEmail&amp;totype=Class&amp;cident=1782910697458">Send an email</a>
+        <a href="admin.sd?page=EmailClass&amp;cident=1782910697458">Email this class</a>
       </p>
     </div>
   </div></div></div>

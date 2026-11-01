@@ -1,20 +1,18 @@
 <!doctype html>
 <!--
-  The FETCHED copy of Unenroll(cident,sident), as the crawler recorded it:
-  title "Drop Student", 0 tables, 0 rows, 0 controls, 5 links, 1 form.
+  A CAPTURE of Unenroll(sident,cident)'s content root, taken from the live page
+  (signed in) on 2026-11-01.
 
-  This is not a capture of the rendered page. The live one is drawn by the app's
-  own JS and is measured in docs/live-sample.json (5 controls, 5 links, 1 button,
-  196 chars), which is why no fixture of it is written here: hand-authored markup
-  of a JS-drawn screen would be invention, and a test that passes against
-  invented markup is worse than no test.
+  The crawl called this form-shaped: "5 controls, 5 links". Opened live it has no
+  visible control at all. The five controls are hidden inputs (drop_charge_date,
+  drop_classes_date, dropreason, dropnotes and an args record), and the page is a
+  confirmation: a sentence, a Continue button that calls
+  StudioDir.onCallMethodSubmit('Unenroll','confirm',...), and links to the student
+  and the class. It is the app's destructive confirmation, and the rebuild leaves
+  it alone on purpose.
 
-  What this pins is the *fetched* verdict, and it is not what the map predicted:
-  the content root holds six links — five actions plus the breadcrumb — which is
-  exactly readNote's six-link gate, so the note refuses. readIndex excludes the
-  breadcrumb as chrome and sees only five items, so it refuses too, and the page
-  lands on no view at all. main.js then takes its `!model.view` live re-read
-  branch: that, not the note tiebreaker, is the path this screen really travels.
+  The chrome is the shared trimmed shell. Text inside the content root is filler of
+  the same length, so no student name, class name or charge is in this file.
 -->
 <html lang="en"><body>
 <form id="idForm">
@@ -25,17 +23,21 @@
   </div>
   <div class="topBarContainer"><div class="topBar"></div></div>
   <div id="mainContent"><div class="contentContainer"><div class="Content">
-    <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a> / Classes</div>
+    <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a></div>
     <div class="formTitle">Drop Student</div>
     <div class="ButtonBar"></div>
     <div class="contentInfo">
-      <p>Dropping the student removes them from this class. The charge stays on the family unless it is removed too.</p>
+      <input type="hidden" name="drop_charge_date" value="2026-01-01">
+      <input type="hidden" name="drop_classes_date" value="2026-01-01">
+      <input type="hidden" name="dropreason">
+      <input type="hidden" name="dropnotes">
+      <input type="hidden" name="args1792595029233" value="0">
+      <p>Dropping the student takes them out of this class. Filler sentence, roughly the length of the app's own.</p>
       <p>
-        <a href="admin.sd?page=HomePage">Home</a>
-        <a href="admin.sd?page=SwitchClasses&amp;sident=1629799984805">Switch Classes</a>
-        <a class="Btn" href="#" id="continue">Continue</a>
-        <a href="admin.sd?page=EditFamily&amp;fident=1503525685676">Go to Karmen</a>
-        <a href="admin.sd?page=EditClass&amp;cident=1782910697458">Go to 818 Ballet</a>
+        <a href="admin.sd?page=SwitchClasses&amp;cident=1782910697458&amp;sident=1741880123629">Switch Classes</a>
+        <a class="Btn" id="continue" href="#" onclick="StudioDir.onCallMethodSubmit('Unenroll','confirm','args1792595029233');;return false;">Continue</a>
+        <a href="admin.sd?page=EditStudent&amp;sident=1741880123629">Back to the student</a>
+        <a href="admin.sd?page=EditClass&amp;cident=1782910697458">Back to the class</a>
       </p>
     </div>
   </div></div></div>

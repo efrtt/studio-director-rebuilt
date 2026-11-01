@@ -1,13 +1,17 @@
 <!doctype html>
 <!--
-  A RECONSTRUCTION of GetOnlineRegUrl, not a capture. The crawl recorded only the
-  shape: title "Get Online Reg Url", 0 tables, 0 rows, 2 controls, 2 links, no
-  tabbed panels, and no JS action of its own — which is precisely why the rules
-  cannot place it (controls with no save are left to the app).
+  A CAPTURE of GetOnlineRegUrl's content root, taken from the live page
+  (`admin.sd?page=GetOnlineRegUrl`, signed in) on 2026-11-01.
 
-  Its real markup was never dumped beyond those counts, so this fixture pins the
-  DECISION for a page of this shape, not the page. If a real dump ever arrives,
-  replace this file and re-record the golden.
+  What the crawl had recorded as "2 controls, 2 links" is really two <input>
+  elements with no id and no name at all, a link whose own text is the
+  registration address, and no #save anywhere in the document: there is nothing
+  here to read and nothing to write. That is why no reader claims it.
+
+  The chrome is the shared trimmed shell the other fixtures use. Every text node
+  inside the content root was replaced with filler of the same length, and the
+  registration address with an example one, so no live URL or tenant id is in
+  this file.
 -->
 <html lang="en"><body>
 <form id="idForm">
@@ -17,17 +21,15 @@
   </div>
   <div class="topBarContainer"><div class="topBar"></div></div>
   <div id="mainContent"><div class="contentContainer"><div class="Content">
-    <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a> / Charges</div>
+    <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a></div>
     <div class="formTitle">Get Online Reg Url</div>
     <div class="ButtonBar"></div>
     <div class="contentInfo">
-      <p>Post this address on your site so families can register themselves.</p>
-      <p><input type="text" id="regurl" name="regurl" value="https://app.thestudiodirector.com/studio1/register.sd"></p>
-      <p><input type="text" id="studioid" name="studioid" value="studio1"></p>
-      <p>
-        <a href="admin.sd?page=HomePage">Home</a>
-        <a href="admin.sd?page=ManagePortal">Portal settings</a>
-      </p>
+      <br>
+      <input>
+      <p>To create a link on your own site, copy the address below. <br><input></p>
+      <p></p>
+      <p><a href="admin.sd?page=GetOnlineRegUrl&amp;meth=selectFilters&amp;methargs=">https://registration.example.com/studio/register.sd?studioid=example</a><script>/* the page's own inline script, not reproduced */</script></p>
     </div>
   </div></div></div>
 </form>

@@ -198,3 +198,22 @@ pages that had plainly mounted. `recordView` wrote the verdict, then `record`'s 
 later rebuilt the entry from scratch and dropped the two fields, so the log could never have shown a
 source for any screen. 0.15.2 carries them forward, and a test now pins it; the table above is the
 first evidence the probe was ever able to keep.
+
+### The five carried-forward screens, opened live
+
+The unknowns left after that walk were five screens the docs described from counts. All five were
+opened in the same session, structure only:
+
+| Screen | What the crawl called it | What the page is |
+|---|---|---|
+| `Unenroll(sident,cident)` | 5 controls, 5 links | 5 *hidden* inputs, 5 anchors, `a#continue.Btn` calling `onCallMethodSubmit('Unenroll','confirm',…)` |
+| `EmailClass(cident)` | 2 controls, 5 links | 2 hidden inputs (`cident`, an args record), 5 anchors, no visible control |
+| `SendEmail(totype,iident)` | 1 control, 6 links | 1 hidden input (`iident`), 6 anchors, no visible control |
+| `GetOnlineRegUrl` | 2 controls, 2 links | 2 `<input>` elements with neither id nor name, a link whose text is the registration address, no `#save` |
+| `ManageFamilyNotes(fident,meth)` | 1 control, 3 links | `textarea#archivednotes name="familynotes" rows=20` holding the archived notes, a link to the family's notes tab, no `#save` |
+
+So "form-shaped" was an artefact of counting: the crawl's control count included hidden inputs that
+carry record ids, and three of the five have no visible control at all. `Unenroll` is the app's
+destructive confirmation, not an editor. The two that do have a visible control have nothing that
+saves it. Deferring all five to the app is the reading these dumps support; the four fixtures are
+captures of these content roots now, so a future change of mind shows up as a golden diff.
