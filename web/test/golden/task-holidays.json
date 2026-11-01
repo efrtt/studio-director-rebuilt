@@ -1,0 +1,1389 @@
+{
+  "file": "task-holidays.html",
+  "form": {
+    "breadcrumb": [
+      "Home"
+    ],
+    "fields": [
+      {
+        "checked": null,
+        "id": "holiday_desc",
+        "key": "holiday_desc",
+        "label": null,
+        "masked": false,
+        "name": "holiday_desc",
+        "options": null,
+        "selector": "#holiday_desc",
+        "type": "text",
+        "value": ""
+      },
+      {
+        "checked": null,
+        "id": "holiday_date__mon",
+        "key": "holiday_date__mon",
+        "label": null,
+        "masked": false,
+        "name": "holiday_date__mon",
+        "options": [
+          {
+            "label": "Jan",
+            "selected": false,
+            "value": "Jan"
+          },
+          {
+            "label": "Feb",
+            "selected": false,
+            "value": "Feb"
+          },
+          {
+            "label": "Mar",
+            "selected": false,
+            "value": "Mar"
+          },
+          {
+            "label": "Apr",
+            "selected": false,
+            "value": "Apr"
+          },
+          {
+            "label": "May",
+            "selected": false,
+            "value": "May"
+          },
+          {
+            "label": "Jun",
+            "selected": false,
+            "value": "Jun"
+          },
+          {
+            "label": "Jul",
+            "selected": false,
+            "value": "Jul"
+          },
+          {
+            "label": "Aug",
+            "selected": false,
+            "value": "Aug"
+          },
+          {
+            "label": "Sep",
+            "selected": true,
+            "value": "Sep"
+          },
+          {
+            "label": "Oct",
+            "selected": false,
+            "value": "Oct"
+          },
+          {
+            "label": "Nov",
+            "selected": false,
+            "value": "Nov"
+          },
+          {
+            "label": "Dec",
+            "selected": false,
+            "value": "Dec"
+          }
+        ],
+        "selector": "#holiday_date__mon",
+        "type": "select",
+        "value": "Sep"
+      },
+      {
+        "checked": null,
+        "id": "holiday_date__day",
+        "key": "holiday_date__day",
+        "label": null,
+        "masked": false,
+        "name": "holiday_date__day",
+        "options": [
+          {
+            "label": "1",
+            "selected": false,
+            "value": "1"
+          },
+          {
+            "label": "2",
+            "selected": false,
+            "value": "2"
+          },
+          {
+            "label": "3",
+            "selected": false,
+            "value": "3"
+          },
+          {
+            "label": "4",
+            "selected": false,
+            "value": "4"
+          },
+          {
+            "label": "5",
+            "selected": false,
+            "value": "5"
+          },
+          {
+            "label": "6",
+            "selected": false,
+            "value": "6"
+          },
+          {
+            "label": "7",
+            "selected": true,
+            "value": "7"
+          }
+        ],
+        "selector": "#holiday_date__day",
+        "type": "select",
+        "value": "7"
+      },
+      {
+        "checked": null,
+        "id": "holiday_date__year",
+        "key": "holiday_date__year",
+        "label": null,
+        "masked": false,
+        "name": "holiday_date__year",
+        "options": [
+          {
+            "label": "2026",
+            "selected": true,
+            "value": "2026"
+          },
+          {
+            "label": "2027",
+            "selected": false,
+            "value": "2027"
+          }
+        ],
+        "selector": "#holiday_date__year",
+        "type": "select",
+        "value": "2026"
+      },
+      {
+        "checked": null,
+        "id": "holiday_charge",
+        "key": "holiday_charge",
+        "label": null,
+        "masked": false,
+        "name": "holiday_charge",
+        "options": [
+          {
+            "label": "No",
+            "selected": true,
+            "value": "0"
+          },
+          {
+            "label": "Yes",
+            "selected": false,
+            "value": "1"
+          }
+        ],
+        "selector": "#holiday_charge",
+        "type": "select",
+        "value": "0"
+      }
+    ],
+    "kind": "form",
+    "rows": [
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "holiday_desc",
+            "key": "holiday_desc",
+            "label": null,
+            "masked": false,
+            "name": "holiday_desc",
+            "options": null,
+            "selector": "#holiday_desc",
+            "type": "text",
+            "value": ""
+          }
+        ],
+        "label": "Description"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "holiday_date__mon",
+            "key": "holiday_date__mon",
+            "label": null,
+            "masked": false,
+            "name": "holiday_date__mon",
+            "options": [
+              {
+                "label": "Jan",
+                "selected": false,
+                "value": "Jan"
+              },
+              {
+                "label": "Feb",
+                "selected": false,
+                "value": "Feb"
+              },
+              {
+                "label": "Mar",
+                "selected": false,
+                "value": "Mar"
+              },
+              {
+                "label": "Apr",
+                "selected": false,
+                "value": "Apr"
+              },
+              {
+                "label": "May",
+                "selected": false,
+                "value": "May"
+              },
+              {
+                "label": "Jun",
+                "selected": false,
+                "value": "Jun"
+              },
+              {
+                "label": "Jul",
+                "selected": false,
+                "value": "Jul"
+              },
+              {
+                "label": "Aug",
+                "selected": false,
+                "value": "Aug"
+              },
+              {
+                "label": "Sep",
+                "selected": true,
+                "value": "Sep"
+              },
+              {
+                "label": "Oct",
+                "selected": false,
+                "value": "Oct"
+              },
+              {
+                "label": "Nov",
+                "selected": false,
+                "value": "Nov"
+              },
+              {
+                "label": "Dec",
+                "selected": false,
+                "value": "Dec"
+              }
+            ],
+            "selector": "#holiday_date__mon",
+            "type": "select",
+            "value": "Sep"
+          },
+          {
+            "checked": null,
+            "id": "holiday_date__day",
+            "key": "holiday_date__day",
+            "label": null,
+            "masked": false,
+            "name": "holiday_date__day",
+            "options": [
+              {
+                "label": "1",
+                "selected": false,
+                "value": "1"
+              },
+              {
+                "label": "2",
+                "selected": false,
+                "value": "2"
+              },
+              {
+                "label": "3",
+                "selected": false,
+                "value": "3"
+              },
+              {
+                "label": "4",
+                "selected": false,
+                "value": "4"
+              },
+              {
+                "label": "5",
+                "selected": false,
+                "value": "5"
+              },
+              {
+                "label": "6",
+                "selected": false,
+                "value": "6"
+              },
+              {
+                "label": "7",
+                "selected": true,
+                "value": "7"
+              }
+            ],
+            "selector": "#holiday_date__day",
+            "type": "select",
+            "value": "7"
+          },
+          {
+            "checked": null,
+            "id": "holiday_date__year",
+            "key": "holiday_date__year",
+            "label": null,
+            "masked": false,
+            "name": "holiday_date__year",
+            "options": [
+              {
+                "label": "2026",
+                "selected": true,
+                "value": "2026"
+              },
+              {
+                "label": "2027",
+                "selected": false,
+                "value": "2027"
+              }
+            ],
+            "selector": "#holiday_date__year",
+            "type": "select",
+            "value": "2026"
+          }
+        ],
+        "label": "Date"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "holiday_charge",
+            "key": "holiday_charge",
+            "label": null,
+            "masked": false,
+            "name": "holiday_charge",
+            "options": [
+              {
+                "label": "No",
+                "selected": true,
+                "value": "0"
+              },
+              {
+                "label": "Yes",
+                "selected": false,
+                "value": "1"
+              }
+            ],
+            "selector": "#holiday_charge",
+            "type": "select",
+            "value": "0"
+          }
+        ],
+        "label": "Charge Tuition"
+      }
+    ],
+    "tables": [
+      {
+        "caption": "",
+        "cls": "ReportTable",
+        "headings": [
+          "Holiday Desc",
+          "Date",
+          "Charge Tuition"
+        ],
+        "id": "",
+        "rowTotal": 3,
+        "rows": [
+          [
+            {
+              "href": null,
+              "right": false,
+              "text": "Labor Day"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "Mon, Sep 7, 2026"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "No"
+            }
+          ],
+          [
+            {
+              "href": null,
+              "right": false,
+              "text": "Fall Break"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "Mon, Nov 23, 2026"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "No"
+            }
+          ],
+          [
+            {
+              "href": null,
+              "right": false,
+              "text": "Winter Break"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "Mon, Dec 21, 2026"
+            },
+            {
+              "href": null,
+              "right": false,
+              "text": "No"
+            }
+          ]
+        ],
+        "section": ""
+      }
+    ],
+    "title": "Manage Holidays"
+  },
+  "model": {
+    "confirm": null,
+    "index": null,
+    "list": null,
+    "nav": [],
+    "note": null,
+    "report": null,
+    "settings": null,
+    "sheet": null,
+    "task": {
+      "actions": [
+        {
+          "href": "",
+          "id": "save",
+          "js": true,
+          "label": "Save",
+          "onclick": "StudioDir.onSubmitToMethod('ManageHolidays','add');"
+        }
+      ],
+      "breadcrumb": [
+        "Home"
+      ],
+      "fields": [
+        {
+          "checked": null,
+          "id": "holiday_desc",
+          "key": "holiday_desc",
+          "label": null,
+          "masked": false,
+          "name": "holiday_desc",
+          "options": null,
+          "selector": "#holiday_desc",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "holiday_date__mon",
+          "key": "holiday_date__mon",
+          "label": null,
+          "masked": false,
+          "name": "holiday_date__mon",
+          "options": [
+            {
+              "label": "Jan",
+              "selected": false,
+              "value": "Jan"
+            },
+            {
+              "label": "Feb",
+              "selected": false,
+              "value": "Feb"
+            },
+            {
+              "label": "Mar",
+              "selected": false,
+              "value": "Mar"
+            },
+            {
+              "label": "Apr",
+              "selected": false,
+              "value": "Apr"
+            },
+            {
+              "label": "May",
+              "selected": false,
+              "value": "May"
+            },
+            {
+              "label": "Jun",
+              "selected": false,
+              "value": "Jun"
+            },
+            {
+              "label": "Jul",
+              "selected": false,
+              "value": "Jul"
+            },
+            {
+              "label": "Aug",
+              "selected": false,
+              "value": "Aug"
+            },
+            {
+              "label": "Sep",
+              "selected": true,
+              "value": "Sep"
+            },
+            {
+              "label": "Oct",
+              "selected": false,
+              "value": "Oct"
+            },
+            {
+              "label": "Nov",
+              "selected": false,
+              "value": "Nov"
+            },
+            {
+              "label": "Dec",
+              "selected": false,
+              "value": "Dec"
+            }
+          ],
+          "selector": "#holiday_date__mon",
+          "type": "select",
+          "value": "Sep"
+        },
+        {
+          "checked": null,
+          "id": "holiday_date__day",
+          "key": "holiday_date__day",
+          "label": null,
+          "masked": false,
+          "name": "holiday_date__day",
+          "options": [
+            {
+              "label": "1",
+              "selected": false,
+              "value": "1"
+            },
+            {
+              "label": "2",
+              "selected": false,
+              "value": "2"
+            },
+            {
+              "label": "3",
+              "selected": false,
+              "value": "3"
+            },
+            {
+              "label": "4",
+              "selected": false,
+              "value": "4"
+            },
+            {
+              "label": "5",
+              "selected": false,
+              "value": "5"
+            },
+            {
+              "label": "6",
+              "selected": false,
+              "value": "6"
+            },
+            {
+              "label": "7",
+              "selected": true,
+              "value": "7"
+            }
+          ],
+          "selector": "#holiday_date__day",
+          "type": "select",
+          "value": "7"
+        },
+        {
+          "checked": null,
+          "id": "holiday_date__year",
+          "key": "holiday_date__year",
+          "label": null,
+          "masked": false,
+          "name": "holiday_date__year",
+          "options": [
+            {
+              "label": "2026",
+              "selected": true,
+              "value": "2026"
+            },
+            {
+              "label": "2027",
+              "selected": false,
+              "value": "2027"
+            }
+          ],
+          "selector": "#holiday_date__year",
+          "type": "select",
+          "value": "2026"
+        },
+        {
+          "checked": null,
+          "id": "holiday_charge",
+          "key": "holiday_charge",
+          "label": null,
+          "masked": false,
+          "name": "holiday_charge",
+          "options": [
+            {
+              "label": "No",
+              "selected": true,
+              "value": "0"
+            },
+            {
+              "label": "Yes",
+              "selected": false,
+              "value": "1"
+            }
+          ],
+          "selector": "#holiday_charge",
+          "type": "select",
+          "value": "0"
+        }
+      ],
+      "form": {
+        "breadcrumb": [
+          "Home"
+        ],
+        "fields": [
+          {
+            "checked": null,
+            "id": "holiday_desc",
+            "key": "holiday_desc",
+            "label": null,
+            "masked": false,
+            "name": "holiday_desc",
+            "options": null,
+            "selector": "#holiday_desc",
+            "type": "text",
+            "value": ""
+          },
+          {
+            "checked": null,
+            "id": "holiday_date__mon",
+            "key": "holiday_date__mon",
+            "label": null,
+            "masked": false,
+            "name": "holiday_date__mon",
+            "options": [
+              {
+                "label": "Jan",
+                "selected": false,
+                "value": "Jan"
+              },
+              {
+                "label": "Feb",
+                "selected": false,
+                "value": "Feb"
+              },
+              {
+                "label": "Mar",
+                "selected": false,
+                "value": "Mar"
+              },
+              {
+                "label": "Apr",
+                "selected": false,
+                "value": "Apr"
+              },
+              {
+                "label": "May",
+                "selected": false,
+                "value": "May"
+              },
+              {
+                "label": "Jun",
+                "selected": false,
+                "value": "Jun"
+              },
+              {
+                "label": "Jul",
+                "selected": false,
+                "value": "Jul"
+              },
+              {
+                "label": "Aug",
+                "selected": false,
+                "value": "Aug"
+              },
+              {
+                "label": "Sep",
+                "selected": true,
+                "value": "Sep"
+              },
+              {
+                "label": "Oct",
+                "selected": false,
+                "value": "Oct"
+              },
+              {
+                "label": "Nov",
+                "selected": false,
+                "value": "Nov"
+              },
+              {
+                "label": "Dec",
+                "selected": false,
+                "value": "Dec"
+              }
+            ],
+            "selector": "#holiday_date__mon",
+            "type": "select",
+            "value": "Sep"
+          },
+          {
+            "checked": null,
+            "id": "holiday_date__day",
+            "key": "holiday_date__day",
+            "label": null,
+            "masked": false,
+            "name": "holiday_date__day",
+            "options": [
+              {
+                "label": "1",
+                "selected": false,
+                "value": "1"
+              },
+              {
+                "label": "2",
+                "selected": false,
+                "value": "2"
+              },
+              {
+                "label": "3",
+                "selected": false,
+                "value": "3"
+              },
+              {
+                "label": "4",
+                "selected": false,
+                "value": "4"
+              },
+              {
+                "label": "5",
+                "selected": false,
+                "value": "5"
+              },
+              {
+                "label": "6",
+                "selected": false,
+                "value": "6"
+              },
+              {
+                "label": "7",
+                "selected": true,
+                "value": "7"
+              }
+            ],
+            "selector": "#holiday_date__day",
+            "type": "select",
+            "value": "7"
+          },
+          {
+            "checked": null,
+            "id": "holiday_date__year",
+            "key": "holiday_date__year",
+            "label": null,
+            "masked": false,
+            "name": "holiday_date__year",
+            "options": [
+              {
+                "label": "2026",
+                "selected": true,
+                "value": "2026"
+              },
+              {
+                "label": "2027",
+                "selected": false,
+                "value": "2027"
+              }
+            ],
+            "selector": "#holiday_date__year",
+            "type": "select",
+            "value": "2026"
+          },
+          {
+            "checked": null,
+            "id": "holiday_charge",
+            "key": "holiday_charge",
+            "label": null,
+            "masked": false,
+            "name": "holiday_charge",
+            "options": [
+              {
+                "label": "No",
+                "selected": true,
+                "value": "0"
+              },
+              {
+                "label": "Yes",
+                "selected": false,
+                "value": "1"
+              }
+            ],
+            "selector": "#holiday_charge",
+            "type": "select",
+            "value": "0"
+          }
+        ],
+        "kind": "form",
+        "rows": [
+          {
+            "fields": [
+              {
+                "checked": null,
+                "id": "holiday_desc",
+                "key": "holiday_desc",
+                "label": null,
+                "masked": false,
+                "name": "holiday_desc",
+                "options": null,
+                "selector": "#holiday_desc",
+                "type": "text",
+                "value": ""
+              }
+            ],
+            "label": "Description"
+          },
+          {
+            "fields": [
+              {
+                "checked": null,
+                "id": "holiday_date__mon",
+                "key": "holiday_date__mon",
+                "label": null,
+                "masked": false,
+                "name": "holiday_date__mon",
+                "options": [
+                  {
+                    "label": "Jan",
+                    "selected": false,
+                    "value": "Jan"
+                  },
+                  {
+                    "label": "Feb",
+                    "selected": false,
+                    "value": "Feb"
+                  },
+                  {
+                    "label": "Mar",
+                    "selected": false,
+                    "value": "Mar"
+                  },
+                  {
+                    "label": "Apr",
+                    "selected": false,
+                    "value": "Apr"
+                  },
+                  {
+                    "label": "May",
+                    "selected": false,
+                    "value": "May"
+                  },
+                  {
+                    "label": "Jun",
+                    "selected": false,
+                    "value": "Jun"
+                  },
+                  {
+                    "label": "Jul",
+                    "selected": false,
+                    "value": "Jul"
+                  },
+                  {
+                    "label": "Aug",
+                    "selected": false,
+                    "value": "Aug"
+                  },
+                  {
+                    "label": "Sep",
+                    "selected": true,
+                    "value": "Sep"
+                  },
+                  {
+                    "label": "Oct",
+                    "selected": false,
+                    "value": "Oct"
+                  },
+                  {
+                    "label": "Nov",
+                    "selected": false,
+                    "value": "Nov"
+                  },
+                  {
+                    "label": "Dec",
+                    "selected": false,
+                    "value": "Dec"
+                  }
+                ],
+                "selector": "#holiday_date__mon",
+                "type": "select",
+                "value": "Sep"
+              },
+              {
+                "checked": null,
+                "id": "holiday_date__day",
+                "key": "holiday_date__day",
+                "label": null,
+                "masked": false,
+                "name": "holiday_date__day",
+                "options": [
+                  {
+                    "label": "1",
+                    "selected": false,
+                    "value": "1"
+                  },
+                  {
+                    "label": "2",
+                    "selected": false,
+                    "value": "2"
+                  },
+                  {
+                    "label": "3",
+                    "selected": false,
+                    "value": "3"
+                  },
+                  {
+                    "label": "4",
+                    "selected": false,
+                    "value": "4"
+                  },
+                  {
+                    "label": "5",
+                    "selected": false,
+                    "value": "5"
+                  },
+                  {
+                    "label": "6",
+                    "selected": false,
+                    "value": "6"
+                  },
+                  {
+                    "label": "7",
+                    "selected": true,
+                    "value": "7"
+                  }
+                ],
+                "selector": "#holiday_date__day",
+                "type": "select",
+                "value": "7"
+              },
+              {
+                "checked": null,
+                "id": "holiday_date__year",
+                "key": "holiday_date__year",
+                "label": null,
+                "masked": false,
+                "name": "holiday_date__year",
+                "options": [
+                  {
+                    "label": "2026",
+                    "selected": true,
+                    "value": "2026"
+                  },
+                  {
+                    "label": "2027",
+                    "selected": false,
+                    "value": "2027"
+                  }
+                ],
+                "selector": "#holiday_date__year",
+                "type": "select",
+                "value": "2026"
+              }
+            ],
+            "label": "Date"
+          },
+          {
+            "fields": [
+              {
+                "checked": null,
+                "id": "holiday_charge",
+                "key": "holiday_charge",
+                "label": null,
+                "masked": false,
+                "name": "holiday_charge",
+                "options": [
+                  {
+                    "label": "No",
+                    "selected": true,
+                    "value": "0"
+                  },
+                  {
+                    "label": "Yes",
+                    "selected": false,
+                    "value": "1"
+                  }
+                ],
+                "selector": "#holiday_charge",
+                "type": "select",
+                "value": "0"
+              }
+            ],
+            "label": "Charge Tuition"
+          }
+        ],
+        "tables": [
+          {
+            "caption": "",
+            "cls": "ReportTable",
+            "headings": [
+              "Holiday Desc",
+              "Date",
+              "Charge Tuition"
+            ],
+            "id": "",
+            "rowTotal": 3,
+            "rows": [
+              [
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "Labor Day"
+                },
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "Mon, Sep 7, 2026"
+                },
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "No"
+                }
+              ],
+              [
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "Fall Break"
+                },
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "Mon, Nov 23, 2026"
+                },
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "No"
+                }
+              ],
+              [
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "Winter Break"
+                },
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "Mon, Dec 21, 2026"
+                },
+                {
+                  "href": null,
+                  "right": false,
+                  "text": "No"
+                }
+              ]
+            ],
+            "section": ""
+          }
+        ],
+        "title": "Manage Holidays"
+      },
+      "kind": "task",
+      "links": [],
+      "primary": {
+        "href": "",
+        "id": "save",
+        "js": true,
+        "label": "Save",
+        "onclick": "StudioDir.onSubmitToMethod('ManageHolidays','add');"
+      },
+      "rows": [
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "holiday_desc",
+              "key": "holiday_desc",
+              "label": null,
+              "masked": false,
+              "name": "holiday_desc",
+              "options": null,
+              "selector": "#holiday_desc",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Description"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "holiday_date__mon",
+              "key": "holiday_date__mon",
+              "label": null,
+              "masked": false,
+              "name": "holiday_date__mon",
+              "options": [
+                {
+                  "label": "Jan",
+                  "selected": false,
+                  "value": "Jan"
+                },
+                {
+                  "label": "Feb",
+                  "selected": false,
+                  "value": "Feb"
+                },
+                {
+                  "label": "Mar",
+                  "selected": false,
+                  "value": "Mar"
+                },
+                {
+                  "label": "Apr",
+                  "selected": false,
+                  "value": "Apr"
+                },
+                {
+                  "label": "May",
+                  "selected": false,
+                  "value": "May"
+                },
+                {
+                  "label": "Jun",
+                  "selected": false,
+                  "value": "Jun"
+                },
+                {
+                  "label": "Jul",
+                  "selected": false,
+                  "value": "Jul"
+                },
+                {
+                  "label": "Aug",
+                  "selected": false,
+                  "value": "Aug"
+                },
+                {
+                  "label": "Sep",
+                  "selected": true,
+                  "value": "Sep"
+                },
+                {
+                  "label": "Oct",
+                  "selected": false,
+                  "value": "Oct"
+                },
+                {
+                  "label": "Nov",
+                  "selected": false,
+                  "value": "Nov"
+                },
+                {
+                  "label": "Dec",
+                  "selected": false,
+                  "value": "Dec"
+                }
+              ],
+              "selector": "#holiday_date__mon",
+              "type": "select",
+              "value": "Sep"
+            },
+            {
+              "checked": null,
+              "id": "holiday_date__day",
+              "key": "holiday_date__day",
+              "label": null,
+              "masked": false,
+              "name": "holiday_date__day",
+              "options": [
+                {
+                  "label": "1",
+                  "selected": false,
+                  "value": "1"
+                },
+                {
+                  "label": "2",
+                  "selected": false,
+                  "value": "2"
+                },
+                {
+                  "label": "3",
+                  "selected": false,
+                  "value": "3"
+                },
+                {
+                  "label": "4",
+                  "selected": false,
+                  "value": "4"
+                },
+                {
+                  "label": "5",
+                  "selected": false,
+                  "value": "5"
+                },
+                {
+                  "label": "6",
+                  "selected": false,
+                  "value": "6"
+                },
+                {
+                  "label": "7",
+                  "selected": true,
+                  "value": "7"
+                }
+              ],
+              "selector": "#holiday_date__day",
+              "type": "select",
+              "value": "7"
+            },
+            {
+              "checked": null,
+              "id": "holiday_date__year",
+              "key": "holiday_date__year",
+              "label": null,
+              "masked": false,
+              "name": "holiday_date__year",
+              "options": [
+                {
+                  "label": "2026",
+                  "selected": true,
+                  "value": "2026"
+                },
+                {
+                  "label": "2027",
+                  "selected": false,
+                  "value": "2027"
+                }
+              ],
+              "selector": "#holiday_date__year",
+              "type": "select",
+              "value": "2026"
+            }
+          ],
+          "label": "Date"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "holiday_charge",
+              "key": "holiday_charge",
+              "label": null,
+              "masked": false,
+              "name": "holiday_charge",
+              "options": [
+                {
+                  "label": "No",
+                  "selected": true,
+                  "value": "0"
+                },
+                {
+                  "label": "Yes",
+                  "selected": false,
+                  "value": "1"
+                }
+              ],
+              "selector": "#holiday_charge",
+              "type": "select",
+              "value": "0"
+            }
+          ],
+          "label": "Charge Tuition"
+        }
+      ],
+      "tables": [
+        {
+          "caption": "",
+          "cls": "ReportTable",
+          "headings": [
+            "Holiday Desc",
+            "Date",
+            "Charge Tuition"
+          ],
+          "id": "",
+          "rowTotal": 3,
+          "rows": [
+            [
+              {
+                "href": null,
+                "right": false,
+                "text": "Labor Day"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "Mon, Sep 7, 2026"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "No"
+              }
+            ],
+            [
+              {
+                "href": null,
+                "right": false,
+                "text": "Fall Break"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "Mon, Nov 23, 2026"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "No"
+              }
+            ],
+            [
+              {
+                "href": null,
+                "right": false,
+                "text": "Winter Break"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "Mon, Dec 21, 2026"
+              },
+              {
+                "href": null,
+                "right": false,
+                "text": "No"
+              }
+            ]
+          ],
+          "section": ""
+        }
+      ],
+      "title": "Manage Holidays"
+    },
+    "title": "Manage Holidays",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=ManageHolidays",
+    "view": "task",
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=ManageHolidays",
+  "view": "task"
+}

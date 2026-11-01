@@ -668,6 +668,18 @@ html.sd-app form#idForm { visibility: hidden !important; }
   vertical-align: top;
 }
 .sd-fields td { padding: 5px 0; vertical-align: top; }
+.sd-fields td {
+  /* One row can hold a date: month, day and year are three selects, and the app
+     prints them on one line. Stacked full-width boxes read as three unrelated
+     fields, so the cell lays its controls out in a line and shares it out. */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  align-items: center;
+}
+.sd-fields td > * { min-width: 0; }
+/* The inputs' own stacked spacing does not belong beside each other. */
+.sd-fields td > .sd-input + .sd-input { margin-top: 0; }
 .sd-fields tr + tr > * { box-shadow: inset 0 1px 0 rgba(39, 48, 63, .6); }
 .sd-input {
   width: 100%;

@@ -1,5 +1,6 @@
 <script>
   import { changesFrom } from '../lib/save.js';
+  import { cellKind } from '../lib/cellclass.js';
 
   export let task;
   export let registerPrimary = null;
@@ -128,6 +129,48 @@
         {/each}
       </tbody>
     </table>
+
+    <!-- A task page prints tables too: `ManageHolidays` lists every holiday
+         beside the form that adds one. Read-only here, rows are links. -->
+    {#if task.tables && task.tables.length}
+      {#each task.tables as block}
+        {#if block.section}<h4 class="sd-section">{block.section}</h4>{/if}
+        <div class="sd-tablewrap">
+          <table class="sd-table">
+            {#if block.headings.length}
+              <thead>
+                <tr>
+                  {#each block.headings as heading}<th>{heading}</th>{/each}
+                </tr>
+              </thead>
+            {/if}
+            <tbody>
+              {#each block.rows as row}
+                <tr>
+                  {#each row as cell}
+                    <td
+                      class:sd-cell--right={cell.right}
+                      class:sd-cell--link={cellKind(cell) === 'link'}
+                      class:sd-cell--action={cellKind(cell) === 'action'}
+                    >
+                      {#if cell.actions && cell.actions.length > 1}
+                        <span class="sd-cell-actions">
+                          {#each cell.actions as action}
+                            <a class="sd-pill" href={action.href} title={action.label}>{action.label}</a>
+                          {/each}
+                        </span>
+                      {:else if cell.href}
+                        <a href={cell.href} title="Open in the app's editor">{cell.text}</a>
+                      {:else}{cell.text}{/if}
+                    </td>
+                  {/each}
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      {/each}
+    {/if}
 
     {#if task.links.length}
       <p class="sd-panelnote">

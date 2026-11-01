@@ -1,0 +1,95 @@
+<!--
+  A CAPTURE of ManageHolidays — the holiday form and the holidays that exist.
+
+  Two things worth recording:
+
+    1. the form is `table.FormEx` and its Date row is three selects — month, day,
+       year — printed on one line by the app. Stacked, they read as three fields;
+    2. the list beside it is `table.ReportTable`, in the right-hand cell of
+       `table.Layout`, with its own heading row ("Holiday Desc / Date / Charge
+       Tuition"). The task view showed the form and dropped the list.
+
+  Structure and class names are the live ones. Holiday names and dates are
+  invented; the live ones belong to a studio.
+-->
+<!DOCTYPE html>
+<html>
+<head><title>The Studio Director</title></head>
+<body>
+<form id="idForm">
+  <div class="standardMainContent">
+    <div id="sideNavBar"></div>
+    <div id="mainContent">
+      <div class="contentContainer">
+        <div class="Content">
+          <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a></div>
+          <div class="formTitle">Manage Holidays</div>
+          <div class="ButtonBar">
+            <a onclick="StudioDir.onSubmitToMethod('ManageHolidays','add');" id="save">Save</a>
+          </div>
+          <div class="contentInfo">
+            <table class="Layout">
+              <tbody>
+                <tr>
+                  <td class="Top">
+                    <table class="FormEx">
+                      <tbody>
+                        <tr>
+                          <td><span id="holiday_desc__label">Description</span></td>
+                          <td><span id="holiday_desc__field"><input type="text" name="holiday_desc" value="" id="holiday_desc"></span></td>
+                        </tr>
+                        <tr>
+                          <td><span id="holiday_date__label">Date</span></td>
+                          <td><span id="holiday_date__field">
+                            <select id="holiday_date__mon" name="holiday_date__mon" style="vertical-align:middle">
+                              <option value="Jan">Jan</option><option value="Feb">Feb</option>
+                              <option value="Mar">Mar</option><option value="Apr">Apr</option>
+                              <option value="May">May</option><option value="Jun">Jun</option>
+                              <option value="Jul">Jul</option><option value="Aug">Aug</option>
+                              <option value="Sep" selected>Sep</option><option value="Oct">Oct</option>
+                              <option value="Nov">Nov</option><option value="Dec">Dec</option>
+                            </select>
+                            <select id="holiday_date__day" name="holiday_date__day" style="vertical-align:middle">
+                              <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                              <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                              <option value="7" selected>7</option>
+                            </select>
+                            <select id="holiday_date__year" name="holiday_date__year" style="vertical-align:middle">
+                              <option value="2026" selected>2026</option><option value="2027">2027</option>
+                            </select>
+                          </span></td>
+                        </tr>
+                        <tr>
+                          <td><span id="holiday_charge__label">Charge Tuition</span></td>
+                          <td><span id="holiday_charge__field">
+                            <select id="holiday_charge" name="holiday_charge">
+                              <option value="0" selected>No</option><option value="1">Yes</option>
+                            </select>
+                          </span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td class="RHS">
+                    <table class="ReportTable">
+                      <thead>
+                        <tr><th>Holiday Desc</th><th>Date</th><th>Charge Tuition</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>Labor Day</td><td>Mon, Sep 7, 2026</td><td>No</td></tr>
+                        <tr><td>Fall Break</td><td>Mon, Nov 23, 2026</td><td>No</td></tr>
+                        <tr><td>Winter Break</td><td>Mon, Dec 21, 2026</td><td>No</td></tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</body>
+</html>
