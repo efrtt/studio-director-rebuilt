@@ -68,6 +68,9 @@ export function mount(opts = {}) {
       // Toggle screens: our controls, the app's own Save.
       onSaveSettings: opts.onSaveSettings || null,
       onSearch: opts.onSearch || null,
+      // Every screen with a control gets a way to press it: the narrower wiring left
+      // a dropped student's dialog with a dead button.
+      onPress: opts.onPress || ((action) => clickActionInApp(document, action)),
       onRefresh: opts.onRefresh || null,
       // The app's own nav icons, read where they live. Keyed by href, because the
       // rail renders the model's links and the live sidebar is where the <i> is.

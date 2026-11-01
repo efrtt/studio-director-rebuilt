@@ -16,7 +16,7 @@
 
 import { qs, qsa, textOf } from './shell.js';
 
-const CONFIRMED = /\bhas been\s+(updated|saved|added|created|deleted|removed|changed|cloned|unenrolled|enrolled)\b/i;
+const CONFIRMED = /\bhas been\s+(updated|saved|added|created|deleted|removed|changed|cloned|unenrolled|enrolled|dropped|withdrawn)\b/i;
 const REFUSED = /\b(has not been|was not|could not be|cannot be|unable to|not saved|not updated|error|failed|requires?|invalid)\b/i;
 
 // The screen is sometimes *before* the outcome: the app asks, then saves. The
@@ -32,13 +32,51 @@ const MAX_LENGTH = 240;
 // `Unenroll` is drawn live, though the captured fixture had them apart. So take the
 // node's own words and drop the controls, rather than dropping the node: otherwise
 // the one sentence on the page disappears along with the button.
-function textWithoutControls(node) {
-  if (!node || !node.cloneNode) return textOf(node);
-  const copy = node.cloneNode(true);
-  if (copy.querySelectorAll) {
-    copy.querySelectorAll('a[href], [onclick], .Btn').forEach((el) => el.remove());
+//
+// The names in the sentence are links too. "Are you sure you want to drop Lily from
+// 520 Contemporary 1?" is three text nodes and two anchors, and "…has been dropped"
+// ends in a link of its own ("Review the account for …"). Dropping every anchor lost
+// the names ("drop from ?"); keeping every anchor kept the command. So: keep the
+// words, drop the links that are commands, and put a space between them - the app's
+// markup has none, which is how "1Review" happened.
+const COMMAND = /^(review|open|view|print|email|edit|manage|see|show|go to|back to|return)\b/i;
+
+function isCommand(el) {
+  const onclick = el.getAttribute && el.getAttribute('onclick');
+  if (onclick) return true;
+  if (el.classList && el.classList.contains('Btn')) return true;
+  return COMMAND.test(String(el.textContent || '').trim());
+}
+
+function sentenceOf(node) {
+  if (!node || !node.childNodes) return textOf(node);
+
+  let out = '';
+  let own = '';
+  for (const child of Array.from(node.childNodes)) {
+    if (child.nodeType === 3) {
+      out += child.textContent;
+      own += child.textContent;
+      continue;
+    }
+    if (child.nodeType !== 1) continue;
+    if (String(child.tagName || '').toLowerCase() === 'br') {
+      out += ' ';
+      continue;
+    }
+    const text = String(child.textContent || '').trim();
+    if (!text || isCommand(child)) continue;
+    out += ' ' + text;
   }
-  return textOf(copy);
+
+  // A paragraph made only of links is the app's action bar, not a sentence. Read
+  // as prose it put "Switch Classes" into the drop question, and made the Email
+  // Class menu look like a question at all. Only words the page states itself
+  // count; the names inside a sentence are still kept, because the surrounding
+  // sentence is text of its own.
+  if (!/\S/.test(own)) return '';
+
+  return out.replace(/\s+/g, ' ').trim();
 }
 
 // A page waiting for a yes: `Unenroll` is the shape. A warning sentence, no
@@ -69,7 +107,7 @@ export function pendingConfirmation(doc) {
   const label = textOf(button);
   const title = textOf(qs(doc, '.formTitle, .ReportName, h1'));
   const lines = qsa(root, 'p, li')
-    .map((node) => textWithoutControls(node))
+    .map((node) => sentenceOf(node))
     .filter((text) => text && text !== label && text.length <= MAX_LENGTH);
 
   if (!label || !title || !lines.length) return null;
@@ -97,7 +135,7 @@ function messageIn(root, pattern) {
     // The outcome line often ends in a link ("Review the account for …"), and
     // the link's words are not part of the sentence the app is stating: read as
     // text they ran on from the message ("… Contemporary 1Review the account").
-    .map((el) => ({ el, text: textWithoutControls(el) }))
+    .map((el) => ({ el, text: sentenceOf(el) }))
     .filter(({ text }) => text && text.length <= MAX_LENGTH && pattern.test(text));
 
   if (!matches.length) return null;
