@@ -70,6 +70,29 @@ test('a page with nothing but a link is not a notice', () => {
   assert.equal(readNote(docOf(bare)), null);
 });
 
+test('the app’s Yes and No buttons are controls, not a sentence', () => {
+  // Add Class Charge ends on a page with no `page=` in its URL: the charge is
+  // saved and the app offers New / Yes / No. The buttons are `<div class="Btn">`,
+  // so stripping only links and inputs left their own words as the page's one
+  // line - "YesNo" - and the screen read as a notice saying nothing.
+  const yesNo = `<form id="idForm"><div class="contentContainer"><div class="Content">
+    <div class="formTitle">Add Class Charge</div>
+    <div class="contentInfo">
+      <div class="Btn" onclick="StudioDir.onSubmit('Yes')">Yes</div>
+      <div class="Btn" onclick="StudioDir.onSubmit('No')">No</div>
+    </div>
+  </div></div></form>`;
+
+  assert.equal(readNote(docOf(yesNo)), null, 'nothing to say, so the page is left alone');
+
+  // With a real sentence above them, that sentence is the line - not "YesNo".
+  const withMessage = yesNo.replace('<div class="contentInfo">',
+    '<div class="contentInfo"><p>Charge added. Add another?</p>');
+  const note = readNote(docOf(withMessage));
+  assert.ok(note);
+  assert.deepEqual(Array.from(note.lines), ['Charge added. Add another?']);
+});
+
 /*
  * The tiebreaker main.js uses before it trusts a note. These pages are the real
  * ones from the live walk: `ChargesHome` fetched as a shell and drew 18 links,

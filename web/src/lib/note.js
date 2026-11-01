@@ -34,6 +34,15 @@ const MAX_LINES = 8;
 // One falling-back sentence, the same allowance `confirmation.js` makes.
 const MAX_PROSE = 240;
 
+// `Yes` and `No` drawn as two controls side by side produced the line "YesNo":
+// the pair's own text read as if it were a sentence. A line survives this test
+// only if removing the controls' labels leaves words behind.
+function onlyLabels(text, labels) {
+  let rest = text;
+  for (const label of labels) rest = rest.split(label).join('');
+  return !rest.replace(/[^a-z0-9]+/gi, '');
+}
+
 // The one content-root definition (model/root.js), under this reader's name.
 const rootOf = contentRoot;
 
@@ -141,7 +150,7 @@ function linesOf(root, actions) {
     const text = textOf(node);
     if (!text || text.length > 240) continue;
     // A paragraph that only holds the button repeats the button's own label.
-    if (labels.has(text) || seen.has(text)) continue;
+    if (labels.has(text) || onlyLabels(text, labels) || seen.has(text)) continue;
     seen.add(text);
     lines.push(text);
     if (lines.length >= MAX_LINES) break;
@@ -156,10 +165,14 @@ function linesOf(root, actions) {
     if (info && info.cloneNode) {
       const copy = info.cloneNode(true);
       if (copy.querySelectorAll) {
-        copy.querySelectorAll('a, ol, ul, li, input, script').forEach((el) => el.remove());
+        // Everything the app draws a control with, not only links: on these
+        // screens the buttons are often `<div class="Btn">`, and their own words
+        // are not the page's instruction.
+        copy.querySelectorAll('a, ol, ul, li, input, select, textarea, button, script, .Btn, .BtnOutln, [onclick]')
+          .forEach((el) => el.remove());
       }
       const text = textOf(copy);
-      if (text && text.length <= MAX_PROSE) lines.push(text);
+      if (text && text.length <= MAX_PROSE && !onlyLabels(text, labels)) lines.push(text);
     }
   }
 
