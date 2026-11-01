@@ -18,7 +18,7 @@ const panel = (heading, rows) => `<div id="idSearchSpan" class="searchResultPane
   <div class="searchResultBar"><div class="searchResultLabel">${heading}</div></div>
   <div class="searchResultList">${rows.join('')}</div>
 </div>`;
-const listOf = (html) => readList(doc(`<body><div id="mainContent">${html}</div></body>`),
+const listOf = (html) => readList(doc(`<body><div id="mainContent"><div class="formTitle">Search Results</div>${html}</div></body>`),
   'https://app.thestudiodirector.com/studio1/admin.sd?page=SearchResults');
 
 test('a shorter reading is the panel mid-redraw, not a shorter list', () => {

@@ -81,7 +81,12 @@ export function choosePeriodInApp(root, value) {
     const match = [...select.options].some((option) => String(option.value || '') === String(value || ''));
     if (!match) continue;
 
-    select.value = value;
+    // Set the option, not the control: every DOM (and the app own script) agrees
+    // on which option is selected, while a bare .value assignment is read-only in
+    // some implementations.
+    for (const option of select.options) {
+      option.selected = String(option.value || "") === String(value || "");
+    }
     const doc = select.ownerDocument;
     let event;
     try {
