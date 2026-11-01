@@ -1,181 +1,141 @@
-# Studio Director Comfort Skin
+# Studio Director, rebuilt — Wii skin
 
-A read-only usability layer for **The Studio Director** (`app.thestudiodirector.com`), delivered as a
-Tampermonkey / Violentmonkey userscript. It restyles and augments the pages the app already serves.
+An unofficial userscript that gives [The Studio Director](https://www.thestudiodirector.com/)'s admin
+screens a rebuilt client: a week calendar that fits on a laptop, record lists you can filter and walk,
+editors that save only what you changed, and readable renders of the reports, table screens and
+settings pages the app serves as bare HTML.
 
-> **There are now two projects in this repo.** This README covers the *skin* (`studio-director-skin.user.js`),
-> which decorates the app's own pages. The rebuilt screens (`studio-director-rebuilt.user.js`) are a
-> ground-up replacement frontend that parses four pages into typed data and renders its own views —
-> see [`web/README.md`](web/README.md). Install only one of them at a time.
->
-> The earlier rebuild attempts (`app/`, `studio-director-calendar.user.js`) have been removed: they
-> accumulated adapters for page shapes that were never actually dumped. `web/` is the current build
-> and contains only what the dumps show. The page-diagnosis script that produced those dumps now
-> lives at `web/tools/diagnose-page.js`.
+**This branch is the Wii design.** The rail becomes a channel menu, and a Wii-inspired theme is the
+default for a fresh install — big rounded panels, one bright accent, text sized to be read from across
+a room. The functional rebuild underneath is the same as `main`; the light and dark themes are still
+there if you prefer them.
+
+![The channel menu](web/docs/shots/wii-menu-live.png)
+
+It runs in your browser on top of the app you already pay for, with your existing session. No account,
+no server, no API key.
+
+> **Not affiliated with The Studio Director.** This is a personal client for an account you own. It is
+> not a replacement service, it does not redistribute anyone's data, and it is not supported by the
+> vendor. It is also not affiliated with Nintendo; the theme is an homage, not a port.
 
 ## What it does
 
-| Area | Change |
-|---|---|
-| Layout | Removes the hard-coded `min-width: 1340px` that breaks laptop screens, and gives narrow viewports a scroll path. |
-| Typography | One font family instead of Arial/Verdana/Open Sans mixed per element; larger, higher-contrast text. |
-| Data tables | Sticky headers, zebra rows, row hover, right-aligned numeric and money columns, and a client-side row filter with a live count. Applied only to tables detected as data tables. |
-| Roster focus | On any screen with a real list (8+ rows), the block holding the biggest table is marked primary and takes the width freed by folding the **inert** blocks in front of it. Anything containing a form control is never folded, nothing is moved, and one click restores everything. It only acts when one table clearly dominates — a second table half its size means a multi-panel screen, and it leaves the layout alone. |
-| Ledger | The balance summary (`table.LedgerHeader`) is pinned above the running ledger, and the ledger's own column header sticks just below it at the summary's measured height. Amounts right-align even when they use signed forms like `-$120.00`. |
-| Calendar | Today emphasised, weekends tinted, a non-colour legend for the "space available / full" indicators, and auto-scroll to today. |
-| Status colours | `openClass` / `fullClass` / `notApplied` gain a non-colour cue (accent bar, dotted underline) so state does not rely on green vs red alone. |
-| Tabs | On tabbed detail screens (`Overview / Students / Ledger / Notes`), table work happens only in the panel that is actually rendered, and switching tabs enhances the newly shown panel. The tab you last used on a screen reopens next time you visit it. |
-| Navigation | **Ctrl/Cmd + K** command palette indexing every `.sd?page=` link on the current screen, with fuzzy search, arrow keys and Enter. Recently visited pages surface automatically. |
-| Pinning | Pin the pages you use daily; pinned pages lead the palette and appear as a chip strip on the Home screen. |
-| Theme | Light, dark, or follow the system. |
-| Density | Comfortable or compact cell padding. |
-| Focus | Visible focus rings for keyboard navigation. |
-| Login | Restyled sign-in page (same form, same behaviour). |
+- **Wii-style channel menu.** The app's rail is replaced by a grid of channels you can click through,
+  with the page you are on highlighted.
+- **Four themes.** Wii (default on this branch), light, dark, or follow the system.
+- **Week and month calendars.** Classes as blocks sized by real duration, studio columns, seat and
+  waitlist counts read from the page rather than from colour, and a footer that totals the week.
+- **Record lists.** Classes, families and students get a filterable list with live counts and mixed-type
+  badges; opening a row goes straight to that record instead of through the app's search.
+- **Record editors.** One row per field, the app's own values, record tabs (Enrollment, Skills,
+  Calendar, …) rendered from the panels already in the response, and the record's own buttons — New,
+  Print, Email, Delete, Edit Family — back where you can reach them.
+- **Reports, table screens and settings.** The 66 report screens share one adapter, so do the print
+  forms and the big sheets. Settings pages offer their own controls rather than an invented Save.
+- **Landing pages as a grid.** Menu screens become a searchable tile grid instead of a wall of links.
+- **Esc gets you out.** The original page is still there, untouched, one keypress away.
 
-## What it deliberately does not do
+## How it works
 
-- **No network requests.** The script issues zero `fetch`/`XHR` calls. Your session cookie, the
-  server and your account are untouched — it only reads what the page already rendered.
-- **No writes.** No forms are submitted, no data is changed.
-- **No data leaves the browser.** Settings live in userscript storage (or `localStorage`).
-- It does not work in The Studio Director's native mobile app or on iOS Safari.
+The script reads the page the browser already loaded and parses it into a plain model — no network call
+is needed on most screens. A single same-origin `GET` is the fallback for pages the app fills in after
+load. A model is turned into a Svelte view, and every reader is a pure function of a document and a URL,
+which is what lets the whole thing be tested without a browser.
+
+Writes are never constructed here. The editor puts your changed values into the app's own live form
+controls and clicks the app's own Save, so validation, masks and redirects all remain the app's
+business. Fields you did not touch keep the value the server sent.
+
+The Wii theme is a stylesheet, not a second app: every rule is scoped to
+`html[data-sd-theme="wii"] #sd-root`, so choosing another theme cannot inherit it.
 
 ## Install
 
-1. Install [Tampermonkey](https://www.tampermonkey.net/) (Chrome/Edge/Safari) or
-   [Violentmonkey](https://violentmonkey.github.io/) (Firefox).
-2. Open the userscript manager's dashboard → **New script**.
-3. Replace the template with the contents of `studio-director-skin.user.js` and save.
-4. Load the app and sign in as usual. The skin applies immediately.
+Requires [Tampermonkey](https://www.tampermonkey.net/) (Chrome, Edge, Safari) or
+[Violentmonkey](https://violentmonkey.github.io/) (Firefox).
 
-The `@match` is `https://app.thestudiodirector.com/*/*`, so it works for **any** studio tenant, not
-just yours. The tenant is read from the URL path at runtime.
+1. Build the userscript (Node 20 or newer):
 
-### Sharing with friends (auto-update)
+   ```bash
+   cd web
+   npm ci
+   npm run userscript     # writes ../studio-director-rebuilt.user.js
+   ```
 
-Host the `.user.js` file anywhere that serves plain text over HTTPS (a GitHub Gist's raw URL, a
-static host, an internal server), then add these two lines to the metadata block before sharing:
+2. In your userscript manager, create a new script and paste in the contents of
+   `studio-director-rebuilt.user.js`.
+3. Open The Studio Director and sign in as usual. The Wii theme is applied first; the header's theme
+   control cycles through the others.
 
-```js
-// @updateURL    https://your.host/studio-director-skin.user.js
-// @downloadURL  https://your.host/studio-director-skin.user.js
-```
+The `@match` is `https://app.thestudiodirector.com/*/*`, so it works on any studio tenant; the tenant is
+read from the URL. The metadata block points `@updateURL` at the built file on this repo's `main`
+branch, so an installed copy picks up a new build when the version is bumped.
 
-They are intentionally **not** included — shipping a placeholder URL makes the update check fail on
-every launch. Once the lines point somewhere real, each friend installs once and receives updates
-whenever you bump `@version`.
+## Using it
 
-## Controls
+- **Esc**, the **Original** button, or `#original` on a URL returns the app's own page. Anything
+  unsaved is discarded.
+- The channel menu replaces the app's navigation and links to the same pages, rebuilt.
+- On a record, the left column lists sibling records when the page itself carries that list — so moving
+  from one family to the next is one click.
 
-- **Ctrl/Cmd + K** — jump to page palette
-- **↑ / ↓** — move selection, **Enter** — open, **Esc** — close
-- **Userscript menu** (Tampermonkey toolbar icon):
-  - Jump to page…
-  - Pin / unpin this page
-  - Toggle roster focus (fold inert blocks)
-  - Toggle remember-tab
-  - Toggle density (comfortable / compact)
-  - Cycle theme (auto / light / dark)
-  - Diagnose this page (console) — now also lists each content block with its row, control,
-    table and node counts, with no text, which is enough to tune a page module
+## Safety
 
-Add `?skinDebug=1` to any URL (or enable `debug` in storage) to outline the tables, columns and
-widgets the script has claimed.
+- **The app posts, not the script.** No POST body, method name or token is ever built here.
+- **Only changed fields are written.** Everything else stays as the server sent it.
+- **At most one same-origin `GET` per page view**, and none on screens the live page already answers.
+  Cookies and credentials are never read, stored or logged.
+- **The sign-in page is never replaced.**
+- **Nothing leaves the browser.** Theme and other preferences live in local storage.
 
-## Verification
+## Development
 
-Tested against the app's real `admin.css` using `harness.html`, which now reproduces the
-authenticated shell captured from a live structure dump: `.topBarContainer`, `.standardMainContent`,
-`#sideNavBar`, `#mainContent > .contentContainer`, a left detail pane with live controls, an inert
-banner, and a 12-row roster.
-
-Checked on the current revision: no console errors attributable to the script; `body` `min-width`
-relaxes from `1340px` to `0`, and at a 1024 px viewport the document scroll width goes from
-**1340 px (overflowing)** to **1024 px (no overflow)**; sticky headers resolve to `position: sticky`;
-12 money cells are right-aligned; the palette indexes **13** de-duplicated destinations; density
-switches cell padding between `7px 10px` and `3px 7px`; dark mode resolves body to
-`rgb(21, 26, 34)` with `rgb(230, 235, 243)` text.
-
-Roster module: the 12-row roster pane is chosen as primary and a 2-row meeting table is not; exactly
-the one inert block in front of it is folded; the detail pane holding 5 form controls is untouched;
-the toggle cycles `1 → 0 → 1` folded blocks with matching labels. Because `.contentContainer` is a
-**row flex** in their stylesheet, the toggle bar mounts above the row (800×28) — the first attempt
-rendered it *inside* the row as a squeezed 70 px-wide column, which is what caught the problem.
-
-Ledger (`harness-tabs.html`): the running amount column went from **0 of 9** cells aligned to **9 of 9**. The cause was real, not cosmetic — `-$120.00` failed the old money pattern, so only 6 of 9 rows matched and the column fell under the 70% numeric threshold. The balance summary pins at `top: 0` and the ledger's column header sits at `39px` (the summary's measured height); after scrolling the container 500 px they measured at `0` and `39` from the viewport top, so both hold. Reaching that required clearing `overflow` on the two wrappers that clip without ever scrolling (`#tab-ledger-content`, `.Content`) — a non-scrolling `overflow: auto` ancestor silently becomes the sticky containing block. `#mainContent` is never touched, so the app keeps its real scroll container.
-
-Tabs (`harness-tabs.html`, mirroring the real `EditFamily` tab markup): at load only the visible Ledger
-panel's table is claimed — the Overview and Students tables stay untouched and there is exactly **1**
-toolbar. Clicking Overview lazily claims its table (**1 → 2** data tables, toolbar visible), and the
-ledger's toolbar survives. The choice is stored as `{"<page>": "overview"}`, and after a reload the
-skin restored Overview over the page's hard-coded default (`overview` selected, ledger panel
-`display:none`), with that panel enhanced. The skin never toggles the app's tab classes — it clicks
-the app's own tab and lets the app switch.
-
-The multi-table guardrail was tested by adding a rival 8-row table to the same screen: the fold count
-went from 1 to **0**, so a ledger-style screen is left alone. Turning roster focus off now removes the
-folded class, the toggle bar, the `sds-primary` marker and the `sds-rowflex` hook (0/0/false/false),
-and re-running restores all four — the first version left the flex growth behind when switched off.
-
-`diagnose()` emits its whole report as a **single** `console.log` string between clear markers, so
-"Copy string" in devtools captures the summary, the content block list and the structure at once,
-instead of several collapsed entries that get truncated when copied by hand.
-
-Verified on an earlier revision of the harness that included the login form and calendar: login
-input and container both measure 320 px so the form does not overflow, and the calendar legend,
-today emphasis and scroll-to-today behave as described.
-
-### Regenerating the harness
-
-The preview server serves only the registered HTML file, so the script has to be inlined to run
-locally. The `*.run.html` copies are **generated** — never edit them, and they are not kept in the
-repo. Rebuild one whenever you want to open a harness:
+Everything lives in [`web/`](web/). The readers are pure functions, the recorded reference behaviour is
+frozen as JSON, and CI enforces both.
 
 ```bash
-for f in harness harness-tabs; do
-  awk '{ if ($0 ~ /<script src="studio-director-skin.user.js"><\/script>/) { print "<script>"; while ((getline line < "studio-director-skin.user.js") > 0) print line; close("studio-director-skin.user.js"); print "</script>"; } else print }' $f.html > $f.run.html
-done
+cd web
+npm ci
+npm test            # every reader, router and writer
+npm run golden      # the recorded screens, model for model
+npm run demo        # self-contained demo pages from the fixtures
+npm run userscript  # rebuild ../studio-director-rebuilt.user.js
+npm run serve       # serve the demo pages locally
 ```
 
-Two harnesses, two jobs: `harness.html` is the roster/list screen, `harness-tabs.html` is the tabbed
-detail screen. Both are development scaffolding, not part of the skin — delete them whenever you
-no longer want them.
+CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs the tests, the goldens, the build, and
+fails if the committed userscript does not match the source it was built from.
 
-## Known limits
+```text
+web/
+  src/            readers, model, views (Svelte), themes, styles
+    wii.css       the Wii theme, scoped to html[data-sd-theme="wii"] #sd-root
+  test/           fixtures, golden models, suites
+  tools/          build, golden, capture, crawl and demo scripts
+  docs/           contract, design notes, crawl map, screenshots
+```
 
-- **Roster focus is heuristic, not per-screen.** It picks the primary table by row count and folds
-  only what sits *before* it and holds no form control. Multi-table screens are skipped entirely
-  rather than guessed at, so a ledger or family record is left untouched. If it still gets a screen
-  wrong, one click restores everything, or turn it off from the menu. A precise module per screen
-  needs that screen's block list — the Diagnose command now prints exactly that.
-- **It never folds blocks after the primary table, and never moves a node.** Folding is a CSS class
-  toggle, so the app's own scripts and form serialisation are unaffected.
-- **The ledger pin removes clipping from two wrappers.** `#tab-ledger-content` and `.Content` get `overflow: visible`, because each clipped without ever scrolling and that silently disabled `position: sticky`. Scrolling moves to `#mainContent`, which is built for it, but this is the one place the skin changes a layout rule rather than only adding to it — worth removing if a screen starts drawing outside its box.
-- **Dark mode is best effort.** The app hard-codes background colours in ~445 rules; the common
-  surfaces are covered, but a rarely used screen may show a light patch. Light mode is exact.
-- **The scraped "morning glance" dashboard was cut** from this version. It would have been the only
-  feature making network requests, and it cannot be written correctly without knowing which pages
-  hold which totals. Pinning plus the palette covers the same "too many clicks" problem with none of
-  the risk.
-- Selectors are centralised at the top of the file; if The Studio Director restyles a screen, it is
-  a one-place fix.
+Captured pages and the models they produce are committed under `web/test/fixtures` and
+`web/test/golden`. They contain structure and same-length filler text, never record content — the crawl
+tools read tags, classes, headings and counts only.
 
-## Next step: page dumps
+## Docs
 
-To build per-page reordering, save one copy of each screen that matters — In devtools: **Elements →
-right-click `<html>` → Copy → Copy outerHTML** — for the schedule/calendar, rosters, financials and
-enrollment screens.
+- [`web/README.md`](web/README.md) — the long write-up: each reader, what it claims and what it refuses.
+- [`web/docs/contract.md`](web/docs/contract.md) — the invariants, and the golden models that pin them.
+- [`web/docs/adding-a-page.md`](web/docs/adding-a-page.md) — how to cover a screen the rebuild misses.
+- [`web/docs/crawl-map.md`](web/docs/crawl-map.md) — every screen in the crawl and which reader owns it.
+- [`web/docs/rebuild-spec.md`](web/docs/rebuild-spec.md) — the design the rebuild follows.
 
-> **These files contain student names, guardian names and payment data.** Keep them out of version
-> control and redact names before sharing. If you would rather not hand over markup at all, run the
-> **Diagnose this page** menu command and copy the **whole single string** it logs — tags, classes
-> and counts only, no page text. That is usually enough to write a page module, and it cannot leak
-> a student's name.
+## Limitations
 
-## A note on scope
-
-This is a personal skin for a product you pay for, applied to your own account. Keep it that way:
-don't republish the app's data, don't hand it out as a service, and don't point it at accounts that
-aren't yours. The script makes no requests and changes no data, which is what keeps it uninteresting
-to the people who run the service. If something is genuinely unusable, telling Studio Director
-support is also worth doing — that fixes it for everyone.
+- **Unofficial and unversioned against the app.** If The Studio Director changes a screen, a reader can
+  stop claiming it; the page then falls back to the app's own markup, which is the intended failure mode
+  but still a miss.
+- **Two screens are deliberately left alone**, because neither can be read or saved safely; see
+  [`web/docs/contract.md`](web/docs/contract.md).
+- **The Wii theme is best effort over a stylesheet the app controls.** It covers the app's common
+  surfaces; a rarely used screen may keep an odd patch of the app's own colour.
+- **Desktop browsers only.** It does not work in the vendor's mobile app or on iOS Safari.
+- **No affiliation and no warranty.** Use it on your own account, at your own risk.
