@@ -1,25 +1,25 @@
 import App from './App.svelte';
 import { injectStyles, removeStyles } from './lib/styles.js';
 import {
-  fetchPage, hasShell, liveIsBare, railLinks, parseHtml, SessionExpired
+  fetchPage, hasShell, liveIsBare, parseHtml, SessionExpired
 } from './lib/shell.js';
 import { routeOf } from './lib/route.js';
 import { readList } from './lib/list.js';
 import { expandInApp, showAllTrigger } from './lib/expand.js';
 import { runSearch } from './lib/search.js';
 import { readPage } from './lib/page.js';
-import { readForm, hasForm } from './lib/form.js';
-import { readBar } from './lib/bar.js';
-import { readTabs } from './lib/tabs.js';
+import { hasForm } from './lib/form.js';
 import { runReportInApp } from './lib/report.js';
-import { readTask, runTaskInApp } from './lib/task.js';
+import { runTaskInApp } from './lib/task.js';
 import { readSheet } from './lib/sheet.js';
-import { readSettings, saveSettingsInApp } from './lib/settings.js';
+import { saveSettingsInApp } from './lib/settings.js';
 import { clickActionInApp } from './lib/actions.js';
 import { changesFrom, saveInApp } from './lib/save.js';
 import { probeTick, recordView } from './lib/probe.js';
 import { contradictsNote } from './lib/note.js';
-import { wantsLiveLook, decideMount, decideShellLess, hasReadyView, chooseSource } from './lib/choose.js';
+import { wantsLiveLook, decideMount, decideShellLess, chooseSource } from './lib/choose.js';
+import { readRecordPage } from './lib/record.js';
+import { readLiveView } from './lib/live.js';
 
 export { readPage };
 // Probe mode's two ends: `probeTick` measures the page before the overlay covers it, and
@@ -163,7 +163,7 @@ export async function autoMount(opts = {}) {
   });
 
   if (freshLook) {
-    const live = await readLiveView();
+    const live = await readLiveView(document, location.href);
     const decision = decideMount({ fetchedView: model.view, liveView: live ? live.view : null });
     if (decision.source === 'live') return mountView(live, onOriginal, 'live');
     // Contradicted and unexplained: the server's sentence is not the screen the
@@ -241,16 +241,13 @@ export async function loadAllRecords(doc = document) {
 
 // Search results. The URL alone is not enough: the panel is filled by the app's
 // own JS after load (the page carries DWR iframes, not rows), so this page is
-// read live and only once its rows are there.
+// read live and only once its rows are there. The wait itself is `lib/live.js`,
+// with the clock injectable, because a timer is the one thing a fixture cannot
+// reach; the longer budget is this screen's own.
 async function mountSearchResults(onOriginal) {
-  const rows = () => document.querySelectorAll('#idSearchSpan .searchResultItem').length;
-  const started = Date.now();
-  while (!rows() && Date.now() - started < 4000) {
-    await new Promise((resolve) => setTimeout(resolve, 150));
-  }
-
-  const model = readPage(document, location.href, { allowEmpty: true });
-  return mountView(model, onOriginal);
+  const model = await readLiveView(document, location.href, { maxWait: 4000 })
+    || readPage(document, location.href, { allowEmpty: true });
+  return mountView(model, onOriginal, 'live');
 }
 
 // The page the browser is already showing, read where it stands. Used for the
@@ -260,18 +257,9 @@ function mountLive(onOriginal) {
   // A record page reached without a page name (the URL the app leaves behind
   // after a refused save) is still an editor, and must not be read as a week or
   // a list just because the URL lost its `page=Edit…`.
-  const record = recordModel(document, location.href);
-  if (record) {
-    return mount({
-      model: record,
-      state: 'ready',
-      onSave: (values) => saveInApp(document, changesFrom(record.form, values)),
-      onAction: (item) => clickActionInApp(document, item),
-      onLoadAll: loadAllRecords,
-      onSearch: searchEverything,
-      canLoadAll: !!showAllTrigger(document),
-      onOriginal
-    });
+  const record = readRecordPage(document, location.href);
+  if (record && record.view === 'form') {
+    return mountEditor(record.model, onOriginal);
   }
 
   const model = readPage(document, location.href, { allowRefused: true });
@@ -283,12 +271,28 @@ function mountLive(onOriginal) {
   return mountView(model, onOriginal);
 }
 
+// The editor's mount: the one view that saves. Every other kind goes through
+// mountView, which is why this is separate rather than a branch inside it.
+function mountEditor(model, onOriginal) {
+  recordView('form', 'live');
+  return mount({
+    model,
+    state: 'ready',
+    onSave: (values) => saveInApp(document, changesFrom(model.form, values)),
+    onAction: (item) => clickActionInApp(document, item),
+    onLoadAll: loadAllRecords,
+    onSearch: searchEverything,
+    canLoadAll: !!showAllTrigger(document),
+    onOriginal
+  });
+}
+
 // A record page: the editor is rebuilt only when the page really has a form of
 // the dumped shape. Anything else is left to the app, untouched — no overlay —
 // because covering a form is how you end up unable to edit.
 //
-// readForm, never readPage: the class editor contains a Calendar tab with seven
-// TimeBlock tables, and the week adapter would read that tab as the calendar.
+// Which screen the page is, in what order, is `lib/record.js`; this function is
+// the fetching and the mounting.
 function mountRecord(onOriginal) {
   // Live first, copy second. The form is server-rendered, but the app's JS fills
   // part of it after the response lands (the phone-label selects start empty),
@@ -302,112 +306,27 @@ function mountRecord(onOriginal) {
 
   return source
     .then((page) => {
-      const nav = railLinks(page.doc);
-      const list = readList(page.doc);
-      const form = readForm(page.doc);
-      const editor = recordModel(page.doc, page.finalUrl);
+      const found = readRecordPage(page.doc, page.finalUrl);
 
-      if (editor) {
+      if (!found) {
+        console.info('[sd] record page - leaving the app\u2019s editor alone');
+        return null;
+      }
+
+      if (found.view === 'form') {
         // Probe mode records where every other view came from; records were the
         // one kind with no verdict in the log, which is exactly the kind the plan
-        // is trying to check.
+        // is trying to check. Read where it stands, the form's source is `live`
+        // even when the page was fetched as a fallback.
         recordView('form', live ? 'live' : 'fetched');
-        // Edit pages opened from a list carry that list in the side panel
-        // (`#idSearchSpan`, plus `#searchidx`). Showing it keeps record-to-record
-        // navigation inside the app instead of a trip back to Classes.
-        return mount({
-          model: editor,
-          state: 'ready',
-          onSave: (values) => saveInApp(document, changesFrom(editor.form, values)),
-          onAction: (item) => clickActionInApp(document, item),
-          onLoadAll: loadAllRecords,
-          onSearch: searchEverything,
-          canLoadAll: !!showAllTrigger(document),
-          onOriginal
-        });
+        return mountEditor(found.model, onOriginal);
       }
 
-      // A form without a save control is not an editor: `PrintClassRoster` and
-      // `Attendance` carry forty and a hundred controls, and an editor built
-      // from them would be a dead wall of inputs. Their own controls do the
-      // work, so they are read as a task, or as a table when that is all they
-      // have.
-      const task = form ? readTask(page.doc) : null;
-      if (task) {
-        return mountView({ nav, list, url: page.finalUrl, task, view: 'task', title: task.title }, onOriginal);
-      }
-
-      const sheet = readSheet(page.doc);
-      if (sheet) {
-        return mountView({ nav, list, url: page.finalUrl, sheet, view: 'sheet', title: sheet.title }, onOriginal);
-      }
-
-      const settings = readSettings(page.doc);
-      if (settings) {
-        return mountView({ nav, list, url: page.finalUrl, settings, view: 'settings', title: settings.title }, onOriginal);
-      }
-
-      // Not an editor, a form, a table or a toggle — but a page can carry a
-      // record parameter and still be something else entirely. `Enroll(sident)`
-      // and `SwitchClasses` are the week calendar, `EnrollmentSearch` is a
-      // record list, `EmailTextHome(meth)` is a menu. Those are real screens, so
-      // the page router gets the last word before the app does.
-      const other = readPage(page.doc, page.finalUrl);
-      if (other.view) {
-        return mountView({ ...other, list: other.list || list }, onOriginal);
-      }
-
-      console.info('[sd] record page - leaving the app\u2019s editor alone');
-      return null;
+      return mountView(found.model, onOriginal);
     })
     .catch((err) => {
       // A failed read is not worth replacing a working page with an error.
       console.info('[sd] record page - left alone:', err && err.message ? err.message : err);
       return null;
     });
-}
-
-// The live page's model, once the app has drawn whatever it was going to draw.
-// `SearchResults` and the Enroll step proved the pattern: for a JS-built screen
-// the fetched HTML is an empty shell, and only the live DOM has the controls.
-// Reading it immediately would catch the page mid-render, hence the short wait.
-async function readLiveView(maxWait = 1500) {
-  const first = readPage(document, location.href);
-  if (hasReadyView(first)) return first;
-
-  const started = Date.now();
-  while (Date.now() - started < maxWait) {
-    await new Promise((resolve) => setTimeout(resolve, 120));
-    const next = readPage(document, location.href);
-    if (hasReadyView(next)) return next;
-  }
-  return null;
-}
-
-// The record editor's model, or null when the page is not one.
-//
-// A record editor is a form *plus a way to save it*. The app puts Save in the
-// top bar, so `#save` is the check; the tabbed record pages are editors even
-// when that id differs, because they are the only record screens with tabs.
-function recordModel(doc, url) {
-  const form = readForm(doc);
-  if (!form) return null;
-
-  const tabs = readTabs(doc);
-  const tabbed = !!(tabs && tabs.tabs.length > 1);
-  if (!doc.getElementById('save') && !tabbed) return null;
-
-  return {
-    nav: railLinks(doc),
-    form,
-    // The bar above the tabs: New, Print, Email, Delete, Edit Family, More.
-    bar: readBar(doc),
-    // Enrollment, Skills, Calendar: the page already carries them hidden, so
-    // they are rebuilt from the same response as the form.
-    tabs,
-    list: readList(doc),
-    view: 'form',
-    title: form.title,
-    url
-  };
 }

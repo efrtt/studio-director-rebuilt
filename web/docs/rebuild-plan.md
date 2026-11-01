@@ -68,8 +68,12 @@ calls `read` once per reader; `claims` exists for tests.
 replacing three inline questions in `main.js`. The record-page rule is untouched: `readForm`
 directly, never through the chain.
 
-What is left of the spec's §3 is the *note tiebreaker* and the shell-less case, which still run in
-`main.js` because they need the live document and a timeout. They call the same tested helpers.
+What was left of the spec's §3 after this was the *note tiebreaker*, the shell-less case, the record
+ladder and the live re-read: the first two had their decisions in `choose.js` but their DOM reads in
+`main.js`, and the last two sat in the middle of the mounting code where no test could reach them.
+`lib/record.js` now owns the order a record URL resolves in, `lib/live.js` owns the wait with the
+clock injectable, and `test/record.test.mjs` drives both; `main.js` keeps the DOM reads and the
+fetch, which is what the spec's §6 layout asked of it.
 
 ## 4. Live DOM first — done
 
@@ -119,6 +123,7 @@ layout (list beside editor/confirmation) as a `SPLIT` set rather than a nested b
 | record live-first | 173,379 | 169,722 | 49,289 | 14 / 160 |
 | probe routing fix | 173,429 | 169,772 | 48,984 | 14 / 160 |
 | probe verdict fix | 173,473 | 169,816 | 48,995 | 14 / 161 |
+| record ladder + live re-read out of `main.js` | 173,488 | 169,831 | 49,096 | 15 / 168 |
 
 The bundle is **7,327 bytes smaller** than the reference build and 456 bytes smaller gzipped, after
 gaining five model modules, two test suites, the live-first decision and the routing fix the live
