@@ -2,6 +2,7 @@
   "file": "editor-family.html",
   "form": {
     "breadcrumb": [
+      "Home",
       "Families"
     ],
     "fields": [
@@ -74,14 +75,39 @@
         "name": "state",
         "options": [
           {
-            "label": "CA",
+            "label": "AB",
             "selected": false,
+            "value": "AB"
+          },
+          {
+            "label": "AK",
+            "selected": false,
+            "value": "AK"
+          },
+          {
+            "label": "CA",
+            "selected": true,
             "value": "CA"
           },
           {
             "label": "NY",
             "selected": false,
             "value": "NY"
+          },
+          {
+            "label": "ON",
+            "selected": false,
+            "value": "ON"
+          },
+          {
+            "label": "TX",
+            "selected": false,
+            "value": "TX"
+          },
+          {
+            "label": "WA",
+            "selected": false,
+            "value": "WA"
           }
         ],
         "selector": "#state",
@@ -102,24 +128,6 @@
       },
       {
         "checked": null,
-        "id": null,
-        "key": "name:phone1_label",
-        "label": null,
-        "masked": false,
-        "name": "phone1_label",
-        "options": [
-          {
-            "label": "Home",
-            "selected": false,
-            "value": "Home"
-          }
-        ],
-        "selector": "[name=\"phone1_label\"]",
-        "type": "select",
-        "value": "Home"
-      },
-      {
-        "checked": null,
         "id": "phone1",
         "key": "phone1",
         "label": null,
@@ -127,26 +135,8 @@
         "name": "phone1",
         "options": null,
         "selector": "#phone1",
-        "type": "text",
+        "type": "phone_number",
         "value": ""
-      },
-      {
-        "checked": null,
-        "id": null,
-        "key": "name:phone2_label",
-        "label": null,
-        "masked": false,
-        "name": "phone2_label",
-        "options": [
-          {
-            "label": "Work",
-            "selected": false,
-            "value": "Work"
-          }
-        ],
-        "selector": "[name=\"phone2_label\"]",
-        "type": "select",
-        "value": "Work"
       },
       {
         "checked": null,
@@ -157,26 +147,8 @@
         "name": "phone2",
         "options": null,
         "selector": "#phone2",
-        "type": "text",
+        "type": "phone_number",
         "value": ""
-      },
-      {
-        "checked": null,
-        "id": null,
-        "key": "name:phone3_label",
-        "label": null,
-        "masked": false,
-        "name": "phone3_label",
-        "options": [
-          {
-            "label": "Cell",
-            "selected": false,
-            "value": "Cell"
-          }
-        ],
-        "selector": "[name=\"phone3_label\"]",
-        "type": "select",
-        "value": "Cell"
       },
       {
         "checked": null,
@@ -187,7 +159,7 @@
         "name": "phone3",
         "options": null,
         "selector": "#phone3",
-        "type": "text",
+        "type": "phone_number",
         "value": ""
       },
       {
@@ -223,19 +195,19 @@
         "name": "opt_out",
         "options": [
           {
-            "label": "No",
+            "label": "Send emails to family",
             "selected": false,
-            "value": "No"
+            "value": "0"
           },
           {
-            "label": "Yes",
+            "label": "Do not send emails to family",
             "selected": false,
-            "value": "Yes"
+            "value": "1"
           }
         ],
         "selector": "#opt_out",
         "type": "select",
-        "value": "No"
+        "value": "0"
       },
       {
         "checked": null,
@@ -258,7 +230,7 @@
         "name": "emergency_contact_phone",
         "options": null,
         "selector": "#emergency_contact_phone",
-        "type": "text",
+        "type": "phone_number",
         "value": ""
       },
       {
@@ -270,14 +242,44 @@
         "name": "howheard",
         "options": [
           {
+            "label": "",
+            "selected": false,
+            "value": "0"
+          },
+          {
+            "label": "Drive By",
+            "selected": false,
+            "value": "1275125031495"
+          },
+          {
+            "label": "Facebook",
+            "selected": false,
+            "value": "1596760047289"
+          },
+          {
             "label": "Friend",
             "selected": false,
-            "value": "Friend"
+            "value": "2"
+          },
+          {
+            "label": "Newspaper",
+            "selected": false,
+            "value": "3"
+          },
+          {
+            "label": "Promo Mailer",
+            "selected": false,
+            "value": "1596760047367"
+          },
+          {
+            "label": "Website",
+            "selected": false,
+            "value": "1275125031453"
           }
         ],
         "selector": "#howheard",
         "type": "select",
-        "value": "Friend"
+        "value": "0"
       },
       {
         "checked": null,
@@ -302,17 +304,17 @@
           {
             "label": "No",
             "selected": false,
-            "value": "No"
+            "value": "0"
           },
           {
             "label": "Yes",
             "selected": false,
-            "value": "Yes"
+            "value": "1"
           }
         ],
         "selector": "#enrollment_blocked",
         "type": "select",
-        "value": "No"
+        "value": "0"
       }
     ],
     "kind": "form",
@@ -332,7 +334,7 @@
             "value": ""
           }
         ],
-        "label": "Guardian"
+        "label": "Guardian Name(s)"
       },
       {
         "fields": [
@@ -366,7 +368,7 @@
             "value": ""
           }
         ],
-        "label": "Address"
+        "label": "Address 1"
       },
       {
         "fields": [
@@ -413,14 +415,39 @@
             "name": "state",
             "options": [
               {
-                "label": "CA",
+                "label": "AB",
                 "selected": false,
+                "value": "AB"
+              },
+              {
+                "label": "AK",
+                "selected": false,
+                "value": "AK"
+              },
+              {
+                "label": "CA",
+                "selected": true,
                 "value": "CA"
               },
               {
                 "label": "NY",
                 "selected": false,
                 "value": "NY"
+              },
+              {
+                "label": "ON",
+                "selected": false,
+                "value": "ON"
+              },
+              {
+                "label": "TX",
+                "selected": false,
+                "value": "TX"
+              },
+              {
+                "label": "WA",
+                "selected": false,
+                "value": "WA"
               }
             ],
             "selector": "#state",
@@ -445,28 +472,10 @@
             "value": ""
           }
         ],
-        "label": "Zip"
+        "label": "ZIP"
       },
       {
         "fields": [
-          {
-            "checked": null,
-            "id": null,
-            "key": "name:phone1_label",
-            "label": null,
-            "masked": false,
-            "name": "phone1_label",
-            "options": [
-              {
-                "label": "Home",
-                "selected": false,
-                "value": "Home"
-              }
-            ],
-            "selector": "[name=\"phone1_label\"]",
-            "type": "select",
-            "value": "Home"
-          },
           {
             "checked": null,
             "id": "phone1",
@@ -476,32 +485,14 @@
             "name": "phone1",
             "options": null,
             "selector": "#phone1",
-            "type": "text",
+            "type": "phone_number",
             "value": ""
           }
         ],
-        "label": "Phone"
+        "label": "Select Phone TypeHome PhoneMom CellPhone 1Dad CellPhone 2Student CellNanny/BabysitterPhone 3Work Phone"
       },
       {
         "fields": [
-          {
-            "checked": null,
-            "id": null,
-            "key": "name:phone2_label",
-            "label": null,
-            "masked": false,
-            "name": "phone2_label",
-            "options": [
-              {
-                "label": "Work",
-                "selected": false,
-                "value": "Work"
-              }
-            ],
-            "selector": "[name=\"phone2_label\"]",
-            "type": "select",
-            "value": "Work"
-          },
           {
             "checked": null,
             "id": "phone2",
@@ -511,32 +502,14 @@
             "name": "phone2",
             "options": null,
             "selector": "#phone2",
-            "type": "text",
+            "type": "phone_number",
             "value": ""
           }
         ],
-        "label": "Phone 2"
+        "label": "Select Phone TypeHome PhoneMom CellPhone 1Dad CellPhone 2Student CellNanny/BabysitterPhone 3Work Phone"
       },
       {
         "fields": [
-          {
-            "checked": null,
-            "id": null,
-            "key": "name:phone3_label",
-            "label": null,
-            "masked": false,
-            "name": "phone3_label",
-            "options": [
-              {
-                "label": "Cell",
-                "selected": false,
-                "value": "Cell"
-              }
-            ],
-            "selector": "[name=\"phone3_label\"]",
-            "type": "select",
-            "value": "Cell"
-          },
           {
             "checked": null,
             "id": "phone3",
@@ -546,11 +519,11 @@
             "name": "phone3",
             "options": null,
             "selector": "#phone3",
-            "type": "text",
+            "type": "phone_number",
             "value": ""
           }
         ],
-        "label": "Phone 3"
+        "label": "Select Phone TypeHome PhoneMom CellPhone 1Dad CellPhone 2Student CellNanny/BabysitterPhone 3Work Phone"
       },
       {
         "fields": [
@@ -567,7 +540,7 @@
             "value": ""
           }
         ],
-        "label": "Email"
+        "label": "Email / Username"
       },
       {
         "fields": [
@@ -584,7 +557,7 @@
             "value": ""
           }
         ],
-        "label": "Extra Emails"
+        "label": "More Emails (comma separated list)"
       },
       {
         "fields": [
@@ -597,22 +570,22 @@
             "name": "opt_out",
             "options": [
               {
-                "label": "No",
+                "label": "Send emails to family",
                 "selected": false,
-                "value": "No"
+                "value": "0"
               },
               {
-                "label": "Yes",
+                "label": "Do not send emails to family",
                 "selected": false,
-                "value": "Yes"
+                "value": "1"
               }
             ],
             "selector": "#opt_out",
             "type": "select",
-            "value": "No"
+            "value": "0"
           }
         ],
-        "label": "Opt Out"
+        "label": "Opt-out of emails"
       },
       {
         "fields": [
@@ -629,7 +602,7 @@
             "value": ""
           }
         ],
-        "label": "Emergency Contact"
+        "label": "Emergency Contact (other than parents)"
       },
       {
         "fields": [
@@ -642,11 +615,11 @@
             "name": "emergency_contact_phone",
             "options": null,
             "selector": "#emergency_contact_phone",
-            "type": "text",
+            "type": "phone_number",
             "value": ""
           }
         ],
-        "label": "Emergency Phone"
+        "label": "Emergency Contact Phone"
       },
       {
         "fields": [
@@ -659,17 +632,47 @@
             "name": "howheard",
             "options": [
               {
+                "label": "",
+                "selected": false,
+                "value": "0"
+              },
+              {
+                "label": "Drive By",
+                "selected": false,
+                "value": "1275125031495"
+              },
+              {
+                "label": "Facebook",
+                "selected": false,
+                "value": "1596760047289"
+              },
+              {
                 "label": "Friend",
                 "selected": false,
-                "value": "Friend"
+                "value": "2"
+              },
+              {
+                "label": "Newspaper",
+                "selected": false,
+                "value": "3"
+              },
+              {
+                "label": "Promo Mailer",
+                "selected": false,
+                "value": "1596760047367"
+              },
+              {
+                "label": "Website",
+                "selected": false,
+                "value": "1275125031453"
               }
             ],
             "selector": "#howheard",
             "type": "select",
-            "value": "Friend"
+            "value": "0"
           }
         ],
-        "label": "How Heard"
+        "label": "How did you hear about us?"
       },
       {
         "fields": [
@@ -686,7 +689,7 @@
             "value": ""
           }
         ],
-        "label": "Details"
+        "label": "How did you hear details"
       },
       {
         "fields": [
@@ -701,17 +704,17 @@
               {
                 "label": "No",
                 "selected": false,
-                "value": "No"
+                "value": "0"
               },
               {
                 "label": "Yes",
                 "selected": false,
-                "value": "Yes"
+                "value": "1"
               }
             ],
             "selector": "#enrollment_blocked",
             "type": "select",
-            "value": "No"
+            "value": "0"
           }
         ],
         "label": "Enrollment Blocked"
@@ -802,10 +805,10 @@
     "sheet": null,
     "task": null,
     "title": "New Family",
-    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EditFamily&fident=1503525685676",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=NewFamily",
     "view": "list",
     "week": null
   },
-  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EditFamily&fident=1503525685676",
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=NewFamily",
   "view": "list"
 }

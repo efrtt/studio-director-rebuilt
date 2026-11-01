@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html><body>
+<!-- Captured from the live NewFamily page on 2026-11-01 and then trimmed: the
+     form table, its labels, the phone rows and the Save link are the app's own
+     markup, the option lists are cut to a representative few, and the blank
+     record's ids are placeholders. What the old hand-written version got wrong
+     is the shape that mattered: each phone row is a <select name="phoneN_label">
+     of ten real types beside a masked <input type="phone_number">, not a select
+     and a plain text box, and the labels are the app's wording, not guesses. -->
 <form id="idForm" action="admin.sd" method="post">
   <input id="idPage" type="hidden" value="NewFamily">
   <input id="idMeth" type="hidden">
@@ -10,17 +17,17 @@
   </div></div>
   <div class="standardMainContent">
     <div id="sideNavBar" class="sideNavCollapsed">
-      <a class="sideNavLink" href="admin.sd?page=HomePage&clicktab=Home">HomeHome</a>
-      <a class="sideNavLink" href="admin.sd?page=CalendarPage&clicktab=Class+Calendar">Class CalendarClass Calendar</a>
-      <a class="sideNavLink" href="admin.sd?page=NewClass&clicktab=Classes">ClassesClasses</a>
-      <a class="sideNavLink" href="admin.sd?page=NewFamily&clicktab=Families">FamiliesFamilies</a>
-      <a class="sideNavLink" href="admin.sd?page=NewStudent&clicktab=Students">StudentsStudents</a>
-      <a class="sideNavLink" href="admin.sd?page=NewInstructor&clicktab=Instructors">InstructorsInstructors</a>
-      <a class="sideNavLink" href="admin.sd?page=ChargesHome&clicktab=Charges">Charges &amp; PaymentsCharges &amp; Payments</a>
-      <a class="sideNavLink" href="admin.sd?page=EmailTextHome&clicktab=Communications">CommunicationsCommunications</a>
-      <a class="sideNavLink" href="admin.sd?page=AdvSearch&clicktab=Advanced+Search">Advanced SearchAdvanced Search</a>
-      <a class="sideNavLink" href="admin.sd?page=ReportsHome&clicktab=Reports">ReportsReports</a>
-      <a class="sideNavLink" href="admin.sd?page=AdminHome&clicktab=Settings">SettingsSettings</a>
+      <a class="sideNavLink" href="admin.sd?page=HomePage&amp;clicktab=Home">HomeHome</a>
+      <a class="sideNavLink" href="admin.sd?page=CalendarPage&amp;clicktab=Class+Calendar">Class CalendarClass Calendar</a>
+      <a class="sideNavLink" href="admin.sd?page=NewClass&amp;clicktab=Classes">ClassesClasses</a>
+      <a class="sideNavLink" href="admin.sd?page=NewFamily&amp;clicktab=Families">FamiliesFamilies</a>
+      <a class="sideNavLink" href="admin.sd?page=NewStudent&amp;clicktab=Students">StudentsStudents</a>
+      <a class="sideNavLink" href="admin.sd?page=NewInstructor&amp;clicktab=Instructors">InstructorsInstructors</a>
+      <a class="sideNavLink" href="admin.sd?page=ChargesHome&amp;clicktab=Charges">Charges &amp; PaymentsCharges &amp; Payments</a>
+      <a class="sideNavLink" href="admin.sd?page=EmailTextHome&amp;clicktab=Communications">CommunicationsCommunications</a>
+      <a class="sideNavLink" href="admin.sd?page=AdvSearch&amp;clicktab=Advanced+Search">Advanced SearchAdvanced Search</a>
+      <a class="sideNavLink" href="admin.sd?page=ReportsHome&amp;clicktab=Reports">ReportsReports</a>
+      <a class="sideNavLink" href="admin.sd?page=AdminHome&amp;clicktab=Settings">SettingsSettings</a>
       <div class="copyright">©</div>
     </div>
     <div id="mainContent" class="mainContent wideContent">
@@ -39,30 +46,31 @@
           <div class="showAll">Show All</div>
         </div>
         <div class="Content">
-          <div class="Breadcrumb"><a href="#">Families</a><i class="fa-solid fa-angle-right"></i></div>
+          <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a><i class="fa-solid fa-angle-right"></i><a href="admin.sd?page=NewFamily&amp;clicktab=1">Families</a><i class="fa-solid fa-angle-right"></i></div>
           <div class="formTitle">New Family</div>
-          <div class="ButtonBar"><a id="save" href="#">Save</a></div>
+          <div class="ButtonBar"><a onclick="StudioDir.onSubmit('AddFamily');" id="save">Save</a></div>
           <div class="contentInfo">
             <table class="Form"><tbody>
-              <tr><td>Guardian</td><td><input id="guardian" name="guardian" type="text"></td></tr>
-              <tr><td>Last Name</td><td><input id="last_name" name="last_name" type="text"></td></tr>
-              <tr><td>Address</td><td><input id="address1" name="address1" type="text"></td></tr>
-              <tr><td>Address 2</td><td><input id="address2" name="address2" type="text"></td></tr>
-              <tr><td>City</td><td><input id="city" name="city" type="text"></td></tr>
-              <tr><td>State</td><td><select id="state" name="state"><option>CA</option><option>NY</option></select></td></tr>
-              <tr><td>Zip</td><td><input id="zip" name="zip" type="text"></td></tr>
-              <tr><td>Phone</td><td><select name="phone1_label"><option>Home</option></select><input id="phone1" class="masked" name="phone1" type="text"></td></tr>
-              <tr><td>Phone 2</td><td><select name="phone2_label"><option>Work</option></select><input id="phone2" class="masked" name="phone2" type="text"></td></tr>
-              <tr><td>Phone 3</td><td><select name="phone3_label"><option>Cell</option></select><input id="phone3" class="masked" name="phone3" type="text"></td></tr>
-              <tr><td>Email</td><td><input id="email" name="email" type="text"></td></tr>
-              <tr><td>Extra Emails</td><td><input id="extra_emails" name="extra_emails" type="text"></td></tr>
-              <tr><td>Opt Out</td><td><select id="opt_out" name="opt_out"><option>No</option><option>Yes</option></select></td></tr>
-              <tr><td>Emergency Contact</td><td><input id="emergency_contact" name="emergency_contact" type="text"></td></tr>
-              <tr><td>Emergency Phone</td><td><input id="emergency_contact_phone" class="masked" name="emergency_contact_phone" type="text"></td></tr>
-              <tr><td>How Heard</td><td><select id="howheard" name="howheard"><option>Friend</option></select></td></tr>
-              <tr><td>Details</td><td><input id="howheard_details" name="howheard_details" type="text"></td></tr>
-              <tr><td>Enrollment Blocked</td><td><select id="enrollment_blocked" name="enrollment_blocked"><option>No</option><option>Yes</option></select></td></tr>
-            </tbody></table>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap">Guardian Name(s)</td><td><input type="text" name="guardian" id="guardian"></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap">Last Name</td><td><input type="text" name="last_name" id="last_name"></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap">Address 1</td><td><input type="text" name="address1" id="address1"></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap">Address 2</td><td><input type="text" name="address2" id="address2"></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap">City</td><td><input type="text" name="city" id="city"></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap">State</td><td><select name="state" id="state"><option value="AB">AB</option><option value="AK">AK</option><option value="CA" selected="">CA</option><option value="NY">NY</option><option value="ON">ON</option><option value="TX">TX</option><option value="WA">WA</option></select></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap">ZIP</td><td><input type="text" name="zip" id="zip"></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap"><select name="phone1_label"><option value="0">Select Phone Type</option><option value="4">Home Phone</option><option value="6">Mom Cell</option><option value="7">Phone 1</option><option value="8">Dad Cell</option><option value="9">Phone 2</option><option value="2">Student Cell</option><option value="1">Nanny/Babysitter</option><option value="3">Phone 3</option><option value="5">Work Phone</option></select></td><td>    <span class="shell"><span aria-hidden="true" id="phone1Mask"><i></i>(XXX) XXX-XXXX</span><input type="phone_number" class="masked" name="phone1" id="phone1" maxlength="14" data-placeholder="(XXX) XXX-XXXX"></span></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap"><select name="phone2_label"><option value="0">Select Phone Type</option><option value="4">Home Phone</option><option value="6">Mom Cell</option><option value="7">Phone 1</option><option value="8">Dad Cell</option><option value="9">Phone 2</option><option value="2">Student Cell</option><option value="1">Nanny/Babysitter</option><option value="3">Phone 3</option><option value="5">Work Phone</option></select></td><td>    <span class="shell"><span aria-hidden="true" id="phone2Mask"><i></i>(XXX) XXX-XXXX</span><input type="phone_number" class="masked" name="phone2" id="phone2" maxlength="14" data-placeholder="(XXX) XXX-XXXX"></span></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap"><select name="phone3_label"><option value="0">Select Phone Type</option><option value="4">Home Phone</option><option value="6">Mom Cell</option><option value="7">Phone 1</option><option value="8">Dad Cell</option><option value="9">Phone 2</option><option value="2">Student Cell</option><option value="1">Nanny/Babysitter</option><option value="3">Phone 3</option><option value="5">Work Phone</option></select></td><td>    <span class="shell"><span aria-hidden="true" id="phone3Mask"><i></i>(XXX) XXX-XXXX</span><input type="phone_number" class="masked" name="phone3" id="phone3" maxlength="14" data-placeholder="(XXX) XXX-XXXX"></span></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap">Email / Username</td><td><input type="text" name="email" id="email"></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap">More Emails (comma separated list)</td><td><input type="text" name="extra_emails" id="extra_emails"></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap">Opt-out of emails</td><td><select name="opt_out" id="opt_out"><option value="0">Send emails to family</option><option value="1">Do not send emails to family</option></select></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap">Emergency Contact (other than parents)</td><td><input type="text" name="emergency_contact" id="emergency_contact"></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap">Emergency Contact Phone</td><td>    <span class="shell"><span aria-hidden="true" id="emergency_contact_phoneMask"><i></i>(XXX) XXX-XXXX</span><input type="phone_number" class="masked" name="emergency_contact_phone" id="emergency_contact_phone" maxlength="14" data-placeholder="(XXX) XXX-XXXX"></span></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap">How did you hear about us?</td><td><select name="howheard" id="howheard"><option value="0"></option><option value="1275125031495">Drive By</option><option value="1596760047289">Facebook</option><option value="2">Friend</option><option value="3">Newspaper</option><option value="1596760047367">Promo Mailer</option><option value="1275125031453">Website</option></select></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap">How did you hear details</td><td><input type="text" name="howheard_details" id="howheard_details"></td></tr>
+              <tr><td style="padding:4px 16px 4px 0px;white-space:nowrap">Enrollment Blocked</td><td><select name="enrollment_blocked" id="enrollment_blocked"><option value="0">No</option><option value="1">Yes</option></select></td></tr>
+              <tr style="visibility:hidden"><td><input type="hidden" name="fident" value="1000000000001"></td><td></td></tr>
+            </tbody></table><!--end-form-table-->
           </div>
         </div>
       </div>

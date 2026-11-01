@@ -41,7 +41,7 @@ const URLS = {
   'edit-family.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=EditFamily&fident=1503525685676',
   'edit-student.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=EditStudent&sident=1629799984805',
   'editor-class.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=EditClass&cident=1782910697458',
-  'editor-family.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=EditFamily&fident=1503525685676',
+  'editor-family.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=NewFamily',
   'editor-student.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=EditStudent&sident=1629799984805',
   'index-charges.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=ChargesHome',
   'report-results.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=ClassRosterForm',
