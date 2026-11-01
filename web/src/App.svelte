@@ -2,7 +2,9 @@
   import List from './components/List.svelte';
   import State from './components/State.svelte';
   import { queryFromUrl } from './lib/search.js';
-  import { VIEWS, SPLIT, viewOf, propsFor, titleOf, footerOf } from './views/registry.js';
+  import { VIEWS, viewOf, propsFor, titleOf, footerOf } from './views/registry.js';
+  import { layoutFor } from './views/layout.js';
+  import { THEME_LABEL, readTheme, writeTheme, nextTheme, applyTheme } from './lib/theme.js';
 
   export let model = { nav: [], week: null, list: null, form: null, view: null, title: '', url: '' };
   export let state = 'ready';
@@ -37,14 +39,25 @@
     }
   }
 
+  // The colour scheme is one attribute on the document the stylesheet reads, so
+  // changing it costs no re-render of a view. Dark is the default and `auto`
+  // resolves to what the machine prefers.
+  let theme = readTheme();
+  function cycleTheme() {
+    theme = nextTheme(theme);
+    writeTheme(theme);
+  }
+  $: applyTheme(theme);
+
   // The whole view layer is these three lines: which kind, which component, which
-  // props. The title, the footer and the split layout are derived from the model.
+  // props. The title, the footer and the layout are derived from the model.
   $: view = viewOf(model);
   $: entry = view ? VIEWS[view] || null : null;
   $: props = entry ? propsFor(view, model, {
     onRun, onAct, onPress, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll
   }) : {};
-  $: split = !!(entry && SPLIT.has(view) && model.list);
+  $: layout = layoutFor(view, !!model.list);
+  $: split = layout.split !== 'none' && !!model.list;
   $: title = titleOf(model);
   $: foot = footerOf(model);
 
@@ -93,14 +106,21 @@
         />
       </form>
       {#if searchNote}<span class="sd-searchnote">{searchNote}</span>{/if}
+      <button
+        class="sd-btn"
+        type="button"
+        title="Colour scheme: {THEME_LABEL[theme]}"
+        aria-label="Colour scheme: {THEME_LABEL[theme]}"
+        on:click={cycleTheme}
+      >{THEME_LABEL[theme]}</button>
       <button class="sd-btn" type="button" on:click={openOriginal}>Original</button>
     </div>
   </header>
 
-  <div class="sd-body">
+  <div class="sd-body" data-sd-width={layout.width} data-sd-density={layout.density}>
     {#if state === 'ready' && entry}
       {#if split}
-        <div class="sd-split">
+        <div class="sd-split" data-sd-split={layout.split}>
           <div class="sd-split-side"><List list={model.list} current={model.url} onLoadAll={canLoadAll ? loadAll : null} /></div>
           <div class="sd-split-main"><svelte:component this={entry} {...props} /></div>
         </div>

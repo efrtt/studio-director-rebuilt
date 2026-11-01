@@ -350,6 +350,33 @@ html.sd-app form#idForm { visibility: hidden !important; }
 .sd-split-main { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
 .sd-split-side > *, .sd-split-main > * { flex: 1 1 auto; min-height: 0; }
 
+/* A stacked split puts the record list above the pane instead of beside it. The
+   choice is per view, in views/layout.js. */
+.sd-split[data-sd-split="stack"] {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 30%) minmax(0, 1fr);
+}
+.sd-split[data-sd-split="stack"] .sd-split-side {
+  border-right: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Per-view knobs from views/layout.js. All of them default to today's look, so
+   nothing here applies until a row in that table says so. */
+.sd-body[data-sd-width="wide"] .sd-tiles,
+.sd-body[data-sd-width="wide"] .sd-filters,
+.sd-body[data-sd-width="wide"] .sd-fields,
+.sd-body[data-sd-width="wide"] .sd-settinglist { max-width: none; }
+
+.sd-body[data-sd-density="compact"] .sd-table th,
+.sd-body[data-sd-density="compact"] .sd-table td { padding-top: 3px; padding-bottom: 3px; }
+.sd-body[data-sd-density="compact"] .sd-fields th,
+.sd-body[data-sd-density="compact"] .sd-fields td { padding-top: 2px; padding-bottom: 2px; }
+.sd-body[data-sd-density="compact"] .sd-setting { padding-top: 6px; padding-bottom: 6px; }
+.sd-body[data-sd-density="compact"] .sd-records a { padding-top: 5px; padding-bottom: 5px; }
+.sd-body[data-sd-density="compact"] .sd-tile { min-height: 30px; padding-top: 6px; padding-bottom: 6px; }
+.sd-body[data-sd-density="compact"] .sd-dayblock { margin-bottom: 8px; }
+
 /* ---- editor ---- */
 .sd-editor { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
 .sd-editorbar {
@@ -747,6 +774,59 @@ html.sd-app form#idForm { visibility: hidden !important; }
   .sd-split { grid-template-columns: 1fr; }
   .sd-split-side { display: none; }
 }
+
+/* ---- light theme ----
+ *
+ * The palette above is dark. A theme is a set of variable values plus the few
+ * rules that carry a literal colour instead of a variable; theme.js resolves
+ * auto before the attribute is written, so nothing here queries the OS.
+ */
+html[data-sd-theme="light"] #sd-root {
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --panel-2: #f1f3f6;
+  --line: #d7dce4;
+  --text: #1b2330;
+  --dim: #5d6b7f;
+  --accent: #2f5fd0;
+  --ok: #1f8a5b;
+  --warn: #8a5a00;
+  --danger: #c0392b;
+  color-scheme: light;
+}
+html[data-sd-theme="light"] #sd-root .sd-headrow { background: rgba(241, 243, 246, .9); }
+html[data-sd-theme="light"] #sd-root .sd-studiohead,
+html[data-sd-theme="light"] #sd-root .sd-studiocol { border-left-color: rgba(215, 220, 228, .9); }
+html[data-sd-theme="light"] #sd-root .sd-studiocols {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(93, 107, 127, .22) 0 1px,
+    transparent 1px var(--hour)
+  );
+}
+html[data-sd-theme="light"] #sd-root .sd-block {
+  border-color: rgba(0, 0, 0, .12);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
+}
+html[data-sd-theme="light"] #sd-root .sd-block--low {
+  box-shadow: inset 0 0 0 2px rgba(138, 90, 0, .75), 0 1px 2px rgba(0, 0, 0, .08);
+}
+html[data-sd-theme="light"] #sd-root .sd-block--full {
+  box-shadow: inset 0 0 0 2px rgba(192, 57, 43, .7), 0 1px 2px rgba(0, 0, 0, .08);
+}
+html[data-sd-theme="light"] #sd-root .sd-tile:hover { background: #e9eef7; }
+html[data-sd-theme="light"] #sd-root .sd-menu { box-shadow: 0 12px 30px rgba(20, 30, 50, .18); }
+html[data-sd-theme="light"] #sd-root .sd-records a.sd-record--current { background: rgba(47, 95, 208, .12); }
+html[data-sd-theme="light"] #sd-root .sd-records a:hover,
+html[data-sd-theme="light"] #sd-root .sd-menuitem:hover { background: rgba(47, 95, 208, .09); }
+html[data-sd-theme="light"] #sd-root .sd-fields tr + tr > * { box-shadow: inset 0 1px 0 rgba(215, 220, 228, .9); }
+html[data-sd-theme="light"] #sd-root .sd-table td { border-bottom-color: rgba(215, 220, 228, .9) !important; }
+html[data-sd-theme="light"] #sd-root .sd-setting { border-bottom-color: rgba(215, 220, 228, .9); }
+html[data-sd-theme="light"] #sd-root .sd-confirm-mark { background: rgba(31, 138, 91, .14); }
+html[data-sd-theme="light"] #sd-root .sd-confirm-card--bad .sd-confirm-mark { background: rgba(192, 57, 43, .12); }
+html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90, 0, .4); }
+
+#sd-root { color-scheme: dark; }
 
 @media (max-width: 820px) {
   #sd-root { grid-template-columns: 1fr; }
