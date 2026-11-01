@@ -74,7 +74,7 @@ export function propsFor(view, model, handlers) {
     case 'note':
       return { note: model.note, onPress: h.onPress };
     case 'list':
-      return { list: model.list, onLoadAll: h.canLoadAll ? h.onLoadAll : null, auto: true };
+      return { list: model.list, onLoadAll: h.canLoadAll ? h.onLoadAll : null, onRefresh: h.onRefresh || null, auto: true };
     case 'form':
       return {
         form: model.form,

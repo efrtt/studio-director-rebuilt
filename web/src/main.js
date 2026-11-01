@@ -62,6 +62,7 @@ export function mount(opts = {}) {
       // Toggle screens: our controls, the app's own Save.
       onSaveSettings: opts.onSaveSettings || null,
       onSearch: opts.onSearch || null,
+      onRefresh: opts.onRefresh || null,
       // Widening the record list uses the app's own control on the live page,
       // and only when that page actually has one.
       onLoadAll: opts.onLoadAll || null,
@@ -211,6 +212,7 @@ function mountView(model, onOriginal, source = 'fetched') {
       : null,
     onLoadAll: loadAllRecords,
     onSearch: searchEverything,
+    onRefresh: refreshList,
     canLoadAll: !!showAllTrigger(document)
   });
 }
@@ -222,6 +224,13 @@ function mountView(model, onOriginal, source = 'fetched') {
 // back through the normal mount path (a list, with the same panel shape).
 export function searchEverything(query) {
   return runSearch(document, query);
+}
+
+// The same panel, read again where it stands. The app fills its record panel by
+// script, so the first reading is one window of it; this is how the list follows
+// the fill to the end instead of sitting on the first 500 rows.
+export function refreshList(doc = document) {
+  return readList(doc, { allowEmpty: true });
 }
 
 export async function loadAllRecords(doc = document) {
@@ -283,6 +292,7 @@ function mountEditor(model, onOriginal) {
     onAction: (item) => clickActionInApp(document, item),
     onLoadAll: loadAllRecords,
     onSearch: searchEverything,
+    onRefresh: refreshList,
     canLoadAll: !!showAllTrigger(document),
     onOriginal
   });

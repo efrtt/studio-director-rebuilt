@@ -11,6 +11,12 @@
 //
 // NewFamily and NewStudent use the same shell, so this adapter is not specific
 // to classes: it reads whatever the panel calls itself and shows that verbatim.
+//
+// A page can carry more than one panel. The search results page does: the panel
+// it is showing is the result set, while a record panel left over from the page
+// searched from is still in the document. Reading the first panel in document
+// order therefore showed the family list and *then* the results, so the panel is
+// chosen by what it says about itself rather than by where it sits.
 
 import { pageName, qs, qsa, textOf } from './shell.js';
 
@@ -31,25 +37,80 @@ const SINGULAR = {
   instructor: 'Instructor', instructors: 'Instructor'
 };
 
-// The panel is a window onto the record set, not the whole set: the app sends
-// 500 rows. Two places say how many exist, and the live page uses both — the
-// panel's own heading reads "4291 Items", and some versions print "Filter 4291
-// items" in the filter box. Nothing here guesses a total it was not given.
+// The panel is a window onto the record set, not the whole set: the app sends it
+// in windows — 500 rows of "2114 Items" on the live search page — and finishes
+// the rest itself a few seconds later. The heading is where the total is stated;
+// "Filter 2114 items" in the filter box is the other place. Nothing here guesses
+// a total it was not given.
 const COUNT = /^\s*(\d[\d,]*)\s+items?\s*$/i;
 
-function totalOf(doc) {
-  const heading = textOf(qs(doc, '.searchResultBar .searchResultLabel'));
+function panelOf(list) {
+  try {
+    return (list.closest && (list.closest('.searchResultPanel') || list.closest('#idSearchSpan'))) || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function headingOf(list, doc) {
+  const panel = panelOf(list);
+  const heading = (panel && qs(panel, '.searchResultLabel')) || qs(doc, '.searchResultBar .searchResultLabel') || qs(doc, '.searchResultLabel');
+  return heading;
+}
+
+function typesIn(list) {
+  const types = new Set();
+  for (const node of qsa(list, '.searchResultItem')) {
+    const anchor = node.tagName === 'A' ? node : qs(node, 'a[href]');
+    const href = anchor ? anchor.getAttribute('href') : '';
+    const type = TYPE_BY_PAGE[pageName(href || '').toLowerCase()];
+    if (type) types.add(type);
+  }
+  return types;
+}
+
+// How much a panel looks like the screen the page is about. A panel that names
+// itself "Search Results", or that states a count, is the result set; a panel
+// named after one record type is the one carried over from the page searched
+// from. Ties go to the later panel, because that is the one the app just drew.
+function scoreOf(list, doc) {
+  const heading = textOf(headingOf(list, doc));
+  let score = 0;
+  if (/search/i.test(heading)) score += 3;
+  if (COUNT.test(heading)) score += 2;
+  if (typesIn(list).size > 1) score += 1;
+  return score;
+}
+
+function pickList(doc) {
+  const lists = qsa(doc, '.searchResultList');
+  if (!lists.length) return null;
+  let best = lists[0];
+  let bestScore = scoreOf(best, doc);
+  for (const list of lists.slice(1)) {
+    const score = scoreOf(list, doc);
+    if (score >= bestScore) {
+      best = list;
+      bestScore = score;
+    }
+  }
+  return best;
+}
+
+function totalOf(doc, list) {
+  const heading = textOf(headingOf(list, doc));
   const fromHeading = heading.match(COUNT);
   if (fromHeading) return Number(fromHeading[1].replace(/,/g, ''));
 
-  const filter = qs(doc, '#filter');
+  const panel = panelOf(list);
+  const filter = (panel && qs(panel, '#filter')) || qs(doc, '#filter');
   const m = String((filter && filter.getAttribute('placeholder')) || '')
     .match(/(\d[\d,]*)\s+items?/i);
   return m ? Number(m[1].replace(/,/g, '')) : null;
 }
 
 export function readList(doc, opts = {}) {
-  const list = qs(doc, '#idSearchSpan .searchResultList') || qs(doc, '.searchResultList');
+  const list = pickList(doc);
   if (!list) return null;
 
   const seen = new Set();
@@ -81,10 +142,8 @@ export function readList(doc, opts = {}) {
   // empty list is a result ("no matches"), not a missing page.
   if (!items.length && !opts.allowEmpty) return null;
 
-  const heading = qs(doc, '.searchResultBar .searchResultLabel') || qs(doc, '.searchResultLabel');
-
-  const total = totalOf(doc);
-  const headingText = textOf(heading);
+  const total = totalOf(doc, list);
+  const headingText = textOf(headingOf(list, doc));
 
   const types = [...new Set(items.map((item) => item.type).filter(Boolean))];
 
@@ -95,7 +154,7 @@ export function readList(doc, opts = {}) {
     types,
     mixed: types.length > 1,
     // Verbatim: "Classes", "Families", "Students" - whatever the panel says.
-    // A count is not a name, so when the heading is "4291 Items" the app's own
+    // A count is not a name, so when the heading is "2114 Items" the app's own
     // page title stands in.
     label: headingText && !COUNT.test(headingText)
       ? headingText
