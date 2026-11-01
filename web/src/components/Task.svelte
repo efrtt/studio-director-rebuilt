@@ -3,7 +3,6 @@
   import { cellKind } from '../lib/cellclass.js';
 
   export let task;
-  export let registerPrimary = null;
   export let onAct = null;
 
   // Same seeding as the record editor: what the server sent, so an untouched
@@ -47,19 +46,6 @@
     status = `Asked the app to run “${action.label}”${result.applied && result.applied.length ? ` after ${result.applied.length} change${result.applied.length === 1 ? '' : 's'}` : ''}…`;
   }
 
-  // The header owns the page's main action; this view supplies it with its own
-  // state, which the shell cannot see.
-  $: if (registerPrimary) {
-    registerPrimary(task.primary
-      ? {
-        label: busy ? task.primary.label + '…' : task.primary.label,
-        disabled: busy,
-        title: task.primary.onclick || task.primary.label,
-        run: () => act(task.primary)
-      }
-      : null);
-  }
-
   function reset() {
     values = { ...initial };
     status = '';
@@ -81,6 +67,15 @@
       {task.fields.length} field{task.fields.length === 1 ? '' : 's'}{dirty ? ` · ${changes.length} edited` : ''}
     </span>
     <div class="sd-editor-actions">
+      {#if task.primary}
+        <button
+          class="sd-btn sd-primary"
+          type="button"
+          disabled={busy}
+          title={task.primary.onclick || task.primary.label}
+          on:click={() => act(task.primary)}
+        >{pressed === task.primary.label && busy ? `${task.primary.label}…` : task.primary.label}</button>
+      {/if}
       <button class="sd-btn" type="button" disabled={!dirty || busy} on:click={reset}>Reset</button>
       {#each task.actions.filter((a) => a !== task.primary) as action}
         <button

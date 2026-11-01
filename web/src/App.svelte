@@ -98,23 +98,10 @@ import Menu from './components/Menu.svelte';
   $: view = viewOf(model);
   $: entry = view ? VIEWS[view] || null : null;
   $: props = entry ? propsFor(view, model, {
-    onRun, onAct, onPress, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, nav, back, registerPrimary: providePrimary
+    onRun, onAct, onPress, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, nav, back
   }) : {};
   $: layout = layoutFor(view, !!model.list);
   $: split = layout.split !== 'none' && !!model.list;
-  // The page's main action sits in the header, so it is in the same place on
-  // every screen. Views own their own state, so they hand the shell a button
-  // description rather than the shell reaching into them.
-  let primary = null;
-  let lastView = null;
-  function providePrimary(next) {
-    primary = next || null;
-  }
-  $: if (view !== lastView) {
-    lastView = view;
-    primary = null;
-  }
-
   $: title = titleOf(model);
   $: crumbs = crumbsOf(model);
   $: foot = footerOf(model);
@@ -206,15 +193,6 @@ import Menu from './components/Menu.svelte';
       {/if}
     </div>
     <div class="sd-topright">
-      {#if primary}
-        <button
-          class="sd-btn sd-primary sd-headeraction"
-          type="button"
-          disabled={primary.disabled}
-          title={primary.title || primary.label}
-          on:click={primary.run}
-        >{primary.label}</button>
-      {/if}
       <form class="sd-search" on:submit|preventDefault={submitSearch} role="search">
         <input
           class="sd-searchinput"

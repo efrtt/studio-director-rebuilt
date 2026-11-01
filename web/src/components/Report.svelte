@@ -1,7 +1,6 @@
 <script>
   import { cellKind } from '../lib/cellclass.js';
   export let report;
-  export let registerPrimary = null;
   export let onRun = null;
 
   const initial = {};
@@ -39,17 +38,6 @@
     status = 'Asked the app to run it...';
   }
 
-  // The header owns the page's main action; this view supplies it, with its own
-  // state, so the shell never reaches into a component.
-  $: if (registerPrimary) {
-    registerPrimary({
-      label: busy ? 'Running...' : (report.trigger ? report.trigger.label : 'Run Report'),
-      disabled: busy,
-      title: 'Run this report',
-      run
-    });
-  }
-
   function reset() {
     values = { ...initial };
     status = '';
@@ -71,6 +59,13 @@
       {#if report.fields.length}{report.rows.length} filter{report.rows.length === 1 ? '' : 's'}{dirty ? ' · edited' : ''}{:else}Result only{/if}
     </span>
     <div class="sd-editor-actions">
+      <button
+        class="sd-btn sd-primary"
+        type="button"
+        disabled={busy}
+        title="Run this report"
+        on:click={run}
+      >{busy ? 'Running…' : (report.trigger ? report.trigger.label : 'Run Report')}</button>
       {#if report.fields.length}
         <button class="sd-btn" type="button" disabled={!dirty || busy} on:click={reset}>Reset</button>
       {/if}
