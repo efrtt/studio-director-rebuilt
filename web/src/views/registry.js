@@ -7,6 +7,7 @@
 // model, so a view added to the map is a view that can be titled.
 
 import Week from '../components/Week.svelte';
+import Month from '../components/Month.svelte';
 import List from '../components/List.svelte';
 import Editor from '../components/Editor.svelte';
 import Report from '../components/Report.svelte';
@@ -19,6 +20,7 @@ import Confirmed from '../components/Confirmed.svelte';
 
 export const VIEWS = {
   week: Week,
+  month: Month,
   confirm: Confirmed,
   index: Index,
   report: Report,
@@ -40,6 +42,7 @@ export function viewOf(model) {
   if (m.view) return m.view;
   if (m.confirm) return 'confirm';
   if (m.week) return 'week';
+  if (m.month) return 'month';
   if (m.list) return 'list';
   if (m.form) return 'form';
   if (m.report) return 'report';
@@ -57,6 +60,8 @@ export function propsFor(view, model, handlers) {
   switch (view) {
     case 'week':
       return { week: model.week, period: h.period || null, onPeriod: h.onPeriod || null };
+    case 'month':
+      return { month: model.month, period: h.period || null, onPeriod: h.onPeriod || null };
     case 'confirm':
       // A confirmation the app has not performed yet carries a button; an
       // outcome does not.
@@ -118,6 +123,7 @@ export function titleOf(model) {
   return (form && form.title) || (report && report.title) || (task && task.title)
     || (sheet && sheet.title) || (index && index.title) || (settings && settings.title)
     || (note && note.title)
+    || (m.month && m.month.title)
     || (m.week && m.week.title) || (m.list && m.list.label) || m.title || 'Studio Director';
 }
 
@@ -135,6 +141,7 @@ export function footerOf(model) {
   const settings = m.settings;
   const note = m.note;
   const confirm = m.confirm;
+  const month = m.month;
 
   // A settings card can be a small flow step with its own buttons (Enroll,
   // Cancel): naming a Save it does not show would be a lie in the footer.
@@ -147,6 +154,9 @@ export function footerOf(model) {
 
   if (view === 'confirm' && confirm) {
     left = `Saved \u00b7 ${confirm.breadcrumb.length ? confirm.breadcrumb.join(' / ') : 'the app confirmed it'}`;
+  } else if (view === 'month' && month) {
+    left = `${month.label || month.title} \u00b7 ${plural(month.events, 'event', 'events')}`;
+    if (month.holidays) left += ` \u00b7 ${plural(month.holidays, 'holiday', 'holidays')}`;
   } else if (view === 'week' && week) {
     left = `${week.totals.classes} classes \u00b7 ${week.totals.spots} spots open`;
     if (week.totals.waitlisted) left += ` \u00b7 ${week.totals.waitlisted} waitlisted`;
@@ -182,7 +192,8 @@ export function footerOf(model) {
       : view === 'task' ? 'The app runs the action'
         : view === 'sheet' ? 'Read-only view of the app\u2019s own tables'
           : view === 'settings' ? (settingsButtons.length ? 'Each button presses the app\u2019s own control' : 'The app saves the change')
-            : 'Esc opens the original page';
+            : view === 'month' ? 'Read from the app\u2019s own month grid'
+              : 'Esc opens the original page';
 
   return { left, right };
 }

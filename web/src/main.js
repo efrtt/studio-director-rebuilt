@@ -1,7 +1,7 @@
 import App from './App.svelte';
 import { injectStyles, removeStyles } from './lib/styles.js';
 import {
-  fetchPage, hasShell, liveIsBare, parseHtml, SessionExpired
+  fetchPage, hasShell, liveIsBare, parseHtml, SessionExpired, railLinks
 } from './lib/shell.js';
 import { routeOf } from './lib/route.js';
 import { readList } from './lib/list.js';
@@ -10,6 +10,7 @@ import { runSearch } from './lib/search.js';
 import { readPeriodControl, choosePeriodInApp } from './lib/period.js';
 import { readNavIcons } from './lib/navicons.js';
 import { backTarget } from './lib/backlink.js';
+import { readMonth } from './lib/month.js';
 
 // Replaced at build time by vite.config.js.
 const VERSION = typeof __SD_VERSION__ !== 'undefined' ? __SD_VERSION__ : 'dev';
@@ -109,6 +110,12 @@ export async function autoMount(opts = {}) {
   // Before anything is put in front of the page: in probe mode, record what the
   // app actually drew. After mounting, the original content is covered.
   probeTick();
+
+  // The class calendar's month view. It shares `page=CalendarPage` with the week,
+  // and the app switches between the two without changing the page name, so the
+  // grid itself is what identifies it.
+  const month = readMonth(document);
+  if (month) return mountMonth(month, onOriginal);
 
   // One decision, five cases (lib/route.js). The order is the contract: search
   // results are read live because the app draws their rows, a record page is
@@ -237,6 +244,30 @@ function mountView(model, onOriginal, source = 'fetched') {
     period: readPeriodControl(document),
     onPeriod: (value) => choosePeriodInApp(document, value),
     canLoadAll: !!showAllTrigger(document)
+  });
+}
+
+// The month grid: the same rail and season picker as the week, drawn as a
+// calendar. Every link it shows — another month, another season, the week view,
+// a day — is the app's own, so none of them is built here.
+function mountMonth(month, onOriginal) {
+  recordView('month', 'live');
+  return mount({
+    model: {
+      nav: railLinks(document),
+      month,
+      view: 'month',
+      list: null,
+      title: month.title,
+      breadcrumb: month.breadcrumb,
+      url: location.href
+    },
+    state: 'ready',
+    onOriginal,
+    onPress: (action) => clickActionInApp(document, action),
+    onSearch: searchEverything,
+    period: readPeriodControl(document),
+    onPeriod: (value) => choosePeriodInApp(document, value)
   });
 }
 
