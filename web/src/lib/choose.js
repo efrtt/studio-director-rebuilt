@@ -95,6 +95,25 @@ export function looksLikeSearchResults(model) {
   return /search\s*results/i.test(named);
 }
 
+// Has the search route's page finished showing *its* results?
+//
+// The app writes the new title first and the rows a moment later, so a reading
+// taken in between is the previous page's panel wearing the results title. Two
+// things end the wait: a panel that has reached its own total (31 of 31), or a
+// panel whose total is no longer the one first seen (the app redrew it).
+export function searchSettled(model, first) {
+  if (!model || !model.list) return false;
+
+  const items = model.list.items.length;
+  const total = model.list.total;
+  if (total != null && items >= total) return true;
+
+  const before = first && first.list ? first.list.total : null;
+  if (before != null && total != null && total !== before) return true;
+
+  return false;
+}
+
 export function hasReadyView(model) {
   return !!model && READY.some((key) => !!model[key]);
 }

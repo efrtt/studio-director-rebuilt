@@ -22,7 +22,7 @@ import { clickActionInApp } from './lib/actions.js';
 import { changesFrom, saveInApp } from './lib/save.js';
 import { probeTick, recordView } from './lib/probe.js';
 import { contradictsNote } from './lib/note.js';
-import { wantsLiveLook, decideMount, decideShellLess, chooseSource, looksLikeSearchResults } from './lib/choose.js';
+import { wantsLiveLook, decideMount, decideShellLess, chooseSource, looksLikeSearchResults, searchSettled } from './lib/choose.js';
 import { readRecordPage } from './lib/record.js';
 import { readLiveView } from './lib/live.js';
 
@@ -275,10 +275,19 @@ async function mountSearchResults(onOriginal) {
   // Waiting for "a list" is not enough: the page arrives still carrying the
   // record panel of the page the search started from, and that panel reads as a
   // list. Wait for the app's own results title instead, then mount that.
-  const model = await readLiveView(document, location.href, {
-    maxWait: 8000,
-    ready: looksLikeSearchResults
-  }) || readPage(document, location.href, { allowEmpty: true });
+  // The title arrives before the rows: the app writes "Search Results for …",
+  // then replaces the record panel it was already showing. Reading on the title
+  // alone mounted the previous page's list under the new heading, so the wait is
+  // for the panel itself — its own total reached, or a different total than the
+  // one first seen.
+  const first = readPage(document, location.href, { allowEmpty: true });
+  let model = first;
+  const started = Date.now();
+  while (Date.now() - started < 8000) {
+    if (searchSettled(model, first)) break;
+    await new Promise((resolve) => setTimeout(resolve, 120));
+    model = readPage(document, location.href, { allowEmpty: true });
+  }
   return mountView(model, onOriginal, 'live');
 }
 

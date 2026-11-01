@@ -18,6 +18,15 @@ export function keepWidest(current, candidate) {
   if (!candidate || !Array.isArray(candidate.items)) return current;
   if (!current || !Array.isArray(current.items)) return candidate;
 
+  // A different record set is not a shrinking one. Measured on Firefox+the live
+  // app: the search route could read the request page's panel (Families, 4291)
+  // after the results page's title had arrived, and the follow loop then refused
+  // the real results (31) because they were "shorter" — so the wrong list stayed
+  // on screen forever. The panel's own total says which record set it is showing.
+  if (current.total != null && candidate.total != null && candidate.total !== current.total) {
+    return candidate;
+  }
+
   const wider = candidate.items.length > current.items.length;
   const knowsTotal = current.total == null && candidate.total != null;
 
