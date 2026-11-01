@@ -11,11 +11,11 @@
 
 const KEY = 'sd.theme';
 
-// Dark first: it is the look the build has always had, so a fresh install is
-// unchanged until somebody cycles the button.
-export const THEMES = ['dark', 'light', 'auto'];
+// On the wii-skin branch the Wii theme comes first and is what a fresh install
+// gets; the other three are untouched and one press of the button away.
+export const THEMES = ['wii', 'dark', 'light', 'auto'];
 
-export const THEME_LABEL = { dark: 'Dark', light: 'Light', auto: 'Auto' };
+export const THEME_LABEL = { wii: 'Wii', dark: 'Dark', light: 'Light', auto: 'Auto' };
 
 function store() {
   try {
@@ -38,9 +38,9 @@ function prefersDark() {
 export function readTheme(s = store()) {
   try {
     const value = s && s.getItem(KEY);
-    return THEMES.includes(value) ? value : 'dark';
+    return THEMES.includes(value) ? value : 'wii';
   } catch (e) {
-    return 'dark';
+    return 'wii';
   }
 }
 
@@ -63,6 +63,9 @@ export function nextTheme(theme) {
 // `auto` is resolved here rather than in CSS, so there is one place that decides
 // what it means and a test can pin it.
 export function themeName(theme, osPrefersDark = prefersDark()) {
+  // `wii` is its own value, not a light theme: the stylesheet needs to tell the
+  // two apart, because the skin has rules the light theme must not inherit.
+  if (theme === 'wii') return 'wii';
   if (theme === 'light') return 'light';
   if (theme === 'dark') return 'dark';
   return osPrefersDark ? 'dark' : 'light';

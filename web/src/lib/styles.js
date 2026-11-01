@@ -6,6 +6,9 @@
 // single-artifact promise (no CSS sidecar to fetch, so it still inlines into the
 // userscript).
 import CSS from '../styles.css?inline';
+// The Wii skin is a theme, not a second stylesheet: it is appended so a mount
+// injects one <style> and the userscript stays one file with nothing to fetch.
+import WII from '../wii.css?inline';
 
 
 export function injectStyles() {
@@ -13,7 +16,7 @@ export function injectStyles() {
   if (document.getElementById('sd-styles')) return;
   const el = document.createElement('style');
   el.id = 'sd-styles';
-  el.textContent = CSS;
+  el.textContent = `${CSS}\n${WII}`;
   (document.head || document.documentElement).appendChild(el);
 }
 

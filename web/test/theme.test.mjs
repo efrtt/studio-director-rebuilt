@@ -19,14 +19,18 @@ const fakeStore = () => ({
   setItem(k, v) { this.map.set(k, String(v)); }
 });
 
-test('a fresh install keeps the dark look it has always had', () => {
-  assert.equal(readTheme(fakeStore()), 'dark');
+test('a fresh install gets the Wii skin on this branch', () => {
+  assert.equal(readTheme(fakeStore()), 'wii');
   // A stored value from some future or broken version is not trusted.
   const bad = fakeStore();
   bad.setItem('sd.theme', 'solarized');
-  assert.equal(readTheme(bad), 'dark');
+  assert.equal(readTheme(bad), 'wii');
   // No storage at all (private mode) is still a usable answer.
-  assert.equal(readTheme(null), 'dark');
+  assert.equal(readTheme(null), 'wii');
+  // A real choice from before the skin existed is still honoured.
+  const dark = fakeStore();
+  dark.setItem('sd.theme', 'dark');
+  assert.equal(readTheme(dark), 'dark');
 });
 
 test('the choice is remembered, and only a real choice is stored', () => {
@@ -37,16 +41,17 @@ test('the choice is remembered, and only a real choice is stored', () => {
   assert.equal(readTheme(store), 'light', 'and the old one survives');
 });
 
-test('one button cycles all three, and wraps', () => {
-  let theme = 'dark';
+test('one button cycles all four, and wraps', () => {
+  let theme = 'wii';
   const seen = [];
-  for (let i = 0; i < 3; i += 1) {
+  for (let i = 0; i < 4; i += 1) {
     theme = nextTheme(theme);
     seen.push(theme);
   }
-  assert.deepEqual(seen, ['light', 'auto', 'dark']);
-  assert.deepEqual(THEMES, ['dark', 'light', 'auto']);
+  assert.deepEqual(seen, ['dark', 'light', 'auto', 'wii']);
+  assert.deepEqual(THEMES, ['wii', 'dark', 'light', 'auto']);
   assert.equal(THEME_LABEL.auto, 'Auto');
+  assert.equal(THEME_LABEL.wii, 'Wii');
 });
 
 test('auto follows the machine, and the other two do not', () => {
@@ -55,6 +60,9 @@ test('auto follows the machine, and the other two do not', () => {
   // An explicit choice ignores the OS entirely.
   assert.equal(themeName('dark', false), 'dark');
   assert.equal(themeName('light', true), 'light');
+  // The skin is never resolved through the OS: it is the skin.
+  assert.equal(themeName('wii', true), 'wii');
+  assert.equal(themeName('wii', false), 'wii');
 });
 
 test('applying a theme writes the resolved name, not the choice', () => {

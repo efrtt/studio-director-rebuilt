@@ -1,0 +1,623 @@
+/* ---- the Wii skin ----
+ *
+ * A third theme, chosen like the other two (`Dark`, `Light`, `Auto`), and this
+ * branch's default. It is a skin layer, not a rewrite: every rule here is scoped
+ * to `html[data-sd-theme="wii"] #sd-root`, so the dark and light themes keep the
+ * look they had and this file can be deleted in one step.
+ *
+ * What is borrowed from the Wii, and what is honestly a reconstruction:
+ *
+ * - Rodin NTLG is the actual system face and is listed first, but it is not a
+ *   web font anyone can ship, so the stack falls through to the humanist sans
+ *   the era used (no webfont is downloaded - this stays one offline artefact).
+ * - The material language is Frutiger Aero and is real in the source material:
+ *   a gloss cap with a hard specular stop around the halfway line, white
+ *   keylines rather than grey borders, generous rounded panels, and cyan-blue
+ *   light rather than blue paint.
+ * - The numbers - the blues, the radii, the shadow blur - are a reconstruction.
+ *   Nintendo never published a style guide and the originals are 480p textures,
+ *   so these are plausible, internally consistent values rather than sampled
+ *   ones. Where a choice was between "authentic" and "readable at 14px on a
+ *   spreadsheet", readable won.
+ *
+ * The rules use `!important` where the base stylesheet does, because that is the
+ * only way to outrank `#sd-root ... !important`; everywhere else plain
+ * specificity does the work.
+ */
+
+html[data-sd-theme="wii"] #sd-root {
+  --bg: #e8f5fd;
+  --panel: #ffffff;
+  --panel-2: #f3fafe;
+  --line: #cfe6f6;
+  --text: #26333d;
+  --dim: #5d7180;
+  --accent: #1c9bd6;
+  --ok: #2f8f63;
+  --warn: #a86400;
+  --danger: #c0392b;
+
+  /* The Wii blues, in three weights: the light that comes off the sky, the
+     channel blue, and the deep blue used for ink and rules. */
+  --wii-light: #7fd8f7;
+  --wii-blue: #34beed;
+  --wii-deep: #117fb5;
+  --wii-ink: #1b5169;
+
+  --wii-keyline: #ffffff;
+  --wii-shadow: rgba(52, 118, 150, 0.28);
+
+  /* Rounder than the app's own scale: the Wii never uses a 6px corner. */
+  --radius: 14px;
+  --radius-sm: 10px;
+
+  color-scheme: light;
+}
+
+/* ---- the field ----
+ *
+ * The Menu is not a blue page: it is a near-white field that cools toward the
+ * floor, with one big elliptical bloom of light coming up from behind the
+ * channels. That bloom is the signature, so it is a background layer rather than
+ * a colour, and it sits below everything the shell draws. */
+html[data-sd-theme="wii"] #sd-root {
+  background:
+    radial-gradient(120% 62% at 50% 112%,
+      rgba(52, 190, 237, 0.42) 0%,
+      rgba(52, 190, 237, 0.16) 42%,
+      rgba(52, 190, 237, 0) 72%),
+    linear-gradient(180deg, #ffffff 0%, #f2fbff 58%, #dff1fb 100%);
+  color: var(--text);
+  font-family: "Rodin NTLG", "Rodin", "Hiragino Maru Gothic ProN", "Nunito Sans",
+    "Segoe UI", system-ui, sans-serif;
+  /* Wii UI is demi-bold all the way down; nothing on it is a light weight. */
+  font-weight: 500;
+}
+
+/* ---- the header ----
+ *
+ * Wii system screens (Settings, Shop, the channel prompts) carry a blue bar with
+ * the screen's name set straight onto it, so this is the one surface that is
+ * filled rather than white. White pills sit on it. */
+html[data-sd-theme="wii"] #sd-root .sd-top {
+  background: linear-gradient(180deg, #7fd8f7 0%, #34beed 52%, #22a5d8 100%);
+  border-bottom: 0;
+  box-shadow: 0 2px 10px rgba(18, 92, 128, 0.24);
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+html[data-sd-theme="wii"] #sd-root .sd-title {
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-shadow: 0 1px 2px rgba(11, 60, 84, 0.35);
+}
+html[data-sd-theme="wii"] #sd-root .sd-crumbs { color: rgba(255, 255, 255, 0.88); }
+html[data-sd-theme="wii"] #sd-root .sd-crumbsep { opacity: 0.6; }
+html[data-sd-theme="wii"] #sd-root .sd-top .sd-searchnote { color: #ffffff; }
+
+/* ---- the rail is a column of channels ----
+ *
+ * The most recognisable part, and it needs no markup: a nav link is already a
+ * block with a label and an icon. As a channel tile it is white, keylined,
+ * glossed, and it lights up (bloom + a little growth) under the pointer. */
+html[data-sd-theme="wii"] #sd-root .sd-rail {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(232, 245, 253, 0.92)) !important;
+  border-right: 1px solid rgba(207, 230, 246, 0.9);
+  padding: 10px 9px;
+  gap: 5px;
+}
+html[data-sd-theme="wii"] #sd-root .sd-brand {
+  color: var(--wii-deep);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 2px 8px 8px;
+}
+
+html[data-sd-theme="wii"] #sd-root .sd-navlink,
+html[data-sd-theme="wii"] #sd-root .sd-railtoggle {
+  border: 0 !important;
+  border-radius: 13px;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 51%, #f4fbff 52%, #eaf6fd 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 0 0 1px rgba(214, 235, 247, 0.95),
+    0 6px 12px -8px rgba(52, 118, 150, 0.5);
+  color: #33505f;
+  font-weight: 600;
+  transition:
+    transform 180ms cubic-bezier(0.2, 0.8, 0.3, 1),
+    box-shadow 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease;
+}
+html[data-sd-theme="wii"] #sd-root .sd-navlink:hover,
+html[data-sd-theme="wii"] #sd-root .sd-railtoggle:hover {
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 51%, #f7fdff 52%, #eef9ff 100%) !important;
+  color: var(--wii-deep);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 0 0 2px rgba(52, 190, 237, 0.55),
+    0 10px 18px -10px rgba(34, 130, 176, 0.55);
+  transform: translateY(-1px) scale(1.015);
+}
+html[data-sd-theme="wii"] #sd-root .sd-navlink--active {
+  background: linear-gradient(180deg, #9fe6fb 0%, #5acdf5 50%, #2aa9dd 51%, #1b8dc4 100%) !important;
+  color: #ffffff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 8px 16px -8px rgba(16, 105, 145, 0.65);
+  text-shadow: 0 1px 1px rgba(9, 60, 85, 0.35);
+}
+html[data-sd-theme="wii"] #sd-root .sd-navlink--active .sd-navtext { font-weight: 700; }
+html[data-sd-theme="wii"] #sd-root .sd-navicon { opacity: 1; }
+html[data-sd-theme="wii"] #sd-root .sd-navinitial { font-weight: 700; }
+
+/* The fold toggle is chrome, not a destination: no gloss, no growth. */
+html[data-sd-theme="wii"] #sd-root .sd-railtoggle {
+  color: var(--dim);
+  font-weight: 600;
+  box-shadow: inset 0 1px 0 #ffffff, 0 0 0 1px rgba(214, 235, 247, 0.8);
+}
+html[data-sd-theme="wii"] #sd-root .sd-railtoggle:hover { transform: none; }
+
+/* ---- controls: pills with a hard gloss stop ----
+ *
+ * Every button is a pill. Secondary actions are white with ink-blue text, the
+ * primary is the blue gradient with its specular highlight, and both carry the
+ * white keyline the Wii uses instead of a grey border. */
+html[data-sd-theme="wii"] #sd-root .sd-btn {
+  border: 1px solid #cbe6f5;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 50%, #f2fafe 51%, #e6f5fd 100%);
+  color: #2b4c5e;
+  font-weight: 600;
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 2px 6px rgba(52, 118, 150, 0.16);
+}
+html[data-sd-theme="wii"] #sd-root .sd-btn:hover {
+  border-color: #9ed9f2;
+  color: var(--wii-deep);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 0 0 2px rgba(52, 190, 237, 0.4),
+    0 4px 10px -2px rgba(52, 118, 150, 0.25);
+  transform: translateY(-1px);
+}
+html[data-sd-theme="wii"] #sd-root .sd-btn:active { transform: translateY(0) scale(0.99); }
+html[data-sd-theme="wii"] #sd-root .sd-btn:disabled,
+html[data-sd-theme="wii"] #sd-root .sd-btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+  opacity: 0.5;
+}
+html[data-sd-theme="wii"] #sd-root .sd-primary {
+  border-color: #1b8dc4;
+  background: linear-gradient(180deg, #8fe0fa 0%, #5acdf5 50%, #2aa9dd 51%, #1b8dc4 100%);
+  color: #ffffff;
+  text-shadow: 0 1px 1px rgba(9, 60, 85, 0.3);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 4px 10px -3px rgba(16, 105, 145, 0.6);
+}
+html[data-sd-theme="wii"] #sd-root .sd-primary:hover { color: #ffffff; }
+html[data-sd-theme="wii"] #sd-root .sd-btn--danger { color: #b3452f; }
+html[data-sd-theme="wii"] #sd-root .sd-btn--danger:hover { border-color: #e6b3a8; color: #a33a26; }
+
+/* Fields are white wells: a soft inner shadow, a hairline, and a bloom when
+   they take focus. */
+html[data-sd-theme="wii"] #sd-root .sd-searchinput,
+html[data-sd-theme="wii"] #sd-root .sd-filter,
+html[data-sd-theme="wii"] #sd-root .sd-input,
+html[data-sd-theme="wii"] #sd-root .sd-select,
+html[data-sd-theme="wii"] #sd-root .sd-periodselect {
+  border: 1px solid #cfe6f6;
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--text);
+  box-shadow: inset 0 1px 2px rgba(52, 118, 150, 0.1);
+}
+html[data-sd-theme="wii"] #sd-root .sd-searchinput,
+html[data-sd-theme="wii"] #sd-root .sd-filter { border-radius: 999px; padding-inline: 14px; }
+html[data-sd-theme="wii"] #sd-root .sd-searchinput:focus-visible,
+html[data-sd-theme="wii"] #sd-root .sd-filter:focus-visible,
+html[data-sd-theme="wii"] #sd-root .sd-input:focus-visible,
+html[data-sd-theme="wii"] #sd-root .sd-select:focus-visible,
+html[data-sd-theme="wii"] #sd-root .sd-periodselect:focus-visible,
+html[data-sd-theme="wii"] #sd-root .sd-btn:focus-visible {
+  outline: 0;
+  border-color: var(--wii-blue);
+  box-shadow:
+    0 0 0 3px rgba(52, 190, 237, 0.45),
+    inset 0 1px 2px rgba(52, 118, 150, 0.08);
+}
+html[data-sd-theme="wii"] #sd-root .sd-searchinput::placeholder,
+html[data-sd-theme="wii"] #sd-root .sd-filter::placeholder { color: #8aa4b3; }
+
+/* ---- tables ----
+ *
+ * A sheet is a white card with a rounded frame and a tinted header, not a set
+ * of rules on the page. The header stays put while the rows scroll, so its
+ * background has to be opaque - a gradient, not a translucent fill. */
+html[data-sd-theme="wii"] #sd-root .sd-tablewrap {
+  border: 1px solid #d8eefb;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 12px 26px -18px rgba(52, 118, 150, 0.7);
+}
+html[data-sd-theme="wii"] #sd-root .sd-table thead th {
+  background: linear-gradient(180deg, #f4fbff 0%, #ddf0fc 100%) !important;
+  color: var(--wii-deep) !important;
+  border-bottom: 1px solid #cbe6f5 !important;
+  font-weight: 700;
+}
+html[data-sd-theme="wii"] #sd-root .sd-table tbody td {
+  border-bottom: 1px solid #e6f3fb !important;
+  color: var(--text);
+}
+html[data-sd-theme="wii"] #sd-root .sd-table tbody tr:nth-child(even) td {
+  background: #f9fdff !important;
+}
+html[data-sd-theme="wii"] #sd-root .sd-table tbody tr:hover td {
+  background: #e9f7fe !important;
+}
+html[data-sd-theme="wii"] #sd-root .sd-table td a { color: var(--wii-deep); font-weight: 600; }
+html[data-sd-theme="wii"] #sd-root .sd-table td.sd-cell--action a,
+html[data-sd-theme="wii"] #sd-root .sd-table td a.sd-pill {
+  border-color: #cbe6f5;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 50%, #f2fafe 51%, #e8f6fe 100%);
+  color: #2b4c5e;
+  box-shadow: inset 0 1px 0 #ffffff;
+}
+html[data-sd-theme="wii"] #sd-root .sd-table td.sd-cell--action a:hover {
+  border-color: var(--wii-blue);
+  color: var(--wii-deep);
+  background: #e9f7fe;
+}
+
+/* ---- the calendars ----
+ *
+ * Day cards and the month grid are the same card: white, keylined, glossed at
+ * the top edge, cornered at 18px. */
+html[data-sd-theme="wii"] #sd-root .sd-dayblock,
+html[data-sd-theme="wii"] #sd-root .sd-monthgrid {
+  border: 1px solid #d8eefb;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 10px 24px -18px rgba(52, 118, 150, 0.75);
+}
+html[data-sd-theme="wii"] #sd-root .sd-dayname {
+  background: linear-gradient(180deg, #eef9ff 0%, #d9effb 100%);
+  border-bottom: 1px solid #d8eefb;
+  color: var(--wii-deep);
+  font-weight: 700;
+}
+html[data-sd-theme="wii"] #sd-root .sd-none { color: #6e8798; }
+html[data-sd-theme="wii"] #sd-root .sd-weekrow {
+  border: 1px solid #dcefff;
+  border-radius: 13px;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 52%, #f7fcff 53%, #eff9fe 100%);
+  box-shadow: inset 0 1px 0 #ffffff, 0 6px 12px -11px rgba(52, 118, 150, 0.8);
+}
+html[data-sd-theme="wii"] #sd-root .sd-weekrow:hover {
+  border-color: var(--wii-blue);
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 52%, #f2fbff 53%, #e6f6fe 100%);
+  box-shadow: 0 0 0 2px rgba(52, 190, 237, 0.4), 0 8px 16px -12px rgba(34, 130, 176, 0.8);
+  transform: translateY(-1px);
+}
+html[data-sd-theme="wii"] #sd-root .sd-weekrow-time { color: var(--wii-deep); font-weight: 700; }
+html[data-sd-theme="wii"] #sd-root .sd-weekrow-loc { border-color: #dcefff; color: #5d7180; }
+html[data-sd-theme="wii"] #sd-root .sd-weekrow-tag {
+  background: rgba(198, 40, 40, 0.12);
+  color: #9d2a1c;
+}
+html[data-sd-theme="wii"] #sd-root .sd-monthhead {
+  background: linear-gradient(180deg, #f4fbff 0%, #ddf0fc 100%);
+  border-bottom: 1px solid #d8eefb;
+}
+html[data-sd-theme="wii"] #sd-root .sd-monthweekday { color: var(--wii-deep); font-weight: 700; }
+html[data-sd-theme="wii"] #sd-root .sd-monthweek { border-bottom: 1px solid #e6f3fb; }
+html[data-sd-theme="wii"] #sd-root .sd-day { border-right: 1px solid #e6f3fb; }
+html[data-sd-theme="wii"] #sd-root .sd-day--blank { background: #f4fbff; }
+html[data-sd-theme="wii"] #sd-root .sd-day--weekend { background: rgba(52, 190, 237, 0.06); }
+html[data-sd-theme="wii"] #sd-root .sd-day--holiday { background: rgba(255, 186, 98, 0.14); }
+html[data-sd-theme="wii"] #sd-root .sd-day--today {
+  background: rgba(52, 190, 237, 0.16);
+  box-shadow: inset 0 0 0 2px var(--wii-blue);
+}
+html[data-sd-theme="wii"] #sd-root .sd-daynum { color: var(--text); font-weight: 700; }
+html[data-sd-theme="wii"] #sd-root a.sd-daynum:hover { color: var(--wii-deep); }
+html[data-sd-theme="wii"] #sd-root .sd-holiday { color: #a35d05; }
+html[data-sd-theme="wii"] #sd-root .sd-event {
+  border-left: 3px solid var(--wii-blue);
+  border-radius: 9px;
+  background: #eef9ff;
+  color: var(--ink, #26333d);
+}
+html[data-sd-theme="wii"] #sd-root .sd-event:hover { background: #ddf1fd; }
+html[data-sd-theme="wii"] #sd-root .sd-eventtime { color: #4d7e94; }
+
+/* The timeline: hour rules in pale blue, studio columns divided softly, and the
+   day's header on the same tinted strip as a table's. */
+html[data-sd-theme="wii"] #sd-root .sd-headrow {
+  background: linear-gradient(180deg, #f4fbff 0%, #e2f3fd 100%);
+  border-bottom: 1px solid #d8eefb;
+}
+html[data-sd-theme="wii"] #sd-root .sd-studiohead { color: var(--wii-deep); border-left-color: #dcefff; }
+html[data-sd-theme="wii"] #sd-root .sd-studiocol { border-left-color: #dcefff; }
+html[data-sd-theme="wii"] #sd-root .sd-studiocols {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(52, 190, 237, 0.18) 0 1px,
+    transparent 1px var(--hour)
+  );
+}
+html[data-sd-theme="wii"] #sd-root .sd-gutter { border-right: 1px solid #e0f0fa; }
+html[data-sd-theme="wii"] #sd-root .sd-hourlabel { color: #6e8798; }
+
+/* A class block keeps the app's colour as its identity, but the app's palette
+   is neon: painted flat on a white page it glows like a broken pixel. A white
+   veil over the fill keeps the hue and drops it to a pastel, and the ink is
+   derived from that fill by lib/color.js, so the label stays readable. */
+html[data-sd-theme="wii"] #sd-root .sd-block {
+  border: 1px solid rgba(27, 81, 105, 0.18);
+  /* The app paints its own neon border inline; a pastel fill with a neon
+     outline is the worst of both, so the outline is ours too. */
+  border-color: rgba(27, 81, 105, 0.16) !important;
+  border-radius: 9px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 2px 6px -2px rgba(52, 118, 150, 0.45);
+}
+html[data-sd-theme="wii"] #sd-root .sd-block::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.9));
+  pointer-events: none;
+}
+html[data-sd-theme="wii"] #sd-root .sd-block > * { position: relative; z-index: 1; }
+html[data-sd-theme="wii"] #sd-root .sd-block:hover { filter: brightness(1.03); }
+html[data-sd-theme="wii"] #sd-root .sd-block--low {
+  box-shadow: inset 0 0 0 2px rgba(168, 100, 0, 0.75), 0 2px 6px -2px rgba(52, 118, 150, 0.45);
+}
+html[data-sd-theme="wii"] #sd-root .sd-block--full {
+  box-shadow: inset 0 0 0 2px rgba(192, 57, 43, 0.6), 0 2px 6px -2px rgba(52, 118, 150, 0.45);
+}
+
+/* ---- the calendar toolbar and its view switch ---- */
+html[data-sd-theme="wii"] #sd-root .sd-viewswitch {
+  border: 1px solid #cbe6f5;
+  border-radius: 999px;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 #ffffff, 0 2px 6px rgba(52, 118, 150, 0.12);
+}
+html[data-sd-theme="wii"] #sd-root .sd-viewlink {
+  color: #4d7e94;
+  font-weight: 600;
+  border-left-color: #e2f2fb;
+}
+html[data-sd-theme="wii"] #sd-root .sd-viewlink:hover { background: #f0faff; color: var(--wii-deep); }
+html[data-sd-theme="wii"] #sd-root .sd-viewlink--on {
+  background: linear-gradient(180deg, #8fe0fa 0%, #5acdf5 50%, #2aa9dd 51%, #1b8dc4 100%);
+  color: #ffffff;
+  font-weight: 700;
+}
+html[data-sd-theme="wii"] #sd-root .sd-monthlabel { color: var(--wii-deep); font-weight: 700; }
+html[data-sd-theme="wii"] #sd-root .sd-monthstep--off { opacity: 0.4; }
+
+/* ---- lists, index tiles, record lists ---- */
+html[data-sd-theme="wii"] #sd-root .sd-listbar { border-bottom: 1px solid #e0f0fa; }
+html[data-sd-theme="wii"] #sd-root .sd-listbar:has(+ .sd-tablewrap) { border-bottom: 0; }
+html[data-sd-theme="wii"] #sd-root .sd-count { color: #5d7180; }
+html[data-sd-theme="wii"] #sd-root .sd-records li { border-bottom: 1px solid #eaf5fc; }
+html[data-sd-theme="wii"] #sd-root .sd-records a {
+  border-radius: 11px;
+  color: var(--text);
+  transition:
+    transform 160ms cubic-bezier(0.2, 0.8, 0.3, 1),
+    background-color 160ms ease,
+    color 160ms ease;
+}
+html[data-sd-theme="wii"] #sd-root .sd-records a:hover {
+  background: linear-gradient(90deg, #e9f7fe 0%, #f4fbff 100%);
+  color: var(--wii-deep);
+}
+html[data-sd-theme="wii"] #sd-root .sd-records a.sd-record--current {
+  background: linear-gradient(180deg, #9fe6fb 0%, #5acdf5 50%, #2aa9dd 51%, #1b8dc4 100%);
+  color: #ffffff;
+}
+html[data-sd-theme="wii"] #sd-root .sd-records a.sd-record--current .sd-record-label { color: #ffffff; }
+html[data-sd-theme="wii"] #sd-root .sd-type {
+  border-color: #d3eaf8;
+  background: #f2f9fe;
+  color: #4d7e94;
+}
+html[data-sd-theme="wii"] #sd-root .sd-go { color: var(--wii-deep); }
+
+/* Index tiles are channel tiles: a big white card, glossed at the halfway line,
+   that grows and blooms under the pointer. */
+html[data-sd-theme="wii"] #sd-root .sd-tile {
+  border: 1px solid #d8eefb;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 51%, #f6fcff 52%, #eaf7fe 100%);
+  color: #2b4c5e;
+  font-weight: 600;
+  box-shadow: inset 0 1px 0 #ffffff, 0 6px 14px -12px rgba(52, 118, 150, 0.9);
+  transition:
+    transform 180ms cubic-bezier(0.2, 0.8, 0.3, 1),
+    box-shadow 160ms ease,
+    border-color 160ms ease;
+}
+html[data-sd-theme="wii"] #sd-root .sd-tile:hover {
+  border-color: var(--wii-blue);
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 51%, #f2fbff 52%, #e2f5fe 100%);
+  color: var(--wii-deep);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow:
+    0 0 0 2px rgba(52, 190, 237, 0.45),
+    0 12px 20px -14px rgba(34, 130, 176, 0.9);
+}
+html[data-sd-theme="wii"] #sd-root .sd-indexhead { color: var(--wii-deep); border-bottom-color: #dcefff; }
+html[data-sd-theme="wii"] #sd-root .sd-indexcount { color: #6e8798; }
+
+/* ---- editors, forms, split panes ---- */
+html[data-sd-theme="wii"] #sd-root .sd-split-side {
+  background: linear-gradient(180deg, #fbfeff 0%, #eef8fe 100%);
+  border-right: 1px solid #d9eefb;
+}
+html[data-sd-theme="wii"] #sd-root .sd-split[data-sd-split="stack"] .sd-split-side {
+  border-bottom-color: #d9eefb;
+}
+html[data-sd-theme="wii"] #sd-root .sd-editorbar,
+html[data-sd-theme="wii"] #sd-root .sd-editorstatus {
+  background: rgba(255, 255, 255, 0.72);
+  border-bottom: 1px solid #e0f0fa;
+}
+html[data-sd-theme="wii"] #sd-root .sd-editorstatus { color: #4d7e94; }
+html[data-sd-theme="wii"] #sd-root .sd-dirty { color: #5d7180; }
+html[data-sd-theme="wii"] #sd-root .sd-fields th { color: #4d7e94; font-weight: 700; }
+html[data-sd-theme="wii"] #sd-root .sd-fields tr + tr > * { box-shadow: inset 0 1px 0 #eaf5fc; }
+html[data-sd-theme="wii"] #sd-root .sd-tabs { border-bottom: 1px solid #e0f0fa; }
+html[data-sd-theme="wii"] #sd-root .sd-tab { color: #4d7e94; font-weight: 600; border-radius: 10px 10px 0 0; }
+html[data-sd-theme="wii"] #sd-root .sd-tab:hover { color: var(--wii-deep); background: #f2fafe; }
+html[data-sd-theme="wii"] #sd-root .sd-tab--on {
+  color: var(--wii-deep);
+  border-bottom-color: var(--wii-blue);
+  background: linear-gradient(180deg, #f4fbff, #ffffff);
+}
+html[data-sd-theme="wii"] #sd-root .sd-section { color: var(--wii-deep); }
+html[data-sd-theme="wii"] #sd-root .sd-setting { border-bottom: 1px solid #eaf5fc; }
+html[data-sd-theme="wii"] #sd-root .sd-settinglabel { color: #33505f; font-weight: 700; }
+html[data-sd-theme="wii"] #sd-root .sd-action {
+  border-color: #cbe6f5;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #2b4c5e;
+  font-weight: 600;
+}
+html[data-sd-theme="wii"] #sd-root .sd-action:hover { border-color: var(--wii-blue); color: var(--wii-deep); }
+html[data-sd-theme="wii"] #sd-root .sd-action--js { border-style: dashed; color: #6e8798; }
+html[data-sd-theme="wii"] #sd-root .sd-chip {
+  border-color: #d3eaf8;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #2b4c5e;
+}
+html[data-sd-theme="wii"] #sd-root .sd-chip:hover { border-color: var(--wii-blue); color: var(--wii-deep); }
+html[data-sd-theme="wii"] #sd-root .sd-period { border: 1px solid #d3eaf8; background: #ffffff; color: #4d7e94; }
+html[data-sd-theme="wii"] #sd-root .sd-note {
+  border: 1px solid #d8eefb;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #33505f;
+  box-shadow: inset 0 1px 0 #ffffff, 0 8px 18px -16px rgba(52, 118, 150, 0.9);
+}
+html[data-sd-theme="wii"] #sd-root .sd-note strong { color: var(--wii-ink); }
+
+/* ---- overlays: the More menu, the confirmation card, states ---- */
+html[data-sd-theme="wii"] #sd-root .sd-menu {
+  border: 1px solid #d8eefb;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 20px 40px -18px rgba(24, 90, 122, 0.55);
+}
+html[data-sd-theme="wii"] #sd-root .sd-menuitem { border-radius: 10px; color: var(--text); }
+html[data-sd-theme="wii"] #sd-root .sd-menuitem:hover { background: #e9f7fe; color: var(--wii-deep); }
+html[data-sd-theme="wii"] #sd-root .sd-menuitem--danger { color: #b3452f; }
+html[data-sd-theme="wii"] #sd-root .sd-barsep { background: #dcefff; }
+
+html[data-sd-theme="wii"] #sd-root .sd-confirm-card {
+  border: 1px solid #d8eefb;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 55%, #f4fbff 100%);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 0 0 6px rgba(255, 255, 255, 0.6),
+    0 26px 50px -24px rgba(24, 90, 122, 0.5);
+}
+html[data-sd-theme="wii"] #sd-root .sd-confirm-mark {
+  background: linear-gradient(180deg, #8fe0fa, #2aa9dd);
+  color: #ffffff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+html[data-sd-theme="wii"] #sd-root .sd-confirm-mark--ask { background: linear-gradient(180deg, #bfe6f7, #7fbcd6); }
+html[data-sd-theme="wii"] #sd-root .sd-confirm-card--bad .sd-confirm-mark { background: linear-gradient(180deg, #f6b6ae, #d06450); }
+html[data-sd-theme="wii"] #sd-root .sd-confirm-card--bad { border-color: #f0cdc6; }
+html[data-sd-theme="wii"] #sd-root .sd-confirm-msg { color: var(--wii-ink); font-weight: 700; }
+html[data-sd-theme="wii"] #sd-root .sd-state h2 { color: var(--wii-deep); }
+
+/* ---- footer ---- */
+html[data-sd-theme="wii"] #sd-root .sd-foot {
+  background: rgba(255, 255, 255, 0.78);
+  border-top: 1px solid rgba(207, 230, 246, 0.95);
+  color: #5d7180;
+  box-shadow: inset 0 1px 0 #ffffff;
+}
+
+/* ---- scrollbars: pale blue pills rather than the OS's grey gutter ---- */
+html[data-sd-theme="wii"] #sd-root * {
+  scrollbar-width: thin;
+  scrollbar-color: #a9dcf1 rgba(255, 255, 255, 0.5);
+}
+html[data-sd-theme="wii"] #sd-root ::-webkit-scrollbar { width: 12px; height: 12px; }
+html[data-sd-theme="wii"] #sd-root ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.45); }
+html[data-sd-theme="wii"] #sd-root ::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #c6ebfa, #8fd3ee);
+  background-clip: content-box;
+}
+
+/* ---- the pointer ----
+ *
+ * The Wii's cursor is a white gloved hand with a dark outline, and it is the one
+ * piece of the interface you cannot miss. Drawn inline as an SVG so there is no
+ * asset to fetch and nothing to break offline; the hotspot sits at the
+ * fingertip, and every control that takes typing keeps its own cursor. */
+html[data-sd-theme="wii"] #sd-root {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cg fill='%23ffffff' stroke='%232a3d4a' stroke-width='1.3' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M11 3.2c1.15 0 2 .85 2 2v8.4l1.55-.5c.7-.22 1.32.2 1.42.9l.18 1.15 3.6 1.2c.9.3 1.42 1.2 1.2 2.15l-1 4.3c-.2.9-1 1.5-1.9 1.5h-5.3c-.62 0-1.2-.3-1.6-.8l-4.2-5.1c-.6-.72-.5-1.72.2-2.2.62-.5 1.5-.4 2 .2l1.3 1.4V5.2c0-1.15.85-2 2-2Z'/%3E%3C/g%3E%3C/svg%3E") 11 4, pointer;
+}
+html[data-sd-theme="wii"] #sd-root input,
+html[data-sd-theme="wii"] #sd-root textarea,
+html[data-sd-theme="wii"] #sd-root select,
+html[data-sd-theme="wii"] #sd-root .sd-table td { cursor: auto; }
+html[data-sd-theme="wii"] #sd-root a,
+html[data-sd-theme="wii"] #sd-root button,
+html[data-sd-theme="wii"] #sd-root summary,
+html[data-sd-theme="wii"] #sd-root [role="button"] { cursor: pointer; }
+
+/* ---- motion ----
+ *
+ * The Wii answers the pointer with light and a little growth, not with a colour
+ * change, so the lift is part of the skin. It is the first thing to go when
+ * somebody asks their machine for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-sd-theme="wii"] #sd-root .sd-navlink,
+  html[data-sd-theme="wii"] #sd-root .sd-railtoggle,
+  html[data-sd-theme="wii"] #sd-root .sd-btn,
+  html[data-sd-theme="wii"] #sd-root .sd-tile,
+  html[data-sd-theme="wii"] #sd-root .sd-weekrow,
+  html[data-sd-theme="wii"] #sd-root .sd-records a {
+    transition: none;
+  }
+  html[data-sd-theme="wii"] #sd-root .sd-navlink:hover,
+  html[data-sd-theme="wii"] #sd-root .sd-btn:hover,
+  html[data-sd-theme="wii"] #sd-root .sd-tile:hover,
+  html[data-sd-theme="wii"] #sd-root .sd-weekrow:hover {
+    transform: none;
+  }
+}
+
+/* Printing a Wii page prints the table, not the bloom. */
+@media print {
+  html[data-sd-theme="wii"] #sd-root { background: #ffffff; }
+  html[data-sd-theme="wii"] #sd-root .sd-table thead th { background: #f2f2f2 !important; color: #000 !important; }
+}
