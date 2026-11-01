@@ -36,7 +36,7 @@ const STUDIO = /^\s*stu(?:dio)?\s*(\d+)\b/i;
 // Classes taught by the studio's own faculty pool are placeholders for open
 // studio time, not classes anyone attends. They are left off the week view, and
 // counted so the number left off is never a mystery.
-const FACULTY = /^\s*\S+\s+faculty\s*$/i;
+const FACULTY = /^\s*(?:\S+\s+)*faculty\s*$/i;
 const CAPACITY = /(\d+)\s+of\s+(\d+)\s+spots?/i;
 
 function styleMap(value) {
@@ -74,7 +74,7 @@ function linesOf(el) {
 // Some tooltips label their own lines ("Class Name: Ballet III"). The label is
 // the app's, not the class's, so it is stripped from the value. Only a known
 // label is removed: a class genuinely called "Tap: Level 2" keeps its colon.
-const LABEL = /^\s*(class\s*name|name|instructor|teacher|location|studio|room)\s*:\s*/i;
+const LABEL = /^\s*(class\s*name|instructor\s*name|teacher\s*name|location\s*name|name|instructor|teacher|location|studio|room)\s*:\s*/i;
 const unlabel = (value) => (value == null ? value : String(value).replace(LABEL, '').trim() || null);
 
 // Documented order: class name, instructor, location, N spots available,
