@@ -158,7 +158,7 @@ src/
     confirmation.js week.js list.js report.js task.js sheet.js settings.js note.js
     record.js          form + bar + tabs as one record model
   views/               Svelte components keyed by kind, not an {#if} chain
-  styles.js
+  styles.css         the CSS, imported `?inline` so Vite minifies it into the one artifact
 ```
 
 Rules this layout enforces:
