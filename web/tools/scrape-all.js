@@ -548,11 +548,11 @@
     var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'studio-director-pages.json';
+    a.download = 'pages.json';
     document.body.appendChild(a);
     a.click();
     a.remove();
-    console.log('[scrape] downloaded studio-director-pages.json (' + data.pages.length + ' pages)');
+    console.log('[scrape] downloaded pages.json (' + data.pages.length + ' pages)');
     return data;
   }
 
