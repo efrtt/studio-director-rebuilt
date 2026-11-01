@@ -1133,3 +1133,95 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
     transition: none;
   }
 }
+
+/* ---- tables: one reading surface for every sheet, report and ledger ---- */
+/* The app's own tables are edge-to-edge rules with no frame, which reads as loose
+   text once the surrounding page is ours. A table is a card here: a framed
+   surface, a quiet header that stays put, rows that alternate and answer the
+   pointer, and numbers that line up in a column. */
+.sd-tablewrap {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  overflow: auto;
+  margin-bottom: var(--space-3);
+}
+.sd-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  font-size: 13px;
+}
+#sd-root .sd-table th,
+#sd-root .sd-table td { border: 0 !important; background: transparent !important; }
+
+.sd-table thead th {
+  padding: 10px 14px !important;
+  background: var(--panel-2) !important;
+  color: var(--dim);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--line) !important;
+}
+.sd-table tbody td {
+  padding: 9px 14px !important;
+  border-bottom: 1px solid rgba(39, 48, 63, .55) !important;
+  vertical-align: top;
+  color: var(--text);
+}
+.sd-table tbody tr:last-child td { border-bottom: 0 !important; }
+.sd-table tbody tr:nth-child(even) td { background: rgba(255, 255, 255, .018) !important; }
+.sd-table tbody tr:hover td { background: rgba(122, 162, 255, .07) !important; }
+
+/* Figures: same width per digit, so a ledger column reads down as a column. */
+.sd-table .sd-cell--right,
+.sd-table td.sd-cell--right + td { font-variant-numeric: tabular-nums; }
+.sd-table .sd-cell--right { text-align: right; }
+
+/* A cell that goes somewhere: the app's own link, in the accent, quiet until
+   hovered. */
+.sd-table td a {
+  color: var(--accent);
+  font-weight: 500;
+  text-decoration: none;
+}
+.sd-table td a:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+/* A cell whose link is a *control* — Drop, Approve, Enroll — reads as a control:
+   a pill, not another sentence. The app draws these as `href="#"` links. */
+.sd-table td.sd-cell--action a,
+.sd-table td a.sd-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.sd-table td.sd-cell--action a:hover,
+.sd-table td a.sd-pill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(122, 162, 255, .12);
+  text-decoration: none;
+}
+.sd-cell-actions { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+
+html[data-sd-theme="light"] #sd-root .sd-table thead th { background: #f1f3f6 !important; }
+html[data-sd-theme="light"] #sd-root .sd-table tbody td {
+  border-bottom-color: rgba(215, 220, 228, .9) !important;
+}
+html[data-sd-theme="light"] #sd-root .sd-table tbody tr:nth-child(even) td {
+  background: rgba(27, 35, 48, .022) !important;
+}
+html[data-sd-theme="light"] #sd-root .sd-table tbody tr:hover td {
+  background: rgba(47, 95, 208, .06) !important;
+}

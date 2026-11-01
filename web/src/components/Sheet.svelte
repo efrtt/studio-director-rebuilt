@@ -89,8 +89,20 @@
               {#each table.rows as row}
                 <tr>
                   {#each row as cell}
-                    <td class:sd-cell--right={cell.right}>
-                      {#if cell.href}<a href={cell.href} title="Open in the app">{cell.text}</a>{:else}{cell.text}{/if}
+                    <td
+                      class:sd-cell--right={cell.right}
+                      class:sd-cell--link={!!cell.href && !/^#|^javascript:/i.test(cell.href)}
+                      class:sd-cell--action={!!cell.href && /^#|^javascript:/i.test(cell.href)}
+                    >
+                      {#if cell.actions && cell.actions.length > 1}
+                        <span class="sd-cell-actions">
+                          {#each cell.actions as action}
+                            <a class="sd-pill" href={action.href} title={action.label}>{action.label}</a>
+                          {/each}
+                        </span>
+                      {:else if cell.href}
+                        <a href={cell.href} title="Open in the app">{cell.text}</a>
+                      {:else}{cell.text}{/if}
                     </td>
                   {/each}
                 </tr>
