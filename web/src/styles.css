@@ -985,6 +985,21 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
 
 /* ---- page gutter: centre the content, keep the scroll at the edge ---- */
 .sd-editorbar { padding: var(--space-3) var(--page-gutter); }
+
+/* An editor is one column, and the form is what sets its width: at 760 the
+   fields fill it exactly, so the space either side is the same width instead of
+   the form hugging the left edge of a wider column.
+   The gutter is overridden rather than --content-max because a custom property
+   substitutes its own var() where it is *declared* (#sd-root), so changing the
+   width below that point never reaches the gutter. */
+.sd-editor {
+  --form-max: 760px;
+  --page-gutter: max(var(--page-pad), calc((100% - 760px) / 2));
+}
+
+/* The tab labels meet the fields, not the window: the tab's own inset is
+   subtracted so the label, rather than the tab box, sits on the gutter. */
+.sd-tabs { padding: var(--space-2) calc(var(--page-gutter) - 12px) 0; }
 .sd-editorbody,
 .sd-indexbody,
 .sd-reportbody { padding: var(--space-4) var(--page-gutter) var(--space-5); }
