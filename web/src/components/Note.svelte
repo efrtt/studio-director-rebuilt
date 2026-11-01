@@ -1,7 +1,6 @@
 <script>
   export let note;
   export let onPress = null;
-  export let onOriginal = null;
 
   let status = '';
 
@@ -13,7 +12,7 @@
     status = '';
     const result = onPress(action);
     if (!result || !result.submitted) {
-      status = `Could not press “${action.label}” — use Full page.`;
+      status = `Could not press “${action.label}” — use Original.`;
       return;
     }
     status = `Asked the app to run “${action.label}”…`;
@@ -35,9 +34,6 @@
           on:click={() => press(action)}
         >{action.label}</button>
       {/each}
-      {#if onOriginal}
-        <button class="sd-btn" type="button" on:click={onOriginal}>Full page</button>
-      {/if}
     </div>
   </div>
 

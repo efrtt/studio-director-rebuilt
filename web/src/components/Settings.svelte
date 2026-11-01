@@ -3,7 +3,6 @@
 
   export let settings;
   export let onSave = null;
-  export let onOriginal = null;
 
   const initial = {};
   for (const field of settings.fields) initial[field.key] = field.value;
@@ -49,8 +48,8 @@
     if (!result || !result.submitted) {
       const label = (action && action.label) || 'Save';
       status = result && result.reason === 'ambiguous'
-        ? `“${label}” appears ${result.matches} times on the page — use Full page.`
-        : `The app’s “${label}” control is not on this page — use Full page.`;
+        ? `“${label}” appears ${result.matches} times on the page — use Original.`
+        : `The app’s “${label}” control is not on this page — use Original.`;
       return;
     }
     const n = result.applied.length;
@@ -100,9 +99,6 @@
           on:click={() => press(action)}
         >{action.label}</button>
       {/each}
-      {#if onOriginal}
-        <button class="sd-btn" type="button" on:click={onOriginal}>Full page</button>
-      {/if}
     </div>
   </div>
 

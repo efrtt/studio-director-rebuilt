@@ -60,19 +60,19 @@ export function propsFor(view, model, handlers) {
     case 'confirm':
       // A confirmation the app has not performed yet carries a button; an
       // outcome does not.
-      return { confirm: model.confirm, onPress: h.onPress, onOriginal: h.onOriginal };
+      return { confirm: model.confirm, onPress: h.onPress };
     case 'index':
       return { index: model.index };
     case 'report':
-      return { report: model.report, onRun: h.onRun, onOriginal: h.onOriginal };
+      return { report: model.report, onRun: h.onRun };
     case 'task':
-      return { task: model.task, onAct: h.onAct, onOriginal: h.onOriginal };
+      return { task: model.task, onAct: h.onAct };
     case 'sheet':
-      return { sheet: model.sheet, onPress: h.onPress, onOriginal: h.onOriginal };
+      return { sheet: model.sheet, onPress: h.onPress };
     case 'settings':
-      return { settings: model.settings, onSave: h.onSaveSettings, onOriginal: h.onOriginal };
+      return { settings: model.settings, onSave: h.onSaveSettings };
     case 'note':
-      return { note: model.note, onPress: h.onPress, onOriginal: h.onOriginal };
+      return { note: model.note, onPress: h.onPress };
     case 'list':
       return { list: model.list, onLoadAll: h.canLoadAll ? h.onLoadAll : null, auto: true };
     case 'form':
@@ -81,8 +81,7 @@ export function propsFor(view, model, handlers) {
         tabs: model.tabs || null,
         bar: model.bar,
         onSave: h.onSave,
-        onAction: h.onAction,
-        onOriginal: h.onOriginal
+        onAction: h.onAction
       };
     default:
       return {};

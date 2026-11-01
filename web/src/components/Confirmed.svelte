@@ -1,7 +1,6 @@
 <script>
   export let confirm;
   export let onPress = null;
-  export let onOriginal = null;
 
   // The app's own sentence, verbatim. Nothing is invented: if the page said
   // "Hopper Family has been updated." that is the whole screen.
@@ -17,7 +16,7 @@
     status = '';
     const result = onPress(action);
     if (!result || !result.submitted) {
-      status = `Could not press \u201c${action.label}\u201d \u2014 use Full page.`;
+      status = `Could not press \u201c${action.label}\u201d \u2014 use Original.`;
       return;
     }
     status = `Asked the app to run \u201c${action.label}\u201d\u2026`;
@@ -41,9 +40,6 @@
             on:click={() => press(action)}
           >{action.label}</button>
         {/each}
-        {#if onOriginal}
-          <button class="sd-btn" type="button" on:click={onOriginal}>Full page</button>
-        {/if}
       </div>
       {#if status}<p class="sd-editorstatus">{status}</p>{/if}
     </div>

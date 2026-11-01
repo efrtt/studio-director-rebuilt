@@ -8,7 +8,6 @@
   export let onSave = null;
   // Presses a bar control on the live page: the app builds that request.
   export let onAction = null;
-  export let onOriginal = null;
 
   // Which tab strip entry is showing. The record itself is always first, so an
   // editor without tabs looks exactly as it did before.
@@ -48,7 +47,7 @@
     if (!result || !result.submitted) {
       busy = false;
       status = result && result.reason === 'no-save-link'
-        ? 'This page has no Save link — use the full page.'
+        ? 'This page has no Save link — use the app’s own page.'
         : 'Nothing to save.';
       return;
     }
@@ -95,8 +94,8 @@
 
     if (!result || !result.submitted) {
       status = result && result.reason === 'ambiguous'
-        ? `“${item.label}” appears ${result.matches} times on the page — use Full page.`
-        : `The app’s “${item.label}” control is not on this page — use Full page.`;
+        ? `“${item.label}” appears ${result.matches} times on the page — use Original.`
+        : `The app’s “${item.label}” control is not on this page — use Original.`;
       return;
     }
     status = `Asked the app to run “${item.label}”…`;
@@ -130,9 +129,6 @@
     <div class="sd-editor-actions">
       <button class="sd-btn" type="button" disabled={!dirty || busy} on:click={reset}>Reset</button>
       <button class="sd-btn sd-primary" type="button" disabled={!dirty || busy} on:click={submit}>Save</button>
-      {#if onOriginal}
-        <button class="sd-btn" type="button" on:click={onOriginal} title="The app's full page, with tabs">Full page</button>
-      {/if}
 
       {#if bar && (bar.items.length || bar.menu.length)}
         <span class="sd-barsep" aria-hidden="true"></span>
@@ -225,7 +221,7 @@
         <div class="sd-panelactions">
           {#each shown.actions as action}
             {#if action.js}
-              <span class="sd-action sd-action--js" title="Runs the app's own script — use Full page">{action.label}</span>
+              <span class="sd-action sd-action--js" title="Runs the app's own script — use Original">{action.label}</span>
             {:else}
               <a class="sd-action" href={action.href}>{action.label}</a>
             {/if}
@@ -273,12 +269,10 @@
 
       {#if shown.note}<p class="sd-panelnote">{shown.note}</p>{/if}
 
-      {#if onOriginal}
-        <p class="sd-panelnote">
-          Read-only: this tab is the app's own output. Changes go through
-          <button class="sd-linkbtn" type="button" on:click={onOriginal}>the full page</button>.
-        </p>
-      {/if}
+      <p class="sd-panelnote">
+        Read-only: this tab is the app's own output. Changes go through the
+        app's own page — use Original.
+      </p>
     </div>
   {:else}
   <div class="sd-editorbody">

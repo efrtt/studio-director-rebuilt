@@ -612,15 +612,6 @@ html.sd-app form#idForm { visibility: hidden !important; }
 .sd-action:hover { border-color: var(--accent); }
 .sd-action--js { color: var(--dim); border-style: dashed; cursor: default; }
 .sd-panelnote { margin: 8px 0 0; color: var(--dim); font-size: 12.5px; }
-.sd-linkbtn {
-  border: 0;
-  padding: 0;
-  background: none;
-  color: var(--accent);
-  font: inherit;
-  cursor: pointer;
-  text-decoration: underline;
-}
 .sd-fields { border-collapse: collapse; width: 100%; max-width: 760px; font-size: 13px; }
 /* The app's own stylesheet reaches this table too: its cells bring a white
    background, white cell borders and a text shadow, which turn the label column

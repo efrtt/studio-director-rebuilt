@@ -1,7 +1,6 @@
 <script>
   export let sheet;
   export let onPress = null;
-  export let onOriginal = null;
 
   let query = '';
   let status = '';
@@ -31,8 +30,8 @@
     const result = onPress(action);
     if (!result || !result.submitted) {
       status = result && result.reason === 'ambiguous'
-        ? `“${action.label}” appears ${result.matches} times on this page — use Full page.`
-        : `“${action.label}” could not be pressed — use Full page.`;
+        ? `“${action.label}” appears ${result.matches} times on this page — use Original.`
+        : `“${action.label}” could not be pressed — use Original.`;
       return;
     }
     status = `Asked the app to run “${action.label}”…`;
@@ -56,9 +55,6 @@
       {/each}
       {#if !pagePrints}
         <button class="sd-btn" type="button" on:click={print}>Print this view</button>
-      {/if}
-      {#if onOriginal}
-        <button class="sd-btn" type="button" on:click={onOriginal}>Full page</button>
       {/if}
     </div>
   </div>
@@ -108,14 +104,14 @@
     {#if empty}
       <p class="sd-empty">Nothing matches “{query}”.</p>
     {:else if !sheet.tables.length}
-      <p class="sd-panelnote">This page has no table to show — use Full page.</p>
+      <p class="sd-panelnote">This page has no table to show — use Original.</p>
     {/if}
 
     {#if sheet.actions.length}
       <p class="sd-panelnote">
         Read-only: the buttons above are the app’s own controls, and anything that
         changes a row starts from the row’s link or
-        {#if onOriginal}<button class="sd-linkbtn" type="button" on:click={onOriginal}>the full page</button>{:else}the full page{/if}.
+        the app’s own page.
       </p>
     {/if}
   </div>

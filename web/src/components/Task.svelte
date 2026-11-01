@@ -3,7 +3,6 @@
 
   export let task;
   export let onAct = null;
-  export let onOriginal = null;
 
   // Same seeding as the record editor: what the server sent, so an untouched
   // field is never written back.
@@ -20,9 +19,9 @@
   $: dirty = changes.length > 0;
 
   const why = {
-    missing: (label) => `The app’s “${label}” control is not on this page — use Full page.`,
-    ambiguous: (label, n) => `“${label}” appears ${n} times on this page — use Full page.`,
-    'no-action': () => 'This page has no control to press — use Full page.'
+    missing: (label) => `The app’s “${label}” control is not on this page — use Original.`,
+    ambiguous: (label, n) => `“${label}” appears ${n} times on this page — use Original.`,
+    'no-action': () => 'This page has no control to press — use Original.'
   };
 
   function act(action) {
@@ -40,7 +39,7 @@
       const make = why[result && result.reason];
       status = make
         ? make(action.label, result && result.matches)
-        : `Could not press “${action.label}” — use Full page.`;
+        : `Could not press “${action.label}” — use Original.`;
       return;
     }
     status = `Asked the app to run “${action.label}”${result.applied && result.applied.length ? ` after ${result.applied.length} change${result.applied.length === 1 ? '' : 's'}` : ''}…`;
@@ -78,9 +77,6 @@
           on:click={() => act(action)}
         >{pressed === action.label && busy ? `${action.label}…` : action.label}</button>
       {/each}
-      {#if onOriginal}
-        <button class="sd-btn" type="button" on:click={onOriginal}>Full page</button>
-      {/if}
     </div>
   </div>
 

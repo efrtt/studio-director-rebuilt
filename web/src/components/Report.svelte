@@ -1,7 +1,6 @@
 <script>
   export let report;
   export let onRun = null;
-  export let onOriginal = null;
 
   const initial = {};
   for (const field of report.fields) {
@@ -66,9 +65,6 @@
         <button class="sd-btn sd-primary" type="button" disabled={busy} on:click={run}>
           {busy ? 'Running...' : report.trigger.label}
         </button>
-      {/if}
-      {#if onOriginal}
-        <button class="sd-btn" type="button" on:click={onOriginal}>Full page</button>
       {/if}
     </div>
   </div>

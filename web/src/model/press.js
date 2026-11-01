@@ -10,7 +10,7 @@
 // way to find that element again in the live document: by id when the app gives
 // one, and by its exact label when the label is unique. A label that appears
 // five times ("Cancel Class", once per class date) is *not* pressed: guessing
-// which of five rows you meant is worse than saying "use the full page".
+// which of five rows you meant is worse than saying "use Original".
 //
 // Moved here from `lib/actions.js`, behaviour unchanged. What changed is that
 // the chrome selector now comes from `model/root.js`, so the overlay's own
@@ -175,6 +175,6 @@ export function actionHint(doc, action) {
     .filter((el) => !insideDataTable(el) && !isChrome(el) && !notAnAction(el))
     .filter((el) => labelOf(el) === action.label);
   if (matches.length === 0) return 'not on this page';
-  if (matches.length > 1) return `${matches.length} of them - use Full page`;
+  if (matches.length > 1) return `${matches.length} of them - use Original`;
   return '';
 }
