@@ -1,4 +1,5 @@
 <script>
+  import { cellKind } from '../lib/cellclass.js';
   import { changesFrom } from '../lib/save.js';
 
   export let form;
@@ -255,11 +256,15 @@
               {#each block.rows as row}
                 <tr>
                   {#each row as cell}
-                    <td class:sd-cell--right={cell.right}>
+                    <td
+                      class:sd-cell--right={cell.right}
+                      class:sd-cell--link={cellKind(cell) === 'link'}
+                      class:sd-cell--action={cellKind(cell) === 'action'}
+                    >
                       {#if cell.actions && cell.actions.length}
-                        <span class="sd-cellactions">
+                        <span class="sd-cell-actions">
                           {#each cell.actions as action}
-                            <a class="sd-action" href={action.href} title={action.label}>{action.label}</a>
+                            <a class="sd-pill" href={action.href} title={action.label}>{action.label}</a>
                           {/each}
                         </span>
                       {:else if cell.href}<a href={cell.href} title="Open in the app's editor">{cell.text}</a>{:else}{cell.text}{/if}

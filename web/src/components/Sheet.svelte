@@ -1,4 +1,5 @@
 <script>
+  import { cellKind } from '../lib/cellclass.js';
   export let sheet;
   export let onPress = null;
 
@@ -91,8 +92,8 @@
                   {#each row as cell}
                     <td
                       class:sd-cell--right={cell.right}
-                      class:sd-cell--link={!!cell.href && !/^#|^javascript:/i.test(cell.href)}
-                      class:sd-cell--action={!!cell.href && /^#|^javascript:/i.test(cell.href)}
+                      class:sd-cell--link={cellKind(cell) === 'link'}
+                      class:sd-cell--action={cellKind(cell) === 'action'}
                     >
                       {#if cell.actions && cell.actions.length > 1}
                         <span class="sd-cell-actions">
