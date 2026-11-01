@@ -365,10 +365,12 @@ html[data-sd-theme="wii"] #sd-root .sd-hourlabel { color: #6e8798; }
    veil over the fill keeps the hue and drops it to a pastel, and the ink is
    derived from that fill by lib/color.js, so the label stays readable. */
 html[data-sd-theme="wii"] #sd-root .sd-block {
-  border: 1px solid rgba(27, 81, 105, 0.18);
-  /* The app paints its own neon border inline; a pastel fill with a neon
-     outline is the worst of both, so the outline is ours too. */
-  border-color: rgba(27, 81, 105, 0.16) !important;
+  border: 1px solid #c8ddea;
+  /* The app supplies the fill inline and nothing else - no border, no shadow.
+     So the neon edge is its own background showing through the border ring
+     where the veil does not reach, which is why the outline has to be opaque
+     and the veil has to be pushed past it. */
+  border-color: #c8ddea !important;
   border-radius: 9px;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.8),
@@ -377,7 +379,7 @@ html[data-sd-theme="wii"] #sd-root .sd-block {
 html[data-sd-theme="wii"] #sd-root .sd-block::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -1px;
   border-radius: inherit;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.9));
   pointer-events: none;
