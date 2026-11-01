@@ -20,7 +20,7 @@
 // recreate the duplication this file exists to remove: two places to change, and
 // the day they disagree is the day a settings page becomes a task.
 
-import { titleOf, railLinks, pageName } from '../lib/shell.js';
+import { titleOf, railLinks } from '../lib/shell.js';
 import { readWeek } from '../lib/calendar.js';
 import { readList } from '../lib/list.js';
 import { readReport } from '../lib/report.js';
@@ -69,7 +69,6 @@ const TITLED = ['report', 'task', 'sheet', 'index', 'settings', 'note'];
 export function readPage(doc, url, opts = {}) {
   const ctx = {
     url,
-    page: pageName(url),
     isRecord: false,
     allowEmpty: !!opts.allowEmpty,
     allowRefused: !!opts.allowRefused,

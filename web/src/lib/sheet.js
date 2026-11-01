@@ -19,8 +19,7 @@ import { qs, qsa, textOf } from './shell.js';
 import { readTable } from '../model/table.js';
 import { readActions } from './actions.js';
 import { contentRoot } from '../model/root.js';
-
-const MIN_ROWS = 2;
+import { TABLE_ROWS } from './thresholds.js';
 
 // Tables that are structure, not data: the weekday checkbox grid inside a form,
 // the form itself (label column, control column), and the layout table the app
@@ -62,7 +61,7 @@ export function readSheet(doc) {
     rows += read.rowTotal != null ? read.rowTotal : read.rows.length;
   }
 
-  if (!tables.length || rows < MIN_ROWS) return null;
+  if (!tables.length || rows < TABLE_ROWS) return null;
 
   const actions = readActions(root);
 

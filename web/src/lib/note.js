@@ -26,14 +26,11 @@
 import { qs, qsa, textOf } from './shell.js';
 import { readActions, primaryAction } from './actions.js';
 import { contentRoot, CHROME, FURNITURE } from '../model/root.js';
+import { MENU_LINKS, TABLE_ROWS } from './thresholds.js';
 
 // How many lines of instruction to keep. These pages say one thing; a page that
 // says more than eight is not a notice.
 const MAX_LINES = 8;
-// Six links is where `readIndex` starts calling a page a menu.
-const MENU_LINKS = 6;
-// Two data rows is where `readSheet` starts calling a page a table.
-const TABLE_ROWS = 2;
 // One falling-back sentence, the same allowance `confirmation.js` makes.
 const MAX_PROSE = 240;
 

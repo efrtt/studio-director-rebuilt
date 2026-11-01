@@ -16,8 +16,7 @@
 // view they already have.
 
 import { qs, qsa, textOf } from './shell.js';
-
-const MIN_LINKS = 6;
+import { MENU_LINKS, TABLE_ROWS } from './thresholds.js';
 
 // A short menu can still be a menu when it is *drawn* as one. The count above is
 // what protects the notices: fifty of them carry a sentence and one or two
@@ -40,7 +39,6 @@ const CHROME = '#sideNavBar, .topBarContainer, .topBar, .Breadcrumb, .copyright'
 // A menu page has no rows to read. The count is across the whole content, not
 // per table: the week calendar is one small table per day, each holding a single
 // class, so a per-table check would mistake it for a menu.
-const MIN_TABLE_ROWS = 2;
 
 function isChrome(anchor) {
   return !!(anchor.closest && anchor.closest(CHROME + ', #idSearchSpan'));
@@ -73,7 +71,7 @@ export function readIndex(doc) {
     (n, table) => n + Array.from(table.querySelectorAll('tr')).filter((tr) => tr.querySelector('td')).length,
     0
   );
-  if (rows >= MIN_TABLE_ROWS) return null;
+  if (rows >= TABLE_ROWS) return null;
 
   const seen = new Set();
   const items = [];
@@ -102,7 +100,7 @@ export function readIndex(doc) {
     && !qsa(root, 'input, select, textarea').length
     && items.every((item) => item.li && item.li.querySelectorAll('a[href]').length === 1);
 
-  if (items.length < MIN_LINKS && !listed) return null;
+  if (items.length < MENU_LINKS && !listed) return null;
 
   // Groups in the order the page puts them, not alphabetical: the app's own
   // order is somebody's idea of a workflow.
