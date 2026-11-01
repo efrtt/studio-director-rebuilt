@@ -17,6 +17,24 @@
       "lines": [
         "Dropping the student takes them out of this class. Filler sentence, roughly the length of the app's own."
       ],
+      "links": [
+        {
+          "href": "admin.sd?page=HomePage",
+          "label": "Home"
+        },
+        {
+          "href": "admin.sd?page=SwitchClasses&cident=1782910697458&sident=1741880123629",
+          "label": "Switch Classes"
+        },
+        {
+          "href": "admin.sd?page=EditStudent&sident=1741880123629",
+          "label": "Back to the student"
+        },
+        {
+          "href": "admin.sd?page=EditClass&cident=1782910697458",
+          "label": "Back to the class"
+        }
+      ],
       "message": "Dropping the student takes them out of this class. Filler sentence, roughly the length of the app's own.",
       "ok": true,
       "pending": true,

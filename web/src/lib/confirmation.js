@@ -121,12 +121,43 @@ export function pendingConfirmation(doc) {
     lines,
     title,
     breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    links: linksOf(doc, root),
     actions: [{
       label,
       id: button.getAttribute('id') || '',
       onclick: button.getAttribute('onclick') || ''
     }]
   };
+}
+
+// The page's own way onward, as destinations rather than prose.
+//
+// A confirmation states what happened and then lists where you can go: the
+// breadcrumb ("Families > Hopper Family"), "Review the account for …", "Back to
+// the student". Those are the app's links, so they are offered as buttons - and a
+// referrer link is only a fallback, because the page before a save can be one step
+// short of where you want to return to.
+const MAX_LINKS = 5;
+
+function linksOf(doc, root) {
+  const seen = new Set();
+  const out = [];
+
+  for (const anchor of qsa(root, 'a[href]')) {
+    if (anchor.closest && anchor.closest('#sideNavBar, .topBarContainer, #idSearchSpan')) continue;
+
+    const label = textOf(anchor);
+    const href = anchor.getAttribute('href');
+    if (!label || !href || href === '#' || /^javascript:/i.test(href)) continue;
+
+    const key = href + '|' + label;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({ label, href });
+    if (out.length >= MAX_LINKS) break;
+  }
+
+  return out;
 }
 
 function messageIn(root, pattern) {
@@ -171,6 +202,8 @@ export function confirmationOf(doc, opts = {}) {
     message,
     // The app's own title is usually blank here; the message is the screen.
     title: textOf(qs(doc, '.formTitle')) || '',
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean)
+    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    // Where the page itself says you can go next.
+    links: linksOf(doc, root)
   };
 }

@@ -54,7 +54,13 @@
       <p class="sd-confirm-hint">
         {confirm.ok ? 'Saved by the app itself.' : 'The app did not accept the change.'}
       </p>
-      {#if back && back.href}
+      {#if confirm.links && confirm.links.length}
+        <div class="sd-editor-actions sd-confirm-actions">
+          {#each confirm.links as link}
+            <a class="sd-btn" href={link.href} title={link.href}>{link.label}</a>
+          {/each}
+        </div>
+      {:else if back && back.href}
         <div class="sd-editor-actions sd-confirm-actions">
           <a class="sd-btn" href={back.href} title={back.href}>{back.label}</a>
         </div>

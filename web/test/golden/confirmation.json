@@ -8,6 +8,16 @@
         "Hopper Family"
       ],
       "kind": "confirm",
+      "links": [
+        {
+          "href": "admin.sd?page=NewFamily",
+          "label": "Families"
+        },
+        {
+          "href": "admin.sd?page=EditFamily&fident=4402",
+          "label": "Hopper Family"
+        }
+      ],
       "message": "Hopper Family has been updated.",
       "ok": true,
       "title": ""
