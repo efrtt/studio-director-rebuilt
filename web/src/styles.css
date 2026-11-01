@@ -987,3 +987,26 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
 /* Reports are wide so their results can use the window, but their filters are a
    form and stay a readable column. */
 #sd-root .sd-filters { max-width: 900px; }
+
+/* ---- rail links are ours, whatever stylesheet the page brought with it ----
+   Some app pages load a sheet that boxes every anchor. The rail carried no
+   border of its own, so those pages drew a bordered card around each section
+   link while edit pages - which load a different sheet - looked correct. These
+   are explicit, because a rule we do not write is a rule we do not control. */
+#sd-root .sd-rail { background: var(--panel) !important; }
+#sd-root .sd-navlink {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+  border-radius: var(--radius-sm);
+  color: var(--dim);
+}
+#sd-root .sd-navlink:hover { background: var(--panel-2) !important; color: var(--text); }
+#sd-root .sd-navlink--active {
+  background: var(--panel-2) !important;
+  color: var(--text);
+  box-shadow: inset 2px 0 0 var(--accent) !important;
+}
+#sd-root .sd-railtoggle { border: 0 !important; background: transparent !important; }
+#sd-root .sd-railtoggle:hover { background: var(--panel-2) !important; }
