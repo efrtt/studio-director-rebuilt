@@ -32,10 +32,12 @@ HTML arrives. All 61 of these shapes have now been opened in a browser and measu
 then walked live and mounted as an index: `ChargesHome` (18 links) and `ManageWidgets` (8)
 from the live document, `MergeFamily` (9), `EmailFamily` (8) and
 `ManagePaymentMethods_studio` (7) from a fetched copy. The other six left the app its own
-page, which is the safe answer rather than a wrong one: `PrintClass` (6 links),
-`PrintFamily` (7) and `PreapproveStudents` (7) are thinner than the index reader needs, and
-`Unenroll` (5 controls), `EmailClass` (2) and `SendEmail` (1) are real forms no reader
-claims. Two of the `AddStudentMakeup` shapes redirect to the `tidExpired` notice rather than
+page, which is the safe answer rather than a wrong one. `PrintClass` and `PrintFamily` are
+pickers of three and five list items, and since 0.17.0 the index reader takes a short menu when
+every link is alone in its own list item; both now mount as tiles. `PreapproveStudents` keeps
+three links that share a paragraph, which is a notice’s shape, so it stays with the app, as do
+`Unenroll` (a confirmation) and `EmailClass` and `SendEmail` (pickers with no list shape). Two
+of the `AddStudentMakeup` shapes redirect to the `tidExpired` notice rather than
 drawing their own screen.
 
 So the honest reading of the notice row is 50 confirmed notices, not 68: the 18-point gap is

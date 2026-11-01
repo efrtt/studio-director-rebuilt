@@ -19,6 +19,14 @@ import { qs, qsa, textOf } from './shell.js';
 
 const MIN_LINKS = 6;
 
+// A short menu can still be a menu when it is *drawn* as one. The count above is
+// what protects the notices: fifty of them carry a sentence and one or two
+// buttons, and covering those with tiles is worse than leaving the app alone.
+// But `PrintClass` (3 links) and `PrintFamily` (5) are pickers, each destination
+// its own `<li>` and nothing to fill in. That shape is not a notice: a notice's
+// links share a paragraph, beside the sentence it is telling you.
+const MIN_LIST_LINKS = 3;
+
 // A menu has tens of links; a picker has thousands. `Enroll(cident)` is 4,271 —
 // every student in the school, one link each. That is not a reason to refuse the
 // page: the tiles are filterable, so what it needs is a cap on what is *drawn*,
@@ -80,10 +88,21 @@ export function readIndex(doc) {
     if (seen.has(key)) continue;
     seen.add(key);
 
-    items.push({ label, href, section: sectionOf(anchor, root) });
+    items.push({
+      label,
+      href,
+      section: sectionOf(anchor, root),
+      // Kept so the shape test below can ask whether this anchor is alone in its
+      // own list item, which is what a picker looks like.
+      li: anchor.closest ? anchor.closest('li') : null
+    });
   }
 
-  if (items.length < MIN_LINKS) return null;
+  const listed = items.length >= MIN_LIST_LINKS
+    && !qsa(root, 'input, select, textarea').length
+    && items.every((item) => item.li && item.li.querySelectorAll('a[href]').length === 1);
+
+  if (items.length < MIN_LINKS && !listed) return null;
 
   // Groups in the order the page puts them, not alphabetical: the app's own
   // order is somebody's idea of a workflow.

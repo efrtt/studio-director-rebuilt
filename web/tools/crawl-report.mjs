@@ -184,10 +184,12 @@ lines.push('`docs/live-sample.json`): 50 really are notices and 11 are not. Five
 lines.push('then walked live and mounted as an index: `ChargesHome` (18 links) and `ManageWidgets` (8)');
 lines.push('from the live document, `MergeFamily` (9), `EmailFamily` (8) and');
 lines.push('`ManagePaymentMethods_studio` (7) from a fetched copy. The other six left the app its own');
-lines.push('page, which is the safe answer rather than a wrong one: `PrintClass` (6 links),');
-lines.push('`PrintFamily` (7) and `PreapproveStudents` (7) are thinner than the index reader needs, and');
-lines.push('`Unenroll` (5 controls), `EmailClass` (2) and `SendEmail` (1) are real forms no reader');
-lines.push('claims. Two of the `AddStudentMakeup` shapes redirect to the `tidExpired` notice rather than');
+lines.push('page, which is the safe answer rather than a wrong one. `PrintClass` and `PrintFamily` are');
+lines.push('pickers of three and five list items, and since 0.17.0 the index reader takes a short menu when');
+lines.push('every link is alone in its own list item; both now mount as tiles. `PreapproveStudents` keeps');
+lines.push('three links that share a paragraph, which is a notice\u2019s shape, so it stays with the app, as do');
+lines.push('`Unenroll` (a confirmation) and `EmailClass` and `SendEmail` (pickers with no list shape). Two');
+lines.push('of the `AddStudentMakeup` shapes redirect to the `tidExpired` notice rather than');
 lines.push('drawing their own screen.');
 lines.push('');
 lines.push('So the honest reading of the notice row is 50 confirmed notices, not 68: the 18-point gap is');
