@@ -61,9 +61,12 @@
       {#if report.fields.length}
         <button class="sd-btn" type="button" disabled={!dirty || busy} on:click={reset}>Reset</button>
       {/if}
-      {#if report.trigger}
+      {#if report.fields.length}
+        <!-- A report with filters always gets its Run control, even when the
+             model has no trigger: the handler re-reads the run control from the
+             live page, so the button works whether or not the copy carried it. -->
         <button class="sd-btn sd-primary" type="button" disabled={busy} on:click={run}>
-          {busy ? 'Running...' : report.trigger.label}
+          {busy ? 'Running...' : (report.trigger ? report.trigger.label : 'Run Report')}
         </button>
       {/if}
     </div>

@@ -33,7 +33,10 @@ export function reportTrigger(root) {
     if (el) return el;
   }
 
-  for (const el of qsa(root, 'a, button, input[type="submit"], input[type="button"]')) {
+  // Some run controls are drawn as `<div class="Btn" onclick=…>`: no href, not a
+  // button element, so the tag list alone found none of them and the screen grew
+  // a header with no Run button at all.
+  for (const el of qsa(root, 'a, button, .Btn, .BtnOutln, [onclick], input[type="submit"], input[type="button"]')) {
     const label = (el.getAttribute && el.getAttribute('value')) || textOf(el)
       || (el.getAttribute && el.getAttribute('title')) || '';
     if (RUN.test(label.trim())) return el;

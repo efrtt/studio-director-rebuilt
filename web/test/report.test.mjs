@@ -151,3 +151,29 @@ test('a report whose control is missing says so instead of pretending', () => {
   assert.equal(result.submitted, false);
   assert.equal(result.reason, 'no-trigger');
 });
+
+test('a run control drawn as a div is still found', () => {
+  // Student / Class List draws its Run Report as `<div class="Btn" onclick=…>`:
+  // no href and not a button element, so the header came up with no Run control
+  // and the screen had no way to submit its filters.
+  const doc = parseHtml(`<form id="idForm"><div class="contentContainer"><div class="Content">
+    <div class="formTitle">Student / Class List</div>
+    <table class="Form">
+      <tr><td>Student Enrollment</td><td><select id="classes_enroll"><option>All students</option></select></td></tr>
+      <tr><td>Birthday on or After</td><td>
+        <select id="birth_month"><option>Oct</option></select>
+        <select id="birth_day"><option>31</option></select>
+        <select id="birth_year"><option>2026</option></select>
+      </td></tr>
+    </table>
+    <div class="Btn" onclick="StudioDir.runReport()">Run Report</div>
+  </div></div></form>`);
+
+  const read = readReport(doc);
+  assert.ok(read, 'the page is a report');
+  assert.equal(read.trigger.label, 'Run Report');
+  assert.equal(read.trigger.js, true);
+  assert.deepEqual(read.rows.map((r) => r.label), ['Student Enrollment', 'Birthday on or After']);
+  // The three date parts stay one filter row, in order.
+  assert.deepEqual(read.rows[1].fields.map((f) => f.key), ['birth_month', 'birth_day', 'birth_year']);
+});
