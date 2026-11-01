@@ -59,7 +59,12 @@ export function propsFor(view, model, handlers) {
   const h = handlers || {};
   switch (view) {
     case 'week':
-      return { week: model.week, period: h.period || null, onPeriod: h.onPeriod || null };
+      return {
+        week: model.week,
+        period: h.period || null,
+        onPeriod: h.onPeriod || null,
+        nav: h.nav || null
+      };
     case 'month':
       return { month: model.month, period: h.period || null, onPeriod: h.onPeriod || null };
     case 'confirm':

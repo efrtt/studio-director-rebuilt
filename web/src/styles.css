@@ -1386,3 +1386,6 @@ html[data-sd-theme="light"] .sd-event:hover { background: rgba(47, 95, 208, .12)
 }
 html[data-sd-theme="light"] .sd-weekrow:hover { background: rgba(47, 95, 208, .08); }
 html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12); color: #8d1f1f; }
+
+/* The week's toolbar sits in the same bar the month uses, above the days. */
+.sd-weekbar { margin-bottom: 12px; }

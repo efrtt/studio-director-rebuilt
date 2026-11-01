@@ -11,6 +11,7 @@ import { readPeriodControl, choosePeriodInApp } from './lib/period.js';
 import { readNavIcons } from './lib/navicons.js';
 import { backTarget } from './lib/backlink.js';
 import { readMonth } from './lib/month.js';
+import { readCalendarNav } from './lib/calnav.js';
 
 // Replaced at build time by vite.config.js.
 const VERSION = typeof __SD_VERSION__ !== 'undefined' ? __SD_VERSION__ : 'dev';
@@ -83,6 +84,8 @@ export function mount(opts = {}) {
       // whole URLs, so switching season is the app's own navigation.
       period: opts.period || null,
       onPeriod: opts.onPeriod || null,
+      // The calendar's own Prev / Next / view links, when the page has them.
+      nav: opts.nav || null,
       // Widening the record list uses the app's own control on the live page,
       // and only when that page actually has one.
       onLoadAll: opts.onLoadAll || null,
@@ -243,6 +246,8 @@ function mountView(model, onOriginal, source = 'fetched') {
     onRefresh: refreshList,
     period: readPeriodControl(document),
     onPeriod: (value) => choosePeriodInApp(document, value),
+    // The calendar's own Prev / Next / view links, read where they stand.
+    nav: readCalendarNav(document),
     canLoadAll: !!showAllTrigger(document)
   });
 }

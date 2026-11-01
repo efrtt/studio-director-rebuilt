@@ -32,6 +32,9 @@ import { readRail, writeRail } from './lib/rail.js';
   // Where the action started, offered on a confirmation (lib/backlink.js).
   export let back = null;
   export let onPeriod = null;
+  // The app's own calendar toolbar: previous/next week and the other views
+  // (lib/calnav.js). Read at mount time, so the model keeps no chrome.
+  export let nav = null;
 
   // Prefilled from the results URL when there is one, so a search does not
   // vanish from the box the moment its page loads.
@@ -85,7 +88,7 @@ import { readRail, writeRail } from './lib/rail.js';
   $: view = viewOf(model);
   $: entry = view ? VIEWS[view] || null : null;
   $: props = entry ? propsFor(view, model, {
-    onRun, onAct, onPress, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, back, registerPrimary: providePrimary
+    onRun, onAct, onPress, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, nav, back, registerPrimary: providePrimary
   }) : {};
   $: layout = layoutFor(view, !!model.list);
   $: split = layout.split !== 'none' && !!model.list;

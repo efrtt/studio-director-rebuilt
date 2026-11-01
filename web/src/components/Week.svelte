@@ -7,8 +7,12 @@
   // Absent on the demos and on any page without one, so nothing renders.
   export let period = null;
   export let onPeriod = null;
+  // The app's own toolbar: previous and next week, and the other views
+  // (lib/calnav.js). Also read at mount time, so nothing is invented here.
+  export let nav = null;
 
   $: hourHeight = 60 * PX_PER_MIN;
+  $: viewLinks = nav && nav.views ? nav.views : [];
 
   function switchSeason(event) {
     const value = event.currentTarget.value;
@@ -25,18 +29,47 @@
 </script>
 
 <div class="sd-week">
-  {#if period && period.options.length}
-    <div class="sd-periodpick">
-      <label class="sd-periodlabel" for="sd-period">{period.label}</label>
-      <select id="sd-period" class="sd-periodselect" on:change={switchSeason}>
-        {#each period.options as option}
-          <option value={option.value} selected={option.value === period.value}>{option.label}</option>
-        {/each}
-      </select>
+  {#if nav || (period && period.options.length)}
+    <div class="sd-monthbar sd-weekbar">
+      <div class="sd-monthnav">
+        {#if nav}
+          {#if nav.prev}
+            <a class="sd-btn sd-monthstep" href={nav.prev.href} title={nav.prev.text}>‹ Prev</a>
+          {:else}
+            <span class="sd-btn sd-monthstep sd-monthstep--off">‹ Prev</span>
+          {/if}
+          {#if nav.range || week.week}<span class="sd-monthlabel">{nav.range || week.week}</span>{/if}
+          {#if nav.next}
+            <a class="sd-btn sd-monthstep" href={nav.next.href} title={nav.next.text}>Next ›</a>
+          {:else}
+            <span class="sd-btn sd-monthstep sd-monthstep--off">Next ›</span>
+          {/if}
+        {/if}
+      </div>
+
+      <div class="sd-monthtools">
+        {#if viewLinks.length}
+          <span class="sd-viewswitch">
+            {#each viewLinks as view}
+              <a class="sd-viewlink" href={view.href}>{view.label}</a>
+            {/each}
+            <span class="sd-viewlink sd-viewlink--on" aria-current="page">Week</span>
+          </span>
+        {/if}
+
+        {#if period && period.options.length}
+          <label class="sd-periodlabel" for="sd-week-period">{period.label}</label>
+          <select id="sd-week-period" class="sd-periodselect" on:change={switchSeason}>
+            {#each period.options as option}
+              <option value={option.value} selected={option.value === period.value}>{option.label}</option>
+            {/each}
+          </select>
+        {/if}
+      </div>
     </div>
   {/if}
 
-  {#if week.week}
+  {#if !nav && week.week}
     <div class="sd-period">{week.week}</div>
   {/if}
 
