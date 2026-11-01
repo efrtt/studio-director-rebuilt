@@ -1,13 +1,13 @@
 name: CI
 
-# Both gates, on every push. The rebuild's whole safety argument is that the 20
-# golden models and the 14 suites do not move — and twice during the rebuild a
-# change looked fine to read and moved one of them. This makes that check happen
+# Both gates, on every branch that ships a build. The rebuild's whole safety
+# argument is that the golden models and the suites do not move, and more than once
+# a change looked fine to read and moved one of them. This makes that check happen
 # without anyone remembering to run it.
 
 on:
   push:
-    branches: [main, rebuild]
+    branches: [main, rebuild, wii-skin]
   pull_request:
   workflow_dispatch:
 
