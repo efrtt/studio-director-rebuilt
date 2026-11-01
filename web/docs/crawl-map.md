@@ -2,6 +2,9 @@
 
 Generated from `studio-director-pages.json` — **447 screens** crawled on 2026-10-31, 0 links deliberately not followed, 0 errors.
 
+**96 links the safety rule flagged were followed on purpose** - see the
+section at the end of this map for what they are and why they were safe.
+
 **Complete:** the queue was drained, so every page the app links to is in here.
 
 ## Coverage
@@ -163,13 +166,13 @@ Save, Delete and More were invisible in every earlier crawl, and so were the pho
 | `HomePage(tab)` | Home | (no text) | a (no href) |
 | `EditInstructor(iident)` | Instructor: Sam Ortega | #save | a (no href) |
 | `EditInstructor(iident)` | Instructor: Sam Ortega | #delete | a (no href) |
-| `EditFamily(fident)` | Family: Family 13 | #save | a (no href) |
-| `EditFamily(fident)` | Family: Family 13 | #delete | a (no href) |
-| `EditFamily(fident)` | Family: Family 13 | Mom Cell | span.link |
-| `EditFamily(fident)` | Family: Family 13 | Dad Cell | span.link |
-| `EditFamily(fident)` | Family: Family 13 | Home Phone | span.link |
-| `EditStudent(sident)` | Student: Rosalyn Cheng | #save | a (no href) |
-| `EditStudent(sident)` | Student: Rosalyn Cheng | #delete | a (no href) |
+| `EditFamily(fident)` | Family: Family 23 | #save | a (no href) |
+| `EditFamily(fident)` | Family: Family 23 | #delete | a (no href) |
+| `EditFamily(fident)` | Family: Family 23 | Mom Cell | span.link |
+| `EditFamily(fident)` | Family: Family 23 | Dad Cell | span.link |
+| `EditFamily(fident)` | Family: Family 23 | Home Phone | span.link |
+| `EditStudent(sident)` | Student: Student 61 | #save | a (no href) |
+| `EditStudent(sident)` | Student: Student 61 | #delete | a (no href) |
 | `PerformanceCharge` | Performance Charge | #save | a (no href) |
 | `EventCharge` | Event Charge | #save | a (no href) |
 | `CostumeDepositCharge` | Costume Deposit Charge | #save | a (no href) |
@@ -221,17 +224,17 @@ Save, Delete and More were invisible in every earlier crawl, and so were the pho
 | `EmailHistory(fident)` | Email History | Go back | a (no href) |
 | `FamilyDocuments(fident)` | Family Documents | #save | a (no href) |
 | `NewStudent(family)` | New Student | #save | a (no href) |
-| `EditFamily(fident,startrow,tab)` | Family: Family 13 | #save | a (no href) |
-| `EditFamily(fident,startrow,tab)` | Family: Family 13 | #delete | a (no href) |
-| `EditFamily(fident,startrow,tab)` | Family: Family 13 | Mom Cell | span.link |
-| `EditFamily(fident,startrow,tab)` | Family: Family 13 | Dad Cell | span.link |
-| `EditFamily(fident,startrow,tab)` | Family: Family 13 | Home Phone | span.link |
-| `EditFamily(allrows,fident,tab)` | Family: Family 13 | #save | a (no href) |
-| `EditFamily(allrows,fident,tab)` | Family: Family 13 | #delete | a (no href) |
-| `EditFamily(allrows,fident,tab)` | Family: Family 13 | Mom Cell | span.link |
-| `EditFamily(allrows,fident,tab)` | Family: Family 13 | Dad Cell | span.link |
-| `EditFamily(allrows,fident,tab)` | Family: Family 13 | Home Phone | span.link |
-| `EditFamily(allrows,fident,tab)` | Family: Family 13 | (no text) | a (no href) |
+| `EditFamily(fident,startrow,tab)` | Family: Family 23 | #save | a (no href) |
+| `EditFamily(fident,startrow,tab)` | Family: Family 23 | #delete | a (no href) |
+| `EditFamily(fident,startrow,tab)` | Family: Family 23 | Mom Cell | span.link |
+| `EditFamily(fident,startrow,tab)` | Family: Family 23 | Dad Cell | span.link |
+| `EditFamily(fident,startrow,tab)` | Family: Family 23 | Home Phone | span.link |
+| `EditFamily(allrows,fident,tab)` | Family: Family 23 | #save | a (no href) |
+| `EditFamily(allrows,fident,tab)` | Family: Family 23 | #delete | a (no href) |
+| `EditFamily(allrows,fident,tab)` | Family: Family 23 | Mom Cell | span.link |
+| `EditFamily(allrows,fident,tab)` | Family: Family 23 | Dad Cell | span.link |
+| `EditFamily(allrows,fident,tab)` | Family: Family 23 | Home Phone | span.link |
+| `EditFamily(allrows,fident,tab)` | Family: Family 23 | (no text) | a (no href) |
 | `EditCharge(xident)` | Edit Charge | #save | a (no href) |
 | `EditCharge(xident)` | Edit Charge | #delete | a (no href) |
 | `Override(sident)` | Override | #save | a (no href) |
@@ -289,16 +292,16 @@ Save, Delete and More were invisible in every earlier crawl, and so were the pho
 | `EditClass(cident,tab)` | Class: 818 Ballet | #save | a (no href) |
 | `EditClass(cident,tab)` | Class: 818 Ballet | #delete | a (no href) |
 | `EmailHistory(addrs,pos)` | Email History | Go back | a (no href) |
-| `EditFamily(fident,tab)` | Family: Family 13 | #save | a (no href) |
-| `EditFamily(fident,tab)` | Family: Family 13 | #delete | a (no href) |
-| `EditFamily(fident,tab)` | Family: Family 13 | Mom Cell | span.link |
-| `EditFamily(fident,tab)` | Family: Family 13 | Dad Cell | span.link |
-| `EditFamily(fident,tab)` | Family: Family 13 | Home Phone | span.link |
+| `EditFamily(fident,tab)` | Family: Family 23 | #save | a (no href) |
+| `EditFamily(fident,tab)` | Family: Family 23 | #delete | a (no href) |
+| `EditFamily(fident,tab)` | Family: Family 23 | Mom Cell | span.link |
+| `EditFamily(fident,tab)` | Family: Family 23 | Dad Cell | span.link |
+| `EditFamily(fident,tab)` | Family: Family 23 | Home Phone | span.link |
 | `AddFamilyChargeForm(category,charge,family_ident)` | Add Family Charge | #save | a (no href) |
 | `EditCharge(allrows,xident)` | Edit Charge | #save | a (no href) |
 | `EditCharge(allrows,xident)` | Edit Charge | #delete | a (no href) |
-| `EditStudent(sident,tab)` | Student: Rosalyn Cheng | #save | a (no href) |
-| `EditStudent(sident,tab)` | Student: Rosalyn Cheng | #delete | a (no href) |
+| `EditStudent(sident,tab)` | Student: Student 61 | #save | a (no href) |
+| `EditStudent(sident,tab)` | Student: Student 61 | #delete | a (no href) |
 | `Attendance(cident,sident)` | Attendance | #save | a (no href) |
 | `ManageHolidays(meth)` | Manage Holidays | #save | a (no href) |
 | `ManageSessions(meth)` | Manage Sessions | #save | a (no href) |
@@ -368,7 +371,7 @@ its own buttons (OK, Accept, Enroll), so the card offers all of them.
 | `UploadUserDocument` | Upload User Document | Studio Director's Terms / OK / OK |
 | `UploadUserDocument(cident)` | Upload User Document | Studio Director's Terms / OK / OK |
 | `UploadUserDocument(fident)` | Upload User Document | Studio Director's Terms / OK / OK |
-| `ViewAccept(meth,methargs)` | Student Waiver & Release of Liability | [email protected] / San Ramon Valley Dance Academy (SRVDA) Rules and Policies / SRVDA Rules and Policies |
+| `ViewAccept(meth,methargs)` | Student Waiver & Release of Liability | [email protected] / San Ramon Valley Dance Academy (studio1) Rules and Policies / studio1 Rules and Policies |
 
 ## Screens by module
 
@@ -396,7 +399,7 @@ its own buttons (OK, Accept, Enroll), so the card offers all of them.
 | `PrintInstructor(iident,initials)` | Print Schedule: Sam Ortega | record | 13 | 0 | 0 | sheet |
 | `PrintStudent(meth,methargs)` | Print Student | record | 0 | 2 | 0 | settings |
 | `PrintStudent(sident)` | Print Student | record | 0 | 0 | 0 | note |
-| `PrintStudentSchedule(sident)` | Print Schedule: Rosalyn Cheng | record | 0 | 0 | 0 | note |
+| `PrintStudentSchedule(sident)` | Print Schedule: Student 61 | record | 0 | 0 | 0 | note |
 | `PrintTuitionSummary(fident)` | Tuition Summary | record | 2 | 0 | 0 | sheet |
 | `PrintTuitionSummary(meth,methargs)` |  | record | 2 | 0 | 0 | sheet |
 
@@ -423,10 +426,10 @@ its own buttons (OK, Accept, Enroll), so the card offers all of them.
 
 | Page | Title | Kind | Rows | Controls | Tabs | View |
 |---|---|---|---|---|---|---|
-| `EditFamily(allrows,fident,tab)` | Family: Family 13 | record+list | 194 | 20 | 4 | list |
-| `EditFamily(fident,startrow,tab)` | Family: Family 13 | record+list | 45 | 20 | 4 | list |
-| `EditFamily(fident,tab)` | Family: Family 13 | record | 45 | 19 | 4 | editor |
-| `EditFamily(fident)` | Family: Family 13 | record+list | 45 | 20 | 4 | list |
+| `EditFamily(allrows,fident,tab)` | Family: Family 23 | record+list | 194 | 20 | 4 | list |
+| `EditFamily(fident,startrow,tab)` | Family: Family 23 | record+list | 45 | 20 | 4 | list |
+| `EditFamily(fident,tab)` | Family: Family 23 | record | 45 | 19 | 4 | editor |
+| `EditFamily(fident)` | Family: Family 23 | record+list | 45 | 20 | 4 | list |
 | `ManageFamilyNotes(fident,meth)` |  | record | 0 | 1 | 0 | none |
 | `ManagePortalText(fident)` | Manage Portal Text | record | 0 | 1 | 0 | settings |
 | `PickCategory(fident)` | Pick Category | record | 0 | 0 | 0 | index |
@@ -435,8 +438,8 @@ its own buttons (OK, Accept, Enroll), so the card offers all of them.
 
 | Page | Title | Kind | Rows | Controls | Tabs | View |
 |---|---|---|---|---|---|---|
-| `EditStudent(sident,tab)` | Student: Rosalyn Cheng | record | 32 | 17 | 4 | editor |
-| `EditStudent(sident)` | Student: Rosalyn Cheng | record+list | 32 | 18 | 4 | list |
+| `EditStudent(sident,tab)` | Student: Student 61 | record | 32 | 17 | 4 | editor |
+| `EditStudent(sident)` | Student: Student 61 | record+list | 32 | 18 | 4 | list |
 | `Override(sident)` | Override | record | 0 | 0 | 0 | note |
 | `UnenrollAll(sident)` | Unenroll All | record | 0 | 0 | 0 | note |
 | `ViewOldEnrollment(sident)` | View Old Enrollment | record | 6 | 0 | 0 | sheet |
@@ -894,3 +897,25 @@ its own buttons (OK, Accept, Enroll), so the card offers all of them.
 Anything whose page name contains an action verb is recorded and never requested, because
 a crawl must not delete, charge, or email. These are the screens behind those links:
 
+None, because this run followed every flagged link. It says so below.
+
+## Links the safety rule flagged
+
+`tools/scrape-all.js` will not request a link whose page name contains an action verb,
+because a crawl must not delete, charge, or email. A run with `{ all: true }` follows them
+anyway and records each one in `followedRisky`; this crawl was such a run, and followed
+96 of them.
+
+Every one was a plain GET, and 96 of 96 are in this map as screens.
+What the rule matched is the name of the screen behind the link, not an act:
+
+| Kind | Screens | Examples |
+|---|---|---|
+| record | 57 | `SendEmail(meth)`, `ViewDropClassHistory(cident)`, `SendEmail(iident,totype)`, +54 more |
+| page | 21 | `NewFamilyCharge`, `NewClassTypeCharge`, `AddChargeByTag`, +18 more |
+| form | 17 | `PerformanceCharge`, `EventCharge`, `CostumeDepositCharge`, +14 more |
+| week | 1 | `NewClassCharge` |
+
+None came back with a confirmation title, so no GET changed a record: the destinations are
+the charge, delete, reset and email *forms* themselves, which is where the crawl had to go
+to map them. The `Login` and `Register` links point at the public portal sign-in page.

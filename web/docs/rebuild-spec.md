@@ -230,9 +230,11 @@ goldens should not move at all.
 - 2 screens fall back entirely: `GetOnlineRegUrl` and `ManageFamilyNotes(fident,meth)` — controls,
   but nothing that saves them. Their fixtures are reconstructions of counts, so they pin the
   decision, not the page.
-- The report, task and settings write paths share a contract with record saves but **no verified
-  transport**; only the record save has been measured against the real site.
-- The crawl followed 96 URLs its own safety rule flagged; `crawl-map.md` does not yet explain them.
+- The report, task and settings write paths share a contract with record saves, and all four have
+  now been measured against the real site (`EditFamily` 430 bytes, `StudentContactList` 240,
+  `EmailClasses` 169, `ManagePhoneNumbersFormat` 54); see `rebuild-plan.md`.
+- The crawl followed 96 URLs its own safety rule flagged; `crawl-map.md` now explains them (plain
+  GETs to the charge, delete, reset and email forms, none returning a confirmation).
 - `readLiveView`'s polling and `contradictsNote` against a live DOM are still hand-checked only.
 
 ### Status after the rebuild (2026-10-31)

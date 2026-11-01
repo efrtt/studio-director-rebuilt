@@ -157,7 +157,8 @@ its source as well. The first pass measured `fetched` for all four, which turned
 the probe flag rather than in the routing: `sdprobe` was missing from `NAV_PARAMS`, so `?sdprobe=1`
 read as a record id and every armed page went through `mountRecord`.
 
-Remaining: the live hand-checks listed in [`rebuild-plan.md`](rebuild-plan.md).
+Nothing here is waiting for a session: both hand-checks the plan had left are done, and their results
+are in [`rebuild-plan.md`](rebuild-plan.md).
 
 ## What a rewrite should design out
 
@@ -209,6 +210,12 @@ Stated here so a rewrite does not assume these were solved:
   saves them, which is exactly why no reader claims them. Their markup was recorded only as counts,
   so `test/fixtures/fetched-onlineregurl.html` and `fetched-familynotes.html` are reconstructions of
   that shape — they pin the decision, not the page.
-- The report, task and settings write paths share a contract with record saves but **not a verified
-  transport** — only the record save has been measured.
-- The crawl followed 96 URLs its own safety rule flagged; the map does not yet explain that.
+- The report, task and settings write paths share a contract with record saves, and that contract is
+  now measured on all four kinds of screen: `EditFamily` (430 bytes), `StudentContactList` (240),
+  `EmailClasses` (169) and `ManagePhoneNumbersFormat` (54), each a `POST(form, scripted submit)`
+  whose body carried the value written into the page's own control. What stays unproven is the
+  opposite case, a screen where the app posts its own copy, so `save.js` still refuses to press when
+  a field cannot be written.
+- The crawl followed 96 URLs its own safety rule flagged. Explained at the end of
+  [`crawl-map.md`](crawl-map.md): all 96 were plain GETs, every one is in the map as a charge, delete,
+  reset or email *form*, and none came back with a confirmation title.

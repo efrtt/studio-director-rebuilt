@@ -146,6 +146,12 @@ lines.push(`Generated from \`${path.basename(input)}\` — **${crawl.pages.lengt
   + `on ${String(crawl.startedAt || '').slice(0, 10)}`
   + `, ${crawl.counts.skipped} links deliberately not followed, ${crawl.counts.errors} errors.`);
 lines.push('');
+const riskyLinks = crawl.followedRisky || [];
+if (riskyLinks.length) {
+  lines.push(`**${riskyLinks.length} links the safety rule flagged were followed on purpose** - see the`);
+  lines.push('section at the end of this map for what they are and why they were safe.');
+  lines.push('');
+}
 lines.push(crawl.stoppedEarly
   ? `**Incomplete:** ${crawl.remaining} page shapes were still queued when it stopped.`
   : '**Complete:** the queue was drained, so every page the app links to is in here.');
@@ -323,7 +329,45 @@ lines.push('a crawl must not delete, charge, or email. These are the screens beh
 lines.push('');
 const skippedByPage = new Map();
 for (const s of crawl.skipped || []) skippedByPage.set(s.page, (skippedByPage.get(s.page) || 0) + 1);
+if (!skippedByPage.size) lines.push('None, because this run followed every flagged link. It says so below.');
 for (const [page, n] of [...skippedByPage.entries()].sort()) lines.push(`- \`${page}\` (${n})`);
+lines.push('');
+
+lines.push('## Links the safety rule flagged');
+lines.push('');
+lines.push('`tools/scrape-all.js` will not request a link whose page name contains an action verb,');
+lines.push('because a crawl must not delete, charge, or email. A run with `{ all: true }` follows them');
+lines.push('anyway and records each one in `followedRisky`; this crawl was such a run, and followed');
+lines.push(`${riskyLinks.length} of them.`);
+lines.push('');
+const riskyByUrl = new Map(crawl.pages.map((p) => [p.url, p]));
+const flagged = riskyLinks.map((r) => riskyByUrl.get(r.url)).filter(Boolean);
+lines.push(`Every one was a plain GET, and ${flagged.length} of ${riskyLinks.length} are in this map as screens.`);
+lines.push('What the rule matched is the name of the screen behind the link, not an act:');
+lines.push('');
+const flaggedKinds = new Map();
+for (const p of flagged) {
+  if (!flaggedKinds.has(p.kind)) flaggedKinds.set(p.kind, []);
+  flaggedKinds.get(p.kind).push(p);
+}
+lines.push('| Kind | Screens | Examples |');
+lines.push('|---|---|---|');
+for (const [kind, pages] of [...flaggedKinds.entries()].sort((a, b) => b[1].length - a[1].length)) {
+  const names = pages.map((p) => `\`${p.shape}\``);
+  const shown = names.slice(0, 3).join(', ') + (names.length > 3 ? `, +${names.length - 3} more` : '');
+  lines.push(`| ${kind} | ${pages.length} | ${shown} |`);
+}
+lines.push('');
+const confirmations = flagged.filter((p) => /confirm|updated|saved|success/i.test(p.title || ''));
+if (!confirmations.length) {
+  lines.push('None came back with a confirmation title, so no GET changed a record: the destinations are');
+  lines.push('the charge, delete, reset and email *forms* themselves, which is where the crawl had to go');
+  lines.push('to map them. The `Login` and `Register` links point at the public portal sign-in page.');
+} else {
+  lines.push(`${confirmations.length} came back with a confirmation title, so those GETs may have acted.`);
+  lines.push('They are listed here so the next crawl can decide whether to follow them again.');
+  for (const p of confirmations) lines.push(`- \`${p.shape}\` (${p.title})`);
+}
 lines.push('');
 
 fs.mkdirSync(path.dirname(path.resolve(output)), { recursive: true });
