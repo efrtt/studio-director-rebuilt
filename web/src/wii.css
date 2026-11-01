@@ -906,9 +906,11 @@ html[data-sd-theme="wii"] #sd-root .sd-menu-screen {
   position: fixed;
   inset: 0;
   z-index: 60;
-  display: flex;
-  flex-direction: column;
-  padding: 26px 30px 0;
+  /* Two rows: the channels, then the band. The band is a row of its own so it
+     can run edge to edge, and the channels centre themselves in what is left. */
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  padding: 0;
   overflow: auto;
   /* The pinstripe is the Menu's wallpaper: 2px lines over a cool grey. */
   background:
@@ -922,9 +924,12 @@ html[data-sd-theme="wii"] #sd-root .sd-menu-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
   width: 100%;
-  max-width: 1120px;
-  margin: 0 auto;
+  max-width: 1240px;
+  /* Centred in the space above the band rather than pinned to the top edge. */
+  align-self: center;
+  justify-self: center;
   align-content: start;
+  padding: 24px 30px;
 }
 
 /* A channel: white keyline, gloss cap at the halfway line, soft ambient drop. */
@@ -1034,7 +1039,7 @@ html[data-sd-theme="wii"] #sd-root .sd-menu-bar {
   justify-content: space-between;
   gap: 24px;
   width: 100%;
-  margin: auto 0 0;
+  margin: 0;
   padding: 22px 34px 18px;
   /* The shallow curve across the top of the band. */
   border-radius: 50% 50% 0 0 / 34px 34px 0 0;
@@ -1112,8 +1117,11 @@ html[data-sd-theme="wii"] #sd-root .sd-menu-date {
   html[data-sd-theme="wii"] #sd-root .sd-menu-date { font-size: 18px; }
 }
 @media (max-width: 760px) {
-  html[data-sd-theme="wii"] #sd-root .sd-menu-screen { padding: 16px 16px 0; }
-  html[data-sd-theme="wii"] #sd-root .sd-menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  html[data-sd-theme="wii"] #sd-root .sd-menu-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 16px;
+  }
   html[data-sd-theme="wii"] #sd-root .sd-menu-round { width: 62px; height: 62px; }
   html[data-sd-theme="wii"] #sd-root .sd-menu-bar { padding: 16px 18px 12px; }
 }

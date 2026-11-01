@@ -1,7 +1,7 @@
 {
   "name": "sd-rebuilt",
   "private": true,
-  "version": "0.27.0",
+  "version": "0.27.1",
   "type": "module",
   "description": "Rebuilt UI for The Studio Director: week calendar plus the record lists the app puts beside its forms.",
   "scripts": {
