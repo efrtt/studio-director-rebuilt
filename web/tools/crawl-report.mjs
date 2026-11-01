@@ -188,8 +188,10 @@ lines.push('page, which is the safe answer rather than a wrong one. `PrintClass`
 lines.push('pickers of three and five list items, and since 0.17.0 the index reader takes a short menu when');
 lines.push('every link is alone in its own list item; both now mount as tiles. `PreapproveStudents` keeps');
 lines.push('three links that share a paragraph, which is a notice\u2019s shape, so it stays with the app, as do');
-lines.push('`EmailClass` and `SendEmail` (pickers with no list shape). `Unenroll` is a confirmation, and since');
-lines.push('0.18.0 it renders as the ask-before-doing card with the app\u2019s own Continue button. Two');
+lines.push('`EmailClass` is four distinct destinations in 86 characters, and since 0.19.0 it mounts as tiles.');
+lines.push('`SendEmail` repeats one destination four times over twice the prose, so it stays with the app on');
+lines.push('purpose. `Unenroll` is a confirmation, and since 0.18.0 it renders as the ask-before-doing card');
+lines.push('with the app\u2019s own Continue button. Two');
 lines.push('of the `AddStudentMakeup` shapes redirect to the `tidExpired` notice rather than');
 lines.push('drawing their own screen.');
 lines.push('');

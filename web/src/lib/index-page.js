@@ -15,7 +15,7 @@
 // Alerts list), and a page with a form is not one either — those keep whatever
 // view they already have.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, pageName } from './shell.js';
 
 const MIN_LINKS = 6;
 
@@ -26,6 +26,13 @@ const MIN_LINKS = 6;
 // its own `<li>` and nothing to fill in. That shape is not a notice: a notice's
 // links share a paragraph, beside the sentence it is telling you.
 const MIN_LIST_LINKS = 3;
+
+// A picker is a handful of distinct destinations and almost no prose: `EmailClass`
+// is four destinations in 86 characters. The text cap is the other half of the
+// distinction, because `SendEmail` looks the same until you read it: five links to
+// two destinations (one of them repeated four times with different parameters) and
+// 194 characters of description. That page is deliberately left to the app.
+const PICKER_TEXT = 160;
 
 // A menu has tens of links; a picker has thousands. `Enroll(cident)` is 4,271 —
 // every student in the school, one link each. That is not a reason to refuse the
@@ -102,7 +109,16 @@ export function readIndex(doc) {
     && !qsa(root, 'input, select, textarea').length
     && items.every((item) => item.li && item.li.querySelectorAll('a[href]').length === 1);
 
-  if (items.length < MIN_LINKS && !listed) return null;
+  // Every destination offered once, nothing to type into, hardly any prose.
+  const typeable = qsa(root, 'input, select, textarea')
+    .filter((el) => String(el.getAttribute('type') || '').toLowerCase() !== 'hidden');
+  const pages = items.map((item) => pageName(item.href));
+  const picker = items.length >= 3 && items.length <= 5
+    && new Set(pages).size === items.length
+    && !typeable.length
+    && textOf(root).length <= PICKER_TEXT;
+
+  if (items.length < MIN_LINKS && !listed && !picker) return null;
 
   // Groups in the order the page puts them, not alphabetical: the app's own
   // order is somebody's idea of a workflow.

@@ -3,7 +3,39 @@
   "form": null,
   "model": {
     "confirm": null,
-    "index": null,
+    "index": {
+      "breadcrumb": [
+        "Home"
+      ],
+      "count": 4,
+      "groups": [
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=NewClass&clicktab=1",
+              "label": "Classes"
+            },
+            {
+              "href": "admin.sd?page=EditClass&cident=1782910697458",
+              "label": "Back to the class"
+            },
+            {
+              "href": "admin.sd?page=SendEmail&totype=Class&cident=1782910697458",
+              "label": "Send an email"
+            },
+            {
+              "href": "admin.sd?page=EmailClass&cident=1782910697458",
+              "label": "Email this class"
+            }
+          ],
+          "label": "Links"
+        }
+      ],
+      "kind": "index",
+      "limit": 300,
+      "title": "Email Class",
+      "truncated": false
+    },
     "list": null,
     "nav": [
       {
@@ -26,9 +58,9 @@
     "task": null,
     "title": "Email Class",
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=fetched-emailclass",
-    "view": null,
+    "view": "index",
     "week": null
   },
   "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=fetched-emailclass",
-  "view": null
+  "view": "index"
 }
