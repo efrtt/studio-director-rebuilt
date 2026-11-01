@@ -151,6 +151,12 @@ settled the count that prompted it: `EditFamily` has 19 editable fields, and the
 values arrive as `input[type=hidden]`. So the renderer was right and the golden that says 22 models
 a page the app does not serve (see the note in `rebuild-plan.md`).
 
+**Checked live, v0.15.1.** `CalendarPage` (week), `ChargesHome` (index, 28 tiles), `Unenroll` (note)
+and `EditFamily` (form, 19 fields) all mounted from the live document, and a record page now records
+its source as well. The first pass measured `fetched` for all four, which turned out to be a bug in
+the probe flag rather than in the routing: `sdprobe` was missing from `NAV_PARAMS`, so `?sdprobe=1`
+read as a record id and every armed page went through `mountRecord`.
+
 Remaining: the live hand-checks listed in [`rebuild-plan.md`](rebuild-plan.md).
 
 ## What a rewrite should design out

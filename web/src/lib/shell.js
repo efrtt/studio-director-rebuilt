@@ -37,7 +37,12 @@ export function pageName(href) {
 // calendar's own links look like `admin.sd?page=EditClass&cident=…`, and a list
 // item's link takes the same shape. Keys are compared lower-cased because the
 // app's own casing is not consistent (`searchText`).
-const NAV_PARAMS = new Set(['page', 'clicktab', 'filter', 'searchtext']);
+// `sdprobe` belongs here too: it is this build's own switch (see probe.js), and
+// a page visited with `?sdprobe=1` was routed as a record page because the flag
+// looked exactly like `fident=…`. Measured live: with the probe armed, the
+// calendar and ChargesHome both mounted from a fetched copy, because
+// `mountRecord` owned them.
+const NAV_PARAMS = new Set(['page', 'clicktab', 'filter', 'searchtext', 'sdprobe']);
 
 function isNavParam(key) {
   return NAV_PARAMS.has(String(key).toLowerCase());

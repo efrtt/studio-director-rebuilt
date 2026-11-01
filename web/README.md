@@ -622,7 +622,7 @@ to the app, so there is nothing to clean up.
 
 ```bash
 cd web
-npm test          # adapters, routing, rail, editors, saving, forms, tables, toggles — 14 suites, 159 assertions
+npm test          # adapters, routing, rail, editors, saving, forms, tables, toggles — 14 suites, 160 assertions
 npm run golden    # the 20 recorded screens, model for model
 npm run demo      # demo/*.html — self-contained pages, plus live-*.html
 ```

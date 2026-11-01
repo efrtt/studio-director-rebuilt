@@ -241,5 +241,6 @@ Section 2 (registry), section 3 (one dispatcher), section 4 (the write path) and
 are implemented; section 3's note tiebreaker and shell-less case still run in `main.js`, because they
 need the live document and a timeout. Section 5 is switched on: the live document is read first and
 the GET is paid only when `chooseSource` says the live page cannot answer. Which document a model
-comes from on 447 screens is still not something a fixture can see, so that change is unverified
-against the real app. The unknowns above are unchanged; none of them was resolved by moving code.
+comes from on 447 screens is not something a fixture can see, but it has since been checked live on
+four screens, all of which mounted from the live document (see `rebuild-plan.md` section 4). The
+unknowns above are unchanged; none of them was resolved by moving code.

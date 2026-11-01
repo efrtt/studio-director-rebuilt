@@ -574,6 +574,11 @@ test('a page showing one record is handed back to the app', () => {
   assert.equal(isRecordPage('admin.sd?page=NewClass&clicktab=Classes'), false);
   assert.equal(isRecordPage('admin.sd?page=CalendarPage&clicktab=1'), false);
   assert.equal(isRecordPage('admin.sd?page=NewStudent&filter=ada'), false);
+  // The build's own probe switch is not a record parameter. It was, once, and
+  // every page visited with `?sdprobe=1` went through mountRecord instead of its
+  // own route: the calendar and ChargesHome both mounted from a fetched copy.
+  assert.equal(isRecordPage('admin.sd?page=CalendarPage&clicktab=1&sdprobe=1'), false);
+  assert.deepEqual(recordParams('admin.sd?page=ChargesHome&sdprobe=1'), []);
   assert.equal(isRecordPage('https://x/studio1/admin.sd'), false);
 
   // The calendar's own link, verbatim from the dump.

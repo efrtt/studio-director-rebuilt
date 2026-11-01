@@ -295,7 +295,8 @@ function mountRecord(onOriginal) {
   // and an empty select is skipped as uneditable: the fetched copy of EditFamily
   // came back with 19 fields where the page has 22. Reading where it stands is
   // also the tree the edits get written into.
-  const source = hasForm(document)
+  const live = hasForm(document);
+  const source = live
     ? Promise.resolve({ doc: document, finalUrl: location.href })
     : fetchPage(location.href);
 
@@ -307,6 +308,10 @@ function mountRecord(onOriginal) {
       const editor = recordModel(page.doc, page.finalUrl);
 
       if (editor) {
+        // Probe mode records where every other view came from; records were the
+        // one kind with no verdict in the log, which is exactly the kind the plan
+        // is trying to check.
+        recordView('form', live ? 'live' : 'fetched');
         // Edit pages opened from a list carry that list in the side panel
         // (`#idSearchSpan`, plus `#searchidx`). Showing it keeps record-to-record
         // navigation inside the app instead of a trip back to Classes.

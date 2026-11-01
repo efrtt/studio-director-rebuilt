@@ -83,9 +83,23 @@ into.
 view the live tree has not drawn yet, and `decideMount` already owns what to mount; only `live` is
 allowed to skip the GET. The budget is unchanged: one same-origin GET per view at most.
 
-**Still unverified against the real app.** The decision function is tested and the wiring is small,
-but which document a model comes from on 447 screens is not something a fixture can see. This is the
-first thing to check in a signed-in session.
+**Checked live**, v0.15.1, in a signed-in session with the built userscript put into the app's own
+pages:
+
+| Page | Mounted | Source |
+|---|---|---|
+| `CalendarPage` | week, `158 classes` | live |
+| `ChargesHome` | index, 28 tiles from 18 links | live |
+| `Unenroll` | note | live |
+| `EditFamily(fident)` | form, `19 fields` | live |
+
+All four came from the live document, so the common screen costs no GET at all.
+
+The same session found a bug in the probe flag itself: `sdprobe` was missing from `NAV_PARAMS`, so a
+page visited with `?sdprobe=1` looked like `?fident=...` and was routed as a record page. With the
+probe armed, the calendar and `ChargesHome` both mounted from a fetched copy and reported `fetched`,
+which is what the first pass measured before the fix. A record page also recorded no source at all,
+because `mountRecord` never called `recordView`; both are fixed in 0.15.1.
 
 ## 5. Views keyed by kind — done
 
@@ -103,10 +117,11 @@ layout (list beside editor/confirmation) as a `SPLIT` set rather than a nested b
 | view map | 172,763 | 169,185 | 48,784 | 14 / 158 |
 | live-first | 173,202 | 169,624 | 48,919 | 14 / 159 |
 | record live-first | 173,379 | 169,722 | 49,289 | 14 / 160 |
+| probe routing fix | 173,429 | 169,772 | 48,984 | 14 / 160 |
 
-The bundle is **7,377 bytes smaller** than the reference build and 151 bytes smaller gzipped, after
-gaining five model modules, two test suites and the live-first decision, for records as well as for
-the page routes — the old `{#if}` chain and the duplicated readers were most of what went.
+The bundle is **7,327 bytes smaller** than the reference build and 456 bytes smaller gzipped, after
+gaining five model modules, two test suites, the live-first decision and the routing fix the live
+check found, the old `{#if}` chain and the duplicated readers being most of what went.
 
 No test and no golden was edited. The new coverage lives in two new suites (`model.test.mjs`,
 `readers.test.mjs`), added to the `test` script; the twelve original suites pass unchanged.
@@ -135,14 +150,9 @@ the browser ends up with. A crawl summary is a shape, not a page; the fixture ha
 
 ## Not verified here
 
-These need a signed-in session on the live paid app, so they are listed as unchecked rather than
-claimed:
+The read-only checks above are done. These remain, because they write to a real record and need a
+deliberate decision about which one:
 
 - a record save persisting (`tools/save-check.js`);
-- `ChargesHome` routing to its live index rather than its fetched notice;
-- `Unenroll` leaving the app untouched;
 - the report, task and settings write transports, none of which has ever been measured against the
-  real site;
-- the live-first read path (§4) for the page routes, still unexercised against the real app. The
-  record half of it is exercised in the way that matters here: it read a live `EditFamily` and
-  returned that page's real field count.
+  real site.
