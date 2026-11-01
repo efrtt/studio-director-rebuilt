@@ -74,13 +74,13 @@ export function propsFor(view, model, handlers) {
     case 'index':
       return { index: model.index };
     case 'report':
-      return { report: model.report, onRun: h.onRun, registerPrimary: h.registerPrimary };
+      return { report: model.report, onRun: h.onRun };
     case 'task':
-      return { task: model.task, onAct: h.onAct, registerPrimary: h.registerPrimary };
+      return { task: model.task, onAct: h.onAct };
     case 'sheet':
       return { sheet: model.sheet, onPress: h.onPress };
     case 'settings':
-      return { settings: model.settings, onSave: h.onSaveSettings, registerPrimary: h.registerPrimary };
+      return { settings: model.settings, onSave: h.onSaveSettings };
     case 'note':
       return { note: model.note, onPress: h.onPress };
     case 'list':
@@ -91,8 +91,7 @@ export function propsFor(view, model, handlers) {
         tabs: model.tabs || null,
         bar: model.bar,
         onSave: h.onSave,
-        onAction: h.onAction,
-        registerPrimary: h.registerPrimary
+        onAction: h.onAction
       };
     default:
       return {};

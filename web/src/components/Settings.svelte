@@ -2,7 +2,6 @@
   import { settingsChanges } from '../lib/settings.js';
 
   export let settings;
-  export let registerPrimary = null;
   export let onSave = null;
 
   const initial = {};
@@ -63,19 +62,6 @@
     press(null);
   }
 
-  // The header owns the page's main action; this view supplies it with its own
-  // dirty state, which the shell cannot see.
-  $: if (registerPrimary) {
-    registerPrimary(saveTarget
-      ? {
-        label: busy ? 'Saving…' : (saveTarget.label || 'Save'),
-        disabled: !dirty || busy,
-        title: 'Save these settings',
-        run: save
-      }
-      : null);
-  }
-
   function reset() {
     values = { ...initial };
     status = '';
@@ -97,6 +83,15 @@
       {settings.fields.length} setting{settings.fields.length === 1 ? '' : 's'}{dirty ? ` · ${changes.length} changed` : ''}
     </span>
     <div class="sd-editor-actions">
+      {#if saveTarget}
+        <button
+          class="sd-btn sd-primary"
+          type="button"
+          disabled={!dirty || busy}
+          title="Save these settings"
+          on:click={save}
+        >{busy ? 'Saving…' : (saveTarget.label || 'Save')}</button>
+      {/if}
       <button class="sd-btn" type="button" disabled={!dirty || busy} on:click={reset}>Reset</button>
       {#each buttons as action (action.id + action.label)}
         <button
