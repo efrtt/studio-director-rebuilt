@@ -4,6 +4,7 @@
   import { queryFromUrl } from './lib/search.js';
   import { VIEWS, viewOf, propsFor, titleOf, footerOf, crumbsOf } from './views/registry.js';
   import { layoutFor } from './views/layout.js';
+  import { isActiveHref } from './lib/activelink.js';
 import { readRail, writeRail } from './lib/rail.js';
   import { THEME_LABEL, readTheme, writeTheme, nextTheme, applyTheme } from './lib/theme.js';
 
@@ -66,20 +67,11 @@ import { readRail, writeRail } from './lib/rail.js';
     return String(label || '').trim().charAt(0).toUpperCase();
   }
 
-  // The app's own nav carries a clicktab parameter; a content page reached from a
-  // nav link often does not, so a link is marked when the tab matches or when the
-  // URL is that link. No guessing from page names.
+  // Which link is this page: lib/activelink.js. The app's nav carries the same
+  // numeric `clicktab=1` on every link, so an index compared as a name made all
+  // eleven "active" at once.
   function isActive(link) {
-    try {
-      const here = new URL(model.url || location.href, location.origin);
-      const there = new URL(link.href, here.origin);
-      const mine = here.searchParams.get('clicktab');
-      const theirs = there.searchParams.get('clicktab');
-      if (mine && theirs) return mine === theirs;
-      return here.pathname === there.pathname && here.search === there.search;
-    } catch (e) {
-      return false;
-    }
+    return isActiveHref(model.url || location.href, link.href, location.origin);
   }
 
   // The whole view layer is these three lines: which kind, which component, which
