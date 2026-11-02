@@ -777,8 +777,8 @@ html[data-sd-theme="wii"] #sd-root .sd-tile {
   to { opacity: 1; transform: scale(1); }
 }
 @keyframes sd-wii-sheen {
-  0%, 68% { transform: translateX(-130%); }
-  100% { transform: translateX(130%); }
+  0%, 68% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 }
 @keyframes sd-wii-drift {
   0%, 100% { opacity: 0.55; transform: translateY(0) scale(1); }
@@ -791,8 +791,21 @@ html[data-sd-theme="wii"] #sd-root .sd-body > * {
 }
 
 /* The specular sweep across the blue bar. It sits behind the bar's contents, so
-   nothing it passes over is dimmed. */
-html[data-sd-theme="wii"] #sd-root .sd-top { position: relative; overflow: hidden; }
+   nothing it passes over is dimmed.
+
+   The sweep slides its own gradient rather than sliding itself, so the bar can
+   keep `overflow: visible`: the accent and More popovers hang out of it, and
+   clipping to the bar put them behind the page. A gradient 300% wide, moved
+   within its own box, needs no clipping to stay on the bar.
+
+   The bar also needs a z-index. The body's children animate in when a page
+   opens, and an animated element paints as its own stacking context - above a
+   positioned but unnumbered header. */
+html[data-sd-theme="wii"] #sd-root .sd-top {
+  position: relative;
+  overflow: visible;
+  z-index: 2;
+}
 html[data-sd-theme="wii"] #sd-root .sd-top::before {
   content: "";
   position: absolute;
@@ -805,6 +818,8 @@ html[data-sd-theme="wii"] #sd-root .sd-top::before {
     rgba(255, 255, 255, 0.34) 48%,
     rgba(255, 255, 255, 0) 62%
   );
+  background-size: 300% 100%;
+  background-repeat: no-repeat;
   animation: sd-wii-sheen 9s ease-in-out infinite;
 }
 html[data-sd-theme="wii"] #sd-root .sd-top > * { position: relative; z-index: 1; }
