@@ -1,9 +1,18 @@
 <script>
   import { changesFrom } from '../lib/save.js';
   import { cellKind } from '../lib/cellclass.js';
+  import RecordPage from './RecordPage.svelte';
+  import { recordsOf } from '../lib/records.js';
 
   export let task;
   export let onAct = null;
+  // The page's own URL. It is what says whether this is the list, one record's
+  // edit page, or the new page — the same three URLs the app itself uses.
+  export let url = '';
+  // The page's own button bar, read where its controls can be pressed: New and
+  // Delete are the app's, and the add page prints no bar at all.
+  export let bar = null;
+  export let onAction = null;
 
   // Same seeding as the record editor: what the server sent, so an untouched
   // field is never written back.
@@ -57,10 +66,32 @@
       act(task.primary);
     }
   }
+
+  // A task page that prints a list of records beside its form — ManageVendors,
+  // ManageHolidays — is drawn as the list, with the form in a dialog. Those list
+  // pages carry an empty stub form, which is what used to fill the screen with
+  // fourteen blank fields above a table nobody could click into.
+  $: recordList = !!recordsOf(task, url);
+
+  function saveRecord(values) {
+    if (!onAct) return { submitted: false, reason: 'no-action' };
+    return onAct(values, task.primary);
+  }
 </script>
 
 <svelte:window on:keydown={onKey} />
 
+{#if recordList}
+  <RecordPage
+    source={task}
+    {url}
+    title={task.title}
+    saveLabel={task.primary ? task.primary.label : 'Save'}
+    {bar}
+    {onAction}
+    onSave={saveRecord}
+  />
+{:else}
 <div class="sd-task">
   <div class="sd-editorbar">
     <span class="sd-dirty">
@@ -180,3 +211,4 @@
     </p>
   </div>
 </div>
+{/if}

@@ -70,13 +70,30 @@ export function propsFor(view, model, handlers) {
     case 'confirm':
       // A confirmation the app has not performed yet carries a button; an
       // outcome does not.
-      return { confirm: model.confirm, onPress: h.onPress, back: h.back || null };
+      return {
+        confirm: model.confirm,
+        // An outcome lands with the list you carried on from under its sentence,
+        // so that screen is drawn as the list with the sentence above it.
+        records: model.records || null,
+        bar: model.bar || null,
+        url: model.url || '',
+        onPress: h.onPress,
+        back: h.back || null
+      };
     case 'index':
       return { index: model.index };
     case 'report':
       return { report: model.report, onRun: h.onRun };
     case 'task':
-      return { task: model.task, onAct: h.onAct };
+      // The bar is the page's own (New, Delete): drawn where the app drew it,
+      // pressed on the live page so the app builds each request.
+      return {
+        task: model.task,
+        bar: model.bar || null,
+        onAct: h.onAct,
+        onAction: h.onAction,
+        url: model.url || ''
+      };
     case 'sheet':
       return { sheet: model.sheet, onPress: h.onPress };
     case 'settings':
@@ -91,7 +108,8 @@ export function propsFor(view, model, handlers) {
         tabs: model.tabs || null,
         bar: model.bar,
         onSave: h.onSave,
-        onAction: h.onAction
+        onAction: h.onAction,
+        url: model.url || ''
       };
     default:
       return {};
