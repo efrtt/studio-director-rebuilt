@@ -34,9 +34,9 @@
   // A list that arrives as one window widens itself on open: no button to press.
   // Once per mounted list, so a panel that refuses to grow is not retried in a
   // loop — the button stays for a second attempt.
-  // Browsing by letter needs room for the rail. At 260px, in the panel beside an
-  // editor, the list stays plain rows; measured rather than guessed, so a stacked
-  // split on a wide window gets the index and a narrow window does not.
+  // The rail needs room; at 260px, in the panel beside an editor, it would eat a
+  // third of the rows. The grouping does not: the headings alone are still an
+  // index, so the letters stay and only the rail is measured away.
   let root = null;
   let wide = false;
 
@@ -123,7 +123,7 @@
   // room for an index — both stay plain rows.
   const BROWSED = { Family: 'letters', Student: 'letters', Class: 'shelves' };
   $: lone = data.mixed ? '' : (data.types && data.types.length === 1 ? data.types[0] : '');
-  $: view = (BROWSED[lone] && (auto || wide)) ? BROWSED[lone] : 'plain';
+  $: view = BROWSED[lone] || 'plain';
 
   $: letters = letterGroups(items, lone);
   $: shelves = classShelves(items);
@@ -172,6 +172,7 @@
 
   <div class="sd-listbody" class:sd-listbody--letters={view === 'letters'}>
     {#if view === 'letters'}
+      {#if wide}
       <nav class="sd-letterrail" aria-label="Jump to a letter">
         {#each letters as group (group.letter)}
           <a
@@ -184,6 +185,7 @@
           </a>
         {/each}
       </nav>
+      {/if}
 
       <div class="sd-groups" bind:this={groups} on:scroll={onGroupsScroll}>
         {#each letters as group (group.letter)}
