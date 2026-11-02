@@ -28,7 +28,7 @@
               "label": "Enter new charge for families or students that have a tag"
             }
           ],
-          "label": "Charges"
+          "label": "Enter a charge"
         },
         {
           "items": [
@@ -37,19 +37,24 @@
               "label": "Enter multiple payments"
             },
             {
-              "href": "admin.sd?page=ListPaymentsDue",
-              "label": "Enter late fees for families with a balance due"
-            },
-            {
               "href": "admin.sd?page=DepositListForm",
               "label": "Deposit list"
+            }
+          ],
+          "label": "Take a payment"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=ListPaymentsDue",
+              "label": "Enter late fees for families with a balance due"
             },
             {
               "href": "admin.sd?page=ChargesDetail",
               "label": "Charges detail"
             }
           ],
-          "label": "Payments"
+          "label": "Payments due & plans"
         },
         {
           "items": [
@@ -62,7 +67,7 @@
               "label": "Set online registration allowed"
             }
           ],
-          "label": "Settings"
+          "label": "Charge settings"
         }
       ],
       "kind": "index",

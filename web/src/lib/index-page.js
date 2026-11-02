@@ -18,6 +18,7 @@
 import { qs, qsa, textOf } from './shell.js';
 import { MENU_LINKS, TABLE_ROWS } from './thresholds.js';
 import { menuFor, layoutForTitle } from './menu.js';
+import { groupCharges } from './charges.js';
 
 // A short menu can still be a menu when it is *drawn* as one. The count above is
 // what protects the notices: fifty of them carry a sentence and one or two
@@ -159,13 +160,17 @@ export function readIndex(doc) {
   const title = textOf(qs(doc, '.formTitle, .ReportName, h1')) || 'Links';
   const menu = menuFor(title);
 
+  // One menu is filed by the app in a way that reads as a cabinet ("Charges",
+  // "Payments", "Settings"); its links are regrouped into the jobs they do.
+  const finalGroups = menu === 'Charges & Payments' ? groupCharges(groups) : groups;
+
   return {
     kind: 'index',
     title,
     menu,
     layout: layoutForTitle(title),
     breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
-    groups,
+    groups: finalGroups,
     count: items.length,
     // How many tiles the view draws at once. The count above is every link.
     limit: DRAW_LIMIT,

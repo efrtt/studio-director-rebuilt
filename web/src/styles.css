@@ -1709,3 +1709,7 @@ html[data-sd-theme="light"] #sd-root .sd-grprail a:hover,
 html[data-sd-theme="light"] #sd-root .sd-grprail a.on,
 html[data-sd-theme="light"] #sd-root .sd-jump-row.on { background: #e9eef7; }
 html[data-sd-theme="light"] #sd-root .sd-jump-scrim { background: rgba(24, 34, 48, .35); }
+
+/* A grouped page with one category has nothing to navigate: the rail would be a
+   single link pointing at the list already beside it. */
+.sd-grpsplit.one { grid-template-columns: minmax(0, 1fr); }

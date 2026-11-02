@@ -154,8 +154,9 @@
     </div>
   {:else}
     <div class="sd-indexbody">
-      <div class="sd-grpsplit">
-        <nav class="sd-grprail" aria-label="Groups on this page">
+      <div class="sd-grpsplit" class:one={groups.length < 2}>
+        {#if groups.length > 1}
+          <nav class="sd-grprail" aria-label="Groups on this page">
           {#each groups as group, i}
             <a
               href={'#sd-grp-' + i}
@@ -166,7 +167,8 @@
               <b>{group.items.length}</b>
             </a>
           {/each}
-        </nav>
+          </nav>
+        {/if}
 
         <div class="sd-grpcols">
           {#each groups as group, i}
