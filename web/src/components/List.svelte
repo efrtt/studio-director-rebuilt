@@ -34,10 +34,28 @@
   // A list that arrives as one window widens itself on open: no button to press.
   // Once per mounted list, so a panel that refuses to grow is not retried in a
   // loop — the button stays for a second attempt.
+  // Browsing by letter needs room for the rail. At 260px, in the panel beside an
+  // editor, the list stays plain rows; measured rather than guessed, so a stacked
+  // split on a wide window gets the index and a narrow window does not.
+  let root = null;
+  let wide = false;
+
   onMount(() => {
     if (!auto || autoTried || (!onLoadAll && !onRefresh)) return;
     autoTried = true;
     widen();
+  });
+
+  onMount(() => {
+    const measure = () => { wide = !!root && root.clientWidth >= 520; };
+    if (typeof ResizeObserver !== 'function' || !root) {
+      measure();
+      return;
+    }
+    const watch = new ResizeObserver(measure);
+    watch.observe(root);
+    measure();
+    return () => watch.disconnect();
   });
 
   async function widen() {
@@ -105,7 +123,7 @@
   // room for an index — both stay plain rows.
   const BROWSED = { Family: 'letters', Student: 'letters', Class: 'shelves' };
   $: lone = data.mixed ? '' : (data.types && data.types.length === 1 ? data.types[0] : '');
-  $: view = (auto && BROWSED[lone]) || 'plain';
+  $: view = (BROWSED[lone] && (auto || wide)) ? BROWSED[lone] : 'plain';
 
   $: letters = letterGroups(items, lone);
   $: shelves = classShelves(items);
@@ -136,7 +154,7 @@
   }
 </script>
 
-<div class="sd-list" data-sd-view={view}>
+<div class="sd-list" data-sd-view={view} bind:this={root}>
   <div class="sd-listbar">
     <input
       class="sd-filter"
