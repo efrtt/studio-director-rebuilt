@@ -17,6 +17,7 @@
 
 import { qs, qsa, textOf } from './shell.js';
 import { MENU_LINKS, TABLE_ROWS } from './thresholds.js';
+import { menuFor, layoutForTitle } from './menu.js';
 
 // A short menu can still be a menu when it is *drawn* as one. The count above is
 // what protects the notices: fifty of them carry a sentence and one or two
@@ -152,9 +153,17 @@ export function readIndex(doc) {
     group.items.push({ label: item.label, href: item.href });
   }
 
+  // Which menu this is decides how it is drawn (lib/menu.js): the two long
+  // reference pages get the grouped list, the two short ones task cards. The
+  // title is the app's own name for the page, read once and used for both.
+  const title = textOf(qs(doc, '.formTitle, .ReportName, h1')) || 'Links';
+  const menu = menuFor(title);
+
   return {
     kind: 'index',
-    title: textOf(qs(doc, '.formTitle, .ReportName, h1')) || 'Links',
+    title,
+    menu,
+    layout: layoutForTitle(title),
     breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
     groups,
     count: items.length,

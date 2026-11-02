@@ -7,6 +7,8 @@
   import { isActiveHref } from './lib/activelink.js';
 import { readRail, writeRail } from './lib/rail.js';
   import { THEME_LABEL, readTheme, writeTheme, nextTheme, applyTheme } from './lib/theme.js';
+  import Palette from './components/Palette.svelte';
+  import { menuFor } from './lib/menu.js';
 import Menu from './components/Menu.svelte';
 
   export let model = { nav: [], week: null, list: null, form: null, view: null, title: '', url: '' };
@@ -105,6 +107,9 @@ import Menu from './components/Menu.svelte';
   $: title = titleOf(model);
   $: crumbs = crumbsOf(model);
   $: foot = footerOf(model);
+  // Which menu this page is, so the jump palette opens on the destinations
+  // nearest it. Empty on every other screen, which is most of them.
+  $: here = menuFor(title);
 
   // Widening the list changes the model in place: the new list comes from the
   // same page, re-read after its own "Show All" ran.
@@ -238,3 +243,5 @@ import Menu from './components/Menu.svelte';
 {#if menuOpen}
   <Menu nav={model.nav} icons={icons} current={model.url} onClose={() => (menuOpen = false)} />
 {/if}
+
+<Palette nav={model.nav} here={here} />
