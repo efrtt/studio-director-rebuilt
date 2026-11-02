@@ -116,7 +116,9 @@
               on:click={() => choose(row)}
               on:mousemove={() => (cursor = flat.indexOf(row))}
             >
-              <span class="sd-jump-tag">{row.menu === 'Menu' ? 'nav' : row.menu === 'Recent' ? 'recent' : row.menu}</span>
+              {#if group.menu === 'Recent'}
+                <span class="sd-jump-tag">{row.menu}</span>
+              {/if}
               <span class="sd-jump-label">{row.label}</span>
               <span class="sd-jump-code">{row.code}</span>
             </button>
