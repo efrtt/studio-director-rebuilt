@@ -77,8 +77,10 @@
                 "Ages: 6-7"
               ],
               "endsAt": 990,
+              "enrolled": "15 enrolled",
               "height": 90,
               "href": "admin.sd?page=EditClass&cident=818",
+              "initials": "HM",
               "instructor": "Ms. Rivera",
               "label": "Ballet",
               "lane": {
@@ -88,10 +90,9 @@
                 "width": 25
               },
               "location": "Studio 1",
-              "meta": "3:45p–4:30p · Full",
+              "meta": "3:45p–4:30p · 15 enrolled",
               "name": "Ballet",
               "note": null,
-              "seats": "Full",
               "spotsLeft": 0,
               "startsAt": 945,
               "status": "full",
@@ -117,8 +118,10 @@
                 "Ages: 12+"
               ],
               "endsAt": 1050,
+              "enrolled": "8 enrolled",
               "height": 180,
               "href": "admin.sd?page=EditClass&cident=130",
+              "initials": "JM",
               "instructor": "Mr. Cole",
               "label": "Pre-Pointe",
               "lane": {
@@ -128,10 +131,9 @@
                 "width": 25
               },
               "location": "Studio 2",
-              "meta": "4:00p–5:30p · 12 left",
+              "meta": "4:00p–5:30p · 8 enrolled",
               "name": "Pre-Pointe",
               "note": null,
-              "seats": "12 left",
               "spotsLeft": 12,
               "startsAt": 960,
               "status": "open",
@@ -157,8 +159,10 @@
                 "Ages: 12+"
               ],
               "endsAt": 1005,
+              "enrolled": "1 enrolled",
               "height": 90,
               "href": "admin.sd?page=EditClass&cident=322",
+              "initials": "RO",
               "instructor": "Ms. Ortiz",
               "label": "Teen Company",
               "lane": {
@@ -168,10 +172,9 @@
                 "width": 25
               },
               "location": "Studio 3",
-              "meta": "4:00p–4:45p · 4 left",
+              "meta": "4:00p–4:45p · 1 enrolled",
               "name": "Teen Company",
               "note": null,
-              "seats": "4 left",
               "spotsLeft": 4,
               "startsAt": 960,
               "status": "open",
@@ -197,8 +200,10 @@
                 "Ages: 7-9"
               ],
               "endsAt": 1005,
+              "enrolled": "7 enrolled",
               "height": 120,
               "href": "admin.sd?page=EditClass&cident=530",
+              "initials": "JB",
               "instructor": "Mr. Bell",
               "label": "Jazz Company Prep",
               "lane": {
@@ -208,10 +213,9 @@
                 "width": 25
               },
               "location": "Studio 4",
-              "meta": "3:45p–4:45p · 9 left",
+              "meta": "3:45p–4:45p · 7 enrolled",
               "name": "Jazz Company Prep",
               "note": null,
-              "seats": "9 left",
               "spotsLeft": 9,
               "startsAt": 945,
               "status": "open",
@@ -237,8 +241,10 @@
                 "Ages: 14+"
               ],
               "endsAt": 1080,
+              "enrolled": "1 enrolled",
               "height": 150,
               "href": "admin.sd?page=EditClass&cident=180",
+              "initials": "HM",
               "instructor": "Ms. Rivera",
               "label": "Senior Ballet Co Tech",
               "lane": {
@@ -248,10 +254,9 @@
                 "width": 25
               },
               "location": "Studio 1",
-              "meta": "4:45p–6:00p · 17 left",
+              "meta": "4:45p–6:00p · 1 enrolled",
               "name": "Senior Ballet Co Tech",
               "note": null,
-              "seats": "17 left",
               "spotsLeft": 17,
               "startsAt": 1005,
               "status": "open",
@@ -277,8 +282,10 @@
                 "Ages: 14+"
               ],
               "endsAt": 1125,
+              "enrolled": "7 enrolled",
               "height": 150,
               "href": "admin.sd?page=EditClass&cident=122",
+              "initials": "JM",
               "instructor": "Mr. Cole",
               "label": "Ballet 8",
               "lane": {
@@ -288,10 +295,9 @@
                 "width": 25
               },
               "location": "Studio 2",
-              "meta": "5:30p–6:45p · 13 left",
+              "meta": "5:30p–6:45p · 7 enrolled",
               "name": "Ballet 8",
               "note": null,
-              "seats": "13 left",
               "spotsLeft": 13,
               "startsAt": 1050,
               "status": "open",
@@ -317,8 +323,10 @@
                 "Ages: 11+"
               ],
               "endsAt": 1110,
+              "enrolled": "1 enrolled",
               "height": 120,
               "href": "admin.sd?page=EditClass&cident=306",
+              "initials": "RO",
               "instructor": "Ms. Ortiz",
               "label": "Tap 4 & 5",
               "lane": {
@@ -328,10 +336,9 @@
                 "width": 25
               },
               "location": "Studio 3",
-              "meta": "5:30p–6:30p · 14 left",
+              "meta": "5:30p–6:30p · 1 enrolled",
               "name": "Tap 4 & 5",
               "note": null,
-              "seats": "14 left",
               "spotsLeft": 14,
               "startsAt": 1050,
               "status": "open",
@@ -357,8 +364,10 @@
                 "Ages: 9+"
               ],
               "endsAt": 1110,
+              "enrolled": "0 enrolled",
               "height": 120,
               "href": "admin.sd?page=EditClass&cident=534",
+              "initials": "BS",
               "instructor": "Ms. Sandoval",
               "label": "Lyrical 1",
               "lane": {
@@ -368,10 +377,9 @@
                 "width": 25
               },
               "location": "Studio 4",
-              "meta": "5:30p–6:30p · 21 left",
+              "meta": "5:30p–6:30p · 0 enrolled",
               "name": "Lyrical 1",
               "note": null,
-              "seats": "21 left",
               "spotsLeft": 21,
               "startsAt": 1050,
               "status": "open",
@@ -401,8 +409,10 @@
                     "Ages: 6-7"
                   ],
                   "endsAt": 990,
+                  "enrolled": "15 enrolled",
                   "height": 90,
                   "href": "admin.sd?page=EditClass&cident=818",
+                  "initials": "HM",
                   "instructor": "Ms. Rivera",
                   "label": "Ballet",
                   "lane": {
@@ -412,10 +422,9 @@
                     "width": 25
                   },
                   "location": "Studio 1",
-                  "meta": "3:45p–4:30p · Full",
+                  "meta": "3:45p–4:30p · 15 enrolled",
                   "name": "Ballet",
                   "note": null,
-                  "seats": "Full",
                   "spotsLeft": 0,
                   "startsAt": 945,
                   "status": "full",
@@ -441,8 +450,10 @@
                     "Ages: 14+"
                   ],
                   "endsAt": 1080,
+                  "enrolled": "1 enrolled",
                   "height": 150,
                   "href": "admin.sd?page=EditClass&cident=180",
+                  "initials": "HM",
                   "instructor": "Ms. Rivera",
                   "label": "Senior Ballet Co Tech",
                   "lane": {
@@ -452,10 +463,9 @@
                     "width": 25
                   },
                   "location": "Studio 1",
-                  "meta": "4:45p–6:00p · 17 left",
+                  "meta": "4:45p–6:00p · 1 enrolled",
                   "name": "Senior Ballet Co Tech",
                   "note": null,
-                  "seats": "17 left",
                   "spotsLeft": 17,
                   "startsAt": 1005,
                   "status": "open",
@@ -487,8 +497,10 @@
                     "Ages: 12+"
                   ],
                   "endsAt": 1050,
+                  "enrolled": "8 enrolled",
                   "height": 180,
                   "href": "admin.sd?page=EditClass&cident=130",
+                  "initials": "JM",
                   "instructor": "Mr. Cole",
                   "label": "Pre-Pointe",
                   "lane": {
@@ -498,10 +510,9 @@
                     "width": 25
                   },
                   "location": "Studio 2",
-                  "meta": "4:00p–5:30p · 12 left",
+                  "meta": "4:00p–5:30p · 8 enrolled",
                   "name": "Pre-Pointe",
                   "note": null,
-                  "seats": "12 left",
                   "spotsLeft": 12,
                   "startsAt": 960,
                   "status": "open",
@@ -527,8 +538,10 @@
                     "Ages: 14+"
                   ],
                   "endsAt": 1125,
+                  "enrolled": "7 enrolled",
                   "height": 150,
                   "href": "admin.sd?page=EditClass&cident=122",
+                  "initials": "JM",
                   "instructor": "Mr. Cole",
                   "label": "Ballet 8",
                   "lane": {
@@ -538,10 +551,9 @@
                     "width": 25
                   },
                   "location": "Studio 2",
-                  "meta": "5:30p–6:45p · 13 left",
+                  "meta": "5:30p–6:45p · 7 enrolled",
                   "name": "Ballet 8",
                   "note": null,
-                  "seats": "13 left",
                   "spotsLeft": 13,
                   "startsAt": 1050,
                   "status": "open",
@@ -573,8 +585,10 @@
                     "Ages: 12+"
                   ],
                   "endsAt": 1005,
+                  "enrolled": "1 enrolled",
                   "height": 90,
                   "href": "admin.sd?page=EditClass&cident=322",
+                  "initials": "RO",
                   "instructor": "Ms. Ortiz",
                   "label": "Teen Company",
                   "lane": {
@@ -584,10 +598,9 @@
                     "width": 25
                   },
                   "location": "Studio 3",
-                  "meta": "4:00p–4:45p · 4 left",
+                  "meta": "4:00p–4:45p · 1 enrolled",
                   "name": "Teen Company",
                   "note": null,
-                  "seats": "4 left",
                   "spotsLeft": 4,
                   "startsAt": 960,
                   "status": "open",
@@ -613,8 +626,10 @@
                     "Ages: 11+"
                   ],
                   "endsAt": 1110,
+                  "enrolled": "1 enrolled",
                   "height": 120,
                   "href": "admin.sd?page=EditClass&cident=306",
+                  "initials": "RO",
                   "instructor": "Ms. Ortiz",
                   "label": "Tap 4 & 5",
                   "lane": {
@@ -624,10 +639,9 @@
                     "width": 25
                   },
                   "location": "Studio 3",
-                  "meta": "5:30p–6:30p · 14 left",
+                  "meta": "5:30p–6:30p · 1 enrolled",
                   "name": "Tap 4 & 5",
                   "note": null,
-                  "seats": "14 left",
                   "spotsLeft": 14,
                   "startsAt": 1050,
                   "status": "open",
@@ -659,8 +673,10 @@
                     "Ages: 7-9"
                   ],
                   "endsAt": 1005,
+                  "enrolled": "7 enrolled",
                   "height": 120,
                   "href": "admin.sd?page=EditClass&cident=530",
+                  "initials": "JB",
                   "instructor": "Mr. Bell",
                   "label": "Jazz Company Prep",
                   "lane": {
@@ -670,10 +686,9 @@
                     "width": 25
                   },
                   "location": "Studio 4",
-                  "meta": "3:45p–4:45p · 9 left",
+                  "meta": "3:45p–4:45p · 7 enrolled",
                   "name": "Jazz Company Prep",
                   "note": null,
-                  "seats": "9 left",
                   "spotsLeft": 9,
                   "startsAt": 945,
                   "status": "open",
@@ -699,8 +714,10 @@
                     "Ages: 9+"
                   ],
                   "endsAt": 1110,
+                  "enrolled": "0 enrolled",
                   "height": 120,
                   "href": "admin.sd?page=EditClass&cident=534",
+                  "initials": "BS",
                   "instructor": "Ms. Sandoval",
                   "label": "Lyrical 1",
                   "lane": {
@@ -710,10 +727,9 @@
                     "width": 25
                   },
                   "location": "Studio 4",
-                  "meta": "5:30p–6:30p · 21 left",
+                  "meta": "5:30p–6:30p · 0 enrolled",
                   "name": "Lyrical 1",
                   "note": null,
-                  "seats": "21 left",
                   "spotsLeft": 21,
                   "startsAt": 1050,
                   "status": "open",
@@ -773,8 +789,10 @@
                 "Bring ballet shoes"
               ],
               "endsAt": 975,
+              "enrolled": "3 enrolled",
               "height": 90,
               "href": "admin.sd?page=EditClass&cident=806",
+              "initials": "RR",
               "instructor": "Ms. Ruiz",
               "label": "Pre Ballet",
               "lane": {
@@ -784,10 +802,9 @@
                 "width": 25
               },
               "location": "Studio 1",
-              "meta": "3:30p–4:15p · 11 left",
+              "meta": "3:30p–4:15p · 3 enrolled",
               "name": "Pre Ballet",
               "note": "Bring ballet shoes",
-              "seats": "11 left",
               "spotsLeft": 11,
               "startsAt": 930,
               "status": "open",
@@ -813,8 +830,10 @@
                 "Ages: 0"
               ],
               "endsAt": 945,
+              "enrolled": "0 enrolled",
               "height": 30,
               "href": "admin.sd?page=EditClass&cident=12",
+              "initials": "FD",
               "instructor": "Front Desk",
               "label": "Faculty",
               "lane": {
@@ -824,10 +843,9 @@
                 "width": 25
               },
               "location": "Studio 3",
-              "meta": "3:30p–3:45p · 40 left",
+              "meta": "3:30p–3:45p · 0 enrolled",
               "name": "Faculty",
               "note": null,
-              "seats": "40 left",
               "spotsLeft": 40,
               "startsAt": 930,
               "status": "open",
@@ -858,8 +876,10 @@
                     "Bring ballet shoes"
                   ],
                   "endsAt": 975,
+                  "enrolled": "3 enrolled",
                   "height": 90,
                   "href": "admin.sd?page=EditClass&cident=806",
+                  "initials": "RR",
                   "instructor": "Ms. Ruiz",
                   "label": "Pre Ballet",
                   "lane": {
@@ -869,10 +889,9 @@
                     "width": 25
                   },
                   "location": "Studio 1",
-                  "meta": "3:30p–4:15p · 11 left",
+                  "meta": "3:30p–4:15p · 3 enrolled",
                   "name": "Pre Ballet",
                   "note": "Bring ballet shoes",
-                  "seats": "11 left",
                   "spotsLeft": 11,
                   "startsAt": 930,
                   "status": "open",
@@ -909,8 +928,10 @@
                     "Ages: 0"
                   ],
                   "endsAt": 945,
+                  "enrolled": "0 enrolled",
                   "height": 30,
                   "href": "admin.sd?page=EditClass&cident=12",
+                  "initials": "FD",
                   "instructor": "Front Desk",
                   "label": "Faculty",
                   "lane": {
@@ -920,10 +941,9 @@
                     "width": 25
                   },
                   "location": "Studio 3",
-                  "meta": "3:30p–3:45p · 40 left",
+                  "meta": "3:30p–3:45p · 0 enrolled",
                   "name": "Faculty",
                   "note": null,
-                  "seats": "40 left",
                   "spotsLeft": 40,
                   "startsAt": 930,
                   "status": "open",
@@ -980,6 +1000,7 @@
               ],
               "endsAt": null,
               "href": "admin.sd?page=EditClass&cident=906",
+              "initials": "C",
               "instructor": "Mr. Cole",
               "label": "Company Rehearsal",
               "lane": {
@@ -1021,6 +1042,7 @@
               ],
               "endsAt": null,
               "href": "admin.sd?page=EditClass&cident=906",
+              "initials": "C",
               "instructor": "Mr. Cole",
               "label": "Company Rehearsal",
               "lane": {

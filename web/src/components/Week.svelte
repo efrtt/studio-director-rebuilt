@@ -136,7 +136,9 @@
                         `background:${block.color || 'transparent'};` +
                         `color:${block.textColor || inkFor(block.color) || 'inherit'}`}
                     >
-                      <span class="sd-block-name">{block.name}</span>
+                      <span class="sd-block-name">
+                        {block.name}{#if block.initials}<span class="sd-block-init"> ({block.initials})</span>{/if}
+                      </span>
                       {#if block.meta}<span class="sd-block-meta">{block.meta}</span>{/if}
                     </a>
                   {/each}
