@@ -211,7 +211,9 @@ test('each menu page says which of the two layouts it wants', () => {
 
   assert.equal(readIndex(menuDoc('Settings')).layout, 'grouped');
   assert.equal(readIndex(menuDoc('Reports Home')).layout, 'grouped');
-  assert.equal(readIndex(menuDoc('Communications')).layout, 'cards');
+  assert.equal(readIndex(menuDoc('Communications')).layout, 'grouped');
+  assert.equal(readIndex(menuDoc('Advanced Search')).layout, 'grouped');
+  assert.equal(readIndex(menuDoc('Charges & Payments')).layout, 'cards');
   // A menu this build has not seen is grouped, so no link is hidden behind a card.
   assert.equal(readIndex(menuDoc('Some Other Menu')).layout, 'grouped');
 });
