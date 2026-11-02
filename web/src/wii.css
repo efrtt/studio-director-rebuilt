@@ -391,6 +391,11 @@ html[data-sd-theme="wii"] #sd-root .sd-block .sd-block-meta {
   color: #0b1220 !important;
 }
 html[data-sd-theme="wii"] #sd-root .sd-block:hover { filter: brightness(1.03); }
+html[data-sd-theme="wii"] #sd-root .sd-block-init {
+  border-color: rgba(18, 50, 74, 0.28);
+  background: rgba(255, 255, 255, 0.72);
+  opacity: 1;
+}
 html[data-sd-theme="wii"] #sd-root .sd-tip {
   border: 1px solid #cbe6f5;
   border-radius: 10px;
