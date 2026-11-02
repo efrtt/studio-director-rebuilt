@@ -83,6 +83,24 @@ export function recordId(href) {
 // A page that is editing one record is handed back to the app untouched: it is
 // the editor, and covering a form with the list is how you end up unable to
 // edit anything. `EditClass`-style page names count even without a parameter.
+// A `.formTitle` that holds an advisory block *and* the page's own name.
+//
+// `NewEditArchive(content=SeasonContent)` prints
+// `<div class="formTitle"><h4>Do NOT add a season here…</h4>Seasons</div>`: the
+// block is a warning, and the name of the page comes after it. Reading the div
+// as one string put that warning into the dialog's title, a paragraph where a
+// title belongs. The title is the text belonging to the div itself; a div with
+// no text of its own (a plain `<b>Manage Vendors</b>`) still reads as a whole.
+export function titledTextOf(el) {
+  if (!el) return '';
+  const own = Array.from(el.childNodes || [])
+    .filter((node) => node.nodeType === 3)
+    .map((node) => String(node.textContent || '').replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .join(' ');
+  return own || textOf(el);
+}
+
 export function isRecordPage(href) {
   if (recordParams(href).length) return true;
   return /^Edit/i.test(pageName(href));

@@ -80,7 +80,12 @@
     if (found) {
       dismissed = true;
       try {
-        history.replaceState(null, '', cameFrom || url);
+        // An add page's address says `state=new`; the list drawn underneath is
+        // the page you are closing back to, so the address becomes the list's
+        // own, and a reload gets the list rather than the dialog again. Record
+        // pages keep the referrer: their own list URL is the one the archive
+        // pages answer with an error.
+        history.replaceState(null, '', (mode === 'new' && listHref) || cameFrom || url);
       } catch (err) { /* address bar only */ }
       return;
     }
