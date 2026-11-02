@@ -43,8 +43,9 @@ test('each menu page gets the layout it was designed for', () => {
   assert.equal(layoutForTitle('Settings'), 'grouped');
   assert.equal(layoutForTitle('Reports Home'), 'grouped');
   assert.equal(layoutForTitle('Charges & Payments'), 'cards');
-  // Only Charges & Payments is cards now: the other menus keep their categories.
-  assert.equal(layoutForTitle('Communications'), 'grouped');
+  // Charges & Payments and Communications are cards; the reference menus keep
+  // their categories.
+  assert.equal(layoutForTitle('Communications'), 'cards');
   assert.equal(layoutForTitle('Advanced Search'), 'grouped');
 
   // A menu this build has not seen keeps every link on screen.

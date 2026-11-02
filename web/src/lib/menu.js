@@ -5,18 +5,18 @@
 // you are on. One table, read by both, so the two can never disagree about what
 // "Reports Home" is.
 //
-// Why a layout choice at all: Settings, Reports, Communications and Advanced
-// Search are reference pages — dozens of destinations whose categories are the
-// point, so they get the grouped list with a rail you can scan. Charges &
-// Payments is a short list of jobs, and nine jobs read better as cards that say
-// what each one is for than as a wall of links. The palette sits on top of every
+// Why a layout choice at all: Settings, Reports and Advanced Search are
+// reference pages — dozens of destinations whose categories are the point, so
+// they get the grouped list with a rail you can scan. Charges & Payments and
+// Communications are short lists of jobs, and a job reads better as a card that
+// says what it is for than as a wall of links. The palette sits on top of every
 // page either way.
 
 export const MENUS = [
   { title: 'AdminHome', name: 'Settings', layout: 'grouped' },
   { title: 'ReportsHome', name: 'Reports', layout: 'grouped' },
   { title: 'ChargesHome', name: 'Charges & Payments', layout: 'cards' },
-  { title: 'EmailTextHome', name: 'Communications', layout: 'grouped' },
+  { title: 'EmailTextHome', name: 'Communications', layout: 'cards' },
   { title: 'AdvSearch', name: 'Advanced Search', layout: 'grouped' }
 ];
 
