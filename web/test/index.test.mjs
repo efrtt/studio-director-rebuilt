@@ -196,3 +196,22 @@ test('a title inside a list item is that link’s words, not a category', () => 
   assert.deepEqual(read.groups[0].items.map((i) => i.label),
     ['Class roster', 'Attendance', 'Balances']);
 });
+
+test('each menu page says which of the two layouts it wants', () => {
+  // Charges & Payments is a short list of jobs: cards. Settings and Reports are
+  // reference pages whose categories matter: the grouped list with a rail.
+  assert.equal(index.menu, 'Charges & Payments');
+  assert.equal(index.layout, 'cards');
+
+  const menuDoc = (title) => parseHtml(`<form id="idForm"><div class="contentContainer"><div class="Content">
+    <div class="formTitle">${title}</div>
+    ${['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight']
+      .map((n) => `<a href="admin.sd?page=Page_${n}">Page ${n}</a>`).join('')}
+  </div></div></form>`);
+
+  assert.equal(readIndex(menuDoc('Settings')).layout, 'grouped');
+  assert.equal(readIndex(menuDoc('Reports Home')).layout, 'grouped');
+  assert.equal(readIndex(menuDoc('Communications')).layout, 'cards');
+  // A menu this build has not seen is grouped, so no link is hidden behind a card.
+  assert.equal(readIndex(menuDoc('Some Other Menu')).layout, 'grouped');
+});
