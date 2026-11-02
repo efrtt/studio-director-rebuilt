@@ -38,6 +38,20 @@ const STUDIO = /^\s*stu(?:dio)?\s*(\d+)\b/i;
 // counted so the number left off is never a mystery.
 const FACULTY = /^\s*(?:\S+\s+)*faculty\s*$/i;
 const CAPACITY = /(\d+)\s+of\s+(\d+)\s+spots?/i;
+// The block's short summary carries the instructor's initials as a field of
+// their own, right before the start time:
+//   "Stu 3 - 914 Tn/Ad Tap - 18+ - SB - 11:00 AM - 12:00 PM"
+const INITIALS = /\s-\s([A-Z]{1,4})\s*-\s*\d{1,2}:\d{2}/;
+const TITLE = /^(?:mr|mrs|ms|miss|dr|mx)\.?$/i;
+
+// A block whose text carries no initials takes them from the tooltip's full
+// name. A title is not a name, so "Ms. Rivera" is R, not MR.
+function initialsOf(name) {
+  const words = String(name || '').split(/\s+/).filter((w) => w && !TITLE.test(w));
+  if (!words.length) return '';
+  const first = words[0][0].toUpperCase();
+  return words.length === 1 ? first : first + words[words.length - 1][0].toUpperCase();
+}
 
 function styleMap(value) {
   const out = {};
@@ -161,6 +175,8 @@ function laneOf(wrapper) {
   const tip = qsa(wrapper, 'span').find((s) => linesOf(s).length > 1);
   const details = linesOf(tip);
   const info = detailsOf(details);
+  // The page's own initials win; the instructor's name is the fallback.
+  info.initials = (raw.match(INITIALS) || [])[1] || initialsOf(info.instructor);
 
   // The visible text is the app's own summary: "Stu 2 - 122 Ballet - 14+ - JM -
   // 5:30 PM - 6:45 PM - 13 of 20 spots taken". Times come from it when present.
@@ -195,6 +211,7 @@ function laneOf(wrapper) {
     instructor: info.instructor,
     location: info.location,
     ages: info.ages,
+    initials: info.initials,
     note: info.note,
     spotsLeft: info.spotsLeft,
     waitlisted: info.waitlisted,
@@ -222,10 +239,16 @@ function lanesIn(cell) {
   return out;
 }
 
-function seatsOf(entry) {
-  if (entry.spotsLeft == null) return '';
-  if (entry.spotsLeft === 0) return 'Full';
-  return `${entry.spotsLeft} left`;
+// How many are enrolled, not how many seats are left: "3 enrolled" is what a
+// teacher reads off a block. A tooltip that only reports availability has it
+// subtracted from the capacity, and an unknown stays unknown rather than "0".
+function enrolledOf(entry) {
+  const enrolled = entry.taken != null
+    ? entry.taken
+    : entry.capacity != null && entry.spotsLeft != null
+      ? entry.capacity - entry.spotsLeft
+      : null;
+  return enrolled == null ? '' : `${enrolled} enrolled`;
 }
 
 function buildDay(label, blocks, studioCount) {
@@ -242,12 +265,12 @@ function buildDay(label, blocks, studioCount) {
   const height = (dayEnd - dayStart) * PX_PER_MIN;
 
   for (const block of blocks) {
-    block.seats = seatsOf(block);
+    block.enrolled = enrolledOf(block);
     if (block.startsAt == null) continue;
     block.top = (block.startsAt - dayStart) * PX_PER_MIN;
     block.height = (block.endsAt - block.startsAt) * PX_PER_MIN;
     block.timeLabel = `${fmtTime(block.startsAt)}\u2013${fmtTime(block.endsAt)}`;
-    block.meta = [block.timeLabel, block.seats].filter(Boolean).join(' \u00b7 ');
+    block.meta = [block.timeLabel, block.enrolled].filter(Boolean).join(' \u00b7 ');
   }
 
   // Every day shows the same columns, so a class in studio 3 is always third

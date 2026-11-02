@@ -227,15 +227,19 @@ html.sd-app form#idForm { visibility: hidden !important; }
   border: 1px solid rgba(0, 0, 0, .2);
   border-radius: var(--radius-xs);
   box-shadow: 0 1px 2px rgba(0, 0, 0, .18);
-  font-size: var(--fs-micro);
+  font-size: var(--fs-sm);
   line-height: 1.25;
   text-decoration: none;
 }
-.sd-block-name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
-.sd-block-meta { opacity: .85; font-size: var(--fs-micro); font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* The block is read at a glance from across a desk, so it sits a size above the
+   rest of the small type: the name at body size, and the initials in their
+   parenthesis a little lighter so the class still reads first. */
+.sd-block-name { font-weight: 700; font-size: var(--fs-base); overflow: hidden; text-overflow: ellipsis; }
+.sd-block-init { font-weight: 600; opacity: .8; white-space: nowrap; }
+.sd-block-meta { opacity: .85; font-size: var(--fs-sm); font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* A 15-minute class is 30px: one line, no second line squeezed in. */
 .sd-block--short .sd-block-meta { display: none; }
-.sd-block--short { padding: 2px 5px; font-size: var(--fs-micro); }
+.sd-block--short { padding: 2px 5px; font-size: var(--fs-sm); }
 .sd-block:hover { filter: brightness(1.08); }
 .sd-block:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .sd-block--low { box-shadow: inset 0 0 0 2px rgba(255, 190, 90, .95), 0 1px 2px rgba(0, 0, 0, .18); }

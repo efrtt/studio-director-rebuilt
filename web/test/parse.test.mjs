@@ -95,7 +95,7 @@ test('start and end times are read from the block\u2019s own text', () => {
   assert.equal(ballet.taken, 15);
   assert.equal(ballet.capacity, 15);
   assert.equal(ballet.timeLabel, '3:45p\u20134:30p');
-  assert.equal(ballet.meta, '3:45p\u20134:30p \u00b7 Full');
+  assert.equal(ballet.meta, '3:45p–4:30p · 15 enrolled');
 });
 
 test('blocks are sized by duration, not by the app\u2019s pixels', () => {
@@ -160,8 +160,10 @@ test('availability is derived from spots, never from colour', () => {
   const monday = readWeek(calendarDoc).days[0];
   assert.deepEqual(monday.blocks.map((b) => b.status),
     ['full', 'open', 'open', 'open', 'open', 'open', 'open', 'open']);
-  assert.equal(monday.blocks[0].seats, 'Full');
-  assert.equal(monday.blocks[1].seats, '12 left');
+  // Enrolled, not remaining: 15 of 15 is the full one, and the next reports a
+  // count even though it still has seats.
+  assert.equal(monday.blocks[0].enrolled, '15 enrolled');
+  assert.match(monday.blocks[1].enrolled, /^[0-9]+ enrolled$/);
 
   // A lane without a tooltip stays unknown: white does not mean "full".
   const bare = parseHtml(`<table class="TimeBlock"><tbody>

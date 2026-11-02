@@ -97,3 +97,24 @@ test('a studio named only in the tooltip still places the block', () => {
   assert.equal(block.studio, 4);
   assert.deepEqual(week.days[0].columns.map((c) => c.blocks.length), [0, 0, 0, 1]);
 });
+
+test('the block carries the instructor’s initials', () => {
+  const week = readWeek(page(liveBlock(0, 9, 'Stu 3',
+    ' - 914 Tn/Ad Tap - 18+ - SB - 11:00 AM - 12:00 PM - 1 of 14 spots taken',
+    'Class Name: 914 Tn/Ad Tap<br>Instructor Name: S. B.<br>Location: Stu 3<br>13 spots available<br>0 waitlisted<br>Ages: 18+')));
+
+  const block = week.days[0].blocks[0];
+  assert.equal(block.initials, 'SB');
+  assert.equal(block.enrolled, '1 enrolled', 'enrolled is what has been taken, not what is left');
+  assert.equal(block.meta, '11:00a–12:00p · 1 enrolled');
+});
+
+test('initials fall back to the instructor’s full name', () => {
+  const week = readWeek(page(lane(0, 818,
+    ' - 818 Ballet - 6-7 - - 3:45 PM - 4:30 PM - 1 of 15 spots taken',
+    'Class Name: Ballet<br>Instructor Name: Ms. Rivera<br>Location: Studio 1<br>14 spots available<br>0 waitlisted<br>Ages: 6-7')));
+
+  const block = week.days[0].blocks[0];
+  assert.equal(block.initials, 'R', 'a title is not a name');
+  assert.equal(block.enrolled, '1 enrolled');
+});
