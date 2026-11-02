@@ -8,6 +8,8 @@
 import { readRail, writeRail } from './lib/rail.js';
   import { THEME_LABEL, readTheme, writeTheme, nextTheme, applyTheme } from './lib/theme.js';
   import Palette from './components/Palette.svelte';
+  import AccentPicker from './components/AccentPicker.svelte';
+  import { readAccent, writeAccent, applyAccent } from './lib/accent.js';
   import { menuFor } from './lib/menu.js';
 
   export let model = { nav: [], week: null, list: null, form: null, view: null, title: '', url: '' };
@@ -64,6 +66,14 @@ import { readRail, writeRail } from './lib/rail.js';
     writeTheme(theme);
   }
   $: applyTheme(theme);
+  // The accent is a value inside whichever theme is on, so it is written to the
+  // same element and never needs to know which scheme it landed in.
+  let accent = readAccent();
+  function pickAccent(name) {
+    accent = name;
+    writeAccent(name);
+  }
+  $: applyAccent(accent);
 
   // The rail folds to a strip of initials and remembers the choice; the current
   // section is marked, because navigation should say where you are.
@@ -183,6 +193,7 @@ import { readRail, writeRail } from './lib/rail.js';
         />
       </form>
       {#if searchNote}<span class="sd-searchnote">{searchNote}</span>{/if}
+      <AccentPicker accent={accent} onPick={pickAccent} />
       <button
         class="sd-btn"
         type="button"
