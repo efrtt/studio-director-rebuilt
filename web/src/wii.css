@@ -750,10 +750,10 @@ html[data-sd-theme="wii"] #sd-root .sd-weekrow-time { font-size: 13.5px; }
 html[data-sd-theme="wii"] #sd-root .sd-none { font-size: 13px; }
 html[data-sd-theme="wii"] #sd-root .sd-hourlabel { font-size: 12px; }
 html[data-sd-theme="wii"] #sd-root .sd-studiohead { font-size: 12px; }
-html[data-sd-theme="wii"] #sd-root .sd-block { font-size: 12px; padding: 4px 7px; }
-html[data-sd-theme="wii"] #sd-root .sd-block-name { font-size: 12px; }
-html[data-sd-theme="wii"] #sd-root .sd-block-meta { font-size: 11px; }
-html[data-sd-theme="wii"] #sd-root .sd-block--short { font-size: 11px; }
+html[data-sd-theme="wii"] #sd-root .sd-block { font-size: 13px; padding: 4px 7px; }
+html[data-sd-theme="wii"] #sd-root .sd-block-name { font-size: 14px; }
+html[data-sd-theme="wii"] #sd-root .sd-block-meta { font-size: 12.5px; }
+html[data-sd-theme="wii"] #sd-root .sd-block--short { font-size: 12px; }
 
 /* ---- index tiles are channel cards ---- */
 html[data-sd-theme="wii"] #sd-root .sd-tiles {
