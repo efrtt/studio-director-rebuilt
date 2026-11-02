@@ -18,6 +18,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const { parseHtml } = await import('../src/lib/shell.js');
 const { readIndex } = await import('../src/lib/index-page.js');
 const { readPage } = await import('../src/lib/page.js');
+const { layoutForTitle } = await import('../src/lib/menu.js');
 
 const load = (name) => parseHtml(fs.readFileSync(path.join(here, 'fixtures', name), 'utf8'));
 
@@ -204,8 +205,9 @@ test('a title inside a list item is that link’s words, not a category', () => 
 });
 
 test('each menu page says which of the two layouts it wants', () => {
-  // Charges & Payments is a short list of jobs: cards. Settings and Reports are
-  // reference pages whose categories matter: the grouped list with a rail.
+  // Charges & Payments and Communications are short lists of jobs: cards.
+  // Settings and Reports are reference pages whose categories matter: the
+  // grouped list with a rail.
   assert.equal(index.menu, 'Charges & Payments');
   assert.equal(index.layout, 'cards');
 
@@ -217,7 +219,7 @@ test('each menu page says which of the two layouts it wants', () => {
 
   assert.equal(readIndex(menuDoc('Settings')).layout, 'grouped');
   assert.equal(readIndex(menuDoc('Reports Home')).layout, 'grouped');
-  assert.equal(readIndex(menuDoc('Communications')).layout, 'grouped');
+  assert.equal(readIndex(menuDoc('Communications')).layout, 'cards');
   assert.equal(readIndex(menuDoc('Advanced Search')).layout, 'grouped');
   assert.equal(readIndex(menuDoc('Charges & Payments')).layout, 'cards');
   // A menu this build has not seen is grouped, so no link is hidden behind a card.
@@ -241,4 +243,33 @@ test('a charge page the table does not know keeps the heading the page gave it',
   assert.deepEqual(read.groups.map((g) => g.label), ['Enter a charge', 'Charges']);
   assert.equal(read.groups[1].items[0].label, 'Something new', 'the unknown link is not lost');
   assert.equal(read.count, 6);
+});
+
+const commsDoc = load('index-communications.html');
+const comms = readIndex(commsDoc);
+
+test('Communications is a page of jobs, so it is drawn as cards', () => {
+  assert.ok(comms, 'Communications is a menu');
+  assert.equal(comms.menu, 'Communications');
+  assert.equal(comms.layout, 'cards');
+  assert.equal(layoutForTitle('Communications'), 'cards');
+});
+
+test('its links are regrouped by what a person came to do', () => {
+  // The app files these under "Emails", "Letters", "Reports" and "Settings":
+  // four headings, one of which is a filing cabinet. The page does five things.
+  assert.deepEqual(comms.groups.map((g) => g.label), [
+    'Email a group', 'Statements & receipts', 'Class letters & cards',
+    'What went out', 'Templates & schedules', 'Letters'
+  ]);
+  assert.deepEqual(comms.groups.map((g) => g.items.length), [4, 4, 5, 2, 4, 1]);
+  assert.deepEqual(comms.groups[0].items[0],
+    { label: 'Group of students or families', href: 'admin.sd?page=EmailToGroupForm' });
+
+  // Every link is in exactly one card; nothing is invented or dropped.
+  const all = comms.groups.flatMap((g) => g.items.map((i) => i.href)).sort();
+  assert.equal(all.length, comms.count);
+  assert.equal(new Set(all).size, all.length);
+  // An unknown destination keeps the heading the page gave it.
+  assert.equal(comms.groups.at(-1).items[0].label, 'Manage holidays');
 });

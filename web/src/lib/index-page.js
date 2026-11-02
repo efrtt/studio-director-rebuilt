@@ -19,6 +19,7 @@ import { qs, qsa, textOf } from './shell.js';
 import { MENU_LINKS, TABLE_ROWS } from './thresholds.js';
 import { menuFor, layoutForTitle } from './menu.js';
 import { groupCharges } from './charges.js';
+import { groupComms } from './comms.js';
 
 // A short menu can still be a menu when it is *drawn* as one. The count above is
 // what protects the notices: fifty of them carry a sentence and one or two
@@ -160,9 +161,13 @@ export function readIndex(doc) {
   const title = textOf(qs(doc, '.formTitle, .ReportName, h1')) || 'Links';
   const menu = menuFor(title);
 
-  // One menu is filed by the app in a way that reads as a cabinet ("Charges",
-  // "Payments", "Settings"); its links are regrouped into the jobs they do.
-  const finalGroups = menu === 'Charges & Payments' ? groupCharges(groups) : groups;
+  // Two menus are filed by the app by what a link *is* rather than by what a
+  // person came to do ("Charges / Payments / Settings", "Emails / Letters /
+  // Reports"); those links are regrouped into jobs. Every other menu keeps the
+  // page's own headings.
+  const finalGroups = menu === 'Charges & Payments'
+    ? groupCharges(groups)
+    : menu === 'Communications' ? groupComms(groups) : groups;
 
   return {
     kind: 'index',

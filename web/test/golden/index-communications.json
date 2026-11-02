@@ -1,0 +1,153 @@
+{
+  "file": "index-communications.html",
+  "form": null,
+  "model": {
+    "confirm": null,
+    "index": {
+      "breadcrumb": [
+        "Home"
+      ],
+      "count": 20,
+      "groups": [
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=EmailToGroupForm",
+              "label": "Group of students or families"
+            },
+            {
+              "href": "admin.sd?page=EmailTextHome",
+              "label": "Students enrolled in an instructor's classes"
+            },
+            {
+              "href": "admin.sd?page=SendEmail",
+              "label": "Group of instructors"
+            },
+            {
+              "href": "admin.sd?page=EmailClasses",
+              "label": "Group of classes"
+            }
+          ],
+          "label": "Email a group"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=SummaryInvoiceForm",
+              "label": "Summary Invoice"
+            },
+            {
+              "href": "admin.sd?page=StatementForm",
+              "label": "Statement Letter / Account History"
+            },
+            {
+              "href": "admin.sd?page=TransactionDetailForm",
+              "label": "Transaction Detail"
+            },
+            {
+              "href": "admin.sd?page=StudentSummaryForm",
+              "label": "Student Summary Receipt"
+            }
+          ],
+          "label": "Statements & receipts"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=ClassConfirmationForm",
+              "label": "Class Confirmation / Current Class Enrollment"
+            },
+            {
+              "href": "admin.sd?page=EventConfirmationForm",
+              "label": "Event Confirmation / Performance Info"
+            },
+            {
+              "href": "admin.sd?page=BirthdayCardForm",
+              "label": "Birthday Card Letter"
+            },
+            {
+              "href": "admin.sd?page=ReportCard",
+              "label": "Report Card"
+            },
+            {
+              "href": "admin.sd?page=PreapprovedLetters",
+              "label": "Pre-approved Classes"
+            }
+          ],
+          "label": "Class letters & cards"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=EmailsSent",
+              "label": "Emails Sent"
+            },
+            {
+              "href": "admin.sd?page=ViewBouncedEmails",
+              "label": "View Bounced Emails & Reported as Spam Report"
+            }
+          ],
+          "label": "What went out"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=EditEmailSignature",
+              "label": "Email Signature"
+            },
+            {
+              "href": "admin.sd?page=ManageEmailTemplates",
+              "label": "Email Templates"
+            },
+            {
+              "href": "admin.sd?page=ManageDripCampaigns",
+              "label": "Drip Email Campaigns"
+            },
+            {
+              "href": "admin.sd?page=ManageScheduledEmails",
+              "label": "Scheduled Emails"
+            }
+          ],
+          "label": "Templates & schedules"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=ManageHolidays",
+              "label": "Manage holidays"
+            }
+          ],
+          "label": "Letters"
+        }
+      ],
+      "kind": "index",
+      "layout": "cards",
+      "limit": 300,
+      "menu": "Communications",
+      "title": "Communications",
+      "truncated": false
+    },
+    "list": null,
+    "nav": [
+      {
+        "href": "admin.sd?page=HomePage&clicktab=Home",
+        "label": "Home"
+      },
+      {
+        "href": "admin.sd?page=EmailTextHome&clicktab=Email",
+        "label": "Communications"
+      }
+    ],
+    "note": null,
+    "report": null,
+    "settings": null,
+    "sheet": null,
+    "task": null,
+    "title": "Communications",
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=index-communications",
+    "view": "index",
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=index-communications",
+  "view": "index"
+}
