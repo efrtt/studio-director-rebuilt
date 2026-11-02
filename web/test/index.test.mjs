@@ -29,11 +29,17 @@ test('a landing page becomes groups of links, in the app\'s order', () => {
   assert.equal(index.kind, 'index');
   assert.equal(index.title, 'Charges & Payments');
 
-  assert.deepEqual(index.groups.map((g) => g.label), ['Charges', 'Payments', 'Settings']);
+  // Regrouped by the job each link does (lib/charges.js): the app files these ten
+  // in three piles, one of which is "Settings".
+  assert.deepEqual(index.groups.map((g) => g.label),
+    ['Enter a charge', 'Take a payment', 'Payments due & plans', 'Charge settings']);
   assert.deepEqual(index.groups[0].items[0],
     { label: 'Enter new family charge', href: 'admin.sd?page=NewFamilyCharge' });
   assert.equal(index.count, 10);
-  assert.equal(index.groups[1].items.length, 4);
+  assert.equal(index.groups[0].items.length, 4);
+  assert.equal(index.groups[1].items.length, 2);
+  // Every link survives the rearrangement exactly once.
+  assert.equal(index.groups.reduce((n, g) => n + g.items.length, 0), 10);
 });
 
 test('the rail and breadcrumb are navigation, not menu items', () => {
@@ -216,4 +222,23 @@ test('each menu page says which of the two layouts it wants', () => {
   assert.equal(readIndex(menuDoc('Charges & Payments')).layout, 'cards');
   // A menu this build has not seen is grouped, so no link is hidden behind a card.
   assert.equal(readIndex(menuDoc('Some Other Menu')).layout, 'grouped');
+});
+
+test('a charge page the table does not know keeps the heading the page gave it', () => {
+  const doc = parseHtml(`<form id="idForm"><div class="contentContainer"><div class="Content">
+    <div class="formTitle">Charges &amp; Payments</div>
+    <div class="sectionBlock"><h3>Charges</h3>
+      <a href="admin.sd?page=NewFamilyCharge">Enter new family charge</a>
+      <a href="admin.sd?page=BrandNewChargeThing">Something new</a>
+      <a href="admin.sd?page=NewClassCharge">Enter new charge for a class</a>
+      <a href="admin.sd?page=NewClassTypeCharge">Enter new charge for enrolled students</a>
+      <a href="admin.sd?page=AddChargeByTag">Enter new charge for families with a tag</a>
+      <a href="admin.sd?page=AddMultipleCharges">Enter charges for several families</a>
+    </div>
+  </div></div></form>`);
+
+  const read = readIndex(doc);
+  assert.deepEqual(read.groups.map((g) => g.label), ['Enter a charge', 'Charges']);
+  assert.equal(read.groups[1].items[0].label, 'Something new', 'the unknown link is not lost');
+  assert.equal(read.count, 6);
 });
