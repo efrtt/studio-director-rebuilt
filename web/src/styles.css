@@ -11,6 +11,15 @@ html.sd-app form#idForm { visibility: hidden !important; }
   --ok: #46c98a;
   --warn: #ffbe5a;
   --danger: #ff7b72;
+  /* Everything an accent implies, derived once from `--accent`. A theme (or an
+     accent preset) only has to set that one hex; the fills, the hairline and the
+     state colours follow from it, which is why a new accent needs no rules. */
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+  --accent-tint: color-mix(in srgb, var(--accent) 7%, transparent);
+  --ok-soft: color-mix(in srgb, var(--ok) 16%, transparent);
+  --danger-soft: color-mix(in srgb, var(--danger) 16%, transparent);
+  --warn-line: color-mix(in srgb, var(--warn) 45%, transparent);
+  --danger-line: color-mix(in srgb, var(--danger) 45%, transparent);
   position: fixed;
   inset: 0;
   z-index: 2147483000;
@@ -48,7 +57,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
 }
 .sd-rail--empty { display: none; }
 .sd-brand {
-  font-size: 11px;
+  font-size: var(--fs-micro);
   text-transform: uppercase;
   letter-spacing: .1em;
   color: var(--dim);
@@ -57,10 +66,10 @@ html.sd-app form#idForm { visibility: hidden !important; }
 .sd-navlink {
   display: block;
   padding: 6px 10px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   color: var(--dim);
   text-decoration: none;
-  font-size: 13px;
+  font-size: var(--fs-base);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -80,7 +89,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   background: var(--panel);
   flex: 0 0 auto;
 }
-.sd-title { font-size: 17px; font-weight: 700; letter-spacing: -.01em; }
+.sd-title { font-size: var(--fs-xl); font-weight: 700; letter-spacing: -.01em; }
 .sd-topright { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .sd-search { display: flex; align-items: center; }
 .sd-searchinput {
@@ -89,26 +98,26 @@ html.sd-app form#idForm { visibility: hidden !important; }
   height: 30px;
   padding: 0 10px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: var(--panel-2);
   color: var(--text);
   font: inherit;
-  font-size: 13px;
+  font-size: var(--fs-base);
 }
 .sd-searchinput::placeholder { color: var(--dim); }
 .sd-searchinput:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-.sd-searchnote { color: var(--warn); font-size: 12px; white-space: nowrap; }
+.sd-searchnote { color: var(--warn); font-size: var(--fs-sm); white-space: nowrap; }
 .sd-btn {
   display: inline-flex;
   align-items: center;
   height: 30px;
   padding: 0 12px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: var(--panel-2);
   color: var(--text);
   font: inherit;
-  font-size: 13px;
+  font-size: var(--fs-base);
   text-decoration: none;
   cursor: pointer;
 }
@@ -127,7 +136,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   border-top: 1px solid var(--line);
   background: var(--panel);
   color: var(--dim);
-  font-size: 12px;
+  font-size: var(--fs-sm);
 }
 
 /* ---- week ---- */
@@ -137,16 +146,16 @@ html.sd-app form#idForm { visibility: hidden !important; }
   margin-bottom: 10px;
   padding: 3px 10px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--panel-2);
   color: var(--dim);
-  font-size: 12px;
+  font-size: var(--fs-sm);
 }
 /* one section per day: hour gutter on the left, one column per studio */
 .sd-dayblock {
   margin-bottom: 14px;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   background: var(--panel);
   overflow: hidden;
 }
@@ -156,7 +165,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   border-bottom: 1px solid var(--line);
   background: var(--panel-2);
   color: var(--text);
-  font-size: 12px;
+  font-size: var(--fs-sm);
   font-weight: 700;
   letter-spacing: .06em;
   text-transform: uppercase;
@@ -171,7 +180,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
 .sd-studiohead {
   padding: 6px 8px;
   color: var(--dim);
-  font-size: 11px;
+  font-size: var(--fs-micro);
   font-weight: 700;
   letter-spacing: .04em;
   border-left: 1px solid rgba(39, 48, 63, .7);
@@ -188,7 +197,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   right: 8px;
   transform: translateY(-50%);
   color: var(--dim);
-  font-size: 11px;
+  font-size: var(--fs-micro);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -216,17 +225,17 @@ html.sd-app form#idForm { visibility: hidden !important; }
   overflow: hidden;
   padding: 3px 5px;
   border: 1px solid rgba(0, 0, 0, .2);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   box-shadow: 0 1px 2px rgba(0, 0, 0, .18);
-  font-size: 11px;
+  font-size: var(--fs-micro);
   line-height: 1.25;
   text-decoration: none;
 }
 .sd-block-name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
-.sd-block-meta { opacity: .85; font-size: 10.5px; font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sd-block-meta { opacity: .85; font-size: var(--fs-micro); font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* A 15-minute class is 30px: one line, no second line squeezed in. */
 .sd-block--short .sd-block-meta { display: none; }
-.sd-block--short { padding: 2px 5px; font-size: 10.5px; }
+.sd-block--short { padding: 2px 5px; font-size: var(--fs-micro); }
 .sd-block:hover { filter: brightness(1.08); }
 .sd-block:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .sd-block--low { box-shadow: inset 0 0 0 2px rgba(255, 190, 90, .95), 0 1px 2px rgba(0, 0, 0, .18); }
@@ -236,7 +245,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   margin: 0;
   padding: 12px;
   color: var(--dim);
-  font-size: 12px;
+  font-size: var(--fs-sm);
   font-style: italic;
 }
 .sd-untimed {
@@ -247,15 +256,15 @@ html.sd-app form#idForm { visibility: hidden !important; }
   padding: 8px 12px;
   border-top: 1px solid var(--line);
 }
-.sd-untimed-label { color: var(--dim); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+.sd-untimed-label { color: var(--dim); font-size: var(--fs-micro); text-transform: uppercase; letter-spacing: .06em; }
 .sd-chip {
   display: inline-block;
   padding: 3px 7px;
   border: 1px solid var(--line);
-  border-radius: 5px;
+  border-radius: var(--radius-xs);
   background: var(--panel-2);
   color: var(--text);
-  font-size: 11.5px;
+  font-size: var(--fs-sm);
   text-decoration: none;
 }
 .sd-chip:hover { border-color: var(--accent); }
@@ -277,14 +286,14 @@ html.sd-app form#idForm { visibility: hidden !important; }
   height: 30px;
   padding: 0 10px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: var(--panel-2);
   color: var(--text);
   font: inherit;
-  font-size: 13px;
+  font-size: var(--fs-base);
 }
 .sd-filter:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-.sd-count { color: var(--dim); font-size: 12px; white-space: nowrap; }
+.sd-count { color: var(--dim); font-size: var(--fs-sm); white-space: nowrap; }
 .sd-listbody { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 4px 18px 18px; }
 .sd-records { list-style: none; margin: 0; padding: 0; }
 .sd-records li { border-bottom: 1px solid var(--line); }
@@ -294,7 +303,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   align-items: center;
   gap: 8px;
   padding: 9px 10px;
-  border-radius: 5px;
+  border-radius: var(--radius-xs);
   color: var(--text);
   text-decoration: none;
 }
@@ -309,19 +318,19 @@ html.sd-app form#idForm { visibility: hidden !important; }
   min-width: 62px;
   padding: 1px 7px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--panel-2);
   color: var(--dim);
-  font-size: 10.5px;
+  font-size: var(--fs-micro);
   font-weight: 600;
   letter-spacing: .04em;
   text-transform: uppercase;
   text-align: center;
 }
-.sd-records a.sd-record--current { background: rgba(122, 162, 255, .16); }
+.sd-records a.sd-record--current { background: var(--accent-soft); }
 .sd-records a.sd-record--current .sd-record-label { color: var(--accent); font-weight: 600; }
-.sd-go { flex: 0 0 auto; color: var(--dim); font-size: 15px; line-height: 1; opacity: 0; }
-.sd-records a:hover { background: rgba(122, 162, 255, .1); }
+.sd-go { flex: 0 0 auto; color: var(--dim); font-size: var(--fs-lg); line-height: 1; opacity: 0; }
+.sd-records a:hover { background: var(--accent-tint); }
 .sd-records a:hover .sd-go,
 .sd-records a:focus-visible .sd-go { opacity: 1; color: var(--accent); }
 .sd-records a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
@@ -335,14 +344,14 @@ html.sd-app form#idForm { visibility: hidden !important; }
   margin: 14px 0 0;
   padding: 10px 12px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--panel-2);
   color: var(--dim);
-  font-size: 12px;
+  font-size: var(--fs-sm);
   line-height: 1.5;
 }
 .sd-note strong { color: var(--text); font-weight: 600; }
-.sd-note--warn { color: var(--warn); border-color: rgba(255, 190, 90, .45); }
+.sd-note--warn { color: var(--warn); border-color: var(--warn-line); }
 
 /* ---- editor with its record list ---- */
 .sd-split { display: grid; grid-template-columns: 260px minmax(0, 1fr); min-height: 0; }
@@ -395,7 +404,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   border-bottom: 1px solid var(--line);
   flex: 0 0 auto;
 }
-.sd-dirty { color: var(--dim); font-size: 12px; }
+.sd-dirty { color: var(--dim); font-size: var(--fs-sm); }
 .sd-editor-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 
 /* The record's own buttons, after ours: a line separates what this view does
@@ -424,7 +433,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   overflow: auto;
   padding: 5px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--panel);
   box-shadow: 0 12px 30px rgba(0, 0, 0, .45);
 }
@@ -432,17 +441,17 @@ html.sd-app form#idForm { visibility: hidden !important; }
   display: block;
   padding: 7px 9px;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: none;
   color: var(--text);
   font: inherit;
-  font-size: 12.5px;
+  font-size: var(--fs-sm);
   line-height: 1.35;
   text-align: left;
   text-decoration: none;
   cursor: pointer;
 }
-.sd-menuitem:hover { background: rgba(122, 162, 255, .14); }
+.sd-menuitem:hover { background: var(--accent-soft); }
 .sd-menuitem:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .sd-menuitem:disabled { color: var(--dim); cursor: default; }
 .sd-menuitem:disabled:hover { background: none; }
@@ -453,7 +462,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   border-bottom: 1px solid var(--line);
   background: var(--panel-2);
   color: var(--dim);
-  font-size: 12.5px;
+  font-size: var(--fs-sm);
 }
 .sd-editorbody { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 14px 18px 24px; }
 
@@ -472,14 +481,14 @@ html.sd-app form#idForm { visibility: hidden !important; }
   margin: 0 0 10px;
   padding-bottom: 6px;
   border-bottom: 1px solid var(--line);
-  font-size: 12px;
+  font-size: var(--fs-sm);
   text-transform: uppercase;
   letter-spacing: .08em;
   color: var(--text);
 }
 .sd-indexcount {
   color: var(--dim);
-  font-size: 11px;
+  font-size: var(--fs-micro);
   letter-spacing: .04em;
   font-variant-numeric: tabular-nums;
 }
@@ -496,11 +505,11 @@ html.sd-app form#idForm { visibility: hidden !important; }
   gap: 10px;
   padding: 8px 11px;
   border: 1px solid var(--line);
-  border-radius: 7px;
+  border-radius: var(--radius-md);
   background: var(--panel-2);
   color: var(--text);
   text-decoration: none;
-  font-size: 13px;
+  font-size: var(--fs-base);
   min-height: 34px;
 }
 .sd-tile:hover { border-color: var(--accent); background: #1f2a3a; }
@@ -531,7 +540,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
 #sd-root .sd-filterlabel {
   display: block !important;
   position: static !important;
-  font-size: 13px;
+  font-size: var(--fs-base);
   color: var(--text);
   line-height: 1.35;
 }
@@ -560,7 +569,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
 
 .sd-reporthead {
   margin: 6px 0 8px;
-  font-size: 12px;
+  font-size: var(--fs-sm);
   text-transform: uppercase;
   letter-spacing: .08em;
   color: var(--dim);
@@ -582,7 +591,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   background: none;
   color: var(--dim);
   font: inherit;
-  font-size: 13px;
+  font-size: var(--fs-base);
   cursor: pointer;
   white-space: nowrap;
 }
@@ -590,7 +599,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
 .sd-tab--on { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
 .sd-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .sd-tabbody { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 14px 18px 24px; }
-.sd-section { margin: 16px 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); }
+.sd-section { margin: 16px 0 6px; font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: .08em; color: var(--dim); }
 /* Two controls in one cell (the waitlist's Enroll and Drop) are two targets, not
    one link with two words in it. */
 .sd-cellactions { display: inline-flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
@@ -607,7 +616,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   background: var(--panel);
   box-shadow: inset 0 -1px 0 var(--line);
 }
-.sd-table { border-collapse: collapse; width: 100%; font-size: 13px; }
+.sd-table { border-collapse: collapse; width: 100%; font-size: var(--fs-base); }
 #sd-root .sd-table,
 #sd-root .sd-table th,
 #sd-root .sd-table td,
@@ -616,7 +625,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   padding: 6px 12px 6px 0;
   text-align: left;
   font-weight: 600;
-  font-size: 12px;
+  font-size: var(--fs-sm);
   color: var(--dim);
   border-bottom: 1px solid var(--line) !important;
   white-space: nowrap;
@@ -633,18 +642,18 @@ html.sd-app form#idForm { visibility: hidden !important; }
   display: inline-block;
   padding: 3px 11px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--panel-2);
   color: var(--text);
-  font-size: 12px;
+  font-size: var(--fs-sm);
   font-weight: 600;
   line-height: 1.6;
   text-decoration: none;
 }
 .sd-action:hover { border-color: var(--accent); }
 .sd-action--js { color: var(--dim); border-style: dashed; cursor: default; }
-.sd-panelnote { margin: 8px 0 0; color: var(--dim); font-size: 12.5px; }
-.sd-fields { border-collapse: collapse; width: 100%; max-width: 880px; font-size: 13px; }
+.sd-panelnote { margin: 8px 0 0; color: var(--dim); font-size: var(--fs-sm); }
+.sd-fields { border-collapse: collapse; width: 100%; max-width: 880px; font-size: var(--fs-base); }
 /* The app's own stylesheet reaches this table too: its cells bring a white
    background, white cell borders and a text shadow, which turn the label column
    into a white strip and draw lines between every row. Override at id
@@ -700,11 +709,11 @@ html.sd-app form#idForm { visibility: hidden !important; }
   min-height: 30px;
   padding: 4px 9px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: var(--panel-2);
   color: var(--text);
   font: inherit;
-  font-size: 13px;
+  font-size: var(--fs-base);
 }
 .sd-input + .sd-input { margin-top: 6px; }
 .sd-textarea { resize: vertical; min-height: 64px; }
@@ -737,7 +746,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   flex-direction: column;
   gap: 2px;
   color: var(--dim);
-  font-size: 13px;
+  font-size: var(--fs-base);
   font-weight: 600;
   cursor: default;
 }
@@ -753,13 +762,13 @@ html.sd-app form#idForm { visibility: hidden !important; }
 .sd-sheetbody .sd-listbar { padding-left: 0; padding-right: 0; }
 .sd-sheetcaption {
   margin: 10px 0 6px;
-  font-size: 15px;
+  font-size: var(--fs-lg);
   font-weight: 700;
   color: var(--text);
 }
 .sd-sheethead {
   margin: 18px 0 8px;
-  font-size: 12px;
+  font-size: var(--fs-sm);
   text-transform: uppercase;
   letter-spacing: .08em;
   color: var(--dim);
@@ -767,7 +776,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
 /* A table with nothing in it still says so, in the app's own words. */
 .sd-sheetempty { padding: 10px 0; color: var(--dim); font-style: italic; }
 /* The app's totals line, under the table it totals. */
-.sd-sheetnote { margin: 6px 0 0; font-size: 12.5px; color: var(--dim); }
+.sd-sheetnote { margin: 6px 0 0; font-size: var(--fs-sm); color: var(--dim); }
 /* The action bar the app prints under a table ("Add New Costume"). Its links
    navigate, so they read as controls that go somewhere. */
 .sd-sheetlinks { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; }
@@ -799,7 +808,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   max-width: 520px;
   padding: 28px 32px;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: var(--panel);
   text-align: center;
 }
@@ -808,22 +817,22 @@ html.sd-app form#idForm { visibility: hidden !important; }
   place-items: center;
   width: 34px;
   height: 34px;
-  border-radius: 999px;
-  background: rgba(70, 201, 138, .16);
+  border-radius: var(--radius-pill);
+  background: var(--ok-soft);
   color: var(--ok);
   font-size: 18px;
   font-weight: 700;
 }
-.sd-confirm-msg { margin: 0; font-size: 17px; font-weight: 600; }
-.sd-confirm-hint { margin: 0; color: var(--dim); font-size: 12.5px; }
-.sd-confirm-card--bad { border-color: rgba(255, 123, 114, .45); }
+.sd-confirm-msg { margin: 0; font-size: var(--fs-xl); font-weight: 600; }
+.sd-confirm-hint { margin: 0; color: var(--dim); font-size: var(--fs-sm); }
+.sd-confirm-card--bad { border-color: var(--danger-line); }
 .sd-confirm-mark--ask {
-  background: rgba(122, 162, 255, .16);
+  background: var(--accent-soft);
   color: var(--accent);
 }
 .sd-confirm-actions { justify-content: center; margin-top: 4px; }
 .sd-confirm-card--bad .sd-confirm-mark {
-  background: rgba(255, 123, 114, .16);
+  background: var(--danger-soft);
   color: var(--danger);
 }
 
@@ -838,7 +847,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   padding: 40px 24px;
   text-align: center;
 }
-.sd-state h2 { margin: 0; font-size: 19px; }
+.sd-state h2 { margin: 0; font-size: var(--fs-2xl); }
 .sd-state p { margin: 0 0 8px; max-width: 46ch; color: var(--dim); }
 
 @media (max-width: 1080px) {
@@ -846,56 +855,77 @@ html.sd-app form#idForm { visibility: hidden !important; }
   .sd-split-side { display: none; }
 }
 
-/* ---- light theme ----
+/* ---- light theme: paper ----
  *
- * The palette above is dark. A theme is a set of variable values plus the few
- * rules that carry a literal colour instead of a variable; theme.js resolves
- * auto before the attribute is written, so nothing here queries the OS.
+ * A warm off-white rather than #ffffff. A pure-white screen at full brightness
+ * is a lamp pointed at your face, and white panels on a white page have no
+ * depth to them: every surface here is a step of warm paper, the ink is warm
+ * black, and the rules are a warm grey rather than a cool one.
  */
 html[data-sd-theme="light"] #sd-root {
-  --bg: #f6f7f9;
-  --panel: #ffffff;
-  --panel-2: #f1f3f6;
-  --line: #d7dce4;
-  --text: #1b2330;
-  --dim: #5d6b7f;
-  --accent: #2f5fd0;
-  --ok: #1f8a5b;
+  --bg: #f4efe6;
+  --panel: #fdfaf3;
+  --panel-2: #efe7d9;
+  --line: #ded2be;
+  --text: #2b2621;
+  --dim: #6d6154;
+  --accent: #34599f;
+  --ok: #2b7a52;
   --warn: #8a5a00;
-  --danger: #c0392b;
+  --danger: #b3342a;
+  /* Paper has less room between a card and its shadow, so the elevation is
+     warmer and softer than on the dark field. */
+  --shadow-sm: 0 1px 2px rgba(72, 56, 34, .12);
+  --shadow-menu: 0 18px 40px rgba(72, 56, 34, .18);
   color-scheme: light;
 }
-html[data-sd-theme="light"] #sd-root .sd-headrow { background: rgba(241, 243, 246, .9); }
+html[data-sd-theme="light"] #sd-root .sd-headrow { background: var(--panel-2); }
 html[data-sd-theme="light"] #sd-root .sd-studiohead,
-html[data-sd-theme="light"] #sd-root .sd-studiocol { border-left-color: rgba(215, 220, 228, .9); }
+html[data-sd-theme="light"] #sd-root .sd-studiocol { border-left-color: var(--line); }
 html[data-sd-theme="light"] #sd-root .sd-studiocols {
   background-image: repeating-linear-gradient(
     to bottom,
-    rgba(93, 107, 127, .22) 0 1px,
+    color-mix(in srgb, var(--dim) 22%, transparent) 0 1px,
     transparent 1px var(--hour)
   );
 }
 html[data-sd-theme="light"] #sd-root .sd-block {
-  border-color: rgba(0, 0, 0, .12);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
+  border-color: var(--line);
+  box-shadow: var(--shadow-sm);
 }
 html[data-sd-theme="light"] #sd-root .sd-block--low {
-  box-shadow: inset 0 0 0 2px rgba(138, 90, 0, .75), 0 1px 2px rgba(0, 0, 0, .08);
+  box-shadow: inset 0 0 0 2px var(--warn-line), var(--shadow-sm);
 }
 html[data-sd-theme="light"] #sd-root .sd-block--full {
-  box-shadow: inset 0 0 0 2px rgba(192, 57, 43, .7), 0 1px 2px rgba(0, 0, 0, .08);
+  box-shadow: inset 0 0 0 2px var(--danger-line), var(--shadow-sm);
 }
-html[data-sd-theme="light"] #sd-root .sd-tile:hover { background: #e9eef7; }
-html[data-sd-theme="light"] #sd-root .sd-menu { box-shadow: 0 12px 30px rgba(20, 30, 50, .18); }
-html[data-sd-theme="light"] #sd-root .sd-records a.sd-record--current { background: rgba(47, 95, 208, .12); }
-html[data-sd-theme="light"] #sd-root .sd-records a:hover,
-html[data-sd-theme="light"] #sd-root .sd-menuitem:hover { background: rgba(47, 95, 208, .09); }
-html[data-sd-theme="light"] #sd-root .sd-fields tr + tr > * { box-shadow: inset 0 1px 0 rgba(215, 220, 228, .9); }
-html[data-sd-theme="light"] #sd-root .sd-table td { border-bottom-color: rgba(215, 220, 228, .9) !important; }
-html[data-sd-theme="light"] #sd-root .sd-setting { border-bottom-color: rgba(215, 220, 228, .9); }
-html[data-sd-theme="light"] #sd-root .sd-confirm-mark { background: rgba(31, 138, 91, .14); }
-html[data-sd-theme="light"] #sd-root .sd-confirm-card--bad .sd-confirm-mark { background: rgba(192, 57, 43, .12); }
-html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90, 0, .4); }
+html[data-sd-theme="light"] #sd-root .sd-menu { box-shadow: var(--shadow-menu); }
+html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: var(--warn-line); }
+html[data-sd-theme="light"] #sd-root .sd-confirm-mark { background: var(--ok-soft); }
+html[data-sd-theme="light"] #sd-root .sd-confirm-card--bad .sd-confirm-mark { background: var(--danger-soft); }
+
+/* ---- accents ----
+ *
+ * One choice, every theme. A preset is two hex values: the step that reads on a
+ * dark field, and the ink that reads on paper. Everything else - the soft fills,
+ * the focus ring, the selected row - is derived from whichever one the theme
+ * installed, so adding a colour costs two lines and no rules.
+ */
+/* Each preset names its theme: the Wii skin carries its own blue ramp, and a
+   theme-agnostic rule would reach in and replace it. */
+html[data-sd-theme="dark"][data-sd-accent="blue"] #sd-root { --accent: #7aa2ff; }
+html[data-sd-theme="dark"][data-sd-accent="violet"] #sd-root { --accent: #b39dff; }
+html[data-sd-theme="dark"][data-sd-accent="teal"] #sd-root { --accent: #4fd6c3; }
+html[data-sd-theme="dark"][data-sd-accent="green"] #sd-root { --accent: #6fd39a; }
+html[data-sd-theme="dark"][data-sd-accent="amber"] #sd-root { --accent: #f0b45e; }
+html[data-sd-theme="dark"][data-sd-accent="rose"] #sd-root { --accent: #ff8fb0; }
+
+html[data-sd-theme="light"][data-sd-accent="blue"] #sd-root { --accent: #34599f; }
+html[data-sd-theme="light"][data-sd-accent="violet"] #sd-root { --accent: #6a45c0; }
+html[data-sd-theme="light"][data-sd-accent="teal"] #sd-root { --accent: #0f6f68; }
+html[data-sd-theme="light"][data-sd-accent="green"] #sd-root { --accent: #1f7a4c; }
+html[data-sd-theme="light"][data-sd-accent="amber"] #sd-root { --accent: #8a5a12; }
+html[data-sd-theme="light"][data-sd-accent="rose"] #sd-root { --accent: #a3305a; }
 
 #sd-root { color-scheme: dark; }
 
@@ -915,8 +945,24 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
   --space-4: 16px;
   --space-5: 24px;
   --space-6: 32px;
-  --radius: 8px;
+  /* One scale each for corners, type and elevation. A control's corner and a
+     card's corner are the same decision, so they come from one list. */
+  --radius-xs: 5px;
   --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
+  --radius-pill: 999px;
+  /* The two names the skin overrides keep working: they point at the scale. */
+  --radius: var(--radius-md);
+  --fs-micro: 11px;
+  --fs-sm: 12px;
+  --fs-base: 13px;
+  --fs-lg: 15px;
+  --fs-xl: 17px;
+  --fs-2xl: 19px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .18);
+  --shadow-menu: 0 12px 30px rgba(0, 0, 0, .45);
   --field-h: 36px;
   --row-h: 34px;
   --rail-w: 216px;
@@ -957,7 +1003,7 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
 }
 .sd-railtoggle:hover { background: var(--panel-2); color: var(--text); }
 .sd-railtoggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-.sd-railtoggleicon { font-size: 13px; line-height: 1; }
+.sd-railtoggleicon { font-size: var(--fs-base); line-height: 1; }
 .sd-brand { padding: 0; white-space: nowrap; }
 .sd-navlink {
   display: flex;
@@ -988,7 +1034,7 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
   gap: 6px;
   margin-top: 1px;
   color: var(--dim);
-  font-size: 12px;
+  font-size: var(--fs-sm);
   white-space: nowrap;
   overflow: hidden;
 }
@@ -1076,7 +1122,7 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
   gap: var(--space-2);
   margin: 0 0 var(--space-3);
 }
-.sd-periodlabel { color: var(--dim); font-size: 13px; }
+.sd-periodlabel { color: var(--dim); font-size: var(--fs-base); }
 .sd-periodselect {
   height: var(--field-h);
   min-width: 240px;
@@ -1086,7 +1132,7 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
   background: var(--panel-2);
   color: var(--text);
   font: inherit;
-  font-size: 13px;
+  font-size: var(--fs-base);
 }
 .sd-periodselect:hover { border-color: var(--accent); }
 .sd-periodselect:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
@@ -1153,7 +1199,7 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
   width: 20px;
   min-width: 20px;
   text-align: center;
-  font-size: 14px;
+  font-size: var(--fs-base);
   line-height: 1;
   opacity: 0.9;
 }
@@ -1199,7 +1245,7 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
    pointer, and numbers that line up in a column. */
 .sd-tablewrap {
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: var(--panel);
   overflow: auto;
   margin-bottom: var(--space-3);
@@ -1208,7 +1254,7 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
   border-collapse: separate;
   border-spacing: 0;
   width: 100%;
-  font-size: 13px;
+  font-size: var(--fs-base);
 }
 #sd-root .sd-table th,
 #sd-root .sd-table td { border: 0 !important; background: transparent !important; }
@@ -1217,7 +1263,7 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
   padding: 10px 14px !important;
   background: var(--panel-2) !important;
   color: var(--dim);
-  font-size: 11px;
+  font-size: var(--fs-micro);
   font-weight: 600;
   letter-spacing: .04em;
   text-transform: uppercase;
@@ -1233,7 +1279,7 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
 }
 .sd-table tbody tr:last-child td { border-bottom: 0 !important; }
 .sd-table tbody tr:nth-child(even) td { background: rgba(255, 255, 255, .018) !important; }
-.sd-table tbody tr:hover td { background: rgba(122, 162, 255, .07) !important; }
+.sd-table tbody tr:hover td { background: var(--accent-tint) !important; }
 
 /* Figures: same width per digit, so a ledger column reads down as a column. */
 .sd-table .sd-cell--right,
@@ -1256,10 +1302,10 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
   display: inline-block;
   padding: 3px 10px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--panel-2);
   color: var(--text);
-  font-size: 12px;
+  font-size: var(--fs-sm);
   font-weight: 600;
   line-height: 1.5;
   white-space: nowrap;
@@ -1268,20 +1314,20 @@ html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: rgba(138, 90
 .sd-table td a.sd-pill:hover {
   border-color: var(--accent);
   color: var(--accent);
-  background: rgba(122, 162, 255, .12);
+  background: var(--accent-soft);
   text-decoration: none;
 }
 .sd-cell-actions { display: inline-flex; flex-wrap: wrap; gap: 6px; }
 
-html[data-sd-theme="light"] #sd-root .sd-table thead th { background: #f1f3f6 !important; }
+html[data-sd-theme="light"] #sd-root .sd-table thead th { background: var(--panel-2) !important; }
 html[data-sd-theme="light"] #sd-root .sd-table tbody td {
-  border-bottom-color: rgba(215, 220, 228, .9) !important;
+  border-bottom-color: var(--line) !important;
 }
 html[data-sd-theme="light"] #sd-root .sd-table tbody tr:nth-child(even) td {
-  background: rgba(27, 35, 48, .022) !important;
+  background: color-mix(in srgb, var(--text) 3%, transparent) !important;
 }
 html[data-sd-theme="light"] #sd-root .sd-table tbody tr:hover td {
-  background: rgba(47, 95, 208, .06) !important;
+  background: var(--accent-tint) !important;
 }
 
 /* ---- table rules, at the specificity the reset uses ---- */
@@ -1303,7 +1349,7 @@ html[data-sd-theme="light"] #sd-root .sd-table thead th {
   border-bottom-color: var(--line) !important;
 }
 html[data-sd-theme="light"] #sd-root .sd-table tbody td {
-  border-bottom-color: rgba(215, 220, 228, .9) !important;
+  border-bottom-color: var(--line) !important;
 }
 
 /* ---- the month calendar ---- */
@@ -1319,29 +1365,29 @@ html[data-sd-theme="light"] #sd-root .sd-table tbody td {
 .sd-monthnav { display: flex; align-items: center; gap: 8px; }
 .sd-monthlabel {
   min-width: 118px; text-align: center;
-  font-size: 15px; font-weight: 600; color: var(--text);
+  font-size: var(--fs-lg); font-weight: 600; color: var(--text);
   font-variant-numeric: tabular-nums;
 }
-.sd-monthstep { padding: 4px 10px; font-size: 12.5px; }
+.sd-monthstep { padding: 4px 10px; font-size: var(--fs-sm); }
 .sd-monthstep--off { opacity: .35; pointer-events: none; }
 .sd-monthtools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .sd-viewswitch {
   display: inline-flex; overflow: hidden;
-  border: 1px solid var(--line); border-radius: 8px;
+  border: 1px solid var(--line); border-radius: var(--radius-md);
 }
-.sd-viewlink { padding: 4px 10px; font-size: 12.5px; color: var(--dim); text-decoration: none; }
+.sd-viewlink { padding: 4px 10px; font-size: var(--fs-sm); color: var(--dim); text-decoration: none; }
 .sd-viewlink + .sd-viewlink { border-left: 1px solid var(--line); }
 .sd-viewlink:hover { color: var(--text); background: var(--panel-2); }
 .sd-viewlink--on { color: var(--text); background: var(--panel-2); font-weight: 600; }
 
 .sd-monthgrid {
-  border: 1px solid var(--line); border-radius: 12px;
+  border: 1px solid var(--line); border-radius: var(--radius-lg);
   overflow: hidden; background: var(--panel);
 }
 .sd-monthhead, .sd-monthweek { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .sd-monthhead { background: var(--panel-2); border-bottom: 1px solid var(--line); }
 .sd-monthweekday {
-  padding: 8px 10px; font-size: 11.5px; font-weight: 600;
+  padding: 8px 10px; font-size: var(--fs-sm); font-weight: 600;
   letter-spacing: .06em; text-transform: uppercase; color: var(--dim);
 }
 .sd-monthweek { border-bottom: 1px solid var(--line); }
@@ -1355,39 +1401,39 @@ html[data-sd-theme="light"] #sd-root .sd-table tbody td {
 }
 .sd-day:last-child { border-right: 0; }
 .sd-day--blank { background: rgba(8, 12, 18, .28); }
-.sd-day--weekend { background: rgba(122, 162, 255, .035); }
+.sd-day--weekend { background: var(--accent-tint); }
 .sd-day--holiday { background: rgba(255, 186, 98, .07); }
-.sd-day--today { background: rgba(122, 162, 255, .12); box-shadow: inset 0 0 0 2px var(--accent); }
+.sd-day--today { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent); }
 .sd-daytop { display: flex; align-items: baseline; gap: 6px; min-height: 17px; }
 .sd-daynum {
-  font-size: 12.5px; font-weight: 600; color: var(--text);
+  font-size: var(--fs-sm); font-weight: 600; color: var(--text);
   text-decoration: none; font-variant-numeric: tabular-nums;
 }
 a.sd-daynum:hover { color: var(--accent); text-decoration: underline; }
 .sd-holiday {
-  font-size: 10.5px; font-weight: 700; color: #ffbe6a;
+  font-size: var(--fs-micro); font-weight: 700; color: #ffbe6a;
   text-transform: uppercase; letter-spacing: .04em; line-height: 1.2;
 }
 .sd-dayevents { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .sd-event {
   display: block; padding: 3px 6px;
-  border-left: 2px solid var(--accent); border-radius: 5px;
+  border-left: 2px solid var(--accent); border-radius: var(--radius-xs);
   background: var(--panel-2);
-  color: var(--text); font-size: 11.5px; line-height: 1.3;
+  color: var(--text); font-size: var(--fs-sm); line-height: 1.3;
   text-decoration: none;
 }
-.sd-event:hover { background: rgba(122, 162, 255, .18); text-decoration: none; }
+.sd-event:hover { background: var(--accent-soft); text-decoration: none; }
 .sd-eventtime {
-  display: block; font-size: 10.5px; font-weight: 700;
+  display: block; font-size: var(--fs-micro); font-weight: 700;
   color: var(--dim); font-variant-numeric: tabular-nums;
 }
 .sd-eventname { display: block; overflow-wrap: anywhere; }
 
-html[data-sd-theme="light"] .sd-day--blank { background: rgba(27, 35, 48, .025); }
-html[data-sd-theme="light"] .sd-day--weekend { background: rgba(27, 35, 48, .045); }
-html[data-sd-theme="light"] .sd-day--today { background: rgba(47, 95, 208, .09); }
+html[data-sd-theme="light"] .sd-day--blank { background: color-mix(in srgb, var(--text) 4%, transparent); }
+html[data-sd-theme="light"] .sd-day--weekend { background: color-mix(in srgb, var(--text) 6%, transparent); }
+html[data-sd-theme="light"] .sd-day--today { background: var(--accent-tint); }
 html[data-sd-theme="light"] .sd-holiday { color: #a35d05; }
-html[data-sd-theme="light"] .sd-event:hover { background: rgba(47, 95, 208, .12); }
+html[data-sd-theme="light"] .sd-event:hover { background: var(--accent-soft); }
 
 /* The grid is a flex item, and a flex item refuses to shrink below the widest
    class name unless it is told to: that pushed the last column (Saturday) off
@@ -1422,28 +1468,28 @@ html[data-sd-theme="light"] .sd-event:hover { background: rgba(47, 95, 208, .12)
   display: grid; grid-template-columns: 92px minmax(0, 1fr) auto;
   gap: 10px; align-items: center;
   padding: 7px 10px;
-  border: 1px solid var(--line); border-radius: 8px;
+  border: 1px solid var(--line); border-radius: var(--radius-md);
   background: var(--panel-2);
-  color: var(--text); font-size: 13px; text-decoration: none;
+  color: var(--text); font-size: var(--fs-base); text-decoration: none;
 }
-.sd-weekrow:hover { border-color: var(--accent); background: rgba(122, 162, 255, .10); }
+.sd-weekrow:hover { border-color: var(--accent); background: var(--accent-tint); }
 .sd-weekrow-time {
-  font-size: 12.5px; font-weight: 600; color: var(--dim);
+  font-size: var(--fs-sm); font-weight: 600; color: var(--dim);
   font-variant-numeric: tabular-nums;
 }
 .sd-weekrow-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sd-weekrow-tag {
   margin-left: 6px; padding: 1px 6px;
-  border-radius: 999px; background: rgba(255, 138, 128, .16); color: #ff9d93;
-  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+  border-radius: var(--radius-pill); background: rgba(255, 138, 128, .16); color: #ff9d93;
+  font-size: var(--fs-micro); font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
 }
 .sd-weekrow-loc {
   padding: 1px 8px;
-  border: 1px solid var(--line); border-radius: 999px;
-  font-size: 11.5px; color: var(--dim);
+  border: 1px solid var(--line); border-radius: var(--radius-pill);
+  font-size: var(--fs-sm); color: var(--dim);
 }
-html[data-sd-theme="light"] .sd-weekrow:hover { background: rgba(47, 95, 208, .08); }
-html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12); color: #8d1f1f; }
+html[data-sd-theme="light"] .sd-weekrow:hover { background: var(--accent-tint); }
+html[data-sd-theme="light"] .sd-weekrow-tag { background: var(--danger-soft); color: #8d1f1f; }
 
 /* The week's toolbar sits in the same bar the month uses, above the days. */
 .sd-weekbar { margin-bottom: 12px; }
@@ -1468,7 +1514,7 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
   padding: 10px 18px 0;
 }
 .sd-chiplabel {
-  font-size: 10.5px;
+  font-size: var(--fs-micro);
   text-transform: uppercase;
   letter-spacing: .1em;
   color: var(--dim);
@@ -1479,10 +1525,10 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
   gap: 6px;
   padding: 4px 11px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--panel-2);
   color: var(--text);
-  font-size: 12.5px;
+  font-size: var(--fs-sm);
   text-decoration: none;
 }
 .sd-chip:hover { border-color: var(--accent); }
@@ -1506,9 +1552,9 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
   justify-content: space-between;
   gap: 8px;
   padding: 6px 9px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   color: var(--dim);
-  font-size: 12.5px;
+  font-size: var(--fs-sm);
   text-decoration: none;
 }
 .sd-grprail a:hover { background: var(--panel-2); color: var(--text); }
@@ -1526,9 +1572,9 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
   justify-content: space-between;
   gap: 12px;
   padding: 5px 8px;
-  border-radius: 5px;
+  border-radius: var(--radius-xs);
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--fs-base);
   text-decoration: none;
 }
 .sd-rowlink:hover { background: var(--panel-2); }
@@ -1543,7 +1589,7 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
   white-space: nowrap;
   color: var(--dim);
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 11px;
+  font-size: var(--fs-micro);
 }
 
 /* ---- landing pages: task cards (Charges & Payments, Communications) ----
@@ -1561,7 +1607,7 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
   flex-direction: column;
   padding: 12px 14px 10px;
   border: 1px solid var(--line);
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   background: var(--panel-2);
 }
 .sd-cardhead {
@@ -1569,7 +1615,7 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
   align-items: baseline;
   gap: 8px;
   margin: 0 0 8px;
-  font-size: 14px;
+  font-size: var(--fs-base);
 }
 .sd-cardlinks { display: flex; flex-direction: column; }
 .sd-cardlink {
@@ -1578,9 +1624,9 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
   justify-content: space-between;
   gap: 10px;
   padding: 5px 6px;
-  border-radius: 5px;
+  border-radius: var(--radius-xs);
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--fs-base);
   text-decoration: none;
 }
 .sd-cardlink:hover { background: var(--panel); }
@@ -1594,7 +1640,7 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
   background: none;
   color: var(--accent);
   font: inherit;
-  font-size: 12.5px;
+  font-size: var(--fs-sm);
   cursor: pointer;
 }
 .sd-cardmore:hover { text-decoration: underline; }
@@ -1616,7 +1662,7 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
   position: relative;
   width: min(640px, 100%);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: var(--panel);
   box-shadow: 0 26px 64px rgba(0, 0, 0, .45);
   overflow: hidden;
@@ -1628,7 +1674,7 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
   padding: 12px 14px;
   border-bottom: 1px solid var(--line);
 }
-.sd-jump-icon { color: var(--dim); font-size: 15px; }
+.sd-jump-icon { color: var(--dim); font-size: var(--fs-lg); }
 .sd-jump-field input {
   flex: 1 1 auto;
   min-width: 0;
@@ -1642,7 +1688,7 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
 .sd-jump kbd {
   padding: 1px 5px;
   border: 1px solid var(--line);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   background: var(--panel-2);
   color: var(--dim);
   font: 11px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
@@ -1651,7 +1697,7 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
 .sd-jump-group {
   padding: 8px 14px 4px;
   color: var(--dim);
-  font-size: 10.5px;
+  font-size: var(--fs-micro);
   letter-spacing: .1em;
   text-transform: uppercase;
 }
@@ -1672,7 +1718,7 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
 .sd-jump-tag {
   min-width: 92px;
   color: var(--dim);
-  font-size: 10.5px;
+  font-size: var(--fs-micro);
   letter-spacing: .05em;
   text-transform: uppercase;
 }
@@ -1680,7 +1726,7 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
 .sd-jump-code {
   color: var(--dim);
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 11px;
+  font-size: var(--fs-micro);
 }
 .sd-jump-foot {
   display: flex;
@@ -1689,7 +1735,7 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
   padding: 8px 14px;
   border-top: 1px solid var(--line);
   color: var(--dim);
-  font-size: 11.5px;
+  font-size: var(--fs-sm);
 }
 .sd-jump-tally { margin-left: auto; }
 .sd-jump-empty { padding: 10px 14px; color: var(--dim); }
@@ -1702,13 +1748,13 @@ html[data-sd-theme="light"] .sd-weekrow-tag { background: rgba(198, 40, 40, .12)
 }
 
 html[data-sd-theme="light"] #sd-root .sd-card,
-html[data-sd-theme="light"] #sd-root .sd-chip { background: #f3f6fb; }
+html[data-sd-theme="light"] #sd-root .sd-chip { background: var(--panel-2); }
 html[data-sd-theme="light"] #sd-root .sd-rowlink:hover,
 html[data-sd-theme="light"] #sd-root .sd-cardlink:hover,
 html[data-sd-theme="light"] #sd-root .sd-grprail a:hover,
 html[data-sd-theme="light"] #sd-root .sd-grprail a.on,
-html[data-sd-theme="light"] #sd-root .sd-jump-row.on { background: #e9eef7; }
-html[data-sd-theme="light"] #sd-root .sd-jump-scrim { background: rgba(24, 34, 48, .35); }
+html[data-sd-theme="light"] #sd-root .sd-jump-row.on { background: var(--accent-tint); }
+html[data-sd-theme="light"] #sd-root .sd-jump-scrim { background: rgba(52, 44, 34, .35); }
 
 /* A grouped page with one category has nothing to navigate: the rail would be a
    single link pointing at the list already beside it. */
@@ -1726,13 +1772,13 @@ html[data-sd-theme="light"] #sd-root .sd-jump-scrim { background: rgba(24, 34, 4
   display: flex; align-items: center; justify-content: space-between;
   gap: 12px; flex-wrap: wrap;
 }
-.sd-recordcount { color: var(--dim); font-size: 13px; }
+.sd-recordcount { color: var(--dim); font-size: var(--fs-base); }
 .sd-recordcount strong { color: var(--text); font-weight: 600; }
 
 /* The row you are editing stays marked, so closing the dialog returns you to
    the right line of the list. */
 .sd-table tr.sd-recordrow--open > td {
-  background: rgba(122, 162, 255, 0.10);
+  background: var(--accent-tint);
   box-shadow: inset 2px 0 0 var(--accent);
 }
 .sd-recordedit { text-align: right; width: 1%; white-space: nowrap; }
@@ -1752,7 +1798,7 @@ html[data-sd-theme="light"] #sd-root .sd-jump-scrim { background: rgba(24, 34, 4
   max-height: min(calc(100vh - 56px), 900px);
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius-xl);
   box-shadow: 0 26px 70px rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
@@ -1766,22 +1812,22 @@ html[data-sd-theme="light"] #sd-root .sd-jump-scrim { background: rgba(24, 34, 4
   background: var(--panel-2);
 }
 .sd-eyebrow {
-  font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase;
+  font-size: var(--fs-micro); letter-spacing: 0.09em; text-transform: uppercase;
   color: var(--dim); margin-bottom: 4px;
 }
-.sd-dialog-title { margin: 0; font-size: 19px; line-height: 1.25; color: var(--text); }
-.sd-dialog-lede { margin: 6px 0 0; font-size: 12.5px; color: var(--dim); }
+.sd-dialog-title { margin: 0; font-size: var(--fs-2xl); line-height: 1.25; color: var(--text); }
+.sd-dialog-lede { margin: 6px 0 0; font-size: var(--fs-sm); color: var(--dim); }
 .sd-dialog-x {
-  flex: 0 0 auto; width: 30px; height: 30px; border-radius: 8px;
+  flex: 0 0 auto; width: 30px; height: 30px; border-radius: var(--radius-md);
   border: 1px solid transparent; background: transparent;
-  color: var(--dim); font-size: 15px; cursor: pointer; line-height: 1;
+  color: var(--dim); font-size: var(--fs-lg); cursor: pointer; line-height: 1;
 }
 .sd-dialog-x:hover { color: var(--text); border-color: var(--line); }
 
 /* Scrolls on its own so the footer — and the save — never leave the screen. */
 .sd-dialog-body { flex: 1; min-height: 0; overflow: auto; padding: 16px 20px; }
 .sd-dialog-body .sd-fields { margin: 0; }
-.sd-dialogstatus { margin: 12px 0 0; font-size: 12.5px; color: var(--dim); }
+.sd-dialogstatus { margin: 12px 0 0; font-size: var(--fs-sm); color: var(--dim); }
 
 .sd-dialog-foot {
   display: flex; align-items: center; justify-content: space-between;
@@ -1811,11 +1857,11 @@ html[data-sd-theme="light"] #sd-root .sd-jump-scrim { background: rgba(24, 34, 4
 .sd-recordpage > * + * { margin-top: 12px; }
 
 .sd-recordbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.sd-recordcount { color: var(--dim); font-size: 12.5px; }
+.sd-recordcount { color: var(--dim); font-size: var(--fs-sm); }
 .sd-recordcount strong { color: var(--text); font-variant-numeric: tabular-nums; }
 .sd-recordcard {
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: var(--panel);
 }
 .sd-recordcard .sd-tablewrap { margin: 0; }
@@ -1826,7 +1872,7 @@ html[data-sd-theme="light"] #sd-root .sd-jump-scrim { background: rgba(24, 34, 4
 .sd-recordcard .sd-table th:last-child,
 .sd-recordcard .sd-table td:last-child { padding-right: 16px; }
 .sd-recordcard .sd-table tbody tr:last-child > td { border-bottom: 0 !important; }
-.sd-recordcard .sd-table tbody tr:hover > td { background: rgba(122, 162, 255, .06); }
+.sd-recordcard .sd-table tbody tr:hover > td { background: var(--accent-tint); }
 /* The app's stylesheet repaints every cell transparent at id specificity, which
    is why rows scrolled through the sticky header instead of under it. One class
    more specific than that rule is enough to give the header its own surface. */
@@ -1840,13 +1886,13 @@ html[data-sd-theme="light"] #sd-root .sd-jump-scrim { background: rgba(24, 34, 4
   display: flex; align-items: center; gap: 10px;
   margin: 0; padding: 10px 14px;
   border: 1px solid var(--line); border-left: 3px solid var(--accent);
-  border-radius: 10px; background: var(--panel-2);
-  color: var(--text); font-size: 13px;
+  border-radius: var(--radius-md); background: var(--panel-2);
+  color: var(--text); font-size: var(--fs-base);
 }
 .sd-recordnotice-mark {
   display: inline-flex; align-items: center; justify-content: center;
-  flex: 0 0 auto; width: 20px; height: 20px; border-radius: 999px;
-  background: rgba(122, 162, 255, .18); color: var(--accent); font-size: 12px;
+  flex: 0 0 auto; width: 20px; height: 20px; border-radius: var(--radius-pill);
+  background: var(--accent-soft); color: var(--accent); font-size: var(--fs-sm);
 }
 
 /* Footer: the record's own controls on the left, Cancel and Save on the right. */
@@ -1860,12 +1906,29 @@ html[data-sd-theme="light"] #sd-root .sd-jump-scrim { background: rgba(24, 34, 4
   gap: 14px; flex-wrap: wrap;
   padding: 12px 20px; border-top: 1px solid var(--line);
   background: rgba(255, 120, 120, .08);
-  color: var(--text); font-size: 12.5px;
+  color: var(--text); font-size: var(--fs-sm);
 }
-html[data-sd-theme="light"] #sd-root .sd-recordcard { background: #fff; }
-html[data-sd-theme="light"] #sd-root .sd-recordnotice { background: #eef3fb; }
+html[data-sd-theme="light"] #sd-root .sd-recordcard { background: var(--panel); }
+html[data-sd-theme="light"] #sd-root .sd-recordnotice { background: var(--accent-soft); }
 html[data-sd-theme="light"] #sd-root .sd-btn--danger { color: #b32424; }
 
 /* The app's own delete question, in the dialog it is drawn in. */
-.sd-asktext { margin: 0; font-size: 13px; color: var(--dim); }
-html[data-sd-theme="light"] #sd-root .sd-asktext { color: #5b6472; }
+.sd-asktext { margin: 0; font-size: var(--fs-base); color: var(--dim); }
+html[data-sd-theme="light"] #sd-root .sd-asktext { color: var(--dim); }
+
+/* ---- the accent picker ----
+   A dot and a name, in the same menu a record's More button opens: the picker is
+   a popover of controls, not a new kind of widget, so it borrows that panel. */
+.sd-accwrap { position: relative; display: inline-flex; }
+.sd-accbtn { gap: var(--space-2); }
+.sd-accdot {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-pill);
+  background: var(--dot, var(--accent));
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .22);
+}
+.sd-accmenu { min-width: 168px; }
+.sd-accitem { display: flex; align-items: center; gap: var(--space-2); width: 100%; }
+.sd-accitem--on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
