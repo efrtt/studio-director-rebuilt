@@ -56,3 +56,44 @@ test('the faculty pool is counted and left off the week', () => {
   assert.equal(week.days[0].blocks.length, 1);
   assert.equal(week.days[0].blocks[0].name, 'Pre Ballet');
 });
+
+// The live calendar puts the *studio* in the bold lead field, not the time:
+// "<b>Stu 3</b> - 914 Tn/Ad Tap - 18+ - SB - 11:00 AM - 12:00 PM". The reader
+// stripped the bold before it looked for a studio, so the label was discarded and
+// these classes fell back to the lane - which on a day with one studio open is
+// left:0 width:100%, i.e. studio 1. Both blocks below are studio 3 in the app.
+const liveBlock = (left, code, bold, visible, tooltip) => `
+  <div style="top:0.0px;left:${left}%;width:100.0%;height:119.0px">
+    <div style="background-color:#19ff00;z-index:100000"><a href="admin.sd?page=EditClass&amp;cident=${code}"><b>${bold}</b>${visible}</a></div>
+    <span style="display:none">${tooltip}</span>
+  </div>`;
+
+test('a bold studio label is the studio, not a class code', () => {
+  const week = readWeek(page(liveBlock(0, 1782910697485, 'Stu 3',
+    ' - 914 Tn/Ad Tap - 18+ - SB - 11:00 AM - 12:00 PM - 1 of 14 spots taken',
+    'Class Name: 914 Tn/Ad Tap<br>Instructor Name: S. B.<br>Location: Stu 3<br>13 spots available<br>0 waitlisted<br>Ages: 18+') +
+    liveBlock(0, 1782910697486, 'Stu 3',
+      ' - 906 Tn/Ad Jazz - 18+ - SB - 12:00 PM - 1:00 PM - 3 of 14 spots taken',
+      'Class Name: 906 Tn/Ad Jazz<br>Instructor Name: S. B.<br>Location: Stu 3<br>11 spots available<br>0 waitlisted<br>Ages: 18+')));
+
+  const [tap, jazz] = week.days[0].blocks;
+  assert.equal(tap.studio, 3, 'the bold field names the studio');
+  assert.equal(jazz.studio, 3);
+  assert.equal(tap.code, '', 'a studio is not a class code');
+  assert.equal(tap.name, '914 Tn/Ad Tap');
+  assert.equal(tap.startsAt, 11 * 60);
+  assert.equal(jazz.startsAt, 12 * 60);
+
+  // It lands in the third column even though the app drew both at left:0.
+  assert.deepEqual(week.days[0].columns.map((c) => c.blocks.length), [0, 0, 2, 0]);
+});
+
+test('a studio named only in the tooltip still places the block', () => {
+  const week = readWeek(page(lane(0, 12,
+    ' - 812 Pointe - 13+ - RR - 3:30 PM - 4:15 PM - 2 of 10 spots taken',
+    'Class Name: Pointe<br>Instructor Name: Ms. R.<br>Location: Studio 4<br>8 spots available<br>0 waitlisted<br>Ages: 13+')));
+
+  const block = week.days[0].blocks[0];
+  assert.equal(block.studio, 4);
+  assert.deepEqual(week.days[0].columns.map((c) => c.blocks.length), [0, 0, 0, 1]);
+});

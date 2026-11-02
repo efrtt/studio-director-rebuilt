@@ -147,8 +147,14 @@ function laneOf(wrapper) {
   const cardStyle = styleMap(card ? card.getAttribute('style') : '');
   const anchorStyle = styleMap(anchor.getAttribute('style'));
 
+  // The block's bold lead field is not always the same field: the golden week
+  // page sets the time there (`<b>3:45p</b> Stu 1 - 818 …`), the live calendar
+  // sets the studio (`<b>Stu 3</b> - 914 Tn/Ad Tap …`). Neither is the class
+  // number, so it is read for what it is rather than assumed to be the code.
   const bold = qs(anchor, 'b');
-  const code = bold ? textOf(bold) : '';
+  const boldText = bold ? textOf(bold) : '';
+  const boldIsStudio = STUDIO.test(boldText);
+  const code = boldIsStudio ? '' : boldText;
   const raw = textOf(anchor);
   const text = code && raw.indexOf(code) === 0 ? raw.slice(code.length).trim() : raw;
 
@@ -159,7 +165,16 @@ function laneOf(wrapper) {
   // The visible text is the app's own summary: "Stu 2 - 122 Ballet - 14+ - JM -
   // 5:30 PM - 6:45 PM - 13 of 20 spots taken". Times come from it when present.
   const times = timesOf(text) || timesOf(details.join(' - '));
-  const studioMatch = text.match(STUDIO);
+  // Three labels can carry the studio: the bold lead field, the start of the
+  // visible text, and the tooltip's location line (which the app fills from the
+  // class's own studio setting). The lane is the last resort only: a day with a
+  // single studio open prints every block at `left:0%; width:100%`, which is not
+  // studio 1 - reading the lane first put those classes in the wrong column.
+  const studioMatch =
+    boldText.match(STUDIO) ||
+    text.match(STUDIO) ||
+    String(info.location || '').match(STUDIO) ||
+    null;
   const capacity = text.match(CAPACITY);
   const lane = {
     top: number(style.top) || 0,
@@ -168,8 +183,8 @@ function laneOf(wrapper) {
     height: number(style.height) || 24
   };
 
-  // Studio comes from the label when the page prints it, and from the lane the
-  // app positioned the block in otherwise (0%, 25%, 50%, 75% = studios 1-4).
+  // Studio comes from one of the page's own labels, and from the lane the app
+  // positioned the block in only when none of them names it.
   const studio = studioMatch ? Number(studioMatch[1]) : Math.round(lane.left / 25) + 1;
 
   return {
