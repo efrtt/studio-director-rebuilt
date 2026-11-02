@@ -233,8 +233,23 @@ html.sd-app form#idForm { visibility: hidden !important; }
 /* The block is read at a glance from across a desk, so it sits a size above the
    rest of the small type: the name at body size, and the initials in their
    parenthesis a little lighter so the class still reads first. */
-.sd-block-name { font-weight: 700; font-size: var(--fs-base); overflow: hidden; text-overflow: ellipsis; }
-.sd-block-init { font-weight: 600; opacity: .8; white-space: nowrap; }
+.sd-block-name { display: flex; align-items: center; gap: 6px; min-width: 0; font-weight: 700; font-size: var(--fs-base); }
+.sd-block-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* The initials are the pill the app's own week list puts beside a location: a
+   small rounded badge, tinted from the block's own ink so it reads on whatever
+   fill the studio chose. It never shrinks, so a long class name ellipsises. */
+.sd-block-init {
+  flex: none;
+  padding: 0 5px;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-pill, 999px);
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: .02em;
+  opacity: .9;
+}
 .sd-block-meta { opacity: .85; font-size: var(--fs-sm); font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* A 15-minute class is 30px: one line, no second line squeezed in. */
 .sd-block--short .sd-block-meta { display: none; }
