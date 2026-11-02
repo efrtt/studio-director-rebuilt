@@ -26,6 +26,45 @@
   function titleOfRow(row) {
     return row.details.length ? row.details.join('\n') : row.name;
   }
+
+  // The app's own hover card, rebuilt: the class's detail lines, following the
+  // pointer so the block underneath stays readable. The card never takes the
+  // pointer, so there is nothing to flicker on the way to it.
+  let tip = null;
+
+  function noteOf(source) {
+    const details = source.details || [];
+    // A newline without a backslash escape: the patch that wrote this file
+    // through a shell turned the escape into a real line break.
+    const sep = String.fromCharCode(10);
+    const text = details.length
+      ? details.join(sep)
+      : (source.time !== undefined ? titleOfRow(source) : titleOf(source));
+    return text.split(sep).filter(Boolean);
+  }
+
+  // Flip the card to the left of the pointer near the right edge, and lift it
+  // near the bottom, so it is never half outside the window.
+  function placeAt(x, y) {
+    const left = x + 16 + 288 > window.innerWidth ? Math.max(8, x - 304) : x + 16;
+    const top = Math.max(8, Math.min(y + 20, window.innerHeight - 140));
+    return 'left:' + left + 'px;top:' + top + 'px';
+  }
+
+  function showTip(event, source) {
+    const lines = noteOf(source);
+    if (!lines.length) return;
+    tip = { lines, pos: placeAt(event.clientX, event.clientY) };
+  }
+
+  function moveTip(event) {
+    if (!tip) return;
+    tip = { lines: tip.lines, pos: placeAt(event.clientX, event.clientY) };
+  }
+
+  function hideTip() {
+    tip = null;
+  }
 </script>
 
 <div class="sd-week">
@@ -85,7 +124,13 @@
           {#if day.rows.length}
             <div class="sd-dayrows">
               {#each day.rows as row}
-                <a class="sd-weekrow" href={row.href} title={titleOfRow(row)}>
+                <a
+                  class="sd-weekrow"
+                  href={row.href}
+                  on:pointerenter={(event) => showTip(event, row)}
+                  on:pointermove={moveTip}
+                  on:pointerleave={hideTip}
+                >
                   <span class="sd-weekrow-time">{row.time}</span>
                   <span class="sd-weekrow-name">
                     {row.name}
@@ -127,17 +172,17 @@
                   {#each column.blocks as block}
                     <a
                       class="sd-block"
-                      class:sd-block--full={block.status === 'full'}
-                      class:sd-block--low={block.status === 'open' && block.spotsLeft <= 2}
                       class:sd-block--short={block.height < 46}
                       href={block.href}
-                      title={titleOf(block)}
+                      on:pointerenter={(event) => showTip(event, block)}
+                      on:pointermove={moveTip}
+                      on:pointerleave={hideTip}
                       style={`top:${block.top}px;height:${block.height}px;` +
                         `background:${block.color || 'transparent'};` +
                         `color:${block.textColor || inkFor(block.color) || 'inherit'}`}
                     >
                       <span class="sd-block-name">
-                        {block.name}{#if block.initials}<span class="sd-block-init"> ({block.initials})</span>{/if}
+                        {block.name}{#if block.initials}<span class="sd-block-init">&nbsp;({block.initials})</span>{/if}
                       </span>
                       {#if block.meta}<span class="sd-block-meta">{block.meta}</span>{/if}
                     </a>
@@ -154,7 +199,13 @@
           <div class="sd-untimed">
             <span class="sd-untimed-label">No time given</span>
             {#each day.untimed as block}
-              <a class="sd-chip" href={block.href} title={titleOf(block)}>
+              <a
+                class="sd-chip"
+                href={block.href}
+                on:pointerenter={(event) => showTip(event, block)}
+                on:pointermove={moveTip}
+                on:pointerleave={hideTip}
+              >
                 {block.code}{block.code ? ' ' : ''}{block.name}
               </a>
             {/each}
@@ -162,5 +213,10 @@
         {/if}
       </section>
     {/each}
+  {/if}
+  {#if tip}
+    <div class="sd-tip" role="tooltip" style={tip.pos}>
+      {#each tip.lines as line}<div class="sd-tip-line">{line}</div>{/each}
+    </div>
   {/if}
 </div>
