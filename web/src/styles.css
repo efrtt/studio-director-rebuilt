@@ -224,7 +224,6 @@ html.sd-app form#idForm { visibility: hidden !important; }
   gap: 1px;
   overflow: hidden;
   padding: 3px 5px;
-  border: 1px solid rgba(0, 0, 0, .2);
   border-radius: var(--radius-xs);
   box-shadow: 0 1px 2px rgba(0, 0, 0, .18);
   font-size: var(--fs-sm);
@@ -242,8 +241,25 @@ html.sd-app form#idForm { visibility: hidden !important; }
 .sd-block--short { padding: 2px 5px; font-size: var(--fs-sm); }
 .sd-block:hover { filter: brightness(1.08); }
 .sd-block:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-.sd-block--low { box-shadow: inset 0 0 0 2px rgba(255, 190, 90, .95), 0 1px 2px rgba(0, 0, 0, .18); }
-.sd-block--full { box-shadow: inset 0 0 0 2px rgba(255, 123, 114, .95), 0 1px 2px rgba(0, 0, 0, .18); }
+
+/* The class card: the app's own detail list, so the class can be checked without
+   leaving the timeline. Fixed, because the timeline scrolls under the pointer. */
+.sd-tip {
+  position: fixed;
+  z-index: 90;
+  max-width: 272px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-2);
+  box-shadow: 0 10px 26px -10px rgba(0, 0, 0, .6);
+  color: var(--text);
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  pointer-events: none;
+}
+.sd-tip-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sd-tip-line:first-child { font-weight: 600; }
 
 .sd-none {
   margin: 0;
@@ -893,16 +909,7 @@ html[data-sd-theme="light"] #sd-root .sd-studiocols {
     transparent 1px var(--hour)
   );
 }
-html[data-sd-theme="light"] #sd-root .sd-block {
-  border-color: var(--line);
-  box-shadow: var(--shadow-sm);
-}
-html[data-sd-theme="light"] #sd-root .sd-block--low {
-  box-shadow: inset 0 0 0 2px var(--warn-line), var(--shadow-sm);
-}
-html[data-sd-theme="light"] #sd-root .sd-block--full {
-  box-shadow: inset 0 0 0 2px var(--danger-line), var(--shadow-sm);
-}
+html[data-sd-theme="light"] #sd-root .sd-block { box-shadow: var(--shadow-sm); }
 html[data-sd-theme="light"] #sd-root .sd-menu { box-shadow: var(--shadow-menu); }
 html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: var(--warn-line); }
 html[data-sd-theme="light"] #sd-root .sd-confirm-mark { background: var(--ok-soft); }
