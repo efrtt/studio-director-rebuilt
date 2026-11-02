@@ -38,11 +38,14 @@ test('each menu page gets the layout it was designed for', () => {
   assert.equal(menuFor('Reports Home'), 'Reports', 'the report menu names itself "Reports Home"');
   assert.equal(menuFor('Charges & Payments'), 'Charges & Payments');
   assert.equal(menuFor('Communications'), 'Communications');
+  assert.equal(menuFor('Advanced Search'), 'Advanced Search');
 
   assert.equal(layoutForTitle('Settings'), 'grouped');
   assert.equal(layoutForTitle('Reports Home'), 'grouped');
   assert.equal(layoutForTitle('Charges & Payments'), 'cards');
-  assert.equal(layoutForTitle('Communications'), 'cards');
+  // Only Charges & Payments is cards now: the other menus keep their categories.
+  assert.equal(layoutForTitle('Communications'), 'grouped');
+  assert.equal(layoutForTitle('Advanced Search'), 'grouped');
 
   // A menu this build has not seen keeps every link on screen.
   assert.equal(menuFor('Manage Google'), '');

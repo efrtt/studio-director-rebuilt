@@ -49,10 +49,15 @@
   // "what can I do here" to be the question the card answers; ten is a list.
   const CARD_SHOW = 7;
 
-  function cardItems(group) {
-    if (expanded[group.label] || q) return group.items;
-    return group.items.slice(0, CARD_SHOW);
-  }
+  // What each card draws, as a value rather than as a helper called from the
+  // markup. Svelte re-runs a template expression when a variable it names
+  // changes, and a helper's identity never does — so `{#each cardItems(group)}`
+  // kept drawing the cut list forever: the button flipped to "Show fewer" and
+  // the other three links never appeared. A reactive array fixes the dependency.
+  $: cardGroups = groups.map((group) => ({
+    ...group,
+    visible: expanded[group.label] || q ? group.items : group.items.slice(0, CARD_SHOW)
+  }));
 
   function toggle(label) {
     expanded = { ...expanded, [label]: !expanded[label] };
@@ -119,14 +124,14 @@
   {#if layout === 'cards'}
     <div class="sd-indexbody">
       <div class="sd-cards">
-        {#each groups as group}
+        {#each cardGroups as group}
           <section class="sd-card">
             <h3 class="sd-cardhead">
               {group.label}
               <span class="sd-indexcount">{group.items.length}</span>
             </h3>
             <div class="sd-cardlinks">
-              {#each cardItems(group) as item}
+              {#each group.visible as item}
                 <a class="sd-cardlink" href={item.href} title={item.label}>
                   <span class="sd-cardlabel">{item.label}</span>
                   {#if codeOf(item.href)}
@@ -135,7 +140,7 @@
                 </a>
               {/each}
             </div>
-            {#if !q && group.items.length > CARD_SHOW}
+            {#if group.items.length > CARD_SHOW}
               <button class="sd-cardmore" type="button" on:click={() => toggle(group.label)}>
                 {expanded[group.label] ? 'Show fewer' : `Show all ${group.items.length}`}
               </button>
