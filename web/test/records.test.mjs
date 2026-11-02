@@ -102,6 +102,26 @@ assert.equal(
   '/srvda/fallback',
   'a reload is not somewhere to go back to'
 );
+
+// `state=new` is the archive pages' spelling of New, the way `meth=neu` is the
+// vendors': the page it draws is the empty form beside the list of seasons.
+assert.equal(modeOf(SEASON_NEW), 'new', 'state=new is the new page');
+assert.equal(modeOf(SEASONS), 'none', 'and the seasons list is still a list');
+assert.equal(
+  modeOf(SEASONS + '&season_ident=7&state=edit'),
+  'edit',
+  'state names the verb, season_ident names the record'
+);
+assert.equal(
+  openIdOf(SEASONS + '&season_ident=7&state=edit'),
+  '7',
+  'state is the verb, not the id'
+);
+assert.equal(
+  listHrefOf(SEASON_NEW, ''),
+  '/srvda/admin.sd?page=NewEditArchive&content=SeasonContent',
+  'the seasons list keeps `content` and drops the verb'
+);
 assert.equal(
   backHrefOf(EDIT, BASE + '?page=AdminHome', '/srvda/fallback'),
   '/srvda/admin.sd?page=AdminHome',

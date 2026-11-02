@@ -20,7 +20,7 @@
 // Nothing here submits anything. Values are written back into the app's own
 // controls and its own Save link is clicked — see save.js.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, titledTextOf } from './shell.js';
 import { weekdayOf, optionsOf, valueOfSelect, selectorOf } from '../model/fields.js';
 import { readTable } from '../model/table.js';
 import { contentRoot } from '../model/root.js';
@@ -248,7 +248,9 @@ export function readForm(doc) {
 
   return {
     kind: 'form',
-    title: textOf(qs(doc, '.formTitle')) || 'Edit',
+    // The div can hold a warning block and the page's name after it; the name is
+    // what a title means. See `titledTextOf`.
+    title: titledTextOf(qs(doc, '.formTitle')) || 'Edit',
     breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
     rows: best.rows,
     fields: best.fields,

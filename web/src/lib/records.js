@@ -26,7 +26,7 @@ import { pageName, recordParams } from './shell.js';
 // rest of `shell.js`'s NAV_PARAMS plus `content`, which picks which form a
 // `NewEditArchive` page shows — dropping it would land on a broken URL.
 const KEEP = new Set([
-  'page', 'clicktab', 'filter', 'searchtext', 'sdprobe', 'content',
+  'page', 'clicktab', 'filter', 'searchtext', 'sdprobe', 'content', 'state',
   'season', 'datespec_view', 'datespec_view_date'
 ]);
 
@@ -47,6 +47,11 @@ export function modeOf(url) {
   const meth = String(params.get('meth') || '').toLowerCase();
   if (meth === 'neu') return 'new';
   if (meth) return 'edit';
+  // The archive pages (`NewEditArchive&content=…`, `NewEditDel&content=…`) spell
+  // New as `state=new` instead of `meth=neu`: the same empty form beside the same
+  // list. Read as a record parameter it made the add page an edit of nothing, so
+  // the dialog announced "Editing" over a new season.
+  if (String(params.get('state') || '').toLowerCase() === 'new') return 'new';
   // `content` and the calendar's own parameters say which form to draw, not
   // which record is open: the seasons list is
   // `NewEditArchive&content=SeasonContent` with no record of its own, and it has
@@ -114,6 +119,11 @@ export function listHrefOf(url, newHref) {
     for (const key of Array.from(out.searchParams.keys())) {
       if (!KEEP.has(key.toLowerCase())) out.searchParams.delete(key);
     }
+    // `state` is the verb (`new`, `edit`), not part of the address a list lives
+    // at: the seasons list is `content=SeasonContent` with no state at all. Left
+    // in, closing the add dialog rewrote the address bar back to `state=new`, so
+    // a reload reopened the dialog you had just dismissed.
+    out.searchParams.delete('state');
     if (!newHref) {
       // A record URL with no New link beside it still names its page.
       const page = pageName(url);
