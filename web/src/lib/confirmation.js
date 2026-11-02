@@ -193,7 +193,9 @@ export function confirmationOf(doc, opts = {}) {
     // for the app's own button.
     const pending = pendingConfirmation(doc);
     if (pending) return pending;
-    return null;
+    // …or the same screen one step before a delete, which the app draws as a
+    // question over the list rather than as a form.
+    return askedConfirmation(doc);
   }
 
   return {
@@ -205,5 +207,81 @@ export function confirmationOf(doc, opts = {}) {
     breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
     // Where the page itself says you can go next.
     links: linksOf(doc, root)
+  };
+}
+
+// The app's own "are you sure?" before a delete.
+//
+// Measured live on Manage Vendors (2026-11-02): pressing Delete does not post.
+// It navigates to a bare `admin.sd` — no `page=`, so no reader can match it by
+// URL — whose body is the sentence, two links, and the record list beside them:
+//
+//   .Content > .formTitle "Manage Vendors"
+//   .Content > .ButtonBar                     (empty on this page)
+//   .Content > .contentInfo > table.Layout
+//     td.Top  "Are you sure you want to delete testaa?"
+//             <a class="BtnDestr" id="delete" href="…&meth=delconfirmed&vendor_ident=…">Delete</a>
+//             <a class="BtnOutln" id="cancel" href="…&meth=edit&vendor_ident=…">Cancel</a>
+//     td.RHS  the "Existing Vendors" table
+//
+// Both answers are plain links, so the yes is the app's own GET and nothing here
+// has to build a request. `pendingConfirmation` cannot see this page: it asks for
+// a scripted button and refuses any table, and this page has neither. Without
+// this reader it fell through to the table reader and drew as a list with the
+// question dropped.
+// No `\b` before "are": the app's markup is minified, so the title runs straight
+// into the sentence with no whitespace between them ("Manage VendorsAre you
+// sure…"). A word boundary there does not exist, and matching on one meant the
+// real page was never recognised while the fixture — written with indentation —
+// was.
+const ASKS_ABOUT = /are you sure\b[^?]{0,200}\?/i;
+const AFFIRM = /^(delete|remove|drop)\b/i;
+
+export function askedConfirmation(doc) {
+  const root = qs(doc, '.Content') || qs(doc, '#mainContent') || (doc && doc.body);
+  if (!root) return null;
+
+  const sentence = (String(root.textContent || '').replace(/\s+/g, ' ').match(ASKS_ABOUT) || [])[0];
+  if (!sentence) return null;
+
+  const links = qsa(root, 'a[href]')
+    .filter((a) => !(a.closest && a.closest('#sideNavBar, .topBarContainer, .Breadcrumb, #idSearchSpan')));
+  // One way to say yes, and it has to be a link: that is the app's own next step.
+  const yes = links.filter((a) => AFFIRM.test(textOf(a)) && (a.getAttribute('href') || ''));
+  if (yes.length !== 1) return null;
+
+  const no = links.find((a) => /^cancel\b/i.test(textOf(a)));
+  const button = yes[0];
+  const label = textOf(button);
+
+  // The question names the record ("… delete testaa?"); that name is what the
+  // dialog is about, so it is read out of the app's own sentence.
+  const name = sentence
+    .replace(/^.*?\b(delete|remove|drop)\s+/i, '')
+    .replace(/\?\s*$/, '')
+    .trim();
+
+  return {
+    kind: 'confirm',
+    pending: true,
+    ok: true,
+    // The app's sentence, verbatim: nothing is invented about what it asked.
+    message: sentence,
+    title: textOf(qs(doc, '.formTitle')) || '',
+    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    // What the modal asks, for the screen that draws it over the list.
+    ask: {
+      label: label || 'Delete',
+      name,
+      href: button.getAttribute('href') || '',
+      cancelHref: no ? no.getAttribute('href') || '' : ''
+    },
+    links: no ? [{ label: textOf(no), href: no.getAttribute('href') || '' }] : [],
+    actions: [{
+      label,
+      id: button.getAttribute('id') || '',
+      href: button.getAttribute('href') || '',
+      onclick: button.getAttribute('onclick') || ''
+    }]
   };
 }

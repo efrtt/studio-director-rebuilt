@@ -1,12 +1,33 @@
 <script>
+  import RecordPage from './RecordPage.svelte';
+
   export let confirm;
   export let onPress = null;
   // The page that posted the form, when there is one.
   export let back = null;
+  // The page's own bar (New) and URL, when this answer also carries the list.
+  export let bar = null;
+  export let url = '';
+  // The list the save came from, read from the same response.
+  export let records = null;
 
   // The app's own sentence, verbatim. Nothing is invented: if the page said
   // "Hopper Family has been updated." that is the whole screen.
   $: message = confirm.message || (confirm.ok ? 'Saved.' : 'Not saved.');
+
+  // A save lands on the app's answer page, which shows the sentence and the list
+  // you carried on from. Drawn as that list with the sentence above it — that is
+  // what the original looks like, and it means a save returns you to the table
+  // instead of to a card with nowhere to go. A refusal has no list to return to,
+  // so it keeps the card that says so.
+  // The app's own delete question has the same shape: the list it will change, and
+  // one sentence about it. That one is drawn as the list with the question in a
+  // dialog over it, so answering it looks like the editing it belongs to.
+  $: asked = confirm && confirm.pending && confirm.ask ? confirm.ask : null;
+  $: table = confirm.ok && records && records.tables && records.tables.length
+    && (!confirm.pending || asked)
+    ? records
+    : null;
 
   let status = '';
 
@@ -25,7 +46,16 @@
   }
 </script>
 
-{#if confirm.pending}
+{#if table}
+  <RecordPage
+    source={table}
+    {url}
+    {bar}
+    title={confirm.title || ''}
+    notice={confirm.pending ? '' : message}
+    question={asked}
+  />
+{:else if confirm.pending}
   <div class="sd-confirm">
     <div class="sd-confirm-card">
       <div class="sd-confirm-mark sd-confirm-mark--ask" aria-hidden="true">?</div>

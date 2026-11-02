@@ -194,7 +194,13 @@ function headingFor(table) {
 function isSideTable(read) {
   if (!read.rowTotal) return false;
   if (read.headings.length >= 2) return true;
-  if (read.headings.length) return false;
+  // One column is enough when its cells are records. Two shapes are real:
+  //   - "Existing Vendors" prints one heading ("Vendor") over a link per vendor;
+  //   - "Existing Class Locations" prints no heading at all, just a link per
+  //     location.
+  // The heading used to be a refusal, which dropped the vendor list from the
+  // page entirely: the form rendered and the list it manages never appeared.
+  if (read.headings.length > 1) return false;
   return read.rows.every((row) => row.length === 1)
     && read.rows.some((row) => row[0] && row[0].href);
 }

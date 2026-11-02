@@ -20,6 +20,8 @@ import { hasForm } from './lib/form.js';
 import { runReportInApp } from './lib/report.js';
 import { runTaskInApp } from './lib/task.js';
 import { readSheet } from './lib/sheet.js';
+import { readBar } from './lib/bar.js';
+import { confirmSubject } from './lib/deletedname.js';
 import { saveSettingsInApp } from './lib/settings.js';
 import { clickActionInApp } from './lib/actions.js';
 import { changesFrom, saveInApp } from './lib/save.js';
@@ -67,6 +69,11 @@ export function mount(opts = {}) {
       onAction: opts.onAction || null,
       // Same for reports: their run control is on the live page.
       onRun: opts.onRun || null,
+      // A task screen's own control: our fields, the app's own button. This was
+      // the one handler `mount` never forwarded, so every save on a task page
+      // answered "no control to press" — New on the Manage Vendors list, where
+      // the add form is the page itself rather than a `meth=neu` record.
+      onAct: opts.onAct || null,
       // Toggle screens: our controls, the app's own Save.
       onSaveSettings: opts.onSaveSettings || null,
       onSearch: opts.onSearch || null,
@@ -213,6 +220,11 @@ export async function autoMount(opts = {}) {
 // Every handler the views need comes from the live page, never from the copy:
 // the app is what builds each request.
 function mountView(model, onOriginal, source = 'fetched') {
+  // The app's own button bar lives outside the form, so it is read here, once,
+  // for every page rather than inside each reader. The record screen is the one
+  // that draws it — New and Delete come from there — and a page with no bar (the
+  // add screen, which *is* the form) must not grow one.
+  model = pageModel(model, document);
   // What this screen became, and where it came from. Only written when probe
   // mode is armed, so a production page pays nothing for it.
   recordView(model.view || null, source);
@@ -250,6 +262,34 @@ function mountView(model, onOriginal, source = 'fetched') {
     nav: readCalendarNav(document),
     canLoadAll: !!showAllTrigger(document)
   });
+}
+
+// The two things a page carries that the readers do not: the app's own button
+// bar, and — on the screen a save lands on — the list that answer belongs beside.
+//
+// Both are read from the live document, because that is where the controls get
+// clicked and where the browser is already showing the list. Nothing is fetched.
+function pageModel(model, doc) {
+  const bar = readBar(doc);
+  const next = { ...model, bar: model.bar !== undefined ? model.bar : bar };
+
+  // A delete answer names nothing: the app prints " has been deleted." because
+  // the record — and the link that carried its name — is gone. Put back the name
+  // it asked about, so the sentence says what happened to what.
+  if (next.confirm) next.confirm = confirmSubject(next.confirm, next.url || location.href);
+
+  // A save answers with a sentence and the list you carried on from. Read that
+  // list too, so the sentence sits above the table instead of replacing it —
+  // which is what the app's own page does. A refusal has no list to return to.
+  // The app's delete question carries the same list: it is drawn as a dialog over
+  // that table rather than as its own screen.
+  const asked = !!(next.confirm && next.confirm.ask);
+  if (next.confirm && next.confirm.ok && (!next.confirm.pending || asked)) {
+    const sheet = readSheet(doc);
+    if (sheet && sheet.tables && sheet.tables.length) next.records = sheet;
+  }
+
+  return next;
 }
 
 // The month grid: the same rail and season picker as the week, drawn as a
@@ -378,6 +418,14 @@ function mountEditor(model, onOriginal) {
 // Which screen the page is, in what order, is `lib/record.js`; this function is
 // the fetching and the mounting.
 function mountRecord(onOriginal) {
+  // The app answers a delete on the record's own URL (`meth=delconfirmed`), so
+  // routing sends that page here — but it is not an editor. It is the same shape
+  // a save returns: a sentence and the list you carried on from. Read it through
+  // the chain in that one case, so the sentence lands above the table instead of
+  // the page drawing as a bare list with its confirmation dropped.
+  const answered = readPage(document, location.href, { allowRefused: true });
+  if (answered.view === 'confirm') return mountView(answered, onOriginal);
+
   // Live first, copy second. The form is server-rendered, but the app's JS fills
   // part of it after the response lands (the phone-label selects start empty),
   // and an empty select is skipped as uneditable: the fetched copy of EditFamily

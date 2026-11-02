@@ -1,9 +1,14 @@
 <script>
   import { cellKind } from '../lib/cellclass.js';
   import { changesFrom } from '../lib/save.js';
+  import RecordPage from './RecordPage.svelte';
+  import { recordsOf } from '../lib/records.js';
 
   export let form;
   export let tabs = null;
+  // The page's own URL: a record URL can also be a page that prints a list of
+  // its records (seasons), and then the form belongs in a dialog over that list.
+  export let url = '';
   // The page's own button bar (New, Print, Email, Delete, Edit Family, More).
   export let bar = null;
   export let onSave = null;
@@ -16,6 +21,11 @@
   $: list = tabs && tabs.tabs && tabs.tabs.length > 1 ? tabs.tabs : null;
   $: shown = list ? list[Math.min(active, list.length - 1)] : null;
   $: onForm = !shown || shown.kind === 'form';
+
+  // Only when the page prints a list whose rows are records of this page. An
+  // editor without such a table — EditFamily, EditStudent, EditClass — draws
+  // exactly as it did before.
+  $: recordList = !!recordsOf(form, url);
 
   // Rendered values, keyed by control id, seeded from the page's own values.
   const initial = {};
@@ -124,6 +134,17 @@
 
 <svelte:window on:keydown={onKey} on:click={onWindowClick} />
 
+{#if recordList}
+  <RecordPage
+    source={form}
+    {url}
+    title={form.title}
+    saveLabel="Save"
+    {bar}
+    {onAction}
+    onSave={onSave}
+  />
+{:else}
 <div class="sd-editor" class:sd-editor--wide={form.tables && form.tables.length > 0}>
   <div class="sd-editorbar">
     <span class="sd-dirty">{dirty ? `${changes.length} unsaved change${changes.length === 1 ? '' : 's'}` : 'No changes'}</span>
@@ -367,3 +388,4 @@
   </div>
   {/if}
 </div>
+{/if}
