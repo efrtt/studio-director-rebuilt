@@ -80,7 +80,7 @@ html[data-sd-theme="wii"] #sd-root {
  * the screen's name set straight onto it, so this is the one surface that is
  * filled rather than white. White pills sit on it. */
 html[data-sd-theme="wii"] #sd-root .sd-top {
-  background: linear-gradient(180deg, #7fd8f7 0%, #34beed 52%, #22a5d8 100%);
+  background: linear-gradient(180deg, var(--wii-light) 0%, var(--wii-blue) 52%, var(--wii-deep) 100%);
   border-bottom: 0;
   box-shadow: 0 2px 10px rgba(18, 92, 128, 0.24);
   padding-top: 10px;
@@ -137,12 +137,12 @@ html[data-sd-theme="wii"] #sd-root .sd-railtoggle:hover {
   color: var(--wii-deep);
   box-shadow:
     inset 0 1px 0 #ffffff,
-    0 0 0 2px rgba(52, 190, 237, 0.55),
+    0 0 0 2px var(--wii-ring),
     0 10px 18px -10px rgba(34, 130, 176, 0.55);
   transform: translateY(-1px) scale(1.015);
 }
 html[data-sd-theme="wii"] #sd-root .sd-navlink--active {
-  background: linear-gradient(180deg, #9fe6fb 0%, #5acdf5 50%, #2aa9dd 51%, #1b8dc4 100%) !important;
+  background: var(--wii-gloss) !important;
   color: #ffffff;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.85),
@@ -181,7 +181,7 @@ html[data-sd-theme="wii"] #sd-root .sd-btn:hover {
   color: var(--wii-deep);
   box-shadow:
     inset 0 1px 0 #ffffff,
-    0 0 0 2px rgba(52, 190, 237, 0.4),
+    0 0 0 2px var(--wii-ring),
     0 4px 10px -2px rgba(52, 118, 150, 0.25);
   transform: translateY(-1px);
 }
@@ -194,7 +194,7 @@ html[data-sd-theme="wii"] #sd-root .sd-btn:disabled:hover {
 }
 html[data-sd-theme="wii"] #sd-root .sd-primary {
   border-color: #1b8dc4;
-  background: linear-gradient(180deg, #8fe0fa 0%, #5acdf5 50%, #2aa9dd 51%, #1b8dc4 100%);
+  background: var(--wii-gloss);
   color: #ffffff;
   text-shadow: 0 1px 1px rgba(9, 60, 85, 0.3);
   box-shadow:
@@ -229,7 +229,7 @@ html[data-sd-theme="wii"] #sd-root .sd-btn:focus-visible {
   outline: 0;
   border-color: var(--wii-blue);
   box-shadow:
-    0 0 0 3px rgba(52, 190, 237, 0.45),
+    0 0 0 3px var(--wii-ring),
     inset 0 1px 2px rgba(52, 118, 150, 0.08);
 }
 html[data-sd-theme="wii"] #sd-root .sd-searchinput::placeholder,
@@ -307,7 +307,7 @@ html[data-sd-theme="wii"] #sd-root .sd-weekrow {
 html[data-sd-theme="wii"] #sd-root .sd-weekrow:hover {
   border-color: var(--wii-blue);
   background: linear-gradient(180deg, #ffffff 0%, #ffffff 52%, #f2fbff 53%, #e6f6fe 100%);
-  box-shadow: 0 0 0 2px rgba(52, 190, 237, 0.4), 0 8px 16px -12px rgba(34, 130, 176, 0.8);
+  box-shadow: 0 0 0 2px var(--wii-ring), 0 8px 16px -12px rgba(34, 130, 176, 0.8);
   transform: translateY(-1px);
 }
 html[data-sd-theme="wii"] #sd-root .sd-weekrow-time { color: var(--wii-deep); font-weight: 700; }
@@ -417,7 +417,7 @@ html[data-sd-theme="wii"] #sd-root .sd-viewlink {
 }
 html[data-sd-theme="wii"] #sd-root .sd-viewlink:hover { background: #f0faff; color: var(--wii-deep); }
 html[data-sd-theme="wii"] #sd-root .sd-viewlink--on {
-  background: linear-gradient(180deg, #8fe0fa 0%, #5acdf5 50%, #2aa9dd 51%, #1b8dc4 100%);
+  background: var(--wii-gloss);
   color: #ffffff;
   font-weight: 700;
 }
@@ -442,7 +442,7 @@ html[data-sd-theme="wii"] #sd-root .sd-records a:hover {
   color: var(--wii-deep);
 }
 html[data-sd-theme="wii"] #sd-root .sd-records a.sd-record--current {
-  background: linear-gradient(180deg, #9fe6fb 0%, #5acdf5 50%, #2aa9dd 51%, #1b8dc4 100%);
+  background: var(--wii-gloss);
   color: #ffffff;
 }
 html[data-sd-theme="wii"] #sd-root .sd-records a.sd-record--current .sd-record-label { color: #ffffff; }
@@ -473,7 +473,7 @@ html[data-sd-theme="wii"] #sd-root .sd-tile:hover {
   color: var(--wii-deep);
   transform: translateY(-1px) scale(1.02);
   box-shadow:
-    0 0 0 2px rgba(52, 190, 237, 0.45),
+    0 0 0 2px var(--wii-ring),
     0 12px 20px -14px rgba(34, 130, 176, 0.9);
 }
 html[data-sd-theme="wii"] #sd-root .sd-indexhead { color: var(--wii-deep); border-bottom-color: #dcefff; }
@@ -888,7 +888,7 @@ html[data-sd-theme="wii"] #sd-root .sd-home:hover {
   transform: translateY(-1px);
   box-shadow:
     inset 0 1px 0 #ffffff,
-    0 0 0 2px rgba(52, 190, 237, 0.6),
+    0 0 0 2px var(--wii-ring),
     0 6px 12px -4px rgba(14, 82, 116, 0.45);
 }
 html[data-sd-theme="wii"] #sd-root .sd-home:active { transform: scale(0.97); }
@@ -963,7 +963,7 @@ html[data-sd-theme="wii"] #sd-root .sd-channel::after {
   border-radius: inherit;
   pointer-events: none;
   opacity: 0;
-  background: radial-gradient(closest-side, rgba(90, 205, 245, 0.55), rgba(90, 205, 245, 0) 72%);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--wii-blue) 55%, transparent), rgba(90, 205, 245, 0) 72%);
   transition: opacity 170ms ease;
 }
 html[data-sd-theme="wii"] #sd-root .sd-channel:hover,
@@ -972,7 +972,7 @@ html[data-sd-theme="wii"] #sd-root .sd-channel:focus-visible {
   box-shadow:
     inset 0 1px 0 #ffffff,
     0 16px 26px -12px rgba(28, 120, 160, 0.55),
-    0 0 0 3px rgba(90, 205, 245, 0.55);
+    0 0 0 3px color-mix(in srgb, var(--wii-blue) 55%, transparent);
   outline: none;
 }
 html[data-sd-theme="wii"] #sd-root .sd-channel:hover::after,
@@ -1028,7 +1028,7 @@ html[data-sd-theme="wii"] #sd-root .sd-channel--orange {
 html[data-sd-theme="wii"] #sd-root .sd-channel--on {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 0 0 4px rgba(90, 205, 245, 0.85),
+    0 0 0 4px color-mix(in srgb, var(--wii-blue) 85%, transparent),
     0 14px 22px -12px rgba(28, 120, 160, 0.6);
 }
 
@@ -1131,4 +1131,62 @@ html[data-sd-theme="wii"] #sd-root .sd-menu-date {
   html[data-sd-theme="wii"] #sd-root .sd-channel:hover,
   html[data-sd-theme="wii"] #sd-root .sd-channel:focus-visible,
   html[data-sd-theme="wii"] #sd-root .sd-menu-round:hover { transform: none; }
+}
+
+/* ---- accents, in the skin's own material ----
+ *
+ * The Wii's blue is a ramp, not a colour: a light that comes off the sky, the
+ * channel blue, a deep blue for ink, and the gloss built out of those three. So
+ * an accent here is not one hex, it is five - the same five stops, re-picked -
+ * and every gradient in this file reads them instead of naming its own blues.
+ * That is why changing the accent re-tints the bar, the primary buttons, the
+ * active channel and the focus bloom together instead of half-way.
+ *
+ * Blue is the theme's own value and has no rule: it is already in the palette
+ * above, and re-deriving it would change the skin nobody asked to change.
+ */
+html[data-sd-theme="wii"] #sd-root {
+  --wii-gloss: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--wii-light) 55%, #ffffff) 0%,
+    var(--wii-light) 50%,
+    var(--wii-blue) 51%,
+    var(--wii-deep) 100%
+  );
+  --wii-ring: color-mix(in srgb, var(--wii-blue) 45%, transparent);
+}
+html[data-sd-theme="wii"][data-sd-accent="violet"] #sd-root {
+  --accent: #8b6bf0;
+  --wii-light: #bda9ff;
+  --wii-blue: #8b6bf0;
+  --wii-deep: #5b3fc0;
+  --wii-ink: #33246b;
+}
+html[data-sd-theme="wii"][data-sd-accent="teal"] #sd-root {
+  --accent: #12a89b;
+  --wii-light: #8ee6dd;
+  --wii-blue: #12a89b;
+  --wii-deep: #0a6f68;
+  --wii-ink: #0b3f3b;
+}
+html[data-sd-theme="wii"][data-sd-accent="green"] #sd-root {
+  --accent: #2c9a5c;
+  --wii-light: #9adfaf;
+  --wii-blue: #2c9a5c;
+  --wii-deep: #1a6b3d;
+  --wii-ink: #123f26;
+}
+html[data-sd-theme="wii"][data-sd-accent="amber"] #sd-root {
+  --accent: #d98a1f;
+  --wii-light: #f6cd8a;
+  --wii-blue: #d98a1f;
+  --wii-deep: #a25f0c;
+  --wii-ink: #5c3a0c;
+}
+html[data-sd-theme="wii"][data-sd-accent="rose"] #sd-root {
+  --accent: #d4507f;
+  --wii-light: #f6aec6;
+  --wii-blue: #d4507f;
+  --wii-deep: #96315a;
+  --wii-ink: #5c1f38;
 }
