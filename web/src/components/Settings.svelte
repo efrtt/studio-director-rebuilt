@@ -28,7 +28,6 @@
     : (pageSave || settings.save || settings.primary);
   // "One button that saves" reads very differently from "a step with its own
   // two buttons", and the footnote has to say which this page is.
-  $: flow = buttons.length > 0;
 
   function press(action) {
     if (busy) return;
@@ -145,18 +144,5 @@
         </div>
       {/each}
     </div>
-
-    {#if flow}
-      <p class="sd-panelnote">
-        The buttons are the app’s own controls: the values here are written into the
-        page and then that control is pressed, so its validation and whatever follows
-        are unchanged.
-      </p>
-    {:else}
-      <p class="sd-panelnote">
-        The button is the app’s own: the change is written into this page and the app
-        saves it, so validation and anything it does afterwards are unchanged.
-      </p>
-    {/if}
   </div>
 </div>

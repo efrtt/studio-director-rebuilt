@@ -142,15 +142,7 @@
     {#if empty}
       <p class="sd-empty">Nothing matches “{query}”.</p>
     {:else if !sheet.tables.length}
-      <p class="sd-panelnote">This page has no table to show — use Original.</p>
-    {/if}
-
-    {#if sheet.actions.length}
-      <p class="sd-panelnote">
-        Read-only: the buttons above are the app’s own controls, and anything that
-        changes a row starts from the row’s link or
-        the app’s own page.
-      </p>
+      <p class="sd-panelnote">This page has no table to show.</p>
     {/if}
   </div>
 </div>

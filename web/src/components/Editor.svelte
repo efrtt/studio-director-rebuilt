@@ -307,11 +307,6 @@
       {/if}
 
       {#if shown.note}<p class="sd-panelnote">{shown.note}</p>{/if}
-
-      <p class="sd-panelnote">
-        Read-only: this tab is the app's own output. Changes go through the
-        app's own page — use Original.
-      </p>
     </div>
   {:else}
   <div class="sd-editorbody">

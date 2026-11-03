@@ -222,7 +222,7 @@ import { readRail, writeRail } from './lib/rail.js';
 
   <footer class="sd-foot">
     <span>{foot.left}</span>
-    <span>{foot.right}{version ? ' \u00b7 v' + version : ''}</span>
+    <span>{[foot.right, version ? 'v' + version : ''].filter(Boolean).join(' \u00b7 ')}</span>
   </footer>
 </div>
 
