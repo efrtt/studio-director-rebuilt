@@ -2198,7 +2198,13 @@ html[data-sd-theme="light"] #sd-root .sd-asktext { color: var(--dim); }
    The inset stays on the records, where it belongs: it lines the names up, and a
    heading has nothing to line up with. */
 .sd-groups { position: relative; flex: 1 1 auto; min-width: 0; overflow: auto; padding: 0 0 18px; }
-.sd-groups .sd-records { padding: 0 18px 0 8px; }
+/* One gutter for one list, whichever view draws it. A search result beside an
+   editor indents its rows by the toolbar's gutter; the lettered list beside an
+   editor indented them by 8px, so opening the same record from the global
+   search and from the page gave two different rows — a different left edge and
+   a highlight box of a different width. The toolbar and the rows share 18px
+   here, as they already do in the plain view. */
+.sd-groups .sd-records { padding: 0 18px; }
 .sd-groups .sd-note { margin-inline: 18px; }
 .sd-grouphead {
   position: sticky;
@@ -2208,10 +2214,10 @@ html[data-sd-theme="light"] #sd-root .sd-asktext { color: var(--dim); }
   align-items: baseline;
   gap: 8px;
   margin: 0;
-  /* 12px left keeps the letter where it was drawn; 22px right is the old 18px
-     gutter plus the 4px the heading used to add, so the count stays clear of
-     the pane's edge and its scrollbar. */
-  padding: 8px 22px 5px 12px;
+  /* The heading is full width, so its text is padded to meet the row labels:
+     18px of gutter plus the 12px a row's own padding adds. The count ends on
+     the same edge the rows do. */
+  padding: 8px 18px 5px 30px;
   border-bottom: 1px solid var(--line);
   background: var(--bg);
   color: var(--accent);
