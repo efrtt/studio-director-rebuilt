@@ -2192,7 +2192,14 @@ html[data-sd-theme="light"] #sd-root .sd-asktext { color: var(--dim); }
   text-align: center;
 }
 .sd-letterrail a.sd-letterrail--on .sd-letterrail-count { background: transparent; color: var(--accent); }
-.sd-groups { position: relative; flex: 1 1 auto; min-width: 0; overflow: auto; padding: 0 18px 18px 8px; }
+/* The letter headings run edge to edge. They are sticky bars that the rows
+   scroll under, so the gutter the rows live in showed as a strip of background
+   beside each heading — in a 260px panel the heading was 233px of a 260px pane.
+   The inset stays on the records, where it belongs: it lines the names up, and a
+   heading has nothing to line up with. */
+.sd-groups { position: relative; flex: 1 1 auto; min-width: 0; overflow: auto; padding: 0 0 18px; }
+.sd-groups .sd-records { padding: 0 18px 0 8px; }
+.sd-groups .sd-note { margin-inline: 18px; }
 .sd-grouphead {
   position: sticky;
   top: 0;
@@ -2201,7 +2208,10 @@ html[data-sd-theme="light"] #sd-root .sd-asktext { color: var(--dim); }
   align-items: baseline;
   gap: 8px;
   margin: 0;
-  padding: 8px 4px 5px;
+  /* 12px left keeps the letter where it was drawn; 22px right is the old 18px
+     gutter plus the 4px the heading used to add, so the count stays clear of
+     the pane's edge and its scrollbar. */
+  padding: 8px 22px 5px 12px;
   border-bottom: 1px solid var(--line);
   background: var(--bg);
   color: var(--accent);
