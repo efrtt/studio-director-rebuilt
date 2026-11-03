@@ -1,6 +1,7 @@
 <script>
   import { changesFrom } from '../lib/save.js';
   import { cellKind } from '../lib/cellclass.js';
+  import CellHeading from './CellHeading.svelte';
   import CellAction from './CellAction.svelte';
   import CellLink from './CellLink.svelte';
   import RecordPage from './RecordPage.svelte';
@@ -168,7 +169,7 @@
             {#if block.headings.length}
               <thead>
                 <tr>
-                  {#each block.headings as heading}<th>{heading}</th>{/each}
+                  {#each block.headings as heading}<CellHeading text={heading} />{/each}
                 </tr>
               </thead>
             {/if}

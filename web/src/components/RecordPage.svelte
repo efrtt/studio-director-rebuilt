@@ -13,6 +13,7 @@
   // the add page has no bar at all, because that page *is* the add form.
   import RecordDialog from './RecordDialog.svelte';
   import { cellKind } from '../lib/cellclass.js';
+  import CellHeading from './CellHeading.svelte';
   import CellAction from './CellAction.svelte';
   import { rememberDeleted } from '../lib/deletedname.js';
   import {
@@ -125,7 +126,7 @@
           {#if found.block.headings.length}
             <thead>
               <tr>
-                {#each found.block.headings as heading}<th>{heading}</th>{/each}
+                {#each found.block.headings as heading}<CellHeading text={heading} />{/each}
                 <th class="sd-recordedit">Edit</th>
               </tr>
             </thead>
@@ -165,7 +166,7 @@
         <div class="sd-tablewrap">
           <table class="sd-table">
             {#if block.headings.length}
-              <thead><tr>{#each block.headings as heading}<th>{heading}</th>{/each}</tr></thead>
+              <thead><tr>{#each block.headings as heading}<CellHeading text={heading} />{/each}</tr></thead>
             {/if}
             <tbody>
               {#each block.rows as row}

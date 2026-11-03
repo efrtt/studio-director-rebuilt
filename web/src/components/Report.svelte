@@ -1,5 +1,6 @@
 <script>
   import { cellKind } from '../lib/cellclass.js';
+  import CellHeading from './CellHeading.svelte';
   import CellAction from './CellAction.svelte';
   import CellLink from './CellLink.svelte';
   export let report;
@@ -119,7 +120,7 @@
             {#if block.headings.length}
               <thead>
                 <tr>
-                  {#each block.headings as heading}<th>{heading}</th>{/each}
+                  {#each block.headings as heading}<CellHeading text={heading} />{/each}
                 </tr>
               </thead>
             {/if}
