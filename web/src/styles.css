@@ -376,6 +376,11 @@ html.sd-app form#idForm { visibility: hidden !important; }
   min-width: 17px;
   height: 17px;
   padding: 0 5px;
+  /* Off the name's last letter, and sitting on the text's line rather than the
+     row's box: a 17px pill centred in a 40px row floats above the words. */
+  margin-left: 6px;
+  position: relative;
+  top: 1px;
   border: 1px solid var(--danger-line);
   border-radius: var(--radius-pill);
   background: var(--danger-soft);
