@@ -276,6 +276,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
 }
 .sd-tip-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sd-tip-line:first-child { font-weight: 600; }
+.sd-tip-money { font-variant-numeric: tabular-nums; color: var(--danger); font-weight: 600; }
 
 .sd-none {
   margin: 0;
@@ -365,6 +366,27 @@ html.sd-app form#idForm { visibility: hidden !important; }
 }
 .sd-records a.sd-record--current { background: var(--accent-soft); }
 .sd-records a.sd-record--current .sd-record-label { color: var(--accent); font-weight: 600; }
+/* A family that owes money: the name stays the name, and the amount lives in a
+   dollar pill whose hover card spells it out. */
+.sd-due {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 5px;
+  border: 1px solid var(--danger-line);
+  border-radius: var(--radius-pill);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  line-height: 1;
+  cursor: help;
+}
+.sd-due:hover { background: color-mix(in srgb, var(--danger) 28%, transparent); }
+
 .sd-go { flex: 0 0 auto; color: var(--dim); font-size: var(--fs-lg); line-height: 1; opacity: 0; }
 .sd-records a:hover { background: var(--accent-tint); }
 .sd-records a:hover .sd-go,
