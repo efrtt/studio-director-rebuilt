@@ -23,7 +23,12 @@ export function isActionHeading(heading) {
 // heading.
 import { textOf } from './shell.js';
 
-const NOT_LABEL = /(^|\s)(MultiTable|ButtonBar|Tooltip|bar-link|actionIcon|tabContent|tabContainer|table-hidden|searchResult\w*)(\s|$)/i;
+// `MultiTable` is deliberately not on this list. The app uses the class for
+// two different things: an empty spacer between blocks, and — on the student's
+// enrollment panel — the label itself (`<div class="MultiTable">Enrollment for
+// Fall 2026-Spring 2027 (8/3/26-6/10/27)</div>` above each season's table). The
+// words tell them apart; the class does not.
+const NOT_LABEL = /(^|\s)(ButtonBar|Tooltip|bar-link|actionIcon|tabContent|tabContainer|table-hidden|searchResult\w*)(\s|$)/i;
 const NOT_HEADING = /^(totals?\b|subtotals?\b|no items\b|nothing\b)/i;
 // A heading is one line. Anything longer is prose, and prose beside a table is
 // a paragraph, not a name for it.
