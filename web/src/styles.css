@@ -1412,11 +1412,14 @@ html[data-sd-theme="light"][data-sd-accent="rose"] #sd-root { --accent: #a3305a;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  /* Weight is the one cue that survives at rest: the wash and the chevron only
-     arrive on hover, so a bold name is what says "this row opens" from afar. */
-  font-weight: 600;
   transition: color .14s ease;
 }
+
+/* Weight is the one cue that survives at rest: the wash and the chevron only
+   arrive on hover, so a bold name is what says "this row opens" from afar. It
+   sits on the cell rather than the name, because a table that links with a bare
+   anchor leaves no span to style. */
+#sd-root .sd-table td.sd-cell--link { font-weight: 600; }
 .sd-celllink-go {
   flex: 0 0 auto;
   margin-left: auto;
