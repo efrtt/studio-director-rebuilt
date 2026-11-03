@@ -1,14 +1,14 @@
 // Filing names and classes.
 //
 // The panel states a label and a link, so these rules are the only structure
-// the list pages have: a surname to file by, a name to print, and a class
-// number the studio already uses as a category.
+// the list pages have: a surname to file by, a name to print, and a class name
+// with the studio number in front of it.
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
-  classBandOf, classParts, classShelves, displayLabel, letterGroups, letterOf, surnameOf
+  classParts, displayLabel, indexKey, letterGroups, letterOf, surnameOf
 } from '../src/lib/names.js';
 
 test('a name prints first-name-first even when it was filed surname-first', () => {
@@ -32,6 +32,15 @@ test('the index key is the surname, not the first word', () => {
   assert.equal(surnameOf('Lovelace', 'Student'), 'Lovelace');
 });
 
+test('a class is filed by its name, not by its number', () => {
+  assert.equal(indexKey({ label: '101 Ballet III' }, 'Class'), 'Ballet III');
+  assert.equal(indexKey({ label: '520 Contemporary 1' }, 'Class'), 'Contemporary 1');
+  assert.equal(indexKey({ label: 'Jazz I - Tue 5:30p' }, 'Class'), 'Jazz I');
+  assert.equal(indexKey({ label: 'Hip Hop' }, 'Class'), 'Hip Hop');
+  // A label that is only a number still has to land somewhere.
+  assert.equal(indexKey({ label: '300' }, 'Class'), '300');
+});
+
 test('a letter index runs A to Z, with the unindexable last', () => {
   assert.equal(letterOf('Lovelace'), 'L');
   assert.equal(letterOf('Áudet'), 'A', 'a diacritic still files under its letter');
@@ -49,23 +58,16 @@ test('a letter index runs A to Z, with the unindexable last', () => {
   assert.deepEqual(groups[1].items.map((i) => i.label), ['Hopper Family']);
 });
 
-test('classes are shelved by the studio number, not by the label prefix', () => {
-  assert.deepEqual(classBandOf({ label: '101 Ballet III' }), { band: 100, label: '100s' });
-  assert.deepEqual(classBandOf({ label: 'Contemporary 1', href: 'admin.sd?page=EditClass&cident=520' }),
-    { band: 500, label: '500s' });
-  assert.deepEqual(classBandOf({ label: 'Hip Hop', href: 'admin.sd?page=EditClass&cident=812' }),
-    { band: 800, label: '800s' });
-  assert.deepEqual(classBandOf({ label: 'Ballet' }), { band: null, label: 'Other' });
-
-  const shelves = classShelves([
-    { label: 'D', href: '?cident=812' },
-    { label: 'A', href: '?cident=101' },
-    { label: 'E' },
-    { label: 'B', href: '?cident=240' },
-    { label: 'C', href: '?cident=299' }
-  ]);
-  assert.deepEqual(shelves.map((s) => s.label), ['100s', '200s', '800s', 'Other']);
-  assert.deepEqual(shelves[1].items.map((i) => i.label), ['B', 'C'], 'a shelf keeps the app order');
+test('classes group by initial in the same index', () => {
+  const groups = letterGroups([
+    { label: '101 Ballet III', href: '?page=EditClass&cident=101' },
+    { label: 'Jazz I - Tue 5:30p', href: '?page=EditClass&cident=102' },
+    { label: '104 Hip Hop', href: '?page=EditClass&cident=104' },
+    { label: '520 Ballet IV', href: '?page=EditClass&cident=520' }
+  ], 'Class');
+  assert.deepEqual(groups.map((g) => g.letter), ['B', 'H', 'J']);
+  assert.deepEqual(groups[0].items.map((i) => i.label), ['101 Ballet III', '520 Ballet IV'],
+    'a shelf keeps the app order');
 });
 
 test('only a trailing weekday is a schedule; the rest of a label is the name', () => {

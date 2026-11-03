@@ -7,10 +7,10 @@
 //   "Hopper Family"        family, filed under H
 //   "Ada Lovelace"         student, filed under L, printed as written
 //   "Lovelace, Ada"        the same student, surname first
-//   "101 Ballet III"       class, shelf 100s
+//   "101 Ballet III"       class, filed under B (the number is not its name)
 //   "Jazz I - Tue 5:30p"   class; the meeting time is the one thing besides the
-//                          name the label states, so it is the one thing the
-//                          shelf can show beside it
+//                          name the label states, so it is the one thing a row
+//                          can show beside it
 
 const SUFFIX = /^(jr|sr|ii|iii|iv|v)\.?$/i;
 const FAMILY = /\s+family$/i;
@@ -18,6 +18,8 @@ const DAY = /^(mon|tue|wed|thu|fri|sat|sun)[a-z]*\.?/i;
 // A class label splits on its last spaced dash; "Ages 6-9" uses a closed dash
 // and is part of the name, not a schedule.
 const DASHED = /^(.*)\s+[-\u2013\u2014]\s+(.+)$/;
+// The class number is an ordering, not a name: "101" files under nothing.
+const NUMBERED = /^\s*\d+\s*/;
 
 function clean(value) {
   return String(value == null ? '' : value).replace(/\s+/g, ' ').trim();
@@ -60,6 +62,28 @@ export function surnameOf(label, type) {
   return parts[parts.length - 1] || shown;
 }
 
+// What a class row can say besides its name. Only a trailing day is treated as
+// a schedule; anything else stays part of the name, unguessed.
+export function classParts(label) {
+  const raw = clean(label);
+  const match = raw.match(DASHED);
+  if (match && DAY.test(match[2])) return { name: match[1].trim(), when: match[2].trim() };
+  return { name: raw, when: '' };
+}
+
+// The word a row is filed under. A class is filed by its name: "101 Ballet III"
+// and "520 Contemporary 1" are B and C, because a column of 101, 108, 115 is a
+// sequence, not an index.
+export function indexKey(item, type) {
+  const kind = String(type || (item && item.type) || '');
+  const label = (item && item.label) || '';
+  if (kind === 'Class') {
+    const named = classParts(label).name.replace(NUMBERED, '').trim();
+    return named || classParts(label).name || String(label);
+  }
+  return surnameOf(label, kind);
+}
+
 export function letterOf(value) {
   const first = fold(value).charAt(0).toUpperCase();
   return /[A-Z]/.test(first) ? first : '#';
@@ -70,7 +94,7 @@ export function letterOf(value) {
 export function letterGroups(items, type) {
   const groups = new Map();
   for (const item of items || []) {
-    const letter = letterOf(surnameOf(item.label, type || item.type));
+    const letter = letterOf(indexKey(item, type));
     if (!groups.has(letter)) groups.set(letter, []);
     groups.get(letter).push(item);
   }
@@ -80,41 +104,4 @@ export function letterGroups(items, type) {
     return a < b ? -1 : a > b ? 1 : 0;
   });
   return letters.map((letter) => ({ letter, items: groups.get(letter) }));
-}
-
-// The class number is the studio's own category: 101, 240 and 299 are all 200s.
-// It comes from the link when the link carries it, and from the label only when
-// the label leads with a number.
-export function classBandOf(item) {
-  const href = String((item && item.href) || '');
-  const fromHref = href.match(/[?&]cident=(\d+)/i);
-  const fromLabel = String((item && item.label) || '').match(/^\s*(\d+)/);
-  const id = Number(fromHref ? fromHref[1] : fromLabel ? fromLabel[1] : NaN);
-  if (!Number.isFinite(id) || id <= 0) return { band: null, label: 'Other' };
-  const band = Math.floor(id / 100) * 100;
-  return { band, label: band > 0 ? band + 's' : 'Under 100' };
-}
-
-export function classShelves(items) {
-  const shelves = new Map();
-  for (const item of items || []) {
-    const { band, label } = classBandOf(item);
-    const key = band == null ? 'other' : String(band);
-    if (!shelves.has(key)) shelves.set(key, { band, label, items: [] });
-    shelves.get(key).items.push(item);
-  }
-  return [...shelves.values()].sort((a, b) => {
-    if (a.band == null) return 1;
-    if (b.band == null) return -1;
-    return a.band - b.band;
-  });
-}
-
-// What a class row can say besides its name. Only a trailing day is treated as
-// a schedule; anything else stays part of the name, unguessed.
-export function classParts(label) {
-  const raw = clean(label);
-  const match = raw.match(DASHED);
-  if (match && DAY.test(match[2])) return { name: match[1].trim(), when: match[2].trim() };
-  return { name: raw, when: '' };
 }

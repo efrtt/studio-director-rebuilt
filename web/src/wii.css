@@ -1231,12 +1231,4 @@ html[data-sd-theme="wii"] #sd-root .sd-grouphead {
   color: var(--wii-deep);
 }
 html[data-sd-theme="wii"] #sd-root .sd-groupcount { color: #5d7180; }
-html[data-sd-theme="wii"] #sd-root .sd-shelf {
-  border: 1px solid #d8eefb;
-  border-radius: 14px;
-  background: linear-gradient(180deg, #ffffff 0%, #ffffff 51%, #f6fcff 52%, #eaf7fe 100%);
-  box-shadow: inset 0 1px 0 #ffffff;
-}
-html[data-sd-theme="wii"] #sd-root .sd-shelfhead { color: #2b4c5e; }
-html[data-sd-theme="wii"] #sd-root .sd-shelfcount { color: #5d7180; }
 html[data-sd-theme="wii"] #sd-root .sd-when { color: #5d7180; }
