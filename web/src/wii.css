@@ -263,8 +263,16 @@ html[data-sd-theme="wii"] #sd-root .sd-table tbody tr:nth-child(even) td {
 }
 /* The cell's padding moves onto the link, so the whole cell is the target. This
    has to outrank the wii cell rule above it, which is id-scoped too. */
-html[data-sd-theme="wii"] #sd-root .sd-table tbody td.sd-cell--link { padding: 0 !important; }
+html[data-sd-theme="wii"] #sd-root .sd-table tbody td.sd-cell--link {
+  --cell-pad-y: 11px;
+  --cell-pad-x: 14px;
+  padding: 0 !important;
+}
 html[data-sd-theme="wii"] #sd-root .sd-table td a { color: var(--wii-deep); font-weight: 600; }
+/* 600 is every link in this theme; a linked cell says it opens with weight, so
+   it keeps the cell's 700 against the 600 around it. */
+html[data-sd-theme="wii"] #sd-root .sd-table td.sd-cell--link,
+html[data-sd-theme="wii"] #sd-root .sd-table td.sd-cell--link a { font-weight: 700; }
 html[data-sd-theme="wii"] #sd-root .sd-table td.sd-cell--action a,
 html[data-sd-theme="wii"] #sd-root .sd-table td a.sd-pill {
   border-color: #cbe6f5;
