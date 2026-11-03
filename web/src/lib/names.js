@@ -8,6 +8,7 @@
 //   "Ada Lovelace"         student, filed under L, printed as written
 //   "Lovelace, Ada"        the same student, surname first
 //   "100 Ballet 1"         class, filed under 1 — the hundred it belongs to
+//   "Hip Hop"              class with no number, filed under H
 //   "Jazz I - Tue 5:30p"   class; the meeting time is the one thing besides the
 //                          name the label states, so it is the one thing a row
 //                          can show beside it
@@ -86,7 +87,13 @@ export function classNumber(item) {
 // hundred.
 export function indexKey(item, type) {
   const kind = String(type || (item && item.type) || '');
-  if (kind === 'Class') return classNumber(item).charAt(0);
+  if (kind === 'Class') {
+    const digits = classNumber(item);
+    if (digits) return digits.charAt(0);
+    // A class with no number anywhere is still a class: it joins the A-Z run,
+    // filed by its name, with any meeting time taken off first.
+    return classParts((item && item.label) || '').name;
+  }
   return surnameOf((item && item.label) || '', kind);
 }
 
