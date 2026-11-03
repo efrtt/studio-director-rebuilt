@@ -15,6 +15,7 @@
   import { cellKind } from '../lib/cellclass.js';
   import CellHeading from './CellHeading.svelte';
   import CellAction from './CellAction.svelte';
+  import DuePill from './DuePill.svelte';
   import { rememberDeleted } from '../lib/deletedname.js';
   import {
     recordsOf, modeOf, listHrefOf, newHrefOf, widthOf, headingOf, openIdOf, labelOf, blankFormOf,
@@ -147,7 +148,7 @@
                         {/each}
                       </span>
                     {:else if cellKind(cell) === 'action' && cell.text}<CellAction href={cell.href || '#'} label={cell.text} />
-                    {:else}{cell.text}{/if}
+                    {:else}{cell.text}{#if cell.due}<DuePill due={cell.due} />{/if}{/if}
                   </td>
                 {/each}
                 <td class="sd-recordedit">
@@ -172,7 +173,7 @@
               {#each block.rows as row}
                 <tr>
                   {#each row as cell}
-                    <td class:sd-cell--right={cell.right}>{cell.text}</td>
+                    <td class:sd-cell--right={cell.right}>{cell.text}{#if cell.due}<DuePill due={cell.due} />{/if}</td>
                   {/each}
                 </tr>
               {/each}
