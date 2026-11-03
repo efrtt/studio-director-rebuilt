@@ -1361,9 +1361,10 @@ html[data-sd-theme="light"][data-sd-accent="rose"] #sd-root { --accent: #a3305a;
 /* ---- a cell that goes somewhere -----------------------------------------
    The link fills its cell, so the whole box is the target. It stays quiet until
    the pointer arrives: the cell takes the accent wash and a hairline, the name
-   turns accent and underlines, and the chevron travels from beside the name to
-   the cell's right edge. The travel is a growing flex gap, not a measured
-   offset, so it lands on the edge whatever the name is. */
+   turns accent and underlines, and a chevron at the cell's right edge fades in
+   from a few pixels away. It does not travel across the row: the movement drew
+   the eye to itself rather than to the name it belonged to. The chevron always
+   holds its place in the layout, so nothing reflows as it appears. */
 /* The cell's own padding is traded for the link's, so the target is the whole
    box. Id-scoped, because the table's own cell rule is. */
 #sd-root .sd-table tbody td.sd-cell--link { padding: 0 !important; }
@@ -1376,28 +1377,28 @@ html[data-sd-theme="light"][data-sd-accent="rose"] #sd-root { --accent: #a3305a;
   text-decoration: none;
 }
 .sd-celllink-name { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sd-celllink-gap { flex: 0 1 7px; transition: flex-grow .18s ease; }
 .sd-celllink-go {
   flex: 0 0 auto;
+  margin-left: auto;
+  padding-left: 8px;
   color: var(--dim);
-  opacity: .5;
-  transition: transform .18s ease, color .18s ease, opacity .18s ease;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity .14s ease, transform .14s ease, color .14s ease;
 }
 /* A figure column is not a name column: it keeps the target and the wash, but a
    chevron chasing a balance would be noise. */
 .sd-cell--right .sd-celllink { justify-content: flex-end; }
-.sd-cell--right .sd-celllink-gap,
 .sd-cell--right .sd-celllink-go { display: none; }
 #sd-root .sd-table td a.sd-celllink:is(:hover, :focus-visible) .sd-celllink-name {
   color: var(--accent);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-#sd-root .sd-table td a.sd-celllink:is(:hover, :focus-visible) .sd-celllink-gap { flex-grow: 1; }
 #sd-root .sd-table td a.sd-celllink:is(:hover, :focus-visible) .sd-celllink-go {
   color: var(--accent);
   opacity: 1;
-  transform: translateX(2px);
+  transform: none;
 }
 #sd-root .sd-table td.sd-cell--link:has(a.sd-celllink:is(:hover, :focus-visible)) {
   background: var(--accent-soft) !important;
