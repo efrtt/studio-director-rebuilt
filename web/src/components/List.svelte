@@ -120,8 +120,14 @@
 
   // A standalone list page can be browsed by name. A mixed result set is a list
   // of answers, not a directory, and the narrow panel beside an editor has no
-  // room for an index — both stay plain rows.
-  const BROWSED = { Family: 'letters', Student: 'letters', Class: 'letters' };
+  // room for an index — both stay plain rows. Instructors are people with
+  // surnames, so they take the same index as families and students.
+  const BROWSED = {
+    Family: 'letters',
+    Student: 'letters',
+    Instructor: 'letters',
+    Class: 'letters'
+  };
   $: lone = data.mixed ? '' : (data.types && data.types.length === 1 ? data.types[0] : '');
   $: view = BROWSED[lone] || 'plain';
 
