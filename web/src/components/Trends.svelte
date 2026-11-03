@@ -6,7 +6,7 @@
   // The charts stay images. They are server-rendered PNGs, 430x140, and
   // redrawing them here would be a second, different chart of the same numbers.
   import PageTabs from './PageTabs.svelte';
-  import { cellKind } from '../lib/cellclass.js';
+  import DataTable from './DataTable.svelte';
 
   export let trends;
 
@@ -59,31 +59,9 @@
 
     {#each trends.tables as table}
       {#if table.caption}<h3 class="sd-sheethead">{table.caption}</h3>{/if}
-      <div class="sd-tablewrap">
-        <table class="sd-table">
-          {#if table.headings.length}
-            <thead>
-              <tr>
-                {#each table.headings as heading}<th>{heading}</th>{/each}
-              </tr>
-            </thead>
-          {/if}
-          <tbody>
-            {#each table.rows as row}
-              <tr>
-                {#each row as cell}
-                  <td
-                    class:sd-cell--right={cell.right}
-                    class:sd-cell--link={cellKind(cell) === 'link'}
-                  >
-                    {#if cell.href}<a href={cell.href}>{cell.text}</a>{:else}{cell.text}{/if}
-                  </td>
-                {/each}
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-      </div>
+      <!-- The app's own table, drawn by the same component the sheet view uses:
+           a name is a link cell with its chevron, money stays a figure. -->
+      <DataTable {table} />
     {/each}
 
     {#if trends.links.length}

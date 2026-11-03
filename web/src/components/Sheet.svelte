@@ -1,9 +1,5 @@
 <script>
-  import { cellKind } from '../lib/cellclass.js';
-  import CellHeading from './CellHeading.svelte';
-  import CellAction from './CellAction.svelte';
-  import CellLink from './CellLink.svelte';
-  import DuePill from './DuePill.svelte';
+  import DataTable from './DataTable.svelte';
   import PageTabs from './PageTabs.svelte';
   export let sheet;
   export let onPress = null;
@@ -83,55 +79,10 @@
     {#each tables as table}
       {#if table.section}<h3 class="sd-sheethead">{table.section}</h3>{/if}
       {#if table.caption}<h3 class="sd-sheetcaption">{table.caption}</h3>{/if}
-      {#if table.headings.length || table.rows.length}
-        <div class="sd-tablewrap">
-          <table class="sd-table">
-            {#if table.headings.length}
-              <thead>
-                <tr>
-                  {#each table.headings as heading}<CellHeading text={heading} />{/each}
-                </tr>
-              </thead>
-            {/if}
-            <tbody>
-              {#if table.rows.length}
-                {#each table.rows as row}
-                  <tr>
-                    {#each row as cell}
-                      <td
-                        class:sd-cell--right={cell.right}
-                        class:sd-cell--link={cellKind(cell) === 'link'}
-                        class:sd-cell--action={cellKind(cell) === 'action'}
-                      >
-                        {#if cell.actions && cell.actions.length > 1}
-                          <span class="sd-cell-actions">
-                            {#each cell.actions as action}
-                              <CellAction href={action.href} label={action.label} />
-                            {/each}
-                          </span>
-                        {:else if cellKind(cell) === 'action' && cell.text}
-                          <CellAction href={cell.href || '#'} label={cell.text} />
-                        {:else if cell.href}
-                          <CellLink href={cell.href} text={cell.text} due={cell.due || ''} />
-                        {:else}{cell.text}{#if cell.due}<DuePill due={cell.due} />{/if}{/if}
-                      </td>
-                    {/each}
-                  </tr>
-                {/each}
-              {:else}
-                <!-- A table with headings and no rows still belongs on the page:
-                     "Performance Info" with six costumes below it is not the same
-                     screen as "Costume Info" alone. -->
-                <tr>
-                  <td class="sd-sheetempty" colspan={Math.max(table.headings.length, 1)}>
-                    {q ? 'No rows match the filter.' : (table.message || 'No items to display.')}
-                  </td>
-                </tr>
-              {/if}
-            </tbody>
-          </table>
-        </div>
-      {/if}
+      <DataTable
+        {table}
+        emptyText={q ? 'No rows match the filter.' : (table.message || 'No items to display.')}
+      />
       {#if table.total}<p class="sd-sheetnote">{table.total}</p>{/if}
       {#if table.links}
         <p class="sd-sheetlinks">
