@@ -332,8 +332,24 @@ html.sd-app form#idForm { visibility: hidden !important; }
 .sd-filter:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .sd-count { color: var(--dim); font-size: var(--fs-sm); white-space: nowrap; }
 .sd-listbody { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 4px 18px 18px; }
+
+/* The toolbar is one line where there is room for one. In a 260px record panel
+   it is not: the filter used to share its line with two counts and gave up about
+   two thirds of the gutter to them. The counts drop below the field instead, so
+   the field keeps the whole width of the panel. Measured on the list itself, not
+   on the window — the same list is 1080px alone and 260px beside an editor. */
+.sd-list { container-type: inline-size; }
+@container (max-width: 520px) {
+  .sd-listbar { flex-wrap: wrap; row-gap: 6px; }
+  .sd-filter { flex: 1 1 100%; max-width: none; }
+}
+
 .sd-records { list-style: none; margin: 0; padding: 0; }
 .sd-records li { border-bottom: 1px solid var(--line); }
+/* No rules between rows in a sidebar. At 260px the panel is narrower than the
+   name in it, and a line under every record cut the list into strips; the
+   highlight marks the record you are on, which is the job the rule was doing. */
+.sd-split-side .sd-records li { border-bottom: 0; }
 .sd-records li:last-child { border-bottom: 0; }
 .sd-records a {
   display: flex;

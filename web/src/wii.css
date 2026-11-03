@@ -443,6 +443,8 @@ html[data-sd-theme="wii"] #sd-root .sd-listbar { border-bottom: 1px solid #e0f0f
 html[data-sd-theme="wii"] #sd-root .sd-listbar:has(+ .sd-tablewrap) { border-bottom: 0; }
 html[data-sd-theme="wii"] #sd-root .sd-count { color: #5d7180; }
 html[data-sd-theme="wii"] #sd-root .sd-records li { border-bottom: 1px solid #eaf5fc; }
+/* The same quiet sidebar as the base theme: no rule under every record. */
+html[data-sd-theme="wii"] #sd-root .sd-split-side .sd-records li { border-bottom: 0; }
 html[data-sd-theme="wii"] #sd-root .sd-records a {
   border-radius: 11px;
   color: var(--text);
