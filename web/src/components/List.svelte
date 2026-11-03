@@ -126,6 +126,10 @@
   $: view = BROWSED[lone] || 'plain';
 
   $: letters = letterGroups(items, lone);
+  // A rail of one is not "1 letters".
+  $: groupWord = lone === 'Class'
+    ? (letters.length === 1 ? 'number' : 'numbers')
+    : (letters.length === 1 ? 'letter' : 'letters');
 
   let groups = null;
   let activeLetter = '';
@@ -163,7 +167,7 @@
     />
     <span class="sd-count">{items.length} of {data.total || data.items.length}</span>
     {#if view === 'letters' && letters.length}
-      <span class="sd-count">{letters.length} {lone === 'Class' ? 'numbers' : 'letters'}</span>
+      <span class="sd-count">{letters.length} {groupWord}</span>
     {/if}
   </div>
 
