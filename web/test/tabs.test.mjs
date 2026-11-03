@@ -59,6 +59,9 @@ test('the enrollment panel keeps its columns, rows and links', () => {
   assert.equal(enrollment.blocks.length, 2, 'current students and the waitlist');
 
   const roster = enrollment.blocks[0];
+  // The panel opens with the app's own "Add student" / "Tags" bar. It is a
+  // control, not the table's name, so a heading lookup must not take it.
+  assert.equal(roster.section, '');
   assert.deepEqual(roster.headings,
     ['First Name', 'Last Name', 'Age', 'Gender', 'Performing', 'Family', 'Actions']);
   assert.equal(roster.rows.length, 1);
@@ -107,4 +110,30 @@ test('pages without a tab strip get no tab bar', () => {
   assert.equal(readTabs(load('editor-class.html')), null, 'NewClass is a list plus form');
   assert.equal(readTabs(load('calendar-page.html')), null);
   assert.equal(readTabs(parseHtml('<div></div>')), null);
+});
+
+test('a heading the app does not class still labels its table', () => {
+  // A student's enrollment panel names each season the rows below belong to in
+  // a bare div, which none of the class lookups match — so the two tables
+  // arrived unnamed. "Total Hours" sits between them and is a result, not the
+  // second table's name.
+  const doc = parseHtml(`<div class="tabContainer">
+      <div class="selectedTab">Overview</div>
+      <div class="tab" id="tab-enrollment">Enrollment</div>
+    </div>
+    <div class="tabContent" id="tab-enrollment-content">
+      <div class="sectionBlock"><span>Enrollment for Fall 2026-2027 (8/3/26-6/10/27)</span></div>
+      <table class="SimpleSD"><tr><th>Day</th><th>Time</th></tr>
+        <tr><td>Monday</td><td>4:00 PM</td></tr></table>
+      <div class="WithinMultiTable">Total Hours: 11:45</div>
+      <div class="MultiTable"></div>
+      <div><span>Enrollment for (Office Use Only) Dance Co. 2026-2027</span></div>
+      <table class="SimpleSD"><tr><th>Day</th><th>Time</th></tr>
+        <tr><td>Wednesday</td><td>6:00 AM</td></tr></table>
+    </div>`);
+
+  const read = readTabs(doc).tabs[1];
+  assert.equal(read.blocks.length, 2);
+  assert.equal(read.blocks[0].section, 'Enrollment for Fall 2026-2027 (8/3/26-6/10/27)');
+  assert.equal(read.blocks[1].section, 'Enrollment for (Office Use Only) Dance Co. 2026-2027');
 });
