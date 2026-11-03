@@ -1212,17 +1212,25 @@ html[data-sd-theme="wii"][data-sd-accent="rose"] #sd-root {
   --wii-ink: #5c1f38;
 }
 
-/* ---- list: the letter index and the class shelves ----
- * The rail of letters is a channel column and a shelf is a disc case: white,
- * glossed, and rounded. Neither changes a layout box; only the surface does. */
+/* ---- list: the letter index and the class shelves
+ * The rail of letters is a channel card and a shelf is a disc case: white,
+ * glossed, and rounded. Only the surface changes here; the card's box is the
+ * layout's, so the index ends under its last key in both themes. */
 html[data-sd-theme="wii"] #sd-root .sd-letterrail {
-  border-right: 1px solid #e0f0fa;
-  background: #f2f9fe;
+  border: 1px solid #e0f0fa;
+  background: #ffffff;
+  box-shadow: 0 8px 18px -14px rgba(34, 130, 176, 0.9);
 }
 html[data-sd-theme="wii"] #sd-root .sd-letterrail a { color: #5d7180; }
-html[data-sd-theme="wii"] #sd-root .sd-letterrail a:hover { background: #ffffff; color: var(--wii-deep); }
+html[data-sd-theme="wii"] #sd-root .sd-letterrail a:hover { background: #f2f9fe; color: var(--wii-deep); }
 html[data-sd-theme="wii"] #sd-root .sd-letterrail a.sd-letterrail--on {
-  border-left-color: var(--wii-blue);
+  background: #eaf6ff;
+  box-shadow: inset 0 0 0 1px #b9dcf5;
+  color: var(--wii-blue);
+}
+html[data-sd-theme="wii"] #sd-root .sd-letterrail-count { background: #f2f9fe; color: #5d7180; }
+html[data-sd-theme="wii"] #sd-root .sd-letterrail a.sd-letterrail--on .sd-letterrail-count {
+  background: transparent;
   color: var(--wii-blue);
 }
 html[data-sd-theme="wii"] #sd-root .sd-grouphead {
