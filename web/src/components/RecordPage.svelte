@@ -13,6 +13,7 @@
   // the add page has no bar at all, because that page *is* the add form.
   import RecordDialog from './RecordDialog.svelte';
   import { cellKind } from '../lib/cellclass.js';
+  import CellAction from './CellAction.svelte';
   import { rememberDeleted } from '../lib/deletedname.js';
   import {
     recordsOf, modeOf, listHrefOf, newHrefOf, widthOf, headingOf, openIdOf, labelOf, blankFormOf,
@@ -141,14 +142,15 @@
                     {#if cell.actions && cell.actions.length > 1}
                       <span class="sd-cell-actions">
                         {#each cell.actions as action}
-                          <a class="sd-pill" href={action.href} title={action.label}>{action.label}</a>
+                          <CellAction href={action.href} label={action.label} />
                         {/each}
                       </span>
+                    {:else if cellKind(cell) === 'action' && cell.text}<CellAction href={cell.href || '#'} label={cell.text} />
                     {:else}{cell.text}{/if}
                   </td>
                 {/each}
                 <td class="sd-recordedit">
-                  <a class="sd-pill" href={row.href} title="Edit {row.label || 'this record'}">Edit</a>
+                  <CellAction href={row.href} label="Edit" title="Edit {row.label || 'this record'}" />
                 </td>
               </tr>
             {/each}

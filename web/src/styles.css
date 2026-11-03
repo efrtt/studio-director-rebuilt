@@ -1316,7 +1316,9 @@ html[data-sd-theme="light"][data-sd-accent="rose"] #sd-root { --accent: #a3305a;
 }
 .sd-table tbody tr:last-child td { border-bottom: 0 !important; }
 .sd-table tbody tr:nth-child(even) td { background: rgba(255, 255, 255, .018) !important; }
-.sd-table tbody tr:hover td { background: var(--accent-tint) !important; }
+/* Rows do not answer the pointer. Only a cell that opens something does - a
+   balance or a room staying put must not look like a target - so the sheet
+   keeps its banding and nothing else when the pointer crosses it. */
 
 /* Figures: same width per digit, so a ledger column reads down as a column. */
 .sd-table .sd-cell--right,
@@ -1356,15 +1358,104 @@ html[data-sd-theme="light"][data-sd-accent="rose"] #sd-root { --accent: #a3305a;
 }
 .sd-cell-actions { display: inline-flex; flex-wrap: wrap; gap: 6px; }
 
+/* ---- a cell that goes somewhere -----------------------------------------
+   The link fills its cell, so the whole box is the target. It stays quiet until
+   the pointer arrives: the cell takes the accent wash and a hairline, the name
+   turns accent and underlines, and the chevron travels from beside the name to
+   the cell's right edge. The travel is a growing flex gap, not a measured
+   offset, so it lands on the edge whatever the name is. */
+/* The cell's own padding is traded for the link's, so the target is the whole
+   box. Id-scoped, because the table's own cell rule is. */
+#sd-root .sd-table tbody td.sd-cell--link { padding: 0 !important; }
+#sd-root .sd-table td a.sd-celllink {
+  display: flex;
+  align-items: center;
+  padding: 9px 14px;
+  color: var(--text);
+  font-weight: 500;
+  text-decoration: none;
+}
+.sd-celllink-name { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sd-celllink-gap { flex: 0 1 7px; transition: flex-grow .18s ease; }
+.sd-celllink-go {
+  flex: 0 0 auto;
+  color: var(--dim);
+  opacity: .5;
+  transition: transform .18s ease, color .18s ease, opacity .18s ease;
+}
+/* A figure column is not a name column: it keeps the target and the wash, but a
+   chevron chasing a balance would be noise. */
+.sd-cell--right .sd-celllink { justify-content: flex-end; }
+.sd-cell--right .sd-celllink-gap,
+.sd-cell--right .sd-celllink-go { display: none; }
+#sd-root .sd-table td a.sd-celllink:is(:hover, :focus-visible) .sd-celllink-name {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+#sd-root .sd-table td a.sd-celllink:is(:hover, :focus-visible) .sd-celllink-gap { flex-grow: 1; }
+#sd-root .sd-table td a.sd-celllink:is(:hover, :focus-visible) .sd-celllink-go {
+  color: var(--accent);
+  opacity: 1;
+  transform: translateX(2px);
+}
+#sd-root .sd-table td.sd-cell--link:has(a.sd-celllink:is(:hover, :focus-visible)) {
+  background: var(--accent-soft) !important;
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+.sd-body[data-sd-density="compact"] .sd-table td a.sd-celllink { padding-top: 3px; padding-bottom: 3px; }
+
+/* ---- the shape of an action ---------------------------------------------
+   Font Awesome Free 6.7.2 solid paths, used as masks: no webfont, no request,
+   sharp at any zoom, and coloured by the pill they sit in. Icons are CC BY 4.0 -
+   https://fontawesome.com/license/free. The label decides which one, so an
+   unknown verb simply keeps its word. */
+.sd-icon {
+  display: block;
+  width: 12px;
+  height: 12px;
+  background: currentColor;
+  -webkit-mask: var(--glyph) center / contain no-repeat;
+  mask: var(--glyph) center / contain no-repeat;
+}
+#sd-root .sd-icon--edit { --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z'/%3E%3C/svg%3E"); }
+#sd-root .sd-icon--drop { --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath d='M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z'/%3E%3C/svg%3E"); }
+#sd-root .sd-icon--done { --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E"); }
+#sd-root .sd-table td a.sd-pill--icon,
+#sd-root .sd-table td.sd-cell--action a.sd-pill--icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+}
+/* Drop next to a name is one slip from a deletion, whatever shape it takes. */
+#sd-root .sd-table td a.sd-pill--icon:has(.sd-icon--drop):hover {
+  border-color: #c8433a !important;
+  color: #c8433a !important;
+  background: color-mix(in srgb, #c8433a 12%, transparent) !important;
+}
+/* Visually hidden, still read out. */
+.sd-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+
 html[data-sd-theme="light"] #sd-root .sd-table thead th { background: var(--panel-2) !important; }
 html[data-sd-theme="light"] #sd-root .sd-table tbody td {
   border-bottom-color: var(--line) !important;
 }
 html[data-sd-theme="light"] #sd-root .sd-table tbody tr:nth-child(even) td {
   background: color-mix(in srgb, var(--text) 3%, transparent) !important;
-}
-html[data-sd-theme="light"] #sd-root .sd-table tbody tr:hover td {
-  background: var(--accent-tint) !important;
 }
 
 /* ---- table rules, at the specificity the reset uses ---- */
@@ -1909,7 +2000,6 @@ html[data-sd-theme="light"] #sd-root .sd-jump-scrim { background: rgba(52, 44, 3
 .sd-recordcard .sd-table th:last-child,
 .sd-recordcard .sd-table td:last-child { padding-right: 16px; }
 .sd-recordcard .sd-table tbody tr:last-child > td { border-bottom: 0 !important; }
-.sd-recordcard .sd-table tbody tr:hover > td { background: var(--accent-tint); }
 /* The app's stylesheet repaints every cell transparent at id specificity, which
    is why rows scrolled through the sticky header instead of under it. One class
    more specific than that rule is enough to give the header its own surface. */
