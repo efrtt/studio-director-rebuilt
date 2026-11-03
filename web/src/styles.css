@@ -685,7 +685,9 @@ span.sd-tab { cursor: default; }
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
-  padding: 16px 18px 24px;
+  /* The page gutter, like every other view: content centres at --content-max and
+     the scrollbar stays at the window edge. */
+  padding: var(--space-4) var(--page-gutter) var(--space-5);
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -752,7 +754,14 @@ a.sd-stat:hover { background: var(--panel-2); }
 
 /* ---- trends: the app's own chart images ---- */
 .sd-trends { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
-.sd-trendsbody { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 0 18px 24px; }
+.sd-trendsbody {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  /* The chart grid is the widest thing in the skin; it reads best as a column
+     rather than stretched across an ultrawide window. */
+  padding: 0 var(--page-gutter) var(--space-5);
+}
 .sd-chartgrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
