@@ -1384,7 +1384,14 @@ html[data-sd-theme="light"][data-sd-accent="rose"] #sd-root { --accent: #a3305a;
   font-weight: 500;
   text-decoration: none;
 }
-.sd-celllink-name { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sd-celllink-name {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color .14s ease;
+}
 .sd-celllink-go {
   flex: 0 0 auto;
   margin-left: auto;
@@ -1407,6 +1414,11 @@ html[data-sd-theme="light"][data-sd-accent="rose"] #sd-root { --accent: #a3305a;
   color: var(--accent);
   opacity: 1;
   transform: none;
+}
+/* The wash and the hairline fade in with the chevron. Without this the cell
+   snapped to its hover state while the chevron animated over it. */
+#sd-root .sd-table td.sd-cell--link {
+  transition: background-color .14s ease, box-shadow .14s ease;
 }
 #sd-root .sd-table td.sd-cell--link:has(a.sd-celllink:is(:hover, :focus-visible)) {
   background: var(--accent-soft) !important;
