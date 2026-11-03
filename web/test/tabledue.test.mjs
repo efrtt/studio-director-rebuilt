@@ -45,6 +45,21 @@ test('a four-figure balance keeps its commas', () => {
   assert.equal(readTable(table).rows[0][2].due, '$1,204.50');
 });
 
+test('a balance with no name beside it stays text', () => {
+  // The student's Family tab files the figure under its own heading and puts
+  // nothing else in the cell — the live page looks like this, verified against
+  // EditStudent&sident=…&searchidx=2975. A lone pill there is not a warning
+  // about a name; the amount is the whole answer.
+  const table = parseHtml('<table><tbody>'
+    + '<tr><th>Detail</th><th>Value</th></tr>'
+    + '<tr><td>Balance Due</td><td><span class="boldRed"><span class="Tooltip">Balance due: $1,205.00</span>$</span></td></tr>'
+    + '</tbody></table>').querySelector('table');
+
+  const cell = readTable(table).rows[0][1];
+  assert.equal(cell.text, '$1,205.00');
+  assert.equal(cell.due, undefined, 'no name, no pill');
+});
+
 test('a family that owes nothing is just a name', () => {
   const table = tableOf(`<tr><td>Ada</td><td>Lovelace</td>${family('Hopper')}<td class="action-cell"><a href="admin.sd?page=Unenroll&amp;sident=1">Edit</a></td></tr>`);
   const [, , cell] = readTable(table).rows[0];

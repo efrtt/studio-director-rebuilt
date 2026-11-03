@@ -89,8 +89,15 @@ function cellOf(td, index, rightCols) {
         .filter((action) => action.label)
       : [];
 
+    // A cell that holds nothing but the balance prints the balance. The pill is
+    // for money beside a family's name: it says "this row owes" without taking
+    // room from the name. On its own the amount is the whole answer — the
+    // Family tab files it under "Balance Due" and nothing else is in the cell —
+    // so a lone red `$` there says less than the figure does.
+    const words = raw.replace(/^(\d{1,2}:\d{2}\s*[ap]\.?m?\.?)(?=[A-Za-z\u2013-])/i, '$1 ').replace(/\s+/g, ' ').trim();
+
     return {
-    text: raw.replace(/^(\d{1,2}:\d{2}\s*[ap]\.?m?\.?)(?=[A-Za-z\u2013-])/i, '$1 ').replace(/\s+/g, ' ').trim(),
+    text: words || due,
     href: anchor ? anchor.getAttribute('href') : null,
       ...(actionCell ? { action: true } : {}),
     // The app right-aligns its action column on the heading (`th.AR`) and only
@@ -98,8 +105,9 @@ function cellOf(td, index, rightCols) {
       right: rightCols.has(index) || isRight(td),
       // Only when there is something to disambiguate: one control is the cell.
       ...(actions.length ? { actions } : {}),
-      // A balance this cell states, kept out of its words.
-      ...(due ? { due } : {})
+      // A balance this cell states, kept out of its words — but only when there
+      // are words to keep it out of.
+      ...(due && words ? { due } : {})
   };
 }
 
