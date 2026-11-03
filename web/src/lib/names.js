@@ -21,7 +21,6 @@ const DAY = /^(mon|tue|wed|thu|fri|sat|sun)[a-z]*\.?/i;
 const DASHED = /^(.*)\s+[-\u2013\u2014]\s+(.+)$/;
 // The class number, which the studio uses as its category.
 const NUMBERED = /^\s*(\d+)/;
-const CIDENT = /[?&]cident=(\d+)/i;
 
 function clean(value) {
   return String(value == null ? '' : value).replace(/\s+/g, ' ').trim();
@@ -74,13 +73,14 @@ export function classParts(label) {
 }
 
 // The number a class row is filed under: the hundred, taken from the class
-// number itself. "100 Ballet 1" files under 1, "520 Contemporary 1" under 5. The
-// number comes from the link when the label does not lead with one.
+// number itself. "100 Ballet 1" files under 1, "520 Contemporary 1" under 5.
+//
+// The name is the only place it can come from. Every class link carries a
+// numeric cident, so reading one would find a number for every row in the
+// list and tell us nothing about which hundred that row belongs to.
 export function classNumber(item) {
   const label = String((item && item.label) || '');
-  const href = String((item && item.href) || '');
-  const digits = (label.match(NUMBERED) || [])[1] || (href.match(CIDENT) || [])[1] || '';
-  return digits;
+  return (label.match(NUMBERED) || [])[1] || '';
 }
 
 // The single character a row is filed under: a surname's letter, or a class's
