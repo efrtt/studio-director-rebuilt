@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { recordId } from '../lib/shell.js';
   import { keepWidest, isComplete } from '../lib/follow.js';
-  import { displayLabel, letterGroups, classShelves } from '../lib/names.js';
+  import { displayLabel, letterGroups } from '../lib/names.js';
   import RecordRow from './RecordRow.svelte';
 
   export let list;
@@ -121,12 +121,11 @@
   // A standalone list page can be browsed by name. A mixed result set is a list
   // of answers, not a directory, and the narrow panel beside an editor has no
   // room for an index — both stay plain rows.
-  const BROWSED = { Family: 'letters', Student: 'letters', Class: 'shelves' };
+  const BROWSED = { Family: 'letters', Student: 'letters', Class: 'letters' };
   $: lone = data.mixed ? '' : (data.types && data.types.length === 1 ? data.types[0] : '');
   $: view = BROWSED[lone] || 'plain';
 
   $: letters = letterGroups(items, lone);
-  $: shelves = classShelves(items);
 
   let groups = null;
   let activeLetter = '';
@@ -165,8 +164,6 @@
     <span class="sd-count">{items.length} of {data.total || data.items.length}</span>
     {#if view === 'letters' && letters.length}
       <span class="sd-count">{letters.length} letters</span>
-    {:else if view === 'shelves' && shelves.length}
-      <span class="sd-count">{shelves.length} shelves</span>
     {/if}
   </div>
 
@@ -196,7 +193,7 @@
             </h3>
             <ul class="sd-records">
               {#each group.items as item (item.href || item.label)}
-                <RecordRow {item} mixed={data.mixed} {here} />
+                <RecordRow {item} mixed={data.mixed} when={lone === 'Class'} {here} />
               {/each}
             </ul>
           </section>
@@ -230,29 +227,11 @@
         {/if}
       </div>
     {:else}
-      {#if view === 'shelves'}
-        <div class="sd-shelves">
-          {#each shelves as shelf (shelf.label)}
-            <section class="sd-shelf">
-              <h3 class="sd-shelfhead">
-                <span>{shelf.label}</span>
-                <span class="sd-shelfcount">{shelf.items.length}</span>
-              </h3>
-              <ul class="sd-records">
-                {#each shelf.items as item (item.href || item.label)}
-                  <RecordRow {item} when={true} {here} />
-                {/each}
-              </ul>
-            </section>
-          {/each}
-        </div>
-      {:else}
-        <ul class="sd-records">
-          {#each items as item (item.href || item.label)}
-            <RecordRow {item} mixed={data.mixed} {here} />
-          {/each}
-        </ul>
-      {/if}
+      <ul class="sd-records">
+        {#each items as item (item.href || item.label)}
+          <RecordRow {item} mixed={data.mixed} when={lone === 'Class'} {here} />
+        {/each}
+      </ul>
 
       {#if !items.length}
         <p class="sd-empty">
