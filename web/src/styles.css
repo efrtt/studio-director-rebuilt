@@ -1401,12 +1401,19 @@ html[data-sd-theme="light"][data-sd-accent="rose"] #sd-root { --accent: #a3305a;
    the eye to itself rather than to the name it belonged to. The chevron always
    holds its place in the layout, so nothing reflows as it appears. */
 /* The cell's own padding is traded for the link's, so the target is the whole
-   box. Id-scoped, because the table's own cell rule is. */
-#sd-root .sd-table tbody td.sd-cell--link { padding: 0 !important; }
+   box. Id-scoped, because the table's own cell rule is.
+   The link reads the padding from here rather than repeating it: a theme that
+   changes the cell's padding (wii uses 11px) otherwise left the name sitting two
+   pixels above the words in the columns beside it. */
+#sd-root .sd-table tbody td.sd-cell--link {
+  --cell-pad-y: 9px;
+  --cell-pad-x: 14px;
+  padding: 0 !important;
+}
 #sd-root .sd-table td a.sd-celllink {
   display: flex;
   align-items: center;
-  padding: 9px 14px;
+  padding: var(--cell-pad-y) var(--cell-pad-x);
   color: var(--text);
   font-weight: 500;
   text-decoration: none;
@@ -1424,7 +1431,10 @@ html[data-sd-theme="light"][data-sd-accent="rose"] #sd-root { --accent: #a3305a;
    arrive on hover, so a bold name is what says "this row opens" from afar. It
    sits on the cell rather than the name, because a table that links with a bare
    anchor leaves no span to style. */
-#sd-root .sd-table td.sd-cell--link { font-weight: 700; }
+#sd-root .sd-table td.sd-cell--link,
+/* The link carries its own weight from the rule above; the cell's is inherited
+   by the bare anchors in the tables that link without a span. */
+#sd-root .sd-table td.sd-cell--link a { font-weight: 700; }
 .sd-celllink-go {
   flex: 0 0 auto;
   margin-left: auto;
