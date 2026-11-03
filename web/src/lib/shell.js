@@ -49,7 +49,11 @@ export function pageName(href) {
 // compact week grid was read as a data table instead of as a calendar.
 const NAV_PARAMS = new Set([
   'page', 'clicktab', 'filter', 'searchtext', 'sdprobe',
-  'season', 'datespec_view', 'datespec_view_date'
+  'season', 'datespec_view', 'datespec_view_date',
+  // The Home dashboard's own tabs (`?page=HomePage&tab=tab-insights`). A tab is
+  // a view of one page, not a record: left out, every dashboard tab was a
+  // "record page" and was never rebuilt.
+  'tab'
 ]);
 
 function isNavParam(key) {

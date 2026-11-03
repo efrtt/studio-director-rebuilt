@@ -23,6 +23,7 @@
       "title": ""
     },
     "index": null,
+    "insights": null,
     "list": {
       "items": [
         {
@@ -79,6 +80,7 @@
     "sheet": null,
     "task": null,
     "title": "Saved",
+    "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd",
     "view": "confirm",
     "week": null

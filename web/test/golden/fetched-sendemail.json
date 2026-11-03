@@ -4,6 +4,7 @@
   "model": {
     "confirm": null,
     "index": null,
+    "insights": null,
     "list": null,
     "nav": [
       {
@@ -25,6 +26,7 @@
     "sheet": null,
     "task": null,
     "title": "Email Note",
+    "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=fetched-sendemail",
     "view": null,
     "week": null

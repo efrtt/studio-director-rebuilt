@@ -524,6 +524,7 @@
   "model": {
     "confirm": null,
     "index": null,
+    "insights": null,
     "list": {
       "items": [
         {
@@ -604,6 +605,7 @@
     "sheet": null,
     "task": null,
     "title": "New Student",
+    "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EditStudent&sident=1629799984805",
     "view": "list",
     "week": null

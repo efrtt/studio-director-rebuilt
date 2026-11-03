@@ -4,6 +4,7 @@
   "model": {
     "confirm": null,
     "index": null,
+    "insights": null,
     "list": {
       "items": [
         {
@@ -84,6 +85,7 @@
     "sheet": null,
     "task": null,
     "title": "New Class",
+    "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EditClass&cident=1782910697458",
     "view": "list",
     "week": null

@@ -13,6 +13,8 @@ import Editor from '../components/Editor.svelte';
 import Report from '../components/Report.svelte';
 import Task from '../components/Task.svelte';
 import Sheet from '../components/Sheet.svelte';
+import Insights from '../components/Insights.svelte';
+import Trends from '../components/Trends.svelte';
 import Settings from '../components/Settings.svelte';
 import Index from '../components/Index.svelte';
 import Note from '../components/Note.svelte';
@@ -25,6 +27,8 @@ export const VIEWS = {
   index: Index,
   report: Report,
   task: Task,
+  insights: Insights,
+  trends: Trends,
   sheet: Sheet,
   settings: Settings,
   note: Note,
@@ -47,6 +51,8 @@ export function viewOf(model) {
   if (m.form) return 'form';
   if (m.report) return 'report';
   if (m.task) return 'task';
+  if (m.insights) return 'insights';
+  if (m.trends) return 'trends';
   if (m.sheet) return 'sheet';
   if (m.index) return 'index';
   if (m.settings) return 'settings';
@@ -94,6 +100,10 @@ export function propsFor(view, model, handlers) {
         onAction: h.onAction,
         url: model.url || ''
       };
+    case 'insights':
+      return { insights: model.insights };
+    case 'trends':
+      return { trends: model.trends };
     case 'sheet':
       return { sheet: model.sheet, onPress: h.onPress };
     case 'settings':
@@ -137,12 +147,15 @@ export function titleOf(model) {
   const report = m.report;
   const task = m.task;
   const sheet = m.sheet;
+  const insights = m.insights;
+  const trends = m.trends;
   const index = m.index;
   const settings = m.settings;
   const note = m.note;
 
   if (confirm) return confirm.title || (confirm.ok ? 'Saved' : 'Not saved');
   return (form && form.title) || (report && report.title) || (task && task.title)
+    || (insights && insights.title) || (trends && trends.title)
     || (sheet && sheet.title) || (index && index.title) || (settings && settings.title)
     || (note && note.title)
     || (m.month && m.month.title)
@@ -158,11 +171,12 @@ export function footerOf(model) {
   const list = m.list;
   const report = m.report;
   const index = m.index;
-  const task = m.task;
-  const sheet = m.sheet;
-  const settings = m.settings;
-  const note = m.note;
-  const confirm = m.confirm;
+  const task = m.task;    const sheet = m.sheet;
+    const insights = m.insights;
+    const trends = m.trends;
+    const settings = m.settings;
+    const note = m.note;
+    const confirm = m.confirm;
   const month = m.month;
 
   // A settings card can be a small flow step with its own buttons (Enroll,
@@ -193,6 +207,12 @@ export function footerOf(model) {
   } else if (view === 'task' && task) {
     left = `${plural(task.fields.length, 'field', 'fields')} \u00b7 ${plural(task.actions.length, 'control', 'controls')}`;
     if (task.primary) left += ` \u00b7 ${task.primary.label}`;
+  } else if (view === 'insights' && insights) {
+    left = plural(insights.stats.length, 'stat', 'stats');
+    if (insights.donut) left += ` \u00b7 ${insights.donut.legend.length} student states`;
+  } else if (view === 'trends' && trends) {
+    left = plural(trends.charts.length, 'chart', 'charts');
+    if (trends.tables.length) left += ` \u00b7 ${plural(trends.tables.length, 'table', 'tables')}`;
   } else if (view === 'sheet' && sheet) {
     left = `${plural(sheet.rows, 'row', 'rows')} \u00b7 ${plural(sheet.tables.length, 'table', 'tables')}`;
     if (sheet.truncated) left += ` \u00b7 showing ${sheet.shown}`;

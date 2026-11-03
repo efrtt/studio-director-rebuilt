@@ -127,6 +127,7 @@
       "title": "Communications",
       "truncated": false
     },
+    "insights": null,
     "list": null,
     "nav": [
       {
@@ -144,6 +145,7 @@
     "sheet": null,
     "task": null,
     "title": "Communications",
+    "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=index-communications",
     "view": "index",
     "week": null

@@ -19,6 +19,7 @@ const doc = (html) => new DOMParser().parseFromString(html, 'text/html');
 test('the registry order is the contract, most specific first', () => {
   assert.deepEqual(READERS.map((r) => r.id), [
     'confirmation', 'week', 'list', 'report', 'task',
+    'insights', 'trends',
     'sheet', 'index', 'settings', 'note'
   ]);
   // Every reader answers both questions, and records what gates it.
@@ -54,7 +55,7 @@ test('the model keeps one key per reader, all present', () => {
   const model = readPage(doc('<body><div class="contentContainer"><p>nothing here</p></div></body>'),
     'https://app.thestudiodirector.com/studio1/admin.sd?page=Whatever');
 
-  for (const key of ['nav', 'week', 'list', 'report', 'task', 'sheet', 'index', 'settings', 'note', 'confirm']) {
+  for (const key of ['nav', 'week', 'list', 'report', 'task', 'insights', 'trends', 'sheet', 'index', 'settings', 'note', 'confirm']) {
     assert.ok(key in model, key + ' is present');
   }
   assert.equal(model.view, null, 'an unclaimed page is left to the app');
