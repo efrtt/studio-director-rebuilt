@@ -288,3 +288,90 @@ test('an empty select is not offered: the app fills it in later', () => {
   const read = readSettings(doc);
   assert.deepEqual(read.fields.map((f) => f.label), ['Show']);
 });
+
+// The calendar filters page (`SetTimeBlockCalendarFilters`): three lists you can
+// pick several from and the seven weekday boxes. Read as single choices, each
+// list kept one instructor and the weekday row kept one day out of seven.
+const FILTERS = `<form id="idForm">
+  <div class="contentContainer"><div class="Content">
+    <div class="formTitle">Set Calendar Filters</div>
+    <table><tbody>
+      <tr><td>Instructor</td><td>
+        <select name="INSTRUCTOR" multiple>
+          <option value="0">All</option>
+          <option value="1" selected>One</option>
+          <option value="2" selected>Two</option>
+        </select>
+      </td></tr>
+      <tr><td>DAYS</td><td>
+        <input type="checkbox" name="DAYS" value="1" checked>
+        <input type="checkbox" name="DAYS" value="2" checked>
+        <input type="checkbox" name="DAYS" value="4">
+        <input type="checkbox" name="DAYS" value="8">
+        <input type="checkbox" name="DAYS" value="16">
+        <input type="checkbox" name="DAYS" value="32">
+        <input type="checkbox" name="DAYS" value="64">
+      </td></tr>
+    </tbody></table>
+    <a id="save" href="#">Save</a>
+  </div></div></form>`;
+
+test('a list you can pick several from keeps every choice', () => {
+  const read = readSettings(parseHtml(FILTERS));
+  assert.ok(read, 'the calendar filters are a settings screen');
+
+  const multi = read.fields.find((f) => f.type === 'multiselect');
+  assert.ok(multi, 'a select with multiple is not a single-choice select');
+  assert.equal(multi.label, 'Instructor');
+  assert.deepEqual(multi.value, ['1', '2'], 'both chosen options, not just the first');
+  assert.equal(multi.selector, '[name="INSTRUCTOR"]');
+  assert.equal(multi.options.length, 3);
+});
+
+test('the weekday boxes are one setting of seven days, not seven settings', () => {
+  const read = readSettings(parseHtml(FILTERS));
+  const days = read.fields.find((f) => f.type === 'checkboxes');
+
+  assert.ok(days, 'seven boxes sharing a name are one field');
+  assert.equal(days.label, 'DAYS');
+  assert.deepEqual(days.options.map((o) => o.label), ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
+  assert.deepEqual(days.value, ['1', '2'], 'the checked bits');
+  assert.equal(days.selector, '[name="DAYS"]');
+  // One row in the card, so the other six boxes cannot be lost behind it.
+  assert.equal(read.fields.length, 2);
+});
+
+test('saving writes every chosen option and every box', () => {
+  const live = parseHtml(FILTERS);
+  const read = readSettings(live);
+  const presses = [];
+  live.getElementById('save').addEventListener('click', (e) => {
+    e.preventDefault();
+    presses.push('save');
+  });
+
+  const values = {};
+  for (const field of read.fields) values[field.key] = Array.isArray(field.value) ? [...field.value] : field.value;
+  values['name:INSTRUCTOR'] = ['0', '1'];
+  values['checks:DAYS'] = ['1', '4'];
+
+  const result = saveSettingsInApp(live, read, values);
+  assert.equal(result.submitted, true);
+  assert.deepEqual(result.applied.sort(), ['checks:DAYS', 'name:INSTRUCTOR']);
+  assert.deepEqual(presses, ['save']);
+
+  const chosen = Array.from(live.querySelectorAll('[name="INSTRUCTOR"] option'))
+    .filter((o) => o.hasAttribute('selected'))
+    .map((o) => o.getAttribute('value'));
+  assert.deepEqual(chosen, ['0', '1'], 'Two is cleared, not left selected');
+
+  const boxes = Array.from(live.querySelectorAll('[name="DAYS"]')).map((b) => b.hasAttribute('checked'));
+  assert.deepEqual(boxes, [true, false, true, false, false, false, false]);
+});
+
+test('an untouched multi-select is not written back', () => {
+  const read = readSettings(parseHtml(FILTERS));
+  const values = {};
+  for (const field of read.fields) values[field.key] = Array.isArray(field.value) ? [...field.value] : field.value;
+  assert.deepEqual(settingsChanges(read, values), [], 'nothing edited, nothing written');
+});

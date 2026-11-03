@@ -28,7 +28,7 @@
 import { qs, qsa, textOf } from './shell.js';
 import { diffFields, applyFields } from '../model/diff.js';
 import { contentRoot } from '../model/root.js';
-import { optionsOf, humanise } from '../model/fields.js';
+import { optionsOf, humanise, WEEKDAY } from '../model/fields.js';
 import { readActions, primaryAction, clickActionInApp } from './actions.js';
 
 // At most this many fields: a screen with more is a form (or a table), and the
@@ -124,6 +124,17 @@ function controlOf(el) {
     // An empty select is filled in by the app's own JS (the date pickers), so it
     // cannot be offered as a setting.
     if (!options.length) return null;
+    // A list you can pick several from is not a one-choice select. The calendar
+    // filters' Instructor, Class Type and Location are all `multiple`: reading
+    // the first chosen option turned each into a single choice, so saving one
+    // instructor silently cleared the others.
+    if (el.hasAttribute('multiple')) {
+      return {
+        type: 'multiselect',
+        options,
+        value: options.filter((o) => o.selected).map((o) => o.value)
+      };
+    }
     const chosen = options.find((o) => o.selected) || options[0];
     return { type: 'select', options, value: chosen.value };
   }
@@ -161,6 +172,7 @@ export function readSettings(doc) {
 
   const fields = [];
   const radioGroups = new Map();
+  const checkboxGroups = new Map();
   const seen = new Set();
   // Document order, so the card lists the settings in the order the page does
   // rather than in the order this loop happens to collect them.
@@ -195,6 +207,29 @@ export function readSettings(doc) {
         selector: selectorOf(el, doc)
       });
       if (el.hasAttribute('checked')) group.checked = el.getAttribute('value');
+      continue;
+    }
+
+    // The same name repeated is one setting with several choices. The calendar
+    // filters' seven DAYS boxes are the weekday mask (1 = Sunday .. 64 =
+    // Saturday); read one at a time, six of the seven vanished and the seventh
+    // was offered as a single on/off with no day named.
+    if (type === 'checkbox' && name && qsa(doc, 'input[name="' + name + '"]').length > 1) {
+      let group = checkboxGroups.get(name);
+      if (!group) {
+        group = { options: [], el, at: order.get(el) };
+        checkboxGroups.set(name, group);
+      }
+      const value = el.getAttribute('value') || '';
+      group.options.push({
+        // The weekday boxes carry no words of their own: the bit mask is the
+        // only name they have, so it is read as the day it stands for.
+        label: (/(^|_)days?$/i.test(name) && WEEKDAY[Number(value)]) || textOf(el.closest('label')) || value,
+        value,
+        // A box with no value still needs an identity of its own to be diffed.
+        key: value || '#' + group.options.length,
+        checked: el.hasAttribute('checked')
+      });
       continue;
     }
 
@@ -244,6 +279,26 @@ export function readSettings(doc) {
       type: 'radio',
       options: group.options,
       value: group.checked != null ? group.checked : (group.options.find((o) => o.checked) || {}).value || ''
+    });
+  }
+
+  // A checkbox group is one setting, in the order the page puts its boxes. Its
+  // label is the block around them (the cell that says "DAYS"), not the first
+  // box's own value.
+  for (const [name, group] of checkboxGroups) {
+    if (!group.options.length) continue;
+    const container = group.el.parentElement || group.el;
+    const label = blockLabel(container, doc);
+    fields.push({
+      key: 'checks:' + name,
+      at: group.at,
+      label: label.source === 'name' ? humanise(name) : label.label,
+      source: label.source,
+      selector: '[name="' + name + '"]',
+      group: name,
+      type: 'checkboxes',
+      options: group.options,
+      value: group.options.filter((o) => o.checked).map((o) => o.key)
     });
   }
 

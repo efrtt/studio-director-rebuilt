@@ -4,8 +4,12 @@
   export let settings;
   export let onSave = null;
 
+  // A multi-select or a checkbox group holds a list, and `initial` is what Reset
+  // restores: it has to be a copy, or Reset would hand back the same array the
+  // user is editing.
+  const copy = (value) => (Array.isArray(value) ? [...value] : value);
   const initial = {};
-  for (const field of settings.fields) initial[field.key] = field.value;
+  for (const field of settings.fields) initial[field.key] = copy(field.value);
   let values = { ...initial };
   let status = '';
   let busy = false;
@@ -62,7 +66,7 @@
   }
 
   function reset() {
-    values = { ...initial };
+    values = Object.fromEntries(Object.entries(initial).map(([key, value]) => [key, copy(value)]));
     status = '';
   }
 
@@ -111,7 +115,7 @@
     <div class="sd-settinglist">
       {#each settings.fields as field}
         <div class="sd-setting">
-          <label class="sd-settinglabel" for={field.type === 'radio' ? undefined : field.selector}>
+          <label class="sd-settinglabel" for={field.type === 'radio' || field.type === 'checkboxes' ? undefined : field.selector}>
             <span class="sd-settingtext">{field.label}</span>
           </label>
           <div class="sd-settingcontrol">
@@ -129,6 +133,24 @@
                 <input type="checkbox" bind:checked={values[field.key]} />
                 <span>{values[field.key] ? 'On' : 'Off'}</span>
               </label>
+            {:else if field.type === 'multiselect'}
+              <select class="sd-input sd-multiselect" multiple bind:value={values[field.key]}>
+                {#each field.options as option}
+                  <option value={option.value}>{option.label}</option>
+                {/each}
+              </select>
+              <span class="sd-settinghint">
+                {values[field.key].length} of {field.options.length} selected
+              </span>
+            {:else if field.type === 'checkboxes'}
+              <div class="sd-checkgrid">
+                {#each field.options as option}
+                  <label class="sd-check">
+                    <input type="checkbox" value={option.key} bind:group={values[field.key]} />
+                    <span>{option.label}</span>
+                  </label>
+                {/each}
+              </div>
             {:else if field.type === 'select'}
               <select class="sd-input" bind:value={values[field.key]}>
                 {#each field.options as option}

@@ -675,6 +675,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
   white-space: nowrap;
 }
 .sd-tab:hover { color: var(--text); }
+a.sd-tab { text-decoration: none; }
 .sd-tab--on { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
 .sd-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .sd-tabbody { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 14px 18px 24px; }
@@ -834,6 +835,13 @@ html.sd-app form#idForm { visibility: hidden !important; }
 .sd-settingcontrol .sd-input { max-width: 340px; }
 .sd-radios { display: flex; flex-wrap: wrap; gap: 6px 18px; }
 .sd-radios .sd-check { gap: 6px; }
+/* A list you can pick several from needs to show more than one line of choices;
+   a one-line box hid seventeen class types behind a scrollbar. */
+.sd-settingcontrol .sd-multiselect { min-height: 96px; padding: 3px; }
+.sd-settinghint { align-self: center; font-size: var(--fs-sm); color: var(--dim); }
+/* The weekday boxes are seven small targets on one line, not seven settings. */
+.sd-checkgrid { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.sd-checkgrid .sd-check { gap: 6px; }
 
 /* ---- sheet: the app's own tables, read-only ---- */
 .sd-sheet { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
