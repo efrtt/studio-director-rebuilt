@@ -14,6 +14,11 @@ import { radioGroup } from './fields.js';
 
 const same = (a, b) => String(a == null ? '' : a) === String(b == null ? '' : b);
 
+// Two choices are the same set when they hold the same values, whatever order
+// the page lists them in. `null`/`undefined` on either side means "nothing was
+// picked", not "edit this field".
+const setOf = (list) => [...(list || [])].map(String).sort().join('\u0000');
+
 // What a control currently holds. The two readers describe a checkbox slightly
 // differently — the editor fills `checked`, the settings screen fills `value` —
 // and comparing one of them against `value` would read every checked box as an
@@ -37,6 +42,32 @@ export function diffFields(fields, values) {
     if (field.type === 'checkbox') {
       if (!!next !== currentOf(field)) {
         changes.push({ selector: field.selector, checked: !!next, key: field.key });
+      }
+      continue;
+    }
+
+    // A multiple select: every chosen option is part of the value, so a change
+    // is the whole new set. Writing one value into it would drop the rest.
+    if (field.type === 'multiselect') {
+      const now = Array.isArray(field.value) ? field.value : [];
+      const nextList = next == null ? now : Array.isArray(next) ? next : [next];
+      if (setOf(now) !== setOf(nextList)) {
+        changes.push({ selector: field.selector, multiple: true, values: nextList.map(String), key: field.key });
+      }
+      continue;
+    }
+
+    // A group of same-named checkboxes (the weekday mask): the value is the set
+    // of checked boxes, written as one on/off per box in page order.
+    if (field.type === 'checkboxes') {
+      const now = Array.isArray(field.value) ? field.value : [];
+      const nextList = next == null ? now : Array.isArray(next) ? next : [next];
+      const chosen = new Set(nextList.map(String));
+      const before = new Set(now.map(String));
+      const checks = (field.options || []).map((o) => chosen.has(String(o.key)));
+      const was = (field.options || []).map((o) => before.has(String(o.key)));
+      if (checks.join() !== was.join()) {
+        changes.push({ selector: field.selector, checks, key: field.key });
       }
       continue;
     }
@@ -115,12 +146,50 @@ export function applyFields(doc, changes) {
       continue;
     }
 
+    // One on/off per box, in the order the page prints them. A group written
+    // through a single selector would only ever find the first box.
+    if (change.checks) {
+      const boxes = Array.from(doc.querySelectorAll(change.selector));
+      if (!boxes.length) {
+        missing.push(change.key);
+        continue;
+      }
+      boxes.forEach((box, i) => {
+        const on = !!change.checks[i];
+        box.checked = on;
+        if (on) box.setAttribute('checked', '');
+        else box.removeAttribute('checked');
+        announce(box);
+      });
+      applied.push(change.key);
+      continue;
+    }
+
     if (change.checked !== undefined) {
       // Both the property and the attribute: a form read through the DOM sees
       // the property, a serialised one sees the attribute.
       el.checked = change.checked;
       if (change.checked) el.setAttribute('checked', '');
       else el.removeAttribute('checked');
+    } else if (el.tagName === 'SELECT' && change.multiple) {
+      // Every option is visited: selected means "in the new set", and the ones
+      // that were chosen before are cleared rather than left behind.
+      const wanted = new Set((change.values || []).map(String));
+      const options = Array.from(el.querySelectorAll('option'));
+      const on = (option) => {
+        const optionValue = option.getAttribute('value');
+        return wanted.has(String(optionValue != null ? optionValue : option.textContent.trim()));
+      };
+      // The property first, because that is what the app's own code and a form
+      // submit read; then the attribute, because assigning `selected` can clear
+      // its siblings' attributes and the page would otherwise be read back as
+      // empty.
+      for (const option of options) option.selected = on(option);
+      for (const option of options) {
+        if (on(option)) option.setAttribute('selected', '');
+        else option.removeAttribute('selected');
+      }
+      announce(el);
     } else if (el.tagName === 'SELECT') {
       // Select the option itself, in both the attribute and the property: the
       // app reads the selected option, and a select's `value` is not writable

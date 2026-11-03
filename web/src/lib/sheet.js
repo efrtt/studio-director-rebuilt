@@ -65,6 +65,7 @@ export function readSheet(doc) {
   if (!tables.length || rows < TABLE_ROWS) return null;
 
   const actions = readActions(root);
+  const tabs = tabsOf(doc);
 
   return {
     kind: 'sheet',
@@ -75,7 +76,11 @@ export function readSheet(doc) {
     // How many rows this view actually carries, when a table was cut short.
     shown: tables.reduce((n, t) => n + t.rows.length, 0),
     truncated: rows > tables.reduce((n, t) => n + t.rows.length, 0),
-    actions
+    actions,
+    // The app's own tab strip, when the page prints one: `HomePage` shows
+    // Insights and Trends this way, and each is a different screen with its own
+    // `tab=` in the URL. Without the strip the second one was unreachable.
+    ...(tabs.length ? { tabs } : {})
   };
 }
 
@@ -145,6 +150,18 @@ function followingContent(table) {
     ...(total ? { total } : {}),
     ...(links.length ? { links } : {})
   };
+}
+
+// `.tabContainer` holds links on a dashboard and plain tab elements on a record
+// page (that page is an editor, not a sheet, so it never reaches here).
+function tabsOf(doc) {
+  return qsa(doc, '.tabContainer a[href]')
+    .map((a) => ({
+      label: textOf(a),
+      href: a.getAttribute('href') || '',
+      selected: /(^|\s)(selectedTab|selected|active)(\s|$)/i.test(a.getAttribute('class') || '')
+    }))
+    .filter((tab) => tab.label);
 }
 
 function previousHeading(table, root) {

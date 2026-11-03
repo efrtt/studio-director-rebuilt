@@ -242,3 +242,32 @@ test('a data cell is still a link, not an action', () => {
   assert.equal(cell.action, undefined);
   assert.equal(cellKind(cell), 'link');
 });
+
+// HomePage prints its Insights and Trends views as `.tabContainer` links, each a
+// different screen (`?page=HomePage&tab=tab-insights`). Read as a plain table
+// with a stray div above it, the strip was gone and Trends could not be reached.
+test('a dashboard keeps the app’s own tab strip, as links', () => {
+  const doc = parseHtml(`<form id="idForm">
+    <div class="contentContainer"><div class="Content">
+      <div class="formTitle">Home</div>
+      <div class="tabContainer">
+        <a class="tab" href="admin.sd?page=HomePage&tab=tab-insights">Insights</a>
+        <a class="tab" href="admin.sd?page=HomePage&tab=tab-trends">Trends</a>
+      </div>
+      <table class="ReportTable"><tbody>
+        <tr><th>Class</th><th>Start</th></tr>
+        <tr><td>One</td><td>9:00</td></tr>
+        <tr><td>Two</td><td>10:00</td></tr>
+      </tbody></table>
+    </div></div></form>`);
+
+  const read = readSheet(doc);
+  assert.ok(read, 'the page is still a table screen');
+  assert.deepEqual(read.tabs.map((t) => t.label), ['Insights', 'Trends']);
+  assert.equal(read.tabs[0].href, 'admin.sd?page=HomePage&tab=tab-insights');
+  assert.equal(read.tabs[0].selected, false, 'the URL says which one is current');
+});
+
+test('a page with no tab strip grows no tab bar', () => {
+  assert.equal(sheet.tabs, undefined);
+});
