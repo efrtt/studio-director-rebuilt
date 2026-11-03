@@ -28,6 +28,20 @@ test('the verbs the app uses get a shape', () => {
   assert.equal(actionIcon('Manage'), 'edit');
 });
 
+test('the three enrollment controls get three different shapes', () => {
+  // "Edit Enroll Dates", "Edit Attendance" and "Drop" sit next to each other in
+  // one cell. Two pencils would make the first two indistinguishable, so each
+  // names the record it opens. The generic verb must not win first.
+  assert.equal(actionIcon('Edit Enroll Dates'), 'dates');
+  assert.equal(actionIcon('Edit Enrollment Dates'), 'dates');
+  assert.equal(actionIcon('Edit Attendance'), 'attendance');
+  assert.equal(actionIcon('Drop'), 'drop');
+  const shapes = ['Edit Enroll Dates', 'Edit Attendance', 'Drop'].map(actionIcon);
+  assert.equal(new Set(shapes).size, 3, 'no two of them share a glyph');
+  // A different "Edit …" keeps its pencil.
+  assert.equal(actionIcon('Edit Family'), 'edit');
+});
+
 test('a label it cannot place keeps its word', () => {
   assert.equal(actionIcon('Copy'), '', 'Copy is not a tick or a cross');
   assert.equal(actionIcon('Print'), '');
@@ -37,7 +51,7 @@ test('a label it cannot place keeps its word', () => {
 });
 
 test('the icons are masks, not a webfont', () => {
-  for (const name of ['edit', 'drop', 'done']) {
+  for (const name of ['edit', 'drop', 'done', 'dates', 'attendance']) {
     assert.match(css, new RegExp('\\.sd-icon--' + name + ' \\{ --glyph: url\\("data:image/svg\\+xml,'), name);
   }
   assert.match(css, /mask: var\(--glyph\) center \/ contain no-repeat/);

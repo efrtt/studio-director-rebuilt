@@ -5,9 +5,19 @@
 // from a column position. A label this cannot place keeps its text: guessing
 // would put a tick on something that cancels.
 //
-// 'edit' | 'drop' | 'done' | ''
+// 'dates' | 'attendance' | 'edit' | 'drop' | 'done' | ''
+//
+// The first two come before the verbs on purpose. A student's enrollment row is
+// "Edit Enroll Dates", "Edit Attendance", "Drop", and the first two would both
+// match `edit` and draw the same pencil — two controls that look identical next
+// to each other. What tells them apart is not the verb but the record they open,
+// so the record is the shape. Every other "Edit …" the app prints keeps the
+// pencil.
 
 const RULES = [
+  // The dates of an enrollment, and its attendance, are two different records.
+  ['dates', /\benroll(?:ment)?\s*dates?\b/i],
+  ['attendance', /\battendance\b/i],
   ['done', /^(enroll|approve|accept|confirm|complete|add|save|activate)\b/i],
   ['drop', /^(drop|unenroll|remove|delete|withdraw|cancel|decline|deactivate)\b/i],
   ['edit', /^(edit|change|modify|update|manage|adjust)\b/i]
