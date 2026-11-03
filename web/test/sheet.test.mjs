@@ -271,3 +271,48 @@ test('a dashboard keeps the app’s own tab strip, as links', () => {
 test('a page with no tab strip grows no tab bar', () => {
   assert.equal(sheet.tabs, undefined);
 });
+
+// Alerts (a "./ReportBreadcrumb" report) has no .formTitle, .ReportName or h1, so
+// the sheet named itself after its first column — it read "First Name".
+test('a report names itself from its breadcrumb, not its first column', () => {
+  const doc = parseHtml(`<form id="idForm"><div class="contentContainer"><div class="Content">
+      <div class="ReportBreadcrumb">
+        <span class="screenOnly"><a href="admin.sd?page=HomePage">Home</a> /
+          <a href="admin.sd?page=HomePage&tab=tab-insights">Insights</a> / </span>
+        <span style="font-weight: bold">Business Insights - Tue, Nov 3, 2026 1:48 PM</span>
+      </div>
+      <table class="ReportTable"><tbody>
+        <tr><th>First Name</th><th>Last Name</th><th>Age</th></tr>
+        <tr><td>One</td><td>Two</td><td>41</td></tr>
+        <tr><td>Three</td><td>Four</td><td>8</td></tr>
+      </tbody></table>
+    </div></div></form>`);
+
+  const read = readSheet(doc);
+  assert.ok(read);
+  assert.equal(read.title, 'Business Insights', 'the page name, without the moment it ran');
+  assert.equal(read.tables[0].headings[0], 'First Name', 'a column heading is still a column');
+});
+
+// ManageScheduledEmails prints its four headings and then "No items to display."
+// The two-row floor refused the page, so it rendered as nothing.
+test('a table the app has emptied is a screen with an empty table', () => {
+  const doc = parseHtml(`<form id="idForm"><div class="contentContainer"><div class="Content">
+      <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a></div>
+      <div class="formTitle">Scheduled Emails</div>
+      <div class="contentInfo">
+        <table class="ReportTable"><tbody>
+          <tr><th>Scheduled Date</th><th>Subject</th><th>Message Type</th><th class="AR">Actions</th></tr>
+        </tbody></table>
+        <div class="ReportTableNoItemsMsg">No items to display.</div>
+      </div>
+    </div></div></form>`);
+
+  const read = readSheet(doc);
+  assert.ok(read, 'an empty headed table is a sheet, not an empty page');
+  assert.equal(read.title, 'Scheduled Emails');
+  assert.equal(read.rows, 0);
+  assert.deepEqual(read.tables[0].headings, ['Scheduled Date', 'Subject', 'Message Type', 'Actions']);
+  assert.equal(read.tables[0].rows.length, 0);
+  assert.equal(read.tables[0].message, 'No items to display.');
+});
