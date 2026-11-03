@@ -32,6 +32,21 @@ test('the index key is the surname, not the first word', () => {
   assert.equal(surnameOf('Lovelace', 'Student'), 'Lovelace');
 });
 
+test('an instructor is filed by surname, like a student', () => {
+  assert.equal(surnameOf('Ada Lovelace', 'Instructor'), 'Lovelace');
+  assert.equal(surnameOf('Lovelace, Ada', 'Instructor'), 'Lovelace');
+  assert.equal(indexKey({ label: 'Grace Hopper', href: '?page=EditInstructor&iident=4' }, 'Instructor'),
+    'Hopper');
+
+  const groups = letterGroups([
+    { label: 'Grace Hopper', href: '?page=EditInstructor&iident=1' },
+    { label: 'Ada Lovelace', href: '?page=EditInstructor&iident=2' },
+    { label: 'Lovelace, Ada', href: '?page=EditInstructor&iident=3' }
+  ], 'Instructor');
+  assert.deepEqual(groups.map((g) => g.letter), ['H', 'L']);
+  assert.deepEqual(groups[1].items.map((i) => displayLabel(i.label)), ['Ada Lovelace', 'Ada Lovelace']);
+});
+
 test('a class files under its hundred, not under its name', () => {
   assert.equal(classNumber({ label: '100 Ballet 1' }), '100');
   assert.equal(classNumber({ label: '520 Contemporary 1' }), '520');
