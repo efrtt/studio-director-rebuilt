@@ -41,7 +41,9 @@ test('a class files under its hundred, not under its name', () => {
   assert.equal(indexKey({ label: '100 Ballet 1' }, 'Class'), '1');
   assert.equal(indexKey({ label: '520 Contemporary 1' }, 'Class'), '5');
   assert.equal(indexKey({ label: 'Hip Hop', href: '?cident=812' }, 'Class'), '8');
-  assert.equal(indexKey({ label: 'Hip Hop' }, 'Class'), '');
+  // A class with no number joins the letter run instead of falling to '#'.
+  assert.equal(indexKey({ label: 'Hip Hop' }, 'Class'), 'Hip Hop');
+  assert.equal(indexKey({ label: 'Jazz I - Tue 5:30p' }, 'Class'), 'Jazz I');
   // A student is not filed by their number even when the label looks numeric.
   assert.equal(indexKey({ label: 'Ada Lovelace', href: '?sident=9002' }, 'Student'), 'Lovelace');
 });
@@ -71,9 +73,10 @@ test('class numbers come before letters and keep their order', () => {
     { label: '101 Ballet III', href: '?page=EditClass&cident=101' },
     { label: 'Jazz I - Tue 5:30p', href: '?page=EditClass&cident=102' },
     { label: '812 Hip Hop', href: '?page=EditClass&cident=812' },
-    { label: 'Ballet', href: '?page=EditClass' }
+    { label: 'Hip Hop', href: '?page=EditClass' }
   ], 'Class');
-  assert.deepEqual(groups.map((g) => g.letter), ['1', '5', '8', '#']);
+  // The hundreds first, then a class with no number by its name.
+  assert.deepEqual(groups.map((g) => g.letter), ['1', '5', '8', 'H']);
   assert.deepEqual(groups[0].items.map((i) => i.label), ['101 Ballet III', 'Jazz I - Tue 5:30p'],
     'a group keeps the app order');
 });
