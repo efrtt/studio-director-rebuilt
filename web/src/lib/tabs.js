@@ -20,6 +20,7 @@
 // JS control, listed as an action rather than faked.
 
 import { qs, qsa, textOf } from './shell.js';
+import { labelAbove } from './heading.js';
 import { readTable } from '../model/table.js';
 
 // Re-exported so a caller that already had it from here keeps working.
@@ -52,7 +53,10 @@ function panelOf(panel) {
     if (el.tagName === 'TABLE') {
       // A table nested inside another one's cell belongs to that table, not here.
       if (el.closest && el.closest('table') !== el) continue;
-      blocks.push({ section, ...readTable(el) });
+      // Not every panel classes its heading: the enrollment rows are named by
+      // a bare div above the table, so the class lookup is the first guess and
+      // the element above the table is the second.
+      blocks.push({ section: section || labelAbove(el), ...readTable(el) });
       continue;
     }
     if (el.matches && el.matches(MESSAGE)) {

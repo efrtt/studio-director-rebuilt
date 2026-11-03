@@ -16,6 +16,7 @@
 // is why routing tries this after task.
 
 import { qs, qsa, textOf } from './shell.js';
+import { labelAbove } from './heading.js';
 import { readTable } from '../model/table.js';
 import { readActions } from './actions.js';
 import { contentRoot } from '../model/root.js';
@@ -156,5 +157,6 @@ function previousHeading(table, root) {
     node = node.previousElementSibling;
     hops += 1;
   }
-  return '';
+  // A heading the page does not class: read the words above the table.
+  return labelAbove(table);
 }

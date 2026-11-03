@@ -1131,10 +1131,11 @@ html[data-sd-theme="light"][data-sd-accent="rose"] #sd-root { --accent: #a3305a;
 /* An edit page puts two different things in one column: a form of a single
    field per row, and the app's own tables (a roster, a skills list, a waitlist)
    which carry eight columns where the form carries one. The column is wider so
-   those tables have the room, and the fields table fills it - it used to stop at
-   880 inside a wider box, which left a strip of nothing beside every input. */
+   those tables have the room, but the form does not grow with it: one field per
+   row at the table's width makes an input that is a line to hunt along, not a
+   field to read. The tables take the column, the form keeps its own measure. */
 .sd-editor { --form-max: 1120px; }
-.sd-editor .sd-fields { max-width: 100%; }
+.sd-editor .sd-fields { max-width: 880px; }
 
 /* A page that shows a table beside its form needs yet more room — the seasons
    page lists nine columns next to eight fields. The form itself keeps its own

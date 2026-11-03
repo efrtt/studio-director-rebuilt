@@ -110,6 +110,17 @@ test('a table with a heading above it keeps that heading', () => {
   assert.equal(readPage(doc, 'https://x/admin.sd?page=ManageSizes').view, 'sheet');
 });
 
+test('a heading the app does not class still names the table', () => {
+  const doc = parseHtml(`<form id="idForm"><div class="contentContainer"><div class="Content">
+      <div class="formTitle">Trends</div>
+      <div><span>Class Trends</span></div>
+      <table class="ReportTable"><tr><th>Class</th></tr>
+        <tr><td>Ballet III</td></tr><tr><td>Jazz I</td></tr></table>
+    </div></div></form>`);
+  const read = readSheet(doc);
+  assert.equal(read.tables[0].section, 'Class Trends');
+});
+
 test('the week calendar keeps its own view: TimeBlock tables are not sheets', () => {
   assert.equal(readSheet(load('calendar-page.html')), null);
   assert.equal(readPage(load('calendar-page.html'), 'https://x/admin.sd?page=CalendarPage').view, 'week');
