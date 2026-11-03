@@ -62,14 +62,20 @@ export function readSheet(doc) {
     rows += read.rowTotal != null ? read.rowTotal : read.rows.length;
   }
 
-  if (!tables.length || rows < TABLE_ROWS) return null;
+  if (!tables.length) return null;
+  // An empty table is still a screen when the app says so: `ManageScheduledEmails`
+  // prints a four-column heading row and "No items to display." underneath it.
+  // The two-row floor refused that, and the page rendered as nothing at all
+  // rather than as the empty table it is.
+  const emptyNotice = tables.some((table) => table.headings.length && table.message);
+  if (rows < TABLE_ROWS && !emptyNotice) return null;
 
   const actions = readActions(root);
   const tabs = tabsOf(doc);
 
   return {
     kind: 'sheet',
-    title: textOf(qs(doc, '.formTitle, .ReportName, h1')) || tables[0].headings[0] || 'Data',
+    title: textOf(qs(doc, '.formTitle, .ReportName, h1')) || crumbTitle(doc) || tables[0].headings[0] || 'Data',
     breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
     tables,
     rows,
@@ -150,6 +156,19 @@ function followingContent(table) {
     ...(total ? { total } : {}),
     ...(links.length ? { links } : {})
   };
+}
+
+// Report pages carry no heading: their name is the last crumb of
+// `div.ReportBreadcrumb`, followed by the moment the report ran —
+// "Business Insights - Tue, Nov 3, 2026 1:48 PM". Without this the sheet named
+// itself after its first column (Alerts read "First Name").
+function crumbTitle(doc) {
+  const crumb = qs(doc, '.ReportBreadcrumb');
+  if (!crumb) return '';
+  const named = crumb.querySelector('span[style]') || crumb.lastElementChild || crumb;
+  return textOf(named)
+    .replace(/\s+[-–]\s+(?=[A-Z][a-z]{2},\s).*$/, '')
+    .trim();
 }
 
 // `.tabContainer` holds links on a dashboard and plain tab elements on a record
