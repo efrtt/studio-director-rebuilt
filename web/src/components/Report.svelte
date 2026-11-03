@@ -1,5 +1,7 @@
 <script>
   import { cellKind } from '../lib/cellclass.js';
+  import CellAction from './CellAction.svelte';
+  import CellLink from './CellLink.svelte';
   export let report;
   export let onRun = null;
 
@@ -133,10 +135,10 @@
                       {#if cell.actions && cell.actions.length}
                         <span class="sd-cell-actions">
                           {#each cell.actions as action}
-                            <a class="sd-pill" href={action.href} title={action.label}>{action.label}</a>
+                            <CellAction href={action.href} label={action.label} />
                           {/each}
                         </span>
-                      {:else if cell.href}<a href={cell.href} title="Open in the app's editor">{cell.text}</a>{:else}{cell.text}{/if}
+                      {:else if cellKind(cell) === 'action' && cell.text}<CellAction href={cell.href || '#'} label={cell.text} />{:else if cell.href}<CellLink href={cell.href} text={cell.text} />{:else}{cell.text}{/if}
                     </td>
                   {/each}
                 </tr>

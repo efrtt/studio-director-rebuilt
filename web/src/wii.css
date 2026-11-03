@@ -261,9 +261,9 @@ html[data-sd-theme="wii"] #sd-root .sd-table tbody td {
 html[data-sd-theme="wii"] #sd-root .sd-table tbody tr:nth-child(even) td {
   background: #f9fdff !important;
 }
-html[data-sd-theme="wii"] #sd-root .sd-table tbody tr:hover td {
-  background: #e9f7fe !important;
-}
+/* The cell's padding moves onto the link, so the whole cell is the target. This
+   has to outrank the wii cell rule above it, which is id-scoped too. */
+html[data-sd-theme="wii"] #sd-root .sd-table tbody td.sd-cell--link { padding: 0 !important; }
 html[data-sd-theme="wii"] #sd-root .sd-table td a { color: var(--wii-deep); font-weight: 600; }
 html[data-sd-theme="wii"] #sd-root .sd-table td.sd-cell--action a,
 html[data-sd-theme="wii"] #sd-root .sd-table td a.sd-pill {
