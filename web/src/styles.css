@@ -726,7 +726,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
 /* Each control starts small and grows into the share it gets: .sd-input is
    width:100%, and a 100% base size in a wrapping row puts every control on a
    line of its own, which is exactly the stacked date. */
-.sd-fields td > .sd-input { flex: 0 1 480px; }
+.sd-fields td > .sd-input { flex: 1 1 320px; max-width: none; }
 /* A date is three of them beside each other, and they must end on the same line
    the other fields stop at - they used to grow out to the edge of the table, so
    the row read as wider than the column it belongs to. They take a third of
@@ -734,7 +734,7 @@ html.sd-app form#idForm { visibility: hidden !important; }
    it. */
 .sd-fields td:has(> .sd-input + .sd-input) > .sd-input {
   flex: 1 1 0;
-  max-width: calc((480px - 16px) / 3);
+  max-width: calc((100% - 16px) / 3);
 }
 /* The inputs' own stacked spacing does not belong beside each other. */
 .sd-fields td > .sd-input + .sd-input { margin-top: 0; }
@@ -1101,10 +1101,18 @@ html[data-sd-theme="light"][data-sd-accent="rose"] #sd-root { --accent: #a3305a;
   --page-gutter: max(var(--page-pad), calc((100% - var(--form-max)) / 2));
 }
 
-/* A page that shows a table beside its form needs the room those columns ask
-   for — the seasons page lists nine of them next to eight fields. The column
-   stays centred, it is just wider; the form inside keeps its own 880. */
-.sd-editor--wide { --form-max: 1340px; }
+/* An edit page puts two different things in one column: a form of a single
+   field per row, and the app's own tables (a roster, a skills list, a waitlist)
+   which carry eight columns where the form carries one. The column is wider so
+   those tables have the room, and the fields table fills it - it used to stop at
+   880 inside a wider box, which left a strip of nothing beside every input. */
+.sd-editor { --form-max: 1120px; }
+.sd-editor .sd-fields { max-width: 100%; }
+
+/* A page that shows a table beside its form needs yet more room — the seasons
+   page lists nine columns next to eight fields. The form itself keeps its own
+   measure there, because a table is doing the widening. */
+.sd-editor--wide { --form-max: 1360px; }
 .sd-editor--wide .sd-fields { max-width: 880px; }
 
 /* The tab labels meet the fields, not the window: the tab's own inset is
