@@ -85,7 +85,7 @@ export function readTrends(doc) {
   const links = qsa(root, 'a[href]')
     .filter((anchor) => !anchor.closest('table') && !anchor.closest('.tabContainer'))
     .map((anchor) => ({ label: textOf(anchor), href: anchor.getAttribute('href') }))
-    .filter((link) => link.label && /(^|\/|&)page=/i.test(link.href));
+    .filter((link) => link.label && /(^|[/?&])page=/i.test(link.href));
 
   return {
     kind: 'trends',

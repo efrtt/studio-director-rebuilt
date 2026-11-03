@@ -172,6 +172,14 @@ test('the table beside the charts is still a table', () => {
   assert.equal(top.rows[0][0].href, 'admin.sd?page=EditFamily&fident=1');
 });
 
+test('the footer keeps the page’s own link and drops the app’s chrome', () => {
+  // "Set red/yellow/green thresholds for trends" is part of this screen; the
+  // app's footer also prints "Release Notes", which is not.
+  assert.deepEqual(trends.links.map((l) => l.label),
+    ['Set red/yellow/green thresholds for trends']);
+  assert.equal(trends.links[0].href, 'admin.sd?page=SetRedYellowGreen');
+});
+
 test('the tab strip is three tabs, with the current one marked', () => {
   assert.deepEqual(trends.tabs.map((t) => t.label), ['Schedule', 'Insights', 'Trends']);
   assert.deepEqual(trends.tabs.map((t) => t.selected), [false, false, true]);
