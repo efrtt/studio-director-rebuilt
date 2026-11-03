@@ -4,6 +4,7 @@
   "model": {
     "confirm": null,
     "index": null,
+    "insights": null,
     "list": null,
     "nav": [
       {
@@ -133,6 +134,7 @@
     "sheet": null,
     "task": null,
     "title": "Class Roster - Fall 2026",
+    "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=ClassRosterForm",
     "view": "report",
     "week": null

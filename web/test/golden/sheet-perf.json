@@ -4,6 +4,7 @@
   "model": {
     "confirm": null,
     "index": null,
+    "insights": null,
     "list": null,
     "nav": [
       {
@@ -237,6 +238,7 @@
     },
     "task": null,
     "title": "Performance and Costume Management",
+    "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=sheet-perf",
     "view": "sheet",
     "week": null

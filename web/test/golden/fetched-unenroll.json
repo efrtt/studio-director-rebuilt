@@ -41,6 +41,7 @@
       "title": "Drop Student"
     },
     "index": null,
+    "insights": null,
     "list": null,
     "nav": [
       {
@@ -62,6 +63,7 @@
     "sheet": null,
     "task": null,
     "title": "Drop Student",
+    "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=fetched-unenroll",
     "view": "confirm",
     "week": null

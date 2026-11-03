@@ -16,6 +16,7 @@
 // is why routing tries this after task.
 
 import { qs, qsa, textOf } from './shell.js';
+import { readPageTabs } from './pagetabs.js';
 import { labelAbove } from './heading.js';
 import { readTable } from '../model/table.js';
 import { readActions } from './actions.js';
@@ -71,7 +72,7 @@ export function readSheet(doc) {
   if (rows < TABLE_ROWS && !emptyNotice) return null;
 
   const actions = readActions(root);
-  const tabs = tabsOf(doc);
+  const tabs = readPageTabs(doc);
 
   return {
     kind: 'sheet',
@@ -169,18 +170,6 @@ function crumbTitle(doc) {
   return textOf(named)
     .replace(/\s+[-–]\s+(?=[A-Z][a-z]{2},\s).*$/, '')
     .trim();
-}
-
-// `.tabContainer` holds links on a dashboard and plain tab elements on a record
-// page (that page is an editor, not a sheet, so it never reaches here).
-function tabsOf(doc) {
-  return qsa(doc, '.tabContainer a[href]')
-    .map((a) => ({
-      label: textOf(a),
-      href: a.getAttribute('href') || '',
-      selected: /(^|\s)(selectedTab|selected|active)(\s|$)/i.test(a.getAttribute('class') || '')
-    }))
-    .filter((tab) => tab.label);
 }
 
 function previousHeading(table, root) {

@@ -454,6 +454,7 @@
   "model": {
     "confirm": null,
     "index": null,
+    "insights": null,
     "list": null,
     "nav": [],
     "note": null,
@@ -1380,6 +1381,7 @@
       "title": "Manage Holidays"
     },
     "title": "Manage Holidays",
+    "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=ManageHolidays",
     "view": "task",
     "week": null

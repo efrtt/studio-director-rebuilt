@@ -4,24 +4,12 @@
   import CellAction from './CellAction.svelte';
   import CellLink from './CellLink.svelte';
   import DuePill from './DuePill.svelte';
+  import PageTabs from './PageTabs.svelte';
   export let sheet;
   export let onPress = null;
 
   let query = '';
   let status = '';
-
-  // The app's own tabs (HomePage's Insights / Trends) are links to the same page
-  // with a different `tab=`, so the strip navigates rather than switching panels
-  // in place. Whichever one the URL is on is the one shown as current.
-  const tabKey = (href) => new URLSearchParams(String(href || '').split('?')[1] || '').get('tab') || '';
-  let here = '';
-  try { here = new URLSearchParams(window.location.search).get('tab') || ''; } catch (e) { here = ''; }
-  $: tabs = sheet.tabs || [];
-  function tabOn(tab) {
-    if (tab.selected) return true;
-    const key = tabKey(tab.href);
-    return !!key && key === here;
-  }
 
   // The page often has its own Print control (which builds the app's PDF). A
   // second one that prints this view would be a different thing under the same
@@ -79,13 +67,7 @@
 
   {#if status}<p class="sd-editorstatus">{status}</p>{/if}
 
-  {#if tabs.length > 1}
-    <nav class="sd-tabs" aria-label="Page views">
-      {#each tabs as tab}
-        <a class="sd-tab" class:sd-tab--on={tabOn(tab)} href={tab.href}>{tab.label}</a>
-      {/each}
-    </nav>
-  {/if}
+  <PageTabs tabs={sheet.tabs || []} />
 
   <div class="sd-sheetbody">
     <div class="sd-listbar">

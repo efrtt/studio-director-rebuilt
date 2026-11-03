@@ -696,6 +696,7 @@
   "model": {
     "confirm": null,
     "index": null,
+    "insights": null,
     "list": {
       "items": [
         {
@@ -776,6 +777,7 @@
     "sheet": null,
     "task": null,
     "title": "Edit Family",
+    "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EditFamily&fident=1503525685676",
     "view": "list",
     "week": null

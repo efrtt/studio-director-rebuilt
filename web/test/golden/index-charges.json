@@ -77,6 +77,7 @@
       "title": "Charges & Payments",
       "truncated": false
     },
+    "insights": null,
     "list": null,
     "nav": [
       {
@@ -98,6 +99,7 @@
     "sheet": null,
     "task": null,
     "title": "Charges & Payments",
+    "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=ChargesHome",
     "view": "index",
     "week": null

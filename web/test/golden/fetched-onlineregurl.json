@@ -4,6 +4,7 @@
   "model": {
     "confirm": null,
     "index": null,
+    "insights": null,
     "list": null,
     "nav": [
       {
@@ -21,6 +22,7 @@
     "sheet": null,
     "task": null,
     "title": "Get Online Reg Url",
+    "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=fetched-onlineregurl",
     "view": null,
     "week": null

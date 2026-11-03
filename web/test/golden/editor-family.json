@@ -725,6 +725,7 @@
   "model": {
     "confirm": null,
     "index": null,
+    "insights": null,
     "list": {
       "items": [
         {
@@ -805,6 +806,7 @@
     "sheet": null,
     "task": null,
     "title": "New Family",
+    "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=NewFamily",
     "view": "list",
     "week": null

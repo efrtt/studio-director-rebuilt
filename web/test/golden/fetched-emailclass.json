@@ -4,6 +4,7 @@
   "model": {
     "confirm": null,
     "index": null,
+    "insights": null,
     "list": null,
     "nav": [
       {
@@ -59,6 +60,7 @@
     "sheet": null,
     "task": null,
     "title": "Email Class",
+    "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=fetched-emailclass",
     "view": "note",
     "week": null

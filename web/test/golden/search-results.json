@@ -4,6 +4,7 @@
   "model": {
     "confirm": null,
     "index": null,
+    "insights": null,
     "list": {
       "items": [
         {
@@ -62,6 +63,7 @@
     "sheet": null,
     "task": null,
     "title": "Search Results",
+    "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=SearchResults&searchText=smith",
     "view": "list",
     "week": null
