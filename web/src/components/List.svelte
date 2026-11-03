@@ -163,14 +163,14 @@
     />
     <span class="sd-count">{items.length} of {data.total || data.items.length}</span>
     {#if view === 'letters' && letters.length}
-      <span class="sd-count">{letters.length} letters</span>
+      <span class="sd-count">{letters.length} {lone === 'Class' ? 'numbers' : 'letters'}</span>
     {/if}
   </div>
 
   <div class="sd-listbody" class:sd-listbody--letters={view === 'letters'}>
     {#if view === 'letters'}
       {#if wide}
-      <nav class="sd-letterrail" aria-label="Jump to a letter">
+      <nav class="sd-letterrail" aria-label={lone === 'Class' ? 'Jump to a class number' : 'Jump to a letter'}>
         {#each letters as group (group.letter)}
           <a
             href={`#sd-letter-${group.letter}`}

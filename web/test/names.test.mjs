@@ -1,14 +1,14 @@
 // Filing names and classes.
 //
 // The panel states a label and a link, so these rules are the only structure
-// the list pages have: a surname to file by, a name to print, and a class name
-// with the studio number in front of it.
+// the list pages have: a surname to file by, a name to print, and a class
+// number the studio already groups its classes by.
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
-  classParts, displayLabel, indexKey, letterGroups, letterOf, surnameOf
+  classNumber, classParts, displayLabel, indexKey, letterGroups, letterOf, surnameOf
 } from '../src/lib/names.js';
 
 test('a name prints first-name-first even when it was filed surname-first', () => {
@@ -32,20 +32,25 @@ test('the index key is the surname, not the first word', () => {
   assert.equal(surnameOf('Lovelace', 'Student'), 'Lovelace');
 });
 
-test('a class is filed by its name, not by its number', () => {
-  assert.equal(indexKey({ label: '101 Ballet III' }, 'Class'), 'Ballet III');
-  assert.equal(indexKey({ label: '520 Contemporary 1' }, 'Class'), 'Contemporary 1');
-  assert.equal(indexKey({ label: 'Jazz I - Tue 5:30p' }, 'Class'), 'Jazz I');
-  assert.equal(indexKey({ label: 'Hip Hop' }, 'Class'), 'Hip Hop');
-  // A label that is only a number still has to land somewhere.
-  assert.equal(indexKey({ label: '300' }, 'Class'), '300');
+test('a class files under its hundred, not under its name', () => {
+  assert.equal(classNumber({ label: '100 Ballet 1' }), '100');
+  assert.equal(classNumber({ label: '520 Contemporary 1' }), '520');
+  assert.equal(classNumber({ label: 'Ballet III', href: 'admin.sd?page=EditClass&cident=812' }), '812');
+  assert.equal(classNumber({ label: 'Ballet III' }), '');
+
+  assert.equal(indexKey({ label: '100 Ballet 1' }, 'Class'), '1');
+  assert.equal(indexKey({ label: '520 Contemporary 1' }, 'Class'), '5');
+  assert.equal(indexKey({ label: 'Hip Hop', href: '?cident=812' }, 'Class'), '8');
+  assert.equal(indexKey({ label: 'Hip Hop' }, 'Class'), '');
+  // A student is not filed by their number even when the label looks numeric.
+  assert.equal(indexKey({ label: 'Ada Lovelace', href: '?sident=9002' }, 'Student'), 'Lovelace');
 });
 
 test('a letter index runs A to Z, with the unindexable last', () => {
   assert.equal(letterOf('Lovelace'), 'L');
   assert.equal(letterOf('Áudet'), 'A', 'a diacritic still files under its letter');
-  assert.equal(letterOf('o\'neill'), 'O');
-  assert.equal(letterOf('101 Ballet'), '#');
+  assert.equal(letterOf("o'neill"), 'O');
+  assert.equal(letterOf('101 Ballet'), '1', 'a class number is its own heading');
   assert.equal(letterOf(''), '#');
 
   const groups = letterGroups([
@@ -54,20 +59,23 @@ test('a letter index runs A to Z, with the unindexable last', () => {
     { label: '3d Dance Family', href: '?page=EditFamily&fident=3' },
     { label: 'Alvarez Family', href: '?page=EditFamily&fident=4' }
   ], 'Family');
-  assert.deepEqual(groups.map((g) => g.letter), ['A', 'H', 'Z', '#']);
-  assert.deepEqual(groups[1].items.map((i) => i.label), ['Hopper Family']);
+  // A name that begins with a number keeps that number as its heading, and
+  // numbers sort before letters.
+  assert.deepEqual(groups.map((g) => g.letter), ['3', 'A', 'H', 'Z']);
+  assert.deepEqual(groups[2].items.map((i) => i.label), ['Hopper Family']);
 });
 
-test('classes group by initial in the same index', () => {
+test('class numbers come before letters and keep their order', () => {
   const groups = letterGroups([
+    { label: '520 Ballet IV', href: '?page=EditClass&cident=520' },
     { label: '101 Ballet III', href: '?page=EditClass&cident=101' },
     { label: 'Jazz I - Tue 5:30p', href: '?page=EditClass&cident=102' },
-    { label: '104 Hip Hop', href: '?page=EditClass&cident=104' },
-    { label: '520 Ballet IV', href: '?page=EditClass&cident=520' }
+    { label: '812 Hip Hop', href: '?page=EditClass&cident=812' },
+    { label: 'Ballet', href: '?page=EditClass' }
   ], 'Class');
-  assert.deepEqual(groups.map((g) => g.letter), ['B', 'H', 'J']);
-  assert.deepEqual(groups[0].items.map((i) => i.label), ['101 Ballet III', '520 Ballet IV'],
-    'a shelf keeps the app order');
+  assert.deepEqual(groups.map((g) => g.letter), ['1', '5', '8', '#']);
+  assert.deepEqual(groups[0].items.map((i) => i.label), ['101 Ballet III', 'Jazz I - Tue 5:30p'],
+    'a group keeps the app order');
 });
 
 test('only a trailing weekday is a schedule; the rest of a label is the name', () => {
