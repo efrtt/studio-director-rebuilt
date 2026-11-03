@@ -3,6 +3,7 @@
   import CellHeading from './CellHeading.svelte';
   import CellAction from './CellAction.svelte';
   import CellLink from './CellLink.svelte';
+  import DuePill from './DuePill.svelte';
   import { changesFrom } from '../lib/save.js';
   import RecordPage from './RecordPage.svelte';
   import { recordsOf } from '../lib/records.js';
@@ -289,7 +290,7 @@
                             <CellAction href={action.href} label={action.label} />
                           {/each}
                         </span>
-                      {:else if cellKind(cell) === 'action' && cell.text}<CellAction href={cell.href || '#'} label={cell.text} />{:else if cell.href}<CellLink href={cell.href} text={cell.text} />{:else}{cell.text}{/if}
+                      {:else if cellKind(cell) === 'action' && cell.text}<CellAction href={cell.href || '#'} label={cell.text} />{:else if cell.href}<CellLink href={cell.href} text={cell.text} due={cell.due || ''} />{:else}{cell.text}{#if cell.due}<DuePill due={cell.due} />{/if}{/if}
                     </td>
                   {/each}
                 </tr>
@@ -377,8 +378,8 @@
                           {/each}
                         </span>
                       {:else if cell.href}
-                        <a href={cell.href} title="Open in the app's editor">{cell.text}</a>
-                      {:else}{cell.text}{/if}
+                        <a href={cell.href} title="Open in the app's editor">{cell.text}</a>{#if cell.due}<DuePill due={cell.due} />{/if}
+                      {:else}{cell.text}{#if cell.due}<DuePill due={cell.due} />{/if}{/if}
                     </td>
                   {/each}
                 </tr>

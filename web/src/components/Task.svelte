@@ -4,6 +4,7 @@
   import CellHeading from './CellHeading.svelte';
   import CellAction from './CellAction.svelte';
   import CellLink from './CellLink.svelte';
+  import DuePill from './DuePill.svelte';
   import RecordPage from './RecordPage.svelte';
   import { recordsOf } from '../lib/records.js';
 
@@ -191,8 +192,8 @@
                       {:else if cellKind(cell) === 'action' && cell.text}
                         <CellAction href={cell.href || '#'} label={cell.text} />
                       {:else if cell.href}
-                        <CellLink href={cell.href} text={cell.text} />
-                      {:else}{cell.text}{/if}
+                        <CellLink href={cell.href} text={cell.text} due={cell.due || ''} />
+                      {:else}{cell.text}{#if cell.due}<DuePill due={cell.due} />{/if}{/if}
                     </td>
                   {/each}
                 </tr>

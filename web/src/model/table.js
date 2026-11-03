@@ -5,6 +5,37 @@
 // three callers share one parser instead of one of them owning it by accident.
 
 import { qs, qsa, textOf } from '../lib/shell.js';
+import { moneyText } from '../lib/balance.js';
+
+// The app marks a family that owes money with its own red span: the amount in a
+// hidden tooltip and a `$` printed after it.
+//
+//   <a href="admin.sd?page=EditFamily&amp;fident=4401">Lovelace
+//     <span class="boldRed"><span class="Tooltip">Balance due: $120.00</span>$</span></a>
+//
+// Reading the cell's text read the tooltip too, so the name arrived as
+// "Lovelace Balance due: $120.00 $" and nothing could tell name from money. The
+// span is what says which is which: its words are the balance, the rest is the
+// name.
+const DEBT = '.boldRed';
+
+// The text of an element with one kind of descendant left out.
+function textBesides(el, skip) {
+  let out = '';
+  const walk = (node) => {
+    for (const child of Array.from(node.childNodes || [])) {
+      if (child.nodeType === 3) {
+        out += child.textContent;
+        continue;
+      }
+      if (child.nodeType !== 1) continue;
+      if (child.matches && child.matches(skip)) continue;
+      walk(child);
+    }
+  };
+  walk(el);
+  return out;
+}
 
 // A panel is a tab: not the whole record, so it is not paged like a list.
 const MAX_ROWS = 300;
@@ -42,8 +73,12 @@ function cellOf(td, index, rightCols) {
   // only the anchor left the label empty, which rendered an invisible link in the
   // Actions column - the class enrollment page had no Drop button. An anchor with
   // words still wins, so tooltips elsewhere are not echoed.
-  const anchorText = anchor ? textOf(anchor) : '';
-  const raw = anchorText || textOf(td);
+  const debt = qs(td, DEBT);
+  const dueMatch = debt ? String(textOf(debt)).match(/-?\$?\s?\d[\d,]*\.\d{2}/) : null;
+  const due = dueMatch ? moneyText(dueMatch[0]) : '';
+
+  const anchorText = anchor ? (debt ? textBesides(anchor, DEBT) : textOf(anchor)) : '';
+  const raw = (anchorText || (debt ? textBesides(td, DEBT) : textOf(td))) || '';
     // A cell can hold more than one control: the waitlist offers `Enroll` and
     // `Drop` as two icon links side by side. Keeping only the first merged them
     // into a single link whose words ran together and whose target was one of
@@ -62,7 +97,9 @@ function cellOf(td, index, rightCols) {
     // sometimes repeats it on the cells, so the column is what is remembered.
       right: rightCols.has(index) || isRight(td),
       // Only when there is something to disambiguate: one control is the cell.
-      ...(actions.length ? { actions } : {})
+      ...(actions.length ? { actions } : {}),
+      // A balance this cell states, kept out of its words.
+      ...(due ? { due } : {})
   };
 }
 
