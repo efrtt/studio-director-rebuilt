@@ -7,7 +7,7 @@
 //   "Hopper Family"        family, filed under H
 //   "Ada Lovelace"         student, filed under L, printed as written
 //   "Lovelace, Ada"        the same student, surname first
-//   "101 Ballet III"       class, filed under B (the number is not its name)
+//   "100 Ballet 1"         class, filed under 1 — the hundred it belongs to
 //   "Jazz I - Tue 5:30p"   class; the meeting time is the one thing besides the
 //                          name the label states, so it is the one thing a row
 //                          can show beside it
@@ -18,8 +18,9 @@ const DAY = /^(mon|tue|wed|thu|fri|sat|sun)[a-z]*\.?/i;
 // A class label splits on its last spaced dash; "Ages 6-9" uses a closed dash
 // and is part of the name, not a schedule.
 const DASHED = /^(.*)\s+[-\u2013\u2014]\s+(.+)$/;
-// The class number is an ordering, not a name: "101" files under nothing.
-const NUMBERED = /^\s*\d+\s*/;
+// The class number, which the studio uses as its category.
+const NUMBERED = /^\s*(\d+)/;
+const CIDENT = /[?&]cident=(\d+)/i;
 
 function clean(value) {
   return String(value == null ? '' : value).replace(/\s+/g, ' ').trim();
@@ -71,26 +72,31 @@ export function classParts(label) {
   return { name: raw, when: '' };
 }
 
-// The word a row is filed under. A class is filed by its name: "101 Ballet III"
-// and "520 Contemporary 1" are B and C, because a column of 101, 108, 115 is a
-// sequence, not an index.
+// The number a class row is filed under: the hundred, taken from the class
+// number itself. "100 Ballet 1" files under 1, "520 Contemporary 1" under 5. The
+// number comes from the link when the label does not lead with one.
+export function classNumber(item) {
+  const label = String((item && item.label) || '');
+  const href = String((item && item.href) || '');
+  const digits = (label.match(NUMBERED) || [])[1] || (href.match(CIDENT) || [])[1] || '';
+  return digits;
+}
+
+// The single character a row is filed under: a surname's letter, or a class's
+// hundred.
 export function indexKey(item, type) {
   const kind = String(type || (item && item.type) || '');
-  const label = (item && item.label) || '';
-  if (kind === 'Class') {
-    const named = classParts(label).name.replace(NUMBERED, '').trim();
-    return named || classParts(label).name || String(label);
-  }
-  return surnameOf(label, kind);
+  if (kind === 'Class') return classNumber(item).charAt(0);
+  return surnameOf((item && item.label) || '', kind);
 }
 
 export function letterOf(value) {
   const first = fold(value).charAt(0).toUpperCase();
-  return /[A-Z]/.test(first) ? first : '#';
+  return /^[A-Z0-9]$/.test(first) ? first : '#';
 }
 
-// A–Z, with anything that is not a letter filed last under "#": an index that
-// starts with "#" starts with the names nobody was looking for.
+// Numbers first, then A–Z, with anything unindexable last under "#": an index
+// that starts with "#" starts with the rows nobody was looking for.
 export function letterGroups(items, type) {
   const groups = new Map();
   for (const item of items || []) {
@@ -98,9 +104,9 @@ export function letterGroups(items, type) {
     if (!groups.has(letter)) groups.set(letter, []);
     groups.get(letter).push(item);
   }
+  const rank = (key) => (key === '#' ? 2 : /^[0-9]$/.test(key) ? 0 : 1);
   const letters = [...groups.keys()].sort((a, b) => {
-    if (a === '#') return 1;
-    if (b === '#') return -1;
+    if (rank(a) !== rank(b)) return rank(a) - rank(b);
     return a < b ? -1 : a > b ? 1 : 0;
   });
   return letters.map((letter) => ({ letter, items: groups.get(letter) }));
