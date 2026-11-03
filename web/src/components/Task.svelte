@@ -210,11 +210,6 @@
         {#each task.links as link, i}{#if i} · {/if}<a href={link.href}>{link.label}</a>{/each}
       </p>
     {/if}
-
-    <p class="sd-panelnote">
-      The buttons above are the app’s own controls: pressing one sends the page
-      through the app, so its validation and any follow-on step happen as usual.
-    </p>
   </div>
 </div>
 {/if}

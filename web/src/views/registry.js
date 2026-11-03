@@ -209,13 +209,7 @@ export function footerOf(model) {
     if (m.tabs && m.tabs.tabs.length > 1) left += ` \u00b7 ${m.tabs.tabs.length} tabs`;
   }
 
-  const right = view === 'form' ? 'Edits are saved by the app itself'
-    : view === 'report' ? 'The app builds the report'
-      : view === 'task' ? 'The app runs the action'
-        : view === 'sheet' ? 'Read-only view of the app\u2019s own tables'
-          : view === 'settings' ? (settingsButtons.length ? 'Each button presses the app\u2019s own control' : 'The app saves the change')
-            : view === 'month' ? 'Read from the app\u2019s own month grid'
-              : 'Esc opens the original page';
-
-  return { left, right };
+  // The right-hand half of the footer held a sentence per view explaining how the
+  // rebuild defers to the app. The version stamp is the only thing wanted there.
+  return { left, right: '' };
 }

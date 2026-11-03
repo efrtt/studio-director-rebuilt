@@ -82,7 +82,7 @@
       <div class="sd-confirm-mark" aria-hidden="true">{confirm.ok ? '✓' : '!'}</div>
       <p class="sd-confirm-msg">{message}</p>
       <p class="sd-confirm-hint">
-        {confirm.ok ? 'Saved by the app itself.' : 'The app did not accept the change.'}
+        {confirm.ok ? 'Saved.' : 'The app did not accept the change.'}
       </p>
       {#if confirm.links && confirm.links.length}
         <div class="sd-editor-actions sd-confirm-actions">

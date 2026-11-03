@@ -43,9 +43,5 @@
     {#each note.lines as line}
       <p class="sd-noteline">{line}</p>
     {/each}
-    <p class="sd-panelnote">
-      These are the app’s own controls: pressing one sends the page through the
-      app, so its validation and any follow-on step happen as usual.
-    </p>
   </div>
 </div>

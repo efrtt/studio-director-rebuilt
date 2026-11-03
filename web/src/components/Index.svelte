@@ -186,7 +186,7 @@
                 {/each}
               </div>
               {#if group.hidden}
-                <p class="sd-panelnote">{group.hidden} more in this group — type to narrow.</p>
+                <p class="sd-panelnote">{group.hidden} more in this group.</p>
               {/if}
             </section>
           {/each}
@@ -195,7 +195,7 @@
             <p class="sd-empty">Nothing matches “{query}”.</p>
           {:else if capped}
             <p class="sd-panelnote">
-              Showing {limit} of {shown}{q ? ' matching' : ''} links — type a few letters to narrow.
+              Showing {limit} of {shown}{q ? ' matching' : ''} links.
             </p>
           {/if}
         </div>

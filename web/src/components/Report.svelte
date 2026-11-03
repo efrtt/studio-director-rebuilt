@@ -149,10 +149,6 @@
           </table>
         </div>
       {/each}
-    {:else}
-      <p class="sd-panelnote">
-        Set the filters and press {report.trigger ? `“${report.trigger.label}”` : 'Run Report'} — the app builds and runs the report.
-      </p>
     {/if}
   </div>
 </div>

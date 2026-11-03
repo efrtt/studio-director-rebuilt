@@ -6,15 +6,15 @@
   const COPY = {
     expired: {
       title: 'Session expired',
-      body: 'The Studio Director signed this session out. Open the original page, sign in, then reload.'
+      body: 'The Studio Director signed this session out.'
     },
     error: {
       title: 'Could not load that page',
-      body: 'The request failed. The original page is still there.'
+      body: 'The request failed.'
     },
     none: {
       title: 'No view for this page yet',
-      body: 'This screen has no form, table or control that this build can read. The original page is one click away.'
+      body: 'This screen has no form, table or control to read.'
     }
   };
 

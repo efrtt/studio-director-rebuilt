@@ -229,8 +229,6 @@
               <button class="sd-btn sd-primary" type="button" on:click={retry} disabled={busy}>
                 {busy ? 'Loading&hellip;' : (short > 0 ? `Load ${short} more` : 'Load all')}
               </button>
-            {:else}
-              <span><strong>Esc</strong> or <strong>Original</strong> opens the app's own list.</span>
             {/if}
           </div>
           {#if failure}<p class="sd-note sd-note--warn">{failure}</p>{/if}
@@ -263,8 +261,6 @@
             <button class="sd-btn sd-primary" type="button" on:click={retry} disabled={busy}>
               {busy ? 'Loading&hellip;' : (short > 0 ? `Load ${short} more` : 'Load all')}
             </button>
-          {:else}
-            <span><strong>Esc</strong> or <strong>Original</strong> opens the app's own list.</span>
           {/if}
         </div>
         {#if failure}<p class="sd-note sd-note--warn">{failure}</p>{/if}
