@@ -1557,4 +1557,169 @@ html[data-sd-theme="wii"] #sd-root .sd-groupcount {
   box-shadow: inset 0 0 0 1px var(--wii-line);
   color: var(--wii-text);
 }
+
+/* ---- insights and trends: the dashboard as a shelf of discs
+ *
+ * Both screens arrived from the base theme as a bordered box and a grid of
+ * hairlines - correct, and flat beside the rest of this skin. Here the donut is a
+ * disc, the eight figures are channel tiles, and every chart sits on a white shelf
+ * with the accent's light in its corner: the same gloss, keyline and dropped
+ * shadow the tiles and record cards use, so the dashboard stops looking like a
+ * different app. The corner light is a background layer, not a pseudo-element, so
+ * it can never land on top of the type. */
+html[data-sd-theme="wii"] #sd-root .sd-insightcard {
+  border: 1px solid var(--wii-line);
+  border-radius: 18px;
+  background:
+    radial-gradient(120% 150% at 100% 0%,
+      color-mix(in srgb, hsl(var(--wii-hue, 195deg) 100% 74%) 26%, transparent) 0%,
+      transparent 62%),
+    linear-gradient(180deg, #ffffff 0%, #ffffff 62%, var(--wii-w0) 100%);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 10px 22px -18px color-mix(in srgb, var(--wii-deep) 90%, transparent);
+}
+/* The disc: a white keyline around the ring, a glassy highlight across its
+   shoulder, and the total sitting in the white cup in the middle. */
+html[data-sd-theme="wii"] #sd-root .sd-donut {
+  position: relative;
+  box-shadow:
+    0 0 0 3px #ffffff,
+    0 10px 18px -10px color-mix(in srgb, var(--wii-deep) 55%, transparent);
+}
+html[data-sd-theme="wii"] #sd-root .sd-donut::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(120% 120% at 30% 16%,
+    rgba(255, 255, 255, 0.72) 0%,
+    rgba(255, 255, 255, 0.2) 30%,
+    transparent 56%);
+}
+html[data-sd-theme="wii"] #sd-root .sd-donuthole {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 58%, var(--wii-w0) 100%);
+  box-shadow: inset 0 2px 6px color-mix(in srgb, var(--wii-ink) 16%, transparent);
+}
+html[data-sd-theme="wii"] #sd-root .sd-donuthole strong { color: var(--wii-ink); }
+html[data-sd-theme="wii"] #sd-root .sd-donuthole span { color: var(--wii-text); }
+html[data-sd-theme="wii"] #sd-root .sd-donutlegend li { color: var(--wii-text); }
+html[data-sd-theme="wii"] #sd-root .sd-donutcount { color: var(--wii-ink); font-weight: 700; }
+/* The legend's dots are discs too: a white rim so they read on the shelf. */
+html[data-sd-theme="wii"] #sd-root .sd-donutdot {
+  width: 11px;
+  height: 11px;
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 1px 3px color-mix(in srgb, var(--wii-ink) 35%, transparent);
+}
+/* Eight separate tiles instead of one box divided by hairlines: each figure gets
+   its own keyline, gloss and shadow, and lifts when it has somewhere to go. */
+html[data-sd-theme="wii"] #sd-root .sd-stats {
+  gap: 14px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  overflow: visible;
+}
+html[data-sd-theme="wii"] #sd-root .sd-stat {
+  --sd-stat-surface:
+    radial-gradient(150% 170% at 100% 0%,
+      color-mix(in srgb, hsl(var(--wii-hue, 195deg) 100% 76%) 30%, transparent) 0%,
+      transparent 64%),
+    linear-gradient(180deg, #ffffff 0%, #ffffff 54%, var(--wii-w0) 55%, var(--wii-w1) 100%);
+  border: 1px solid var(--wii-line);
+  border-radius: 16px;
+  background: var(--sd-stat-surface);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 8px 16px -14px color-mix(in srgb, var(--wii-deep) 90%, transparent);
+  transition:
+    transform 180ms cubic-bezier(0.2, 0.8, 0.3, 1),
+    box-shadow 170ms ease,
+    border-color 170ms ease;
+}
+html[data-sd-theme="wii"] #sd-root a.sd-stat:hover,
+html[data-sd-theme="wii"] #sd-root a.sd-stat:focus-visible {
+  background: var(--sd-stat-surface);
+  border-color: var(--wii-line-strong);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 14px 22px -14px color-mix(in srgb, var(--wii-deep) 75%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--wii-blue) 40%, transparent);
+  outline: none;
+}
+html[data-sd-theme="wii"] #sd-root .sd-statvalue {
+  color: var(--wii-ink);
+  letter-spacing: -0.01em;
+}
+html[data-sd-theme="wii"] #sd-root .sd-statlbl { color: var(--wii-deep); font-weight: 600; }
+
+/* Trends: a chart is a shelf. The app's PNG stays the chart - it is the app's own
+   picture of its own numbers - but it sits in a white card with a keyline, a soft
+   drop and the accent's light in the top corner. */
+html[data-sd-theme="wii"] #sd-root .sd-chartgrid { gap: 18px 20px; margin: 10px 0 26px; }
+html[data-sd-theme="wii"] #sd-root .sd-chart {
+  border: 1px solid var(--wii-line);
+  border-radius: 18px;
+  background:
+    radial-gradient(130% 160% at 100% 0%,
+      color-mix(in srgb, hsl(var(--wii-hue, 195deg) 100% 76%) 24%, transparent) 0%,
+      transparent 62%),
+    linear-gradient(180deg, #ffffff 0%, #ffffff 66%, var(--wii-w0) 100%);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 10px 20px -18px color-mix(in srgb, var(--wii-deep) 90%, transparent);
+  transition:
+    transform 180ms cubic-bezier(0.2, 0.8, 0.3, 1),
+    box-shadow 170ms ease,
+    border-color 170ms ease;
+}
+html[data-sd-theme="wii"] #sd-root .sd-chart:hover {
+  transform: translateY(-3px);
+  border-color: var(--wii-line-strong);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 16px 26px -16px color-mix(in srgb, var(--wii-deep) 80%, transparent);
+}
+html[data-sd-theme="wii"] #sd-root .sd-charttitle {
+  color: var(--wii-ink);
+  font-weight: 700;
+  font-size: var(--fs-base);
+}
+html[data-sd-theme="wii"] #sd-root .sd-chart img {
+  border-radius: 10px;
+  background: #ffffff;
+  outline: 1px solid var(--wii-w2);
+}
+html[data-sd-theme="wii"] #sd-root .sd-chartcap { color: #5d7180; font-weight: 600; }
+/* A section head carries a small glossed disc instead of an uppercase whisper: the
+   same key in a bar, pressed. It reaches the sheet views too, which share this. */
+html[data-sd-theme="wii"] #sd-root .sd-sheethead {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--wii-deep);
+  font-weight: 800;
+}
+html[data-sd-theme="wii"] #sd-root .sd-sheethead::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--wii-gloss);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 2px 5px -2px color-mix(in srgb, var(--wii-deep) 60%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-sd-theme="wii"] #sd-root a.sd-stat:hover,
+  html[data-sd-theme="wii"] #sd-root .sd-chart:hover { transform: none; }
+}
 html[data-sd-theme="wii"] #sd-root .sd-when { color: #5d7180; }
