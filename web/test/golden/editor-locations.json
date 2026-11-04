@@ -110,6 +110,7 @@
     "title": "Class Locations"
   },
   "model": {
+    "attendance": null,
     "confirm": null,
     "index": null,
     "insights": null,

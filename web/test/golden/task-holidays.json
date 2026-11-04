@@ -452,6 +452,7 @@
     "title": "Manage Holidays"
   },
   "model": {
+    "attendance": null,
     "confirm": null,
     "index": null,
     "insights": null,

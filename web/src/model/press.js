@@ -150,6 +150,24 @@ export function clickActionInApp(doc, action) {
     }
   }
 
+  // No id, but the app's own handler says exactly which control this is — when the
+  // action was read from one element (`exact`). On the attendance screen every
+  // date's Cancel Class reads the same and its `onclick` carries that date's own
+  // argument, so the handler is the identification. An action deduped out of five
+  // identical labels is *not* exact: it does not know which five it meant.
+  // Matched where the handler is bound, and not filtered by table, because this
+  // screen's controls are cells of one.
+  if (action.exact && action.onclick) {
+    const byHandler = qsa(doc, CONTROL).filter((el) => {
+      if (isChrome(el)) return false;
+      return (el.getAttribute && el.getAttribute('onclick') || '').trim() === action.onclick.trim();
+    });
+    if (byHandler.length === 1) {
+      byHandler[0].click();
+      return { submitted: true, via: 'onclick' };
+    }
+  }
+
   // No id: only an unambiguous label may be pressed.
   const matches = qsa(doc, CONTROL)
     .filter((el) => !insideDataTable(el) && !isChrome(el) && !notAnAction(el))
@@ -171,6 +189,11 @@ export function clickActionInApp(doc, action) {
 export function actionHint(doc, action) {
   if (!action) return '';
   if (action.id && qs(doc, '#' + action.id)) return '';
+  if (action.exact && action.onclick) {
+    const exact = qsa(doc, CONTROL).filter((el) => !isChrome(el)
+      && ((el.getAttribute && el.getAttribute('onclick')) || '').trim() === action.onclick.trim());
+    if (exact.length === 1) return '';
+  }
   const matches = qsa(doc, CONTROL)
     .filter((el) => !insideDataTable(el) && !isChrome(el) && !notAnAction(el))
     .filter((el) => labelOf(el) === action.label);

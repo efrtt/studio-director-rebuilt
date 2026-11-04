@@ -2,6 +2,7 @@
   "file": "index-charges.html",
   "form": null,
   "model": {
+    "attendance": null,
     "confirm": null,
     "index": {
       "breadcrumb": [

@@ -23,6 +23,9 @@ import { readRail, writeRail } from './lib/rail.js';
   export let onRun = null;
   export let onAct = null;
   export let onPress = null;
+  // Attendance's own gestures (a tick, a reason, Save): every one of them is
+  // written into the app's live controls, which is why they arrive as one object.
+  export let onAttend = null;
   export let onSaveSettings = null;
   export let onLoadAll = null;
   export let canLoadAll = false;
@@ -100,7 +103,7 @@ import { readRail, writeRail } from './lib/rail.js';
   $: view = viewOf(model);
   $: entry = view ? VIEWS[view] || null : null;
   $: props = entry ? propsFor(view, model, {
-    onRun, onAct, onPress, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, nav, back
+    onRun, onAct, onPress, onAttend, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, nav, back
   }) : {};
   $: layout = layoutFor(view, !!model.list);
   $: split = layout.split !== 'none' && !!model.list;
@@ -126,6 +129,9 @@ import { readRail, writeRail } from './lib/rail.js';
   }
 
   function onKey(e) {
+    // A view's own dialog owns Escape too: Esc in the absence editor closes the
+    // editor, never the page it sits on.
+    if (typeof document !== 'undefined' && document.querySelector('.sd-overlay')) return;
     if (e.key === 'Escape') {
       e.preventDefault();
       openOriginal();

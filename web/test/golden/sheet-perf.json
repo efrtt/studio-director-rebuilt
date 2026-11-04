@@ -2,6 +2,7 @@
   "file": "sheet-perf.html",
   "form": null,
   "model": {
+    "attendance": null,
     "confirm": null,
     "index": null,
     "insights": null,

@@ -22,6 +22,7 @@ import { readTabs } from './tabs.js';
 import { readList } from './list.js';
 import { readTask } from './task.js';
 import { readSheet } from './sheet.js';
+import { readAttendance } from './attendance.js';
 import { readSettings } from './settings.js';
 
 // The record editor's model, or null when the page is not one.
@@ -62,10 +63,21 @@ export function readRecordPage(doc, url) {
   const editor = recordModel(doc, url, form);
   if (editor) return { view: 'form', model: editor };
 
-  // A form without a save control is not an editor: `PrintClassRoster` and
-  // `Attendance` carry forty and a hundred controls, and an editor built from
-  // them would be a dead wall of inputs. Their own controls do the work, so they
-  // are read as a task, or as a table when that is all they have.
+  // Attendance is a grid of controls, so nothing below would read it: the sheet
+  // refuses it on purpose, and a task/editor built from it would be a dead wall
+  // of inputs. It has its own reader, and its own view drives the app's controls.
+  const attendance = readAttendance(doc);
+  if (attendance) {
+    return {
+      view: 'attendance',
+      model: { nav, list, url, attendance, view: 'attendance', title: attendance.title }
+    };
+  }
+
+  // A form without a save control is not an editor: `PrintClassRoster` carries
+  // forty controls, and an editor built from them would be a dead wall of
+  // inputs. Their own controls do the work, so they are read as a task, or as a
+  // table when that is all they have.
   const task = form ? readTask(doc) : null;
   if (task) {
     return { view: 'task', model: { nav, list, url, task, view: 'task', title: task.title } };

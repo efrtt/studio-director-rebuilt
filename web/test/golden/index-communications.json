@@ -2,6 +2,7 @@
   "file": "index-communications.html",
   "form": null,
   "model": {
+    "attendance": null,
     "confirm": null,
     "index": {
       "breadcrumb": [

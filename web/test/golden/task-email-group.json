@@ -231,6 +231,7 @@
     "title": "Email to Group"
   },
   "model": {
+    "attendance": null,
     "confirm": null,
     "index": null,
     "insights": null,

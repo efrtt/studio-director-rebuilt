@@ -20,6 +20,7 @@ import { hasForm } from './lib/form.js';
 import { runReportInApp } from './lib/report.js';
 import { runTaskInApp } from './lib/task.js';
 import { readSheet } from './lib/sheet.js';
+import { markAttendanceInApp, writeAbsenceInApp, writeNotesInApp, pressAttendanceSave } from './lib/attendance.js';
 import { readBar } from './lib/bar.js';
 import { confirmSubject } from './lib/deletedname.js';
 import { saveSettingsInApp } from './lib/settings.js';
@@ -74,6 +75,10 @@ export function mount(opts = {}) {
       // answered "no control to press" — New on the Manage Vendors list, where
       // the add form is the page itself rather than a `meth=neu` record.
       onAct: opts.onAct || null,
+      // Attendance's gestures (a tick, a reason, Save), each written into the app's
+      // own control. Forwarded here as well, because a handler that `mount` does
+      // not pass is a handler no view ever receives.
+      onAttend: opts.onAttend || null,
       // Toggle screens: our controls, the app's own Save.
       onSaveSettings: opts.onSaveSettings || null,
       onSearch: opts.onSearch || null,
@@ -248,6 +253,18 @@ function mountView(model, onOriginal, source = 'fetched') {
     // its controls are pressed where they stand.
     onPress: model.sheet || model.note || (model.confirm && model.confirm.pending)
       ? (action) => clickActionInApp(document, action)
+      : null,
+    // Attendance: every gesture is written into the app's own controls — a tick
+    // pressed so its own onChange runs, a reason and notes written where the app
+    // keeps them, and the page's own Save. Nothing here builds a request.
+    onAttend: model.attendance
+      ? {
+        mark: (boxId, present) => markAttendanceInApp(document, boxId, present),
+        absence: (cell, reason, notes) => writeAbsenceInApp(document, cell, reason, notes),
+        notes: (field, value) => writeNotesInApp(document, field, value),
+        press: (action) => clickActionInApp(document, action),
+        save: () => pressAttendanceSave(document)
+      }
       : null,
     // A toggle screen: our controls, the app's own Save.
     onSaveSettings: model.settings
