@@ -540,10 +540,14 @@ html[data-sd-theme="wii"] #sd-root .sd-fields tr + tr > * { box-shadow: inset 0 
 html[data-sd-theme="wii"] #sd-root .sd-tabs {
   position: relative;
   gap: 4px;
-  margin: 10px 18px 0;
+  /* The bar starts where the page's column starts, so its first key sits over the
+     first field instead of against the window edge. --page-gutter is the same
+     token the view bodies pad themselves with, and on an editor it is the
+     editor's own narrower column. */
+  margin: 10px var(--page-gutter) 0;
   padding: 5px;
   width: fit-content;
-  max-width: calc(100% - 36px);
+  max-width: calc(100% - var(--page-gutter) * 2);
   border: 1px solid var(--wii-line);
   border-radius: 999px;
   background: linear-gradient(180deg, #ffffff 0%, #ffffff 52%, var(--wii-w0) 53%, var(--wii-w1) 100%);
