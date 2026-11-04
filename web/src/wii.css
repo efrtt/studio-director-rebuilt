@@ -578,6 +578,12 @@ html[data-sd-theme="wii"] #sd-root .sd-editorstatus {
   border-bottom: 1px solid var(--wii-line);
 }
 html[data-sd-theme="wii"] #sd-root .sd-editorstatus { color: var(--wii-text); }
+/* The register's reserved status line: blank means no band at all, and no
+   change of height when the message arrives. */
+html[data-sd-theme="wii"] #sd-root .sd-att > .sd-editorstatus--blank {
+  background: none;
+  border-bottom-color: transparent;
+}
 html[data-sd-theme="wii"] #sd-root .sd-dirty { color: #5d7180; }
 html[data-sd-theme="wii"] #sd-root .sd-fields th { color: var(--wii-text); font-weight: 700; }
 html[data-sd-theme="wii"] #sd-root .sd-fields tr + tr > * { box-shadow: inset 0 1px 0 var(--wii-w1); }

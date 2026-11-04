@@ -187,7 +187,10 @@
     </div>
   </div>
 
-  {#if status}<p class="sd-editorstatus">{status}</p>{/if}
+  <!-- The line is always in the flow, at one line's height: a message must not
+       push the register down from under a pointer already on its way to the
+       pencil the untick just revealed. -->
+  <p class="sd-editorstatus" class:sd-editorstatus--blank={!status} role="status">{status}</p>
 
   <div class="sd-attbody">
     <div class="sd-attgrid">

@@ -554,6 +554,16 @@ html.sd-app form#idForm { visibility: hidden !important; }
   color: var(--dim);
   font-size: var(--fs-sm);
 }
+/* In the register the status line keeps its place even when it has nothing to
+   say, so a message appearing never moves the row someone is about to click. */
+.sd-att > .sd-editorstatus {
+  box-sizing: border-box;
+  line-height: 1.5;
+}
+/* A zero-width line box keeps the empty line exactly as tall as a line of text,
+   so the register does not move by a pixel when the message arrives. */
+.sd-att > .sd-editorstatus--blank::after { content: '\200b'; }
+.sd-att > .sd-editorstatus--blank { background: none; border-bottom-color: transparent; }
 .sd-editorbody { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 14px 18px 24px; }
 
 /* ---- landing pages: a searchable tile index ---- */
