@@ -32,7 +32,10 @@ html.sd-app form#idForm { visibility: hidden !important; }
   grid-template-rows: minmax(0, 1fr);
   background: var(--bg);
   color: var(--text);
-  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Open Sans first, then the system stack it falls back to. Nothing is
+     downloaded: this file is one offline artefact, so the family applies where
+     the machine already has it and the stack covers everywhere else. */
+  font: 14px/1.45 "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   overflow: hidden;
 }
 #sd-root * { box-sizing: border-box; }

@@ -87,7 +87,9 @@ html[data-sd-theme="wii"] #sd-root {
       transparent 72%),
     linear-gradient(180deg, #ffffff 0%, var(--wii-w0) 58%, #dff1fb 100%);
   color: var(--text);
-  font-family: "Rodin NTLG", "Rodin", "Hiragino Maru Gothic ProN", "Nunito Sans",
+  /* Open Sans, then the Rodin-ish stack: the skin's own faces are reconstructions
+     of a font nobody can ship, and Open Sans is what the rest of the site uses. */
+  font-family: "Open Sans", "Rodin NTLG", "Rodin", "Hiragino Maru Gothic ProN", "Nunito Sans",
     "Segoe UI", system-ui, sans-serif;
   /* Wii UI is demi-bold all the way down; nothing on it is a light weight. */
   font-weight: 500;
@@ -691,7 +693,7 @@ html[data-sd-theme="wii"] #sd-root {
   --content-max: 1180px;
   /* A humanist grotesque with geometric bowls, the family Rodin belongs to.
      Every one of these ships with an OS; none is downloaded. */
-  font-family: "Segoe UI Variable Text", "Segoe UI", "Futura", "Century Gothic",
+  font-family: "Open Sans", "Segoe UI Variable Text", "Segoe UI", "Futura", "Century Gothic",
     "Hiragino Maru Gothic ProN", "Noto Sans", system-ui, sans-serif;
 }
 
