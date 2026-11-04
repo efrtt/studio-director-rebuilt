@@ -1003,11 +1003,13 @@ html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh {
   animation: none;
   filter: blur(18px) saturate(1.35);
 }
-/* Screened over the bar's own blue, a spot only shows where it is lighter or a
-   different hue, so the field wants to be spread round the wheel rather than
-   nudged: spot 1 on the bar's hue, then a third and a half a turn away. That is
-   what makes the drift read as colour travelling along the bar instead of a wash
-   brightening in place. Each spot is a different size for the same reason. */
+/* The field is the bar's own colour, not an event on it: it is painted at a fixed
+   opacity and has no fade of its own, so the band is always drifting instead of
+   lighting up and going out the way a channel does. Six spots, each a different
+   size and a different interval round the accent's hue, so there is colour
+   somewhere along the bar at every moment and never the same arrangement twice.
+   Under overlay a spot both lightens and darkens the blue it crosses, which is
+   what lets the hue travel while the white labels stay legible. */
 html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh i:nth-child(1) {
   width: 74%;
   --c: hsl(var(--wii-hue, 195deg) 100% 74%);
@@ -1023,6 +1025,20 @@ html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh i:nth-child(3) {
 html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh i:nth-child(4) {
   width: 50%;
   --c: hsl(calc(var(--wii-hue, 195deg) + 166deg) 100% 92%);
+}
+/* The two that fill the gaps the first four leave: one just off the accent's own
+   hue, one a wide step past it, so a spot is always crossing another. */
+html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh i:nth-child(5) {
+  width: 62%;
+  left: 34%;
+  top: -24%;
+  --c: hsl(calc(var(--wii-hue, 195deg) + 38deg) 100% 68%);
+}
+html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh i:nth-child(6) {
+  width: 44%;
+  right: 18%;
+  bottom: -28%;
+  --c: hsl(calc(var(--wii-hue, 195deg) - 110deg) 100% 86%);
 }
 html[data-sd-theme="wii"] #sd-root .sd-top > * { position: relative; z-index: 1; }
 html[data-sd-theme="wii"] #sd-root .sd-top > .sd-top-field { position: absolute; z-index: 0; }

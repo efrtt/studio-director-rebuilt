@@ -133,10 +133,11 @@ import Menu from './components/Menu.svelte';
   }
 
   // The header band's field starts when the node exists, so switching into the Wii
-  // theme later still gets one.
+  // theme later still gets one. It runs a quarter faster than a channel's: the bar
+  // is the app's own colour and never stops moving.
   function meshField(node) {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    runMesh(node, 9);
+    runMesh(node, 9, 0.75);
   }
 
   function openOriginal() {
@@ -196,7 +197,7 @@ import Menu from './components/Menu.svelte';
     {#if resolvedTheme === 'wii'}
       <span class="sd-top-field" aria-hidden="true">
         <span class="sd-mesh" use:meshField>
-          {#each [0, 1, 2, 3] as k (k)}<i></i>{/each}
+          {#each [0, 1, 2, 3, 4, 5] as k (k)}<i></i>{/each}
         </span>
       </span>
       <button

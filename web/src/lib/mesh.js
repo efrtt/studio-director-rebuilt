@@ -34,14 +34,15 @@ export function meshFrames(seed, spot) {
 
 /**
  * Start the field inside one host - an element holding the `<i>` spots.
+ * `speed` scales every lap (0.75 is a quarter faster than the base pace).
  * Returns the running animations so a caller can pause or cancel them.
  */
-export function runMesh(host, seed = 0) {
+export function runMesh(host, seed = 0, speed = 1) {
   if (!host || typeof host.querySelectorAll !== 'function') return [];
   const spots = [...host.querySelectorAll('i')].filter((spot) => typeof spot.animate === 'function');
   return spots.map((spot, k) =>
     spot.animate(meshFrames(seed, k), {
-      duration: MESH_LAPS[k % MESH_LAPS.length],
+      duration: MESH_LAPS[k % MESH_LAPS.length] * speed,
       delay: -(seed * 1900 + k * 3700),
       iterations: Infinity,
       easing: 'linear',
