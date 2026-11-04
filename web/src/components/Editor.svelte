@@ -7,6 +7,7 @@
   import { changesFrom } from '../lib/save.js';
   import RecordPage from './RecordPage.svelte';
   import { recordsOf } from '../lib/records.js';
+  import { tabpill } from '../lib/tabpill.js';
 
   export let form;
   export let tabs = null;
@@ -236,7 +237,7 @@
   {/if}
 
   {#if list}
-    <div class="sd-tabs" role="tablist">
+    <div class="sd-tabs" role="tablist" use:tabpill>
       {#each list as tab, i}
         <button
           class="sd-tab"

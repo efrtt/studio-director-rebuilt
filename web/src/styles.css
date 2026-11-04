@@ -686,6 +686,10 @@ html.sd-app form#idForm { visibility: hidden !important; }
   white-space: nowrap;
 }
 .sd-tab:hover { color: var(--text); }
+/* The selected-tab pill the Wii skin slides between tabs (lib/tabpill.js). It is
+   one element for the whole strip, so it is taken out of the flex flow; no other
+   theme gives it a background, so it draws nothing there. */
+.sd-tabind { position: absolute; pointer-events: none; }
 a.sd-tab { text-decoration: none; }
 /* The tab you are on is a div in the app's markup, so it has no destination. */
 span.sd-tab { cursor: default; }

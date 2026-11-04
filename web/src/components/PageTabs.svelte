@@ -7,6 +7,8 @@
   // current tab; reading only the divs lost the rest.
   export let tabs = [];
 
+  import { tabpill } from '../lib/tabpill.js';
+
   const keyOf = (href) => new URLSearchParams(String(href || '').split('?')[1] || '').get('tab') || '';
   let here = '';
   try { here = new URLSearchParams(window.location.search).get('tab') || ''; } catch (e) { here = ''; }
@@ -19,7 +21,7 @@
 </script>
 
 {#if tabs.length > 1}
-  <nav class="sd-tabs" aria-label="Page views">
+  <nav class="sd-tabs" aria-label="Page views" use:tabpill>
     {#each tabs as tab}
       {#if tab.href}
         <a class="sd-tab" class:sd-tab--on={current(tab)} href={tab.href}>{tab.label}</a>
