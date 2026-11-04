@@ -193,6 +193,18 @@
   <p class="sd-editorstatus" class:sd-editorstatus--blank={!status} role="status">{status}</p>
 
   <div class="sd-attbody">
+    <!-- The page's own ways of adding someone to this class, in one row above
+         the register: they act on the class as a whole, not on the notes. -->
+    {#if attendance.actions.length}
+      <p class="sd-attlinks">
+        {#each attendance.actions as action}
+          <button class="sd-action" type="button" title={action.onclick} on:click={() => press(action)}>
+            {action.label}
+          </button>
+        {/each}
+      </p>
+    {/if}
+
     <div class="sd-attgrid">
       {#each attendance.dates as date (date.key)}
         <section class="sd-attcol" aria-label={date.label}>
@@ -266,15 +278,6 @@
           placeholder="Notes for this class…"
           on:change={writeNotes}
         ></textarea>
-        {#if attendance.actions.length}
-          <p class="sd-attlinks">
-            {#each attendance.actions as action}
-              <button class="sd-action" type="button" title={action.onclick} on:click={() => press(action)}>
-                {action.label}
-              </button>
-            {/each}
-          </p>
-        {/if}
       </div>
     {/if}
   </div>
