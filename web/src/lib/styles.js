@@ -5,7 +5,13 @@
 // `.css` file goes through Vite's CSS pipeline instead, and `?inline` keeps the
 // single-artifact promise (no CSS sidecar to fetch, so it still inlines into the
 // userscript).
+// Open Sans, inlined as data: URIs with its OFL notice (see fonts.css). It is
+// first in the cascade so the face is registered before any rule asks for it.
+import FONTS from '../fonts.css?inline';
 import CSS from '../styles.css?inline';
+// The Wii skin is a theme, not a second stylesheet: it is appended so a mount
+// injects one <style> and the userscript stays one file with nothing to fetch.
+import WII from '../wii.css?inline';
 
 
 export function injectStyles() {
@@ -13,7 +19,7 @@ export function injectStyles() {
   if (document.getElementById('sd-styles')) return;
   const el = document.createElement('style');
   el.id = 'sd-styles';
-  el.textContent = CSS;
+  el.textContent = `${FONTS}\n${CSS}\n${WII}`;
   (document.head || document.documentElement).appendChild(el);
 }
 
