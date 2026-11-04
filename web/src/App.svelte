@@ -196,7 +196,7 @@ import Menu from './components/Menu.svelte';
     {#if resolvedTheme === 'wii'}
       <span class="sd-top-field" aria-hidden="true">
         <span class="sd-mesh" use:meshField style="--hue: 205deg">
-          {#each [0, 1, 2] as k (k)}<i></i>{/each}
+          {#each [0, 1, 2, 3] as k (k)}<i></i>{/each}
         </span>
       </span>
       <button

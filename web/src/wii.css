@@ -994,10 +994,32 @@ html[data-sd-theme="wii"] #sd-root .sd-top-field {
   pointer-events: none;
 }
 html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh {
-  inset: -34%;
-  opacity: 0.5;
-  mix-blend-mode: screen;
+  inset: -30%;
+  opacity: 0.95;
+  mix-blend-mode: overlay;
   animation: none;
+  filter: blur(18px) saturate(1.35);
+}
+/* Screened over the bar's own blue, a spot only shows where it is lighter or a
+   different hue, so the field wants to be spread round the wheel rather than
+   nudged: spot 1 on the bar's hue, then a third and a half a turn away. That is
+   what makes the drift read as colour travelling along the bar instead of a wash
+   brightening in place. Each spot is a different size for the same reason. */
+html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh i:nth-child(1) {
+  width: 74%;
+  --c: hsl(var(--hue, 205deg) 100% 74%);
+}
+html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh i:nth-child(2) {
+  width: 58%;
+  --c: hsl(calc(var(--hue, 205deg) + 84deg) 96% 78%);
+}
+html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh i:nth-child(3) {
+  width: 66%;
+  --c: hsl(calc(var(--hue, 205deg) - 58deg) 100% 56%);
+}
+html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh i:nth-child(4) {
+  width: 50%;
+  --c: hsl(calc(var(--hue, 205deg) + 166deg) 100% 92%);
 }
 html[data-sd-theme="wii"] #sd-root .sd-top > * { position: relative; z-index: 1; }
 html[data-sd-theme="wii"] #sd-root .sd-top > .sd-top-field { position: absolute; z-index: 0; }
