@@ -47,6 +47,11 @@
     // Reading the layout commits that frame; taking the class off on the next one
     // is what starts the fall. A background tab runs no frames, so a timer lifts
     // it as well - the screen comes in either way, just without the travel.
+    if (offscreen) {
+      if (screen) void screen.offsetHeight;
+      requestAnimationFrame(() => (offscreen = false));
+      setTimeout(() => (offscreen = false), 120);
+    }
     return () => clearInterval(timer);
   });
 
