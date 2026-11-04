@@ -28,6 +28,21 @@ import { TABLE_ROWS } from './thresholds.js';
 // wraps whole pages in.
 const NOT_DATA = /^(WeekdayCheckboxes|Layout|TimeBlock|WeekCal|MonthCal|Form|FormEx)$/i;
 
+// A table whose own cells carry controls to type into is a form drawn as a grid,
+// not a table of records. `Attendance` is the shape: for every student and every
+// date, a checkbox, a "Reason" select and a "Studio notes" textarea.
+//
+// Read as data, those controls collapsed into their labels - every option of the
+// select and the textarea's own caption - so one cell read "Reason:SickInjuryOut
+// of TownSchoolEventOtherCompetitionFamilyEventStudio notes:" and the screen
+// became a wall of text in which nobody could mark anybody present. A page that
+// edits is the app's business: it keeps its own page, controls and all.
+//
+// Checkboxes and radios are left out on purpose: a date column of tick boxes the
+// app has already decided (`PrintClassRoster`) is data about that day, and it
+// reads correctly as a cell with no words.
+const EDITS = 'select, textarea, input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"])';
+
 function isDataTable(table) {
   for (const cls of String(table.getAttribute('class') || '').split(/\s+/)) {
     if (NOT_DATA.test(cls)) return false;
@@ -48,6 +63,8 @@ export function readSheet(doc) {
   for (const table of qsa(root, 'table')) {
     if (table.closest && table.closest('table') !== table) continue;
     if (!isDataTable(table)) continue;
+    // A grid of controls is the app's own form, whatever the table is called.
+    if (qs(table, EDITS)) continue;
 
     const read = readTable(table);
     if (!read.headings.length && !read.rows.length) continue;
