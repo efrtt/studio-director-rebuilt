@@ -31,20 +31,6 @@
   let dialogReason = '';
   let dialogNotes = '';
 
-  $: totals = (() => {
-    let expected = 0;
-    let present = 0;
-    for (const row of cells) {
-      for (const date of attendance.dates) {
-        const cell = row[date.key];
-        if (!cell) continue;
-        expected += 1;
-        if (cell.present) present += 1;
-      }
-    }
-    return { expected, present };
-  })();
-
   $: editingDate = editing ? attendance.dates.find((date) => date.key === editing.dateKey) : null;
   $: editingStudent = editing ? attendance.students[editing.index] : null;
 
@@ -165,10 +151,10 @@
 
 <div class="sd-att">
   <div class="sd-editorbar">
-    <span class="sd-dirty">
-      {totals.present} of {totals.expected} present · {attendance.dates.length}
-      date{attendance.dates.length === 1 ? '' : 's'}
-    </span>
+    <!-- What just happened, in the toolbar's left slot: the class totals lived
+         here, and a line that comes and goes in a fixed-height bar cannot push
+         the register down the way a band above the cards did. -->
+    <span class="sd-dirty sd-attmessage" role="status" title={status}>{status}</span>
     <div class="sd-editor-actions">
       {#each attendance.nav as action}
         <button class="sd-btn" type="button" title={action.onclick} on:click={() => press(action)}>
@@ -186,11 +172,6 @@
       {/if}
     </div>
   </div>
-
-  <!-- The line is always in the flow, at one line's height: a message must not
-       push the register down from under a pointer already on its way to the
-       pencil the untick just revealed. -->
-  <p class="sd-editorstatus" class:sd-editorstatus--blank={!status} role="status">{status}</p>
 
   <div class="sd-attbody">
     <!-- The page's own ways of adding someone to this class, in one row above
