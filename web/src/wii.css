@@ -43,6 +43,9 @@ html[data-sd-theme="wii"] #sd-root {
   --wii-blue: #34beed;
   --wii-deep: #117fb5;
   --wii-ink: #1b5169;
+  /* The band's drifting field works in hues, not hexes, so the palette carries
+     the hue of --wii-blue as well. Every accent re-picks it with its five. */
+  --wii-hue: 195deg;
 
   --wii-keyline: #ffffff;
   --wii-shadow: color-mix(in srgb, var(--wii-deep) 28%, transparent);
@@ -1007,19 +1010,19 @@ html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh {
    brightening in place. Each spot is a different size for the same reason. */
 html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh i:nth-child(1) {
   width: 74%;
-  --c: hsl(var(--hue, 205deg) 100% 74%);
+  --c: hsl(var(--wii-hue, 195deg) 100% 74%);
 }
 html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh i:nth-child(2) {
   width: 58%;
-  --c: hsl(calc(var(--hue, 205deg) + 84deg) 96% 78%);
+  --c: hsl(calc(var(--wii-hue, 195deg) + 84deg) 96% 78%);
 }
 html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh i:nth-child(3) {
   width: 66%;
-  --c: hsl(calc(var(--hue, 205deg) - 58deg) 100% 56%);
+  --c: hsl(calc(var(--wii-hue, 195deg) - 58deg) 100% 56%);
 }
 html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh i:nth-child(4) {
   width: 50%;
-  --c: hsl(calc(var(--hue, 205deg) + 166deg) 100% 92%);
+  --c: hsl(calc(var(--wii-hue, 195deg) + 166deg) 100% 92%);
 }
 html[data-sd-theme="wii"] #sd-root .sd-top > * { position: relative; z-index: 1; }
 html[data-sd-theme="wii"] #sd-root .sd-top > .sd-top-field { position: absolute; z-index: 0; }
@@ -1443,7 +1446,9 @@ html[data-sd-theme="wii"] #sd-root .sd-menu-date {
  * an accent here is not one hex, it is five - the same five stops, re-picked -
  * and every gradient in this file reads them instead of naming its own blues.
  * That is why changing the accent re-tints the bar, the primary buttons, the
- * active channel and the focus bloom together instead of half-way.
+ * active channel and the focus bloom together instead of half-way. The header's
+ * drifting field reads the same five: --wii-hue is the hue of --wii-blue, so the
+ * band's colour travel changes with the accent instead of staying cyan.
  *
  * Blue is the theme's own value and has no rule: it is already in the palette
  * above, and re-deriving it would change the skin nobody asked to change.
@@ -1464,6 +1469,7 @@ html[data-sd-theme="wii"][data-sd-accent="violet"] #sd-root {
   --wii-blue: #8b6bf0;
   --wii-deep: #5b3fc0;
   --wii-ink: #33246b;
+  --wii-hue: 254deg;
 }
 html[data-sd-theme="wii"][data-sd-accent="teal"] #sd-root {
   --accent: #12a89b;
@@ -1471,6 +1477,7 @@ html[data-sd-theme="wii"][data-sd-accent="teal"] #sd-root {
   --wii-blue: #12a89b;
   --wii-deep: #0a6f68;
   --wii-ink: #0b3f3b;
+  --wii-hue: 175deg;
 }
 html[data-sd-theme="wii"][data-sd-accent="green"] #sd-root {
   --accent: #2c9a5c;
@@ -1478,6 +1485,7 @@ html[data-sd-theme="wii"][data-sd-accent="green"] #sd-root {
   --wii-blue: #2c9a5c;
   --wii-deep: #1a6b3d;
   --wii-ink: #123f26;
+  --wii-hue: 146deg;
 }
 html[data-sd-theme="wii"][data-sd-accent="amber"] #sd-root {
   --accent: #d98a1f;
@@ -1485,6 +1493,7 @@ html[data-sd-theme="wii"][data-sd-accent="amber"] #sd-root {
   --wii-blue: #d98a1f;
   --wii-deep: #a25f0c;
   --wii-ink: #5c3a0c;
+  --wii-hue: 35deg;
 }
 html[data-sd-theme="wii"][data-sd-accent="rose"] #sd-root {
   --accent: #d4507f;
@@ -1492,6 +1501,7 @@ html[data-sd-theme="wii"][data-sd-accent="rose"] #sd-root {
   --wii-blue: #d4507f;
   --wii-deep: #96315a;
   --wii-ink: #5c1f38;
+  --wii-hue: 339deg;
 }
 
 /* ---- list: the letter index and the class shelves
