@@ -60,6 +60,9 @@ function readCell(cell) {
   const box = qs(cell, BOX);
   if (!box) return null;
 
+  // A make-up, drop-in or trial registration is a superscript beside the tick:
+  // the page marks the cell and prints what the number means in its key.
+  const sup = qs(cell, 'sup');
   const select = qs(cell, 'select');
   const area = qs(cell, 'textarea');
   const options = select
@@ -72,6 +75,8 @@ function readCell(cell) {
     // The app's own checkbox, by id: pressing it is what runs its onChange.
     boxId: box.getAttribute('id') || '',
     present: box.checked !== undefined ? !!box.checked : box.hasAttribute('checked'),
+    // Resolved against the page's own key once every cell is read.
+    mark: sup ? { n: textOf(sup).trim(), label: '', title: '' } : null,
     options,
     reason: {
       name: select ? select.getAttribute('name') || '' : '',
@@ -83,6 +88,33 @@ function readCell(cell) {
       value: area ? String(area.value != null ? area.value : textOf(area)) : ''
     }
   };
+}
+
+// The key to those superscripts, printed in the page's own notes cell: a
+// numbered line per registration, worded by the app ("Make-up/Trial/Drop-in
+// Student: Trial"). Nothing is invented here — the number is matched to the
+// app's line and the line is shown.
+const LEGEND = /^make-?up\s*\/\s*trial\s*\/\s*drop-?in\s*student\s*:\s*(.+)$/i;
+
+function readLegend(doc) {
+  const area = qs(doc, 'textarea[name="att_notes"]');
+  const cell = area ? area.closest('td') : null;
+  const key = {};
+  if (!cell) return key;
+
+  for (const input of qsa(cell, 'input[type="hidden"][name^="args"]')) {
+    let lead = '';
+    for (let node = input.previousSibling; node && !lead; node = node.previousSibling) {
+      if (node.nodeType === 3) lead = String(node.nodeValue || '').trim();
+    }
+    const anchor = input.nextElementSibling;
+    const line = anchor ? textOf(anchor).replace(/\s+/g, ' ').trim() : '';
+    const named = LEGEND.exec(line);
+    const number = lead.replace(/[^0-9]/g, '');
+    if (!named || !number) continue;
+    key[number] = { label: named[1].trim(), title: line };
+  }
+  return key;
 }
 
 // The page's own Prev / Next, which move this view through the class's dates.
@@ -146,6 +178,18 @@ export function readAttendance(doc) {
     });
   }
 
+  // Say what the superscripts mean, from the page's own key.
+  const legend = readLegend(doc);
+  for (const student of students) {
+    for (const date of dates) {
+      const cell = student.cells[date.key];
+      const entry = cell && cell.mark ? legend[cell.mark.n] : null;
+      if (!entry) continue;
+      cell.mark.label = entry.label;
+      cell.mark.title = entry.title;
+    }
+  }
+
   if (!students.length) return null;
 
   const notesArea = qs(doc, 'textarea[name="att_notes"]');
@@ -160,7 +204,9 @@ export function readAttendance(doc) {
   const actions = notesCell
     ? qsa(notesCell, 'a[onclick]')
       .map((anchor) => ({ label: textOf(anchor), onclick: anchor.getAttribute('onclick') || '', exact: true }))
-      .filter((action) => action.label)
+      // The numbered key to the superscripts lives in this cell too, and it is
+      // not one of this screen's controls.
+      .filter((action) => action.label && !LEGEND.test(action.label))
     : [];
 
   const nav = [];

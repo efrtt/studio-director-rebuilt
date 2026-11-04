@@ -490,6 +490,14 @@ html[data-sd-theme="wii"] #sd-root .sd-attname { color: var(--wii-deep); }
 html[data-sd-theme="wii"] #sd-root .sd-attname:hover { color: var(--wii-blue); }
 html[data-sd-theme="wii"] #sd-root .sd-attreason { color: #86a0ae; }
 html[data-sd-theme="wii"] #sd-root .sd-attrow--out .sd-attreason { color: #a25f0c; }
+/* The make-up/trial tag is a small white pill here too, tinted from the skin's
+   own blue so it follows the accent rather than introducing a colour. */
+html[data-sd-theme="wii"] #sd-root .sd-attmark {
+  border-color: color-mix(in srgb, var(--wii-blue) 34%, transparent);
+  background: color-mix(in srgb, var(--wii-blue) 12%, #ffffff);
+  color: var(--wii-ink);
+  box-shadow: inset 0 1px 0 #ffffff;
+}
 /* The round control is a white pill here, like every other button on this skin. */
 html[data-sd-theme="wii"] #sd-root .sd-iconbtn {
   border-color: var(--wii-line);

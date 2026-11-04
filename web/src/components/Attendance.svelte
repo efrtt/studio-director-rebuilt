@@ -225,6 +225,12 @@
                   {:else}
                     <span class="sd-attname">{student.name}</span>
                   {/if}
+                  {#if cells[index][date.key].mark}
+                    <span
+                      class="sd-attmark"
+                      title={cells[index][date.key].mark.title || 'Marked on the page'}
+                    >{cells[index][date.key].mark.label || cells[index][date.key].mark.n}</span>
+                  {/if}
                   {#if !cells[index][date.key].present}
                     <span class="sd-attreason" title={cells[index][date.key].reason.label}>
                       {cells[index][date.key].reason.label || 'No reason given'}
