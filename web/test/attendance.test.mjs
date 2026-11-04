@@ -22,9 +22,9 @@ const { clickActionInApp } = await import('../src/model/press.js');
 
 const parseHtml = (html) => new DOMParser().parseFromString(html, 'text/html');
 
-const cell = (sid, iso, { checked = true, reason = '', notes = '' } = {}) => `
+const cell = (sid, iso, { checked = true, reason = '', notes = '', mark = '' } = {}) => `
   <td>
-    <input type="checkbox" id="${sid}_${iso}_0" onclick="StudioDir.Attendance.onChange(this);"${checked ? ' checked' : ''}>
+    <input type="checkbox" id="${sid}_${iso}_0" onclick="StudioDir.Attendance.onChange(this);"${checked ? ' checked' : ''}>${mark ? `<sup>${mark}</sup>` : ''}
     <span style="display:none" id="${sid}_${iso}_0_reasoninfo">
       Reason:<br>
       <select name="${sid}_${iso}_0_reason">
@@ -60,12 +60,12 @@ const page = (opts = {}) => parseHtml(`<form id="idForm"><div class="contentCont
       </tr>
       <tr>
         <td class="freezecolumn"><a href="admin.sd?page=EditStudent&amp;sident=11">Ada</a></td><td>Lovelace</td>
-        ${cell(11, '2026-11-02')}
-        ${cell(11, '2026-11-09')}
+        ${cell(11, '2026-11-02', { mark: '1' })}
+        ${cell(11, '2026-11-09', { mark: '9' })}
       </tr>
       <tr>
         <td class="freezecolumn"><a href="admin.sd?page=EditStudent&amp;sident=12">Grace</a></td><td>Hopper</td>
-        ${cell(12, '2026-11-02')}
+        ${cell(12, '2026-11-02', { mark: '2' })}
         ${cell(12, '2026-11-09', { checked: false, reason: 'Sick', notes: 'Home with a fever.' })}
       </tr>
       ${opts.extraRow || ''}
@@ -73,6 +73,8 @@ const page = (opts = {}) => parseHtml(`<form id="idForm"><div class="contentCont
     <table class="Layout"><tr><td class="Top">
       <p>The maximum class size for this class is 15.</p>
       <p><a href="#" onclick="StudioDir.onSubmitToMethod('Attendance', 'addMakeupWeeklySeries');;return false;">Schedule a make-up for this class</a></p>
+      <p>1. <input type="hidden" name="args1" value="111"><a href="#" onclick="StudioDir.onCallMethodSubmit('Attendance','editStudentNotes','args1');;return false;">Make-up/Trial/Drop-in Student: Trial</a><br>
+      2. <input type="hidden" name="args2" value="222"><a href="#" onclick="StudioDir.onCallMethodSubmit('Attendance','editStudentNotes','args2');;return false;">Make-up/Trial/Drop-in Student: Trial Class</a></p>
       <textarea name="att_notes" rows="6" cols="120">Bring water.</textarea>
     </td></tr></table>
     <a id="save" href="#" onclick="StudioDir.onSubmitToMethod('Attendance','save');">Save</a>
@@ -120,6 +122,29 @@ test('a grid of the app’s own attendance controls is a register', () => {
   assert.deepEqual(read.nav.map((a) => a.label), ['<< Prev', 'Next >>']);
   assert.equal(read.save.id, 'save');
   assert.match(read.save.onclick, /'Attendance','save'/);
+});
+
+test('a make-up, drop-in or trial registration is named by the page’s own key', () => {
+  const read = readAttendance(page());
+
+  // The cell's superscript, named by the page's numbered key.
+  assert.deepEqual(read.students[0].cells['2026-11-02'].mark, {
+    n: '1',
+    label: 'Trial',
+    title: 'Make-up/Trial/Drop-in Student: Trial'
+  });
+  assert.equal(read.students[1].cells['2026-11-02'].mark.label, 'Trial Class');
+
+  // A number with no line in the key still says a registration is there; the
+  // number is what the page printed, so it is what is shown.
+  assert.deepEqual(read.students[0].cells['2026-11-09'].mark, { n: '9', label: '', title: '' });
+
+  // An ordinary registration is not one, and an absent student keeps the mark
+  // their cell carries without one.
+  assert.equal(read.students[1].cells['2026-11-09'].mark, null);
+
+  // The key's own lines are not controls of this screen.
+  assert.deepEqual(read.actions.map((a) => a.label), ['Schedule a make-up for this class']);
 });
 
 test('the register is not a sheet, and the sheet reader keeps refusing it', () => {

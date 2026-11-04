@@ -1022,6 +1022,20 @@ a.sd-stat:hover { background: var(--panel-2); }
   color: var(--dim); font-size: var(--fs-micro);
 }
 .sd-attrow--out .sd-attreason { color: var(--warn); }
+/* A make-up, drop-in or trial registration: the page's own superscript, named by
+   the page's own key, so a student who is not enrolled on this date reads as one
+   without leaving the register. */
+.sd-attmark {
+  flex: 0 0 auto;
+  padding: 0 6px;
+  border: 1px solid color-mix(in srgb, var(--ok) 40%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ok) 14%, transparent);
+  color: var(--ok);
+  font-size: var(--fs-micro);
+  line-height: 15px;
+  white-space: nowrap;
+}
 .sd-attedit { flex: 0 0 auto; display: inline-flex; align-items: center; padding: 2px 4px; }
 .sd-attedit .sd-icon { width: 11px; height: 11px; }
 .sd-attnotes { margin-top: var(--space-4); max-width: 720px; }
