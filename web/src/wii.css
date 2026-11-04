@@ -533,31 +533,110 @@ html[data-sd-theme="wii"] #sd-root .sd-editorstatus { color: var(--wii-text); }
 html[data-sd-theme="wii"] #sd-root .sd-dirty { color: #5d7180; }
 html[data-sd-theme="wii"] #sd-root .sd-fields th { color: var(--wii-text); font-weight: 700; }
 html[data-sd-theme="wii"] #sd-root .sd-fields tr + tr > * { box-shadow: inset 0 1px 0 var(--wii-w1); }
-html[data-sd-theme="wii"] #sd-root .sd-tabs { border-bottom: 1px solid var(--wii-line); }
-html[data-sd-theme="wii"] #sd-root .sd-tab { color: var(--wii-text); font-weight: 600; border-radius: 10px 10px 0 0; }
+/* Tabs are a segmented bar, not an underline. The app underlines its tabs, and a
+   Wii screen has never underlined anything: a screen's sections are a row of keys
+   set into a white bar, and the one you are on is the key that has been pressed -
+   filled with the gloss, white type. */
+html[data-sd-theme="wii"] #sd-root .sd-tabs {
+  gap: 4px;
+  margin: 10px 18px 0;
+  padding: 5px;
+  width: fit-content;
+  max-width: calc(100% - 36px);
+  border: 1px solid var(--wii-line);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 52%, var(--wii-w0) 53%, var(--wii-w1) 100%);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 2px 6px color-mix(in srgb, var(--wii-deep) 12%, transparent);
+}
+html[data-sd-theme="wii"] #sd-root .sd-tab {
+  border: 0;
+  border-radius: 999px;
+  color: var(--wii-text);
+  font-weight: 600;
+  background: transparent;
+}
 html[data-sd-theme="wii"] #sd-root .sd-tab:hover { color: var(--wii-deep); background: var(--wii-w1); }
 html[data-sd-theme="wii"] #sd-root .sd-tab--on {
-  color: var(--wii-deep);
-  border-bottom-color: var(--wii-blue);
-  background: linear-gradient(180deg, var(--wii-w0), #ffffff);
+  background: var(--wii-gloss);
+  color: #ffffff;
+  border-bottom-color: transparent;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 4px 10px -4px color-mix(in srgb, var(--wii-deep) 55%, transparent);
+  text-shadow: 0 1px 1px color-mix(in srgb, var(--wii-ink) 30%, transparent);
 }
 html[data-sd-theme="wii"] #sd-root .sd-section { color: var(--wii-deep); }
+/* ---- tick boxes and radios ----
+ * The one control the skin never dressed was the browser's own checkbox: a small
+ * blue square with a system tick, in the middle of a screen of gloss and
+ * keylines. A Wii tick box is a chunky white key that presses in and fills with
+ * the accent, so that is what these are now. The tick is an inline SVG, so there
+ * is still nothing to fetch. */
+html[data-sd-theme="wii"] #sd-root input[type="checkbox"],
+html[data-sd-theme="wii"] #sd-root input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  margin: 0 2px 0 0;
+  flex: 0 0 auto;
+  border: 1px solid var(--wii-line-strong);
+  border-radius: 6px;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 52%, var(--wii-w0) 53%, var(--wii-w1) 100%);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 2px 4px -2px color-mix(in srgb, var(--wii-deep) 45%, transparent);
+  cursor: pointer;
+  vertical-align: -4px;
+}
+html[data-sd-theme="wii"] #sd-root input[type="radio"] { border-radius: 999px; }
+html[data-sd-theme="wii"] #sd-root input[type="checkbox"]:checked {
+  border-color: var(--wii-deep);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M4.5 10.6l3.8 3.8 7.2-8' fill='none' stroke='%23ffffff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"),
+    var(--wii-gloss);
+  background-repeat: no-repeat, no-repeat;
+  background-position: center, center;
+  background-size: 13px 13px, 100% 100%;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 3px 8px -3px color-mix(in srgb, var(--wii-deep) 55%, transparent);
+}
+html[data-sd-theme="wii"] #sd-root input[type="radio"]:checked {
+  border-color: var(--wii-deep);
+  background-image:
+    radial-gradient(circle at 50% 50%, #ffffff 0 3.4px, transparent 3.6px),
+    var(--wii-gloss);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 3px 8px -3px color-mix(in srgb, var(--wii-deep) 55%, transparent);
+}
+html[data-sd-theme="wii"] #sd-root input[type="checkbox"]:focus-visible,
+html[data-sd-theme="wii"] #sd-root input[type="radio"]:focus-visible {
+  outline: 0;
+  border-color: var(--wii-blue);
+  box-shadow: 0 0 0 3px var(--wii-ring);
+}
 html[data-sd-theme="wii"] #sd-root .sd-setting { border-bottom: 1px solid var(--wii-w1); }
 html[data-sd-theme="wii"] #sd-root .sd-settinglabel { color: var(--wii-text-strong); font-weight: 700; }
 html[data-sd-theme="wii"] #sd-root .sd-action {
   border-color: var(--wii-line);
   border-radius: 999px;
-  background: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 50%, var(--wii-w1) 51%, var(--wii-w1) 100%);
   color: var(--wii-text-strong);
   font-weight: 600;
+  box-shadow: inset 0 1px 0 #ffffff, 0 2px 5px color-mix(in srgb, var(--wii-deep) 14%, transparent);
 }
 html[data-sd-theme="wii"] #sd-root .sd-action:hover { border-color: var(--wii-blue); color: var(--wii-deep); }
 html[data-sd-theme="wii"] #sd-root .sd-action--js { border-style: dashed; color: var(--wii-text-dim); }
 html[data-sd-theme="wii"] #sd-root .sd-chip {
   border-color: var(--wii-line);
   border-radius: 999px;
-  background: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 50%, var(--wii-w1) 51%, var(--wii-w1) 100%);
   color: var(--wii-text-strong);
+  box-shadow: inset 0 1px 0 #ffffff;
 }
 html[data-sd-theme="wii"] #sd-root .sd-chip:hover { border-color: var(--wii-blue); color: var(--wii-deep); }
 html[data-sd-theme="wii"] #sd-root .sd-period { border: 1px solid var(--wii-line); background: #ffffff; color: var(--wii-text); }
@@ -766,7 +845,7 @@ html[data-sd-theme="wii"] #sd-root .sd-table thead th {
 html[data-sd-theme="wii"] #sd-root .sd-table tbody td { padding: 11px 15px !important; }
 html[data-sd-theme="wii"] #sd-root .sd-fields { font-size: 14px; }
 html[data-sd-theme="wii"] #sd-root .sd-fields th { font-size: 14px; }
-html[data-sd-theme="wii"] #sd-root .sd-tab { font-size: 14px; padding: 8px 14px 10px; }
+html[data-sd-theme="wii"] #sd-root .sd-tab { font-size: 14px; padding: 7px 16px; }
 html[data-sd-theme="wii"] #sd-root .sd-section,
 html[data-sd-theme="wii"] #sd-root .sd-indexhead { font-size: 13px; }
 html[data-sd-theme="wii"] #sd-root .sd-records a { font-size: 14px; padding: 11px 14px; }
@@ -1264,10 +1343,20 @@ html[data-sd-theme="wii"] #sd-root .sd-letterrail a.sd-letterrail--on .sd-letter
   background: transparent;
   color: var(--wii-blue);
 }
+/* A directory's section head is the lid of the group under it: a tinted strip
+   that cools toward its lower edge, the letter set heavy in the ink blue, and the
+   count on a small white disc. */
 html[data-sd-theme="wii"] #sd-root .sd-grouphead {
   border-bottom: 1px solid var(--wii-line);
-  background: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, var(--wii-w0) 55%, var(--wii-w2) 100%);
   color: var(--wii-deep);
 }
-html[data-sd-theme="wii"] #sd-root .sd-groupcount { color: #5d7180; }
+html[data-sd-theme="wii"] #sd-root .sd-groupletter { font-weight: 800; }
+html[data-sd-theme="wii"] #sd-root .sd-groupcount {
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px var(--wii-line);
+  color: var(--wii-text);
+}
 html[data-sd-theme="wii"] #sd-root .sd-when { color: #5d7180; }
