@@ -29,6 +29,7 @@ import { readTask } from '../lib/task.js';
 import { readSheet } from '../lib/sheet.js';
 import { readInsights } from '../lib/insights.js';
 import { readTrends } from '../lib/trends.js';
+import { readAttendance } from '../lib/attendance.js';
 import { readSettings } from '../lib/settings.js';
 import { confirmationOf } from '../lib/confirmation.js';
 import { readNote } from '../lib/note.js';
@@ -49,14 +50,17 @@ const ORDER = [
   { id: 'insights', key: 'insights', after: ['confirmation', 'week', 'list', 'report', 'task'], read: (doc) => readInsights(doc) },
   // The dashboard's Trends tab: the app's own chart images in a layout table.
   { id: 'trends', key: 'trends', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights'], read: (doc) => readTrends(doc) },
+  // A grid of controls is the app's own form, never a table of records: every
+  // student on every date is a tick box with a reason and notes behind it.
+  { id: 'attendance', key: 'attendance', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights', 'trends'], read: (doc) => readAttendance(doc) },
   // Tables with rows: dashboards, print sheets, list-ish settings.
-  { id: 'sheet', key: 'sheet', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights', 'trends'], read: (doc) => readSheet(doc) },
+  { id: 'sheet', key: 'sheet', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights', 'trends', 'attendance'], read: (doc) => readSheet(doc) },
   // Landing pages: what is left when there is nothing but links.
-  { id: 'index', key: 'index', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights', 'trends', 'sheet'], read: (doc) => readIndex(doc) },
+  { id: 'index', key: 'index', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights', 'trends', 'attendance', 'sheet'], read: (doc) => readIndex(doc) },
   // A control and a save. After index, because a menu is not a settings card.
-  { id: 'settings', key: 'settings', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights', 'trends', 'sheet', 'index'], read: (doc) => readSettings(doc) },
+  { id: 'settings', key: 'settings', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights', 'trends', 'attendance', 'sheet', 'index'], read: (doc) => readSettings(doc) },
   // Last of all, and the smallest: a sentence and the app's own button.
-  { id: 'note', key: 'note', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights', 'trends', 'sheet', 'index', 'settings'], read: (doc) => readNote(doc) }
+  { id: 'note', key: 'note', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights', 'trends', 'attendance', 'sheet', 'index', 'settings'], read: (doc) => readNote(doc) }
 ];
 
 export const READERS = ORDER.map((reader) => ({
@@ -70,7 +74,7 @@ const viewOf = (id) => (id === 'confirmation' ? 'confirm' : id);
 
 // Titles come from the model, except for the two readers that have none of their
 // own (a week and a list take the page's own title).
-const TITLED = ['report', 'task', 'insights', 'trends', 'sheet', 'index', 'settings', 'note'];
+const TITLED = ['report', 'task', 'insights', 'trends', 'attendance', 'sheet', 'index', 'settings', 'note'];
 
 export function readPage(doc, url, opts = {}) {
   const ctx = {
@@ -101,6 +105,7 @@ export function readPage(doc, url, opts = {}) {
     task: null,
     insights: null,
     trends: null,
+    attendance: null,
     sheet: null,
     index: null,
     settings: null,

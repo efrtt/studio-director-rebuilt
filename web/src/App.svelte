@@ -25,6 +25,9 @@ import Menu from './components/Menu.svelte';
   export let onRun = null;
   export let onAct = null;
   export let onPress = null;
+  // Attendance's own gestures (a tick, a reason, Save): every one of them is
+  // written into the app's live controls, which is why they arrive as one object.
+  export let onAttend = null;
   export let onSaveSettings = null;
   export let onLoadAll = null;
   export let canLoadAll = false;
@@ -112,7 +115,7 @@ import Menu from './components/Menu.svelte';
   $: view = viewOf(model);
   $: entry = view ? VIEWS[view] || null : null;
   $: props = entry ? propsFor(view, model, {
-    onRun, onAct, onPress, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, nav, back
+    onRun, onAct, onPress, onAttend, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, nav, back
   }) : {};
   $: layout = layoutFor(view, !!model.list);
   $: split = layout.split !== 'none' && !!model.list;
@@ -147,8 +150,10 @@ import Menu from './components/Menu.svelte';
 
   function onKey(e) {
     // While the menu is open it owns Escape: closing the menu must not also open
-    // the app's own page underneath it.
+    // the app's own page underneath it. A view's own dialog owns it too — Esc in
+    // the absence editor closes the editor, never the page it sits on.
     if (menuOpen) return;
+    if (typeof document !== 'undefined' && document.querySelector('.sd-overlay')) return;
     if (e.key === 'Escape') {
       e.preventDefault();
       openOriginal();

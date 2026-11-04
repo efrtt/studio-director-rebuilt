@@ -719,6 +719,7 @@
     "title": "Seasons"
   },
   "model": {
+    "attendance": null,
     "confirm": null,
     "index": null,
     "insights": null,

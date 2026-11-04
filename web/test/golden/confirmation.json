@@ -2,6 +2,7 @@
   "file": "confirmation.html",
   "form": null,
   "model": {
+    "attendance": null,
     "confirm": {
       "breadcrumb": [
         "Families",

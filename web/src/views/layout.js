@@ -25,6 +25,8 @@ export const LAYOUT = {
   confirm: { split: 'beside', width: 'contained' },
   // Tables and report results need the width; forms and menus read better capped.
   sheet: { width: 'wide' },
+  // A date card is 210px, and a month can hold five of them side by side.
+  attendance: { width: 'wide' },
   report: { width: 'wide' }
 };
 

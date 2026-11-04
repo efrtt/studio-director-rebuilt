@@ -466,6 +466,43 @@ html[data-sd-theme="wii"] #sd-root .sd-monthstep--off { opacity: 0.4; }
 html[data-sd-theme="wii"] #sd-root .sd-listbar { border-bottom: 1px solid var(--wii-line); }
 html[data-sd-theme="wii"] #sd-root .sd-listbar:has(+ .sd-tablewrap) { border-bottom: 0; }
 html[data-sd-theme="wii"] #sd-root .sd-count { color: #5d7180; }
+
+/* Attendance: the same shelf as a table, one per date, with the count shelf under
+   the date it belongs to. Only the material is added here - the grid, the row
+   order and the 26px control are the view's own. */
+html[data-sd-theme="wii"] #sd-root .sd-attcol {
+  border-color: var(--wii-line);
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 58%, var(--wii-w0) 100%);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 10px 20px -18px color-mix(in srgb, var(--wii-deep) 90%, transparent);
+}
+html[data-sd-theme="wii"] #sd-root .sd-attcolhead {
+  border-bottom-color: var(--wii-line);
+  background: linear-gradient(180deg, #ffffff 0%, var(--wii-w0) 70%, var(--wii-w2) 100%);
+}
+html[data-sd-theme="wii"] #sd-root .sd-attrow { box-shadow: inset 0 -1px 0 var(--wii-w1); }
+html[data-sd-theme="wii"] #sd-root .sd-attrow:last-child { box-shadow: none; }
+html[data-sd-theme="wii"] #sd-root .sd-attdate { color: var(--wii-ink); }
+html[data-sd-theme="wii"] #sd-root .sd-attcount { color: #5d7180; }
+html[data-sd-theme="wii"] #sd-root .sd-attname { color: var(--wii-deep); }
+html[data-sd-theme="wii"] #sd-root .sd-attname:hover { color: var(--wii-blue); }
+html[data-sd-theme="wii"] #sd-root .sd-attreason { color: #86a0ae; }
+html[data-sd-theme="wii"] #sd-root .sd-attrow--out .sd-attreason { color: #a25f0c; }
+/* The round control is a white pill here, like every other button on this skin. */
+html[data-sd-theme="wii"] #sd-root .sd-iconbtn {
+  border-color: var(--wii-line);
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 50%, var(--wii-w1) 51%, var(--wii-w1) 100%);
+  color: var(--wii-text-strong);
+  box-shadow: inset 0 1px 0 #ffffff, 0 2px 6px color-mix(in srgb, var(--wii-deep) 16%, transparent);
+}
+html[data-sd-theme="wii"] #sd-root .sd-iconbtn:hover,
+html[data-sd-theme="wii"] #sd-root .sd-iconbtn:focus-visible {
+  border-color: #c8433a;
+  color: #c8433a;
+  background: color-mix(in srgb, #c8433a 12%, transparent);
+}
 html[data-sd-theme="wii"] #sd-root .sd-records li { border-bottom: 1px solid var(--wii-w1); }
 /* The same quiet sidebar as the base theme: no rule under every record. */
 html[data-sd-theme="wii"] #sd-root .sd-split-side .sd-records li { border-bottom: 0; }
