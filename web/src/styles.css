@@ -1050,7 +1050,16 @@ a.sd-stat:hover { background: var(--panel-2); }
 .sd-attedit .sd-icon { width: 11px; height: 11px; }
 .sd-attnotes { margin-top: var(--space-4); max-width: 720px; }
 .sd-attnotes .sd-textarea { width: 100%; }
-.sd-attlinks { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
+/* One row of the page's own ways of adding someone, above the register rather
+   than trailing after the notes: they belong to the class, and wrapping keeps
+   them together in a narrow window. */
+.sd-attlinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 var(--space-4);
+}
 
 /* The round icon control: the shape a table cell already gives Drop is the
    shape a date's own Cancel Class wants. `.sd-pill--icon` is scoped to a table
