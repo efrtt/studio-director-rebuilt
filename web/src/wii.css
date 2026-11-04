@@ -733,13 +733,18 @@ html[data-sd-theme="wii"] #sd-root ::-webkit-scrollbar-thumb {
 /* ---- the pointer ----
  *
  * The Wii's pointer is a gloved hand with the player's number on it, and this is
- * the pack's own artwork: cursors/PointerP1.svg and friends, drawn at sixty-four
+ * the pack's own artwork: cursors/PointerP1.svg, its recoloured hover twin
+ * PointerP1Hover.svg, and the closed fist, drawn at sixty-four
  * pixels - twice a system cursor's size - so the hand reads from the sofa. The
  * player-1 set is the one a solo admin sees; P2-P4 carry their own numbers.
  *
- * The hotspot of each is the point of the hand, measured off the raster: the
- * pointing fingertip sits at 24,6, the open hand's at 34,7, and the fist takes
- * the knuckle at 28,21 so it stays under the cursor when it closes.
+ * The hover hand is the same drawing with its own two-stop body gradient swapped
+ * for the pack's bright blue, so it is the pointer that lights up rather than a
+ * different hand; its numeral takes the file's white so the digit still reads.
+ *
+ * The hotspot of each is the point of the hand, measured off the raster: both
+ * pointer states share the fingertip at 24,6, and the fist takes the knuckle at
+ * 28,21 so it stays under the cursor when it closes.
  *
  * A stylesheet cannot reach a file the userscript does not carry, and the artefact
  * has to stay one offline piece, so each hand is pasted here as a PNG: the SVGs
@@ -747,8 +752,8 @@ html[data-sd-theme="wii"] #sd-root ::-webkit-scrollbar-thumb {
  * and the raster is a fraction of that. (Chrome also refuses an SVG served as
  * anything but image/svg+xml, and it is the PNG decoder a cursor goes through.)
  *
- * Three states, the ones a mouse actually passes through: the pointing hand, the
- * open hand over anything that goes somewhere, and the closed fist while it is
+ * Three states, the ones a mouse actually passes through: the pointing hand, that
+ * hand lit up over anything that goes somewhere, and the closed fist while it is
  * being pressed. Text controls keep the text cursor, because that is what says
  * "type here". The B badge above is the pack's other marking, not a pointer.
  *
@@ -763,7 +768,7 @@ html[data-sd-theme="wii"] #sd-root summary,
 html[data-sd-theme="wii"] #sd-root [role="button"],
 html[data-sd-theme="wii"] #sd-root input[type="checkbox"],
 html[data-sd-theme="wii"] #sd-root input[type="radio"] {
-  cursor: url("data:image/png;base64,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") 34 7, pointer;
+  cursor: url("data:image/png;base64,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") 24 6, pointer;
 }
 html[data-sd-theme="wii"] #sd-root a:active,
 html[data-sd-theme="wii"] #sd-root button:active,
