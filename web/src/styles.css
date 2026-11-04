@@ -353,6 +353,14 @@ html.sd-app form#idForm { visibility: hidden !important; }
    name in it, and a line under every record cut the list into strips; the
    highlight marks the record you are on, which is the job the rule was doing. */
 .sd-split-side .sd-records li { border-bottom: 0; }
+/* The directory pages — families, students, classes — are browsed by letter,
+   not read as a table: a rule under every name cut the run of rows into strips.
+   The letter headings keep their rule, which is what separates the sections.
+   Scoped by the list's own type, so a list that is a set of answers (search
+   results, instructors) keeps its rows as they were. */
+#sd-root .sd-list[data-sd-type="Family"] .sd-records li,
+#sd-root .sd-list[data-sd-type="Student"] .sd-records li,
+#sd-root .sd-list[data-sd-type="Class"] .sd-records li { border-bottom: 0; }
 .sd-records li:last-child { border-bottom: 0; }
 .sd-records a {
   display: flex;
