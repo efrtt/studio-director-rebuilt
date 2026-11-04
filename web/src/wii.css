@@ -1035,6 +1035,7 @@ html[data-sd-theme="wii"] #sd-root .sd-btn:active {
 @media (prefers-reduced-motion: reduce) {
   html[data-sd-theme="wii"] #sd-root .sd-body > *,
   html[data-sd-theme="wii"] #sd-root .sd-channel,
+  html[data-sd-theme="wii"] #sd-root .sd-channel::before,
   html[data-sd-theme="wii"] #sd-root .sd-mesh,
   html[data-sd-theme="wii"] #sd-root .sd-main::after {
     animation: none !important;
@@ -1142,9 +1143,10 @@ html[data-sd-theme="wii"] #sd-root .sd-menu-grid {
 
 /* A channel: white keyline, gloss cap at the halfway line, soft ambient drop. */
 html[data-sd-theme="wii"] #sd-root .sd-channel {
-  /* See "channels that drift" below: --tile is the colour this channel is passing
-     through right now, and the gloss is mixed over it. */
-  --tile: #ffffff;
+  /* See "channels that drift" below: --tint is this channel's own colour, and the
+     tile under it stays white. The tint arrives as a layer fading in, never as a
+     colour sliding through the tile's own gradient. */
+  --tint: hsl(var(--hue, 205deg) 92% var(--l, 62%));
   --ink: #041a29;
   position: relative;
   isolation: isolate;
@@ -1158,12 +1160,7 @@ html[data-sd-theme="wii"] #sd-root .sd-channel {
   padding: 12px 14px;
   border: 3px solid #ffffff;
   border-radius: 12px;
-  background: linear-gradient(180deg,
-    color-mix(in srgb, var(--tile) 58%, #ffffff) 0%,
-    color-mix(in srgb, var(--tile) 58%, #ffffff) 52%,
-    color-mix(in srgb, var(--tile) 70%, #f3f8fa) 53%,
-    color-mix(in srgb, var(--tile) 80%, #e7f0f4) 100%);
-  border-color: color-mix(in srgb, var(--tile) 42%, #ffffff);
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 52%, #f3f8fa 53%, #e7f0f4 100%);
   color: var(--ink);
   text-decoration: none;
   text-align: center;
@@ -1188,14 +1185,32 @@ html[data-sd-theme="wii"] #sd-root .sd-channel {
  * The blur is what dissolves their edges - nothing here is a circle you could
  * point at. Their motion comes from lib/mesh.js, because one property drives every
  * background layer and CSS cannot move the spots independently. */
-@property --tile {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #ffffff;
-}
-
-html[data-sd-theme="wii"] #sd-root .sd-channel {
+/* The tint is a layer of its own fading in over the white tile, not a colour
+   travelling through the tile's gradient. An opacity is composited, so it fades
+   the same on every engine; an animated registered <color> inside color-mix()
+   is not - where @property goes unsupported or the paint is stepped, the colour
+   switches at the middle of each fade, which reads as a jump exactly where the
+   fade should be finishing. */
+html[data-sd-theme="wii"] #sd-root .sd-channel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  /* Over the white tile this equals color-mix(in srgb, var(--tint) 58%, #fff);
+     the deeper stops darken the lower half's cool shelf. */
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--tint) 58%, transparent) 0%,
+    color-mix(in srgb, var(--tint) 58%, transparent) 52%,
+    color-mix(in srgb, var(--tint) 70%, transparent) 53%,
+    color-mix(in srgb, var(--tint) 80%, transparent) 100%);
+  opacity: 0;
   animation: sd-tint var(--base, 26s) ease-in-out var(--delay, 0s) infinite;
+}
+/* The keyline warms with the tint. border-color is an ordinary colour property,
+   so this half interpolates everywhere, @property or not. */
+html[data-sd-theme="wii"] #sd-root .sd-channel {
+  animation: sd-tint-edge var(--base, 26s) ease-in-out var(--delay, 0s) infinite;
 }
 html[data-sd-theme="wii"] #sd-root .sd-mesh {
   position: absolute;
@@ -1205,7 +1220,7 @@ html[data-sd-theme="wii"] #sd-root .sd-mesh {
   filter: blur(11px) saturate(1.12);
   opacity: 0;
   /* Rides the tint: present only while the channel has colour. */
-  animation: sd-mesh-rise var(--base, 26s) ease-in-out var(--delay, 0s) infinite;
+  animation: sd-tint var(--base, 26s) ease-in-out var(--delay, 0s) infinite;
 }
 html[data-sd-theme="wii"] #sd-root .sd-mesh i {
   position: absolute;
@@ -1239,14 +1254,14 @@ html[data-sd-theme="wii"] #sd-root .sd-mesh i:nth-child(4) {
 }
 
 @keyframes sd-tint {
-  0%, 22% { --tile: #ffffff; }
-  34%, 42% { --tile: hsl(var(--hue, 205deg) 92% var(--l, 62%)); }
-  60%, 100% { --tile: #ffffff; }
-}
-@keyframes sd-mesh-rise {
   0%, 22% { opacity: 0; }
   34%, 42% { opacity: 1; }
   60%, 100% { opacity: 0; }
+}
+@keyframes sd-tint-edge {
+  0%, 22% { border-color: #ffffff; }
+  34%, 42% { border-color: color-mix(in srgb, var(--tint) 42%, #ffffff); }
+  60%, 100% { border-color: #ffffff; }
 }
 
 /* One ink on white and on colour alike. The halo is invisible on a white channel
