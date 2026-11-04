@@ -12,6 +12,22 @@
   export let current = '';
   export let onClose = null;
 
+  // The screen drops in from above the top edge, fading as it falls, and leaves
+  // the same way. The two states are one class apart (`.sd-menu--offscreen`, in
+  // wii.css) so the browser's transition runs either way - in when the class is
+  // taken off on the first frame, out when it is put back before closing. A CSS
+  // animation could only ever play forwards, and the exit has to be the entrance
+  // run backwards. Only the Wii skin has it, and a reader who asked for less
+  // motion gets the screen with no fall at all.
+  const wii = typeof document !== 'undefined' && document.documentElement.getAttribute('data-sd-theme') === 'wii';
+  const still = typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Must match the transition in wii.css: the screen is gone once it has finished
+  // travelling, not before.
+  const FALL = 300;
+  const animated = wii && !still;
+  let offscreen = animated;
+  let leaving = false;
+
   let clock = formatClock();
   let date = formatMenuDate();
   let timer = null;
@@ -27,6 +43,10 @@
     // navigable from the moment it appears.
     const first = screen && screen.querySelector('.sd-channel');
     if (first) first.focus();
+    // It is painted off-screen for one frame, so there is a state to travel from.
+    // Reading the layout commits that frame; taking the class off on the next one
+    // is what starts the fall. A background tab runs no frames, so a timer lifts
+    // it as well - the screen comes in either way, just without the travel.
     return () => clearInterval(timer);
   });
 
@@ -44,7 +64,17 @@
   }
 
   function close() {
-    if (onClose) onClose();
+    if (leaving) return;
+    if (!animated) {
+      if (onClose) onClose();
+      return;
+    }
+    // Send it back up the way it came, then close for real.
+    leaving = true;
+    offscreen = true;
+    setTimeout(() => {
+      if (onClose) onClose();
+    }, FALL);
   }
 
   function onKey(e) {
@@ -58,7 +88,14 @@
 
 <svelte:window on:keydown={onKey} />
 
-<div class="sd-menu-screen" role="dialog" aria-modal="true" aria-label="Studio menu" bind:this={screen}>
+<div
+  class="sd-menu-screen"
+  class:sd-menu--offscreen={offscreen}
+  role="dialog"
+  aria-modal="true"
+  aria-label="Studio menu"
+  bind:this={screen}
+>
   <div class="sd-menu-grid">
     {#each nav as link, i}
       <a

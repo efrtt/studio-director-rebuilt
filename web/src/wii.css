@@ -1112,9 +1112,23 @@ html[data-sd-theme="wii"] #sd-root .sd-menu-screen {
   background:
     repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0 1px, rgba(226, 232, 236, 0.6) 1px 3px),
     linear-gradient(180deg, #f2f5f7 0%, #e7edf0 62%, #dde5ea 100%);
-  animation: sd-wii-zoom 240ms cubic-bezier(0.2, 0.8, 0.3, 1.05) both;
 }
 
+/* The Menu's entrance and exit. One state apart: off the top edge and
+   transparent, or in place and opaque. The class is what moves it between them,
+   so the same transition plays outwards when it opens and backwards when it
+   closes - an animation could only ever run the one way. components/Menu.svelte
+   holds the first frame before lifting the class, and waits out the fall before
+   closing the screen. */
+html[data-sd-theme="wii"] #sd-root .sd-menu-screen {
+  transition:
+    transform 300ms cubic-bezier(0.2, 0.8, 0.3, 1),
+    opacity 300ms cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+html[data-sd-theme="wii"] #sd-root .sd-menu-screen.sd-menu--offscreen {
+  opacity: 0;
+  transform: translateY(-72px);
+}
 html[data-sd-theme="wii"] #sd-root .sd-menu-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
