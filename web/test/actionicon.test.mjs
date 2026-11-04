@@ -63,6 +63,4 @@ test('the row no longer answers the pointer', () => {
   // The banding stays; the hover wash on every cell is what went away, so
   // pointing at a balance does not look like pointing at a target.
   assert.equal(/\btbody tr:hover/.test(css), false, 'styles.css has no row hover');
-  const wii = fs.readFileSync(path.join(here, '..', 'src', 'wii.css'), 'utf8');
-  assert.equal(/\btbody tr:hover/.test(wii), false, 'wii.css has no row hover either');
 });

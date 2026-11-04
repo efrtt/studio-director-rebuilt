@@ -9,9 +9,9 @@
 // first in the cascade so the face is registered before any rule asks for it.
 import FONTS from '../fonts.css?inline';
 import CSS from '../styles.css?inline';
-// The Wii skin is a theme, not a second stylesheet: it is appended so a mount
-// injects one <style> and the userscript stays one file with nothing to fetch.
-import WII from '../wii.css?inline';
+// The Wii skin lives only on `wii-skin`: it is a theme of its own, carried there by
+// its own stylesheet. A build of `main` never offers it, so there is nothing on this
+// line for a second sheet to do.
 
 
 export function injectStyles() {
@@ -19,7 +19,7 @@ export function injectStyles() {
   if (document.getElementById('sd-styles')) return;
   const el = document.createElement('style');
   el.id = 'sd-styles';
-  el.textContent = `${FONTS}\n${CSS}\n${WII}`;
+  el.textContent = `${FONTS}\n${CSS}`;
   (document.head || document.documentElement).appendChild(el);
 }
 
