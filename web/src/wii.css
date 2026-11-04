@@ -732,30 +732,41 @@ html[data-sd-theme="wii"] #sd-root ::-webkit-scrollbar-thumb {
 
 /* ---- the pointer ----
  *
- * The Wii's cursor is a white gloved hand with a heavy dark outline and the
- * player's number on the palm, and it is the one piece of the interface you
- * cannot miss. Drawn inline as an SVG so there is no asset to fetch and nothing
- * to break offline: one closed silhouette - a rounded index finger, three
- * knuckles stepping down to the right, the palm and the wrist - filled with a
- * pale-blue gradient and stroked in near-black, with the number on the palm.
- * Deliberately a single path and not a stack of circles: overlapping discs give
- * a hand of sausages, and the outline is the whole look. The hotspot sits at the
- * fingertip and every control that takes typing keeps its own cursor.
+ * The Wii's pointer is a gloved hand with the player's number on it, and this is
+ * the packed scheme's own artwork rather than a reconstruction: the .cur files in
+ * the project's cursors/ folder, drawn at 96px. A stylesheet cannot reach a file
+ * the userscript does not carry - the artefact has to stay one offline piece - so
+ * the three the skin needs are pasted here as 32px PNGs of those pixels, with the
+ * pack's own hotspots, scaled: 8,8 in a 96px cursor is 3,3 in 32.
  *
- * The number is the pointer's own mark, like the Menu's channel colours: it is
- * the blue on the player's hand rather than chrome, so it is a fixed hex and not
- * re-picked by the accent. */
+ * Three states, the ones a mouse actually passes through: the pointer itself, the
+ * blue-outlined hand on anything that goes somewhere, and the closed fist while
+ * it is being pressed. Text controls keep the text cursor, because that is what
+ * says "type here".
+ *
+ * The pack's two .ani files are not used: no browser animates a CSS cursor, and
+ * an .ani does not even decode as an image. */
 html[data-sd-theme="wii"] #sd-root {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffffff'/%3E%3Cstop offset='0.58' stop-color='%23f7fcff'/%3E%3Cstop offset='1' stop-color='%23c7e4f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M11.3 2.1 C12.9 2.1 14.15 3.4 14.15 5.75 L14.15 9.95 C14.95 9.05 16.1 8.85 17 9.45 C18.2 10.25 18.55 11.5 18.4 12.45 C19.1 11.6 20.35 11.45 21.25 12.05 C22.35 12.85 22.7 14 22.6 14.85 C23.6 14.05 24.95 14.05 25.75 14.75 C26.75 15.75 26.85 17.6 26.7 19.3 C26.55 21.7 26.15 23.7 24.95 24.95 C24.05 25.95 22.6 26.4 21 26.4 L11.9 26.4 C9.6 26.4 7.9 25.2 7.1 23.4 C6.4 21.8 6.2 19.4 6.4 17.4 C6.6 15.6 7.2 14.3 8 13.4 C8.4 12.9 8.72 12.4 8.75 11.6 L8.75 5.75 C8.75 3.4 9.7 2.1 11.3 2.1Z' fill='url(%23g)' stroke='%230a0f14' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M16.1 14.9 12.7 18 12.7 20.1 16.1 17.6Z' fill='%232f86d6'/%3E%3Crect x='16.1' y='14.9' width='2.8' height='10' fill='%232f86d6'/%3E%3C/svg%3E") 11 2, pointer;
+  cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABSBJREFUWEftl31MlVUcxz/3hZe0a9ISiZURShggIJM5w8RNmA1hmZrN1P6IZSRbssEcjlZqf9RduMZLVlK0UMM3pIERogyYlSmBA2rhlIYIiiYgyhW4cO+N33Ofi91W7V4W/NXZnt177nPO+X7O9/zOOb+rAQxjzx4gGbACe4FMYJApKBpgv8Fg2HTs2DHMZjNr166Vz33A61OgjwDYamtriY2NVfROnDhBUlKSfJV3k14UgPPnzxMdHa2IXb58mfDwcAYHB58Bzk42gQC0ZmdnB6enpytaPT09RERE0NXVtWusvnMqAPbGx8e/UVVVNa4lDrS0tJwBlk0FwItarfaIxWIZ10pOTqawsPA3YAFwbzIhZAlCgaZLly7p5s2bp2gdPXqU9evX9wIbgWeBfuBD4OmxOF0EVADd/wWYAPgJQH5+vm9qaqoyZn9/PzNnzkSr1eLv78/NmzeVLarX65kxYwa9vcJGNbACEOteA76YCJAAeALNiYmJweXl5eNj+Pn5kZeXR1xcHJ2dnURFRVFWVkZkZCQpKSnI1hWnmpqayMzMxGq1vgQccRfCsdfLg4ODE1taWvDw8FDGyMrKIiMjAx8fH6W+e/du0tLSFAdk25aUlGA0GpV3atDWAcsnCrDV19f3I5mNzFxKZWUlISEhzJkzR6lXV1czd+5cAgICZLa0t7cTGBiovBOwnJycDmFR48VlDocDSTqdrkwAQkMlJqGtrU0RCgoKUuo2m015JC7+WsSNdevW3VYBrrqsrh634nED8GRpaSmrV69W+ou4lD8LmkZgun2FnMrAwAAGg9xpREg8uQvwtpeX166amhqKi4vJzc116n/jHmypgsp2CH8E6jfZX9sUV+yPTguzZs3i1q1bKcCn7gLcKSoqMiQkJBAfH09jY6NT/+smCCgAs1kV3g5mK9is9rtbALw8YNPGzRz66kDpmANr3AWwNTc3M3/+fMLCwmhtvajcgzKw1QajImSDlNOw/wKcexVCH7Zvfvld2ml0ULz/AFuTN5uAB90FGKk6dVofF7eCq53XmD37UWxajdMMtRo42ApbvoFdsfDmQhhRwWQpxInWX34mfkmExI7/WC5x3VUI2QXfpW/PjHnf+B5DI87WOiyWmbb2wrLDsPwxOJwEIxa7A4oLGujsuMKqpZHc6b+dAHzrDsC74ZEL3/rpQiN3hyT67QE2Prj6vdsEK0vgIS+oeAE8dGogqrHQ0d5GUswChocGlwA/ugMQB5zqG7Vxb+i+A0KhzE4FGLbAqlLoG4KvnwffaXbrBVinh6KPczFmbZPQ0LsqLu1kCeQ4a8757OD0NRteVqJ93HqJcnFEAzrglUqo77YDPG64387TCxbN9sZsHt4OfOAugEBUeD8w7bn8L48TvTQWT29vRi3q7NUlESeGR8HHG+6awaJar9HCyeOH2Jm6YQAIA664CyDtvce2TzaQ+lRIODuMe1m8PAaTyTkonWJDXR6tDo4U5JC/M61LPQl7JgLg6LN4LD/4BIhcuWYjO/YUotN7ji+JACjrppUj2n4cmu6ayHtnGxWHP5c7QDIoSV5cLn+XesvQkgXV7qtoICgsShHU68HDE4aHoOFMDfV1J7lwto6+37u50XVFLqotQIHLyo7J/EuHH8IWxSzJMBZwraONhjOnqa+rpKPtonSRPFHSIrH7eyAf+NVdcccu+Kd+T8j2BOz3MZxT65KKid19KsREdMf7uPLvZzogZ/ykFFcAJkXYMej/AH8A9s8NPw/lhl8AAAAASUVORK5CYII=") 3 3, pointer;
 }
-html[data-sd-theme="wii"] #sd-root input,
-html[data-sd-theme="wii"] #sd-root textarea,
-html[data-sd-theme="wii"] #sd-root select,
-html[data-sd-theme="wii"] #sd-root .sd-table td { cursor: auto; }
 html[data-sd-theme="wii"] #sd-root a,
 html[data-sd-theme="wii"] #sd-root button,
 html[data-sd-theme="wii"] #sd-root summary,
-html[data-sd-theme="wii"] #sd-root [role="button"] { cursor: pointer; }
+html[data-sd-theme="wii"] #sd-root [role="button"],
+html[data-sd-theme="wii"] #sd-root input[type="checkbox"],
+html[data-sd-theme="wii"] #sd-root input[type="radio"] {
+  cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABO5JREFUWEftl39M1GUcx1/P3XFcIPgzQmf+RisVNC1mpTiS2UTmrzIrsk0X+WOVCUdYrWH9UQjqTDLTrRrMmb+GU0LEnFaWP4gcuCZZmoEmMAWBO37ccffUw/M1YJVwmvzVs93uvrvv83m/vu/P5/l87gRpMggTa/GyGPBiYROCFFaKRrphCdJldtBdxO+OBZcX5uWCy80WksRL3aCPApBHF0DUQC2XewHi9gMrhOg2gFPx8FColvvlOoRvh0Ynj2AXx+80hGCNLM2IZlTiBC11rQkitsHlGlZjF6ndAbApZjhLC+a2SYVnwZmrfEOimNIdAE+ZrOz0vNomtfggfFLMBRoZS6pouJMQgnVyNE0U/7wU84heWmrXTzB/L9VYeQ4vk/FSS0/WU8f9mJiIhzySRcV/AaZqIBRJcWYMIcvH65C1zdBrLZiCYYANqprA5QGLGYKtUO0GmjiMhcdx4cHCi6wUn94KkCBVWgmkZOZwRu2f0xYi9CPYGA3TBsMlBzyYDftmw7gQWHIIjl6GXbFQfBVSjoO3maexi52+QuizniH3j+rLzDMLwc+kQ7x5DJImQm+bvn7nOKyYoB04VQF7zkGaUaKtRVvFV9jF1FsFWBYSzIfFz0JooA6R/ys80BcGBevrw2UwvBcMCQavhIt1MKyn/m7FEdhQSBmScFJErS8Q2oF0GWe2sa94AYzup7efv64GA4QZhSkBKcH0D/1RufFkDtfxI5xEUe4bwHuyN34UAUNzZsHsEXq7ekq12gs63RDo9/fwDjcEpQNWIrCLEt8A1si3/W2sPjIPtpfCB9Edt1c2QEIB5F+E8H5QGK+/v+GIcsVsgrs3w1UHS7CLj30DSJN1WTMJmjEUYnbDD8933H7FCUO2gstlCCfrqSm9OkUKwN8M8fnw+Y/kkCza9dTOUQQZUpa8APf1gTGfQekiQ0jqNLQoIQlLvoTs03ByEYzuAx4jTQpAzU3l3rICnCSLHp3Ltt2hGpG7YD6WaYOgvB7uCQApOj6hqoNtpZDwBayOglfGg9sAU6lQTpReg5hc8LoYwGviSlchFMCxxEgeff8xaPJ0FL5hsXKgtBqm7ICpA2FHHLg92hn1UsCX6iE2F+oczCBJHPAF4N3w/rz1/TNQ7wavyq9hb2tw43OFE6bvgZ7+kDcH/MxGIRq1UFYHcQeguZFJJIoTXQdIl9OQHKp5GRraOaCU2wM0eyA2B2qaYO8sCAnQ1itgs4Css5B2Ag/JwtJVcXWfYL0cRjMlG2IInBumh85f1qsqV44IMAML86GwQgPcG2Tc5wWrGSZubz0pydiF6ghdXgIpBevIs1l5IjNK/zRTAVX1t9pvvKvPzS16NtS7wGNYrxrjwd8g9WscWBhDkvjzqutLN9ZUaSOADPxZPrIHrHoYIvuDs6VjUXaoDaM+1AnZeQ4yi7hMCxG8Ia51XV6loP1Kl5HAZtyMmz4SVkVq62+kxOjOrefeGJqo9rzxNOSdpxwvY29tGLWHSJUmApiMjaNboiCst240FqFHtSrGokpdC6eroMYNlSpNDhKwi62+PL0uwn9b6fK7MSFMSpoAvzugqAoKK6GsutWSBsxUY0LZ/S0eMnldnPVV/OYAGXKwOp4EEIaaAy2cRHAIyWEk5VioYaVQOLe1Ov/3kyQDyRDO21K5yebOAe6UshH3f4A/AOkkAT/rgKPbAAAAAElFTkSuQmCC") 3 3, pointer;
+}
+html[data-sd-theme="wii"] #sd-root a:active,
+html[data-sd-theme="wii"] #sd-root button:active,
+html[data-sd-theme="wii"] #sd-root summary:active,
+html[data-sd-theme="wii"] #sd-root [role="button"]:active {
+  cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABGZJREFUWEftlmtMm1UYx3+9QOsQBCMSEREhGISu60jNQpgbCZAZtimSJmZu+EEjIS7ZSDSERaMbftBGjSkSb3iJ7MKAMJRE7DYIkHkbCARQZB+aAOs2xhC2QaEUaOW8fctojLElLvMDJ3mTnp5znud3/ud/LgrucFHc4fysA6wr8L9XIAUoBG4AHwCPAUagGRj7L3bQagWUwDZgFzAKXFMqlSdiY2MZHx/H5XKhVquJiIhgcnJS5G4FsoEl4CXgq7UArQawAAeMRiODg4PMzc1RV1dHdnY2drud9PR0mpqaMBgMFBcX097eTn19PX19fZSVleF2u58F6oKF8AE8CNhFQJPJJMXIzc2VEkRGRkr18vJySkpKJAU6OztpaGjAbDZLbXq9noGBgQ4ga60ABVFRUQ39/f3ExcVJMaxWK6mpqcTHx0v11tZWkpKSSEhIELNleHiYxMREqU2AWSwWsWx62S8Bc/gUeEqlUn0r5ExLS5MG22w2KVFycrJU93g80qdUCqv4F6GGyWS6LgNcDDg7SEdxFNANPNLY2Eh+fr40XiQXZXVCxwKEhfw9/MzMDOHh4aJhE9AfLMAbGo3mSFtbGzU1NVRUVPiNvzoLRWfAOgz6+6Brn7fZI6ni/VRKiI6OZmJiohj4NFiAm9XV1eF5eXmS8Xp6evzGX3FAQhW4XHLiUnC5weMGoZEA0ITAvr2FnDxxrHFZgYJgATzCfCkpKeh0OoaGLkgLIwK7PbAoEnmguAWO9sL5FyDtXu/mF/+LfgoV1Bw9xssvFjqAu4MFWDhztkWdk5PNRftlYmIewKNU+M1QqYDjQ1D0HRzZDgc2w4IMJpZCKDH0+2/kZmwS3okFrgQKIUz4wyulZZnvmN/GueAvrU9iMdOhSdhWC1lxULsbFpa8CkgqKMA+OsLOrQZu3rieB3wfDMBbesPm13/t7WHaKdzvNdhKcPn3mAN2NMA9Gmh+BkJUshFlL4wO29iduZF551wG8EswADnA2alFD7POWwoICml2MsD8EuxshCknfPM03L/BK70AVqmh+uMKzK8dFNZQB5pc9BNLII6zfsvnx8MK9jwnuX1FeuFyoYgCVMDzVuga8wI8FH6rX6gGjDFaXK75UuDdYAEERLP2rg1PVn59ise3bidUq2VxSZ69vCRCiflFiNLCtAuWZOkVSjh96iSH9++ZAXTASLAAor92efu8t3wF7380Vc8h80dsycrE4fA3pZ835OVRqqCuykLl4ZJL8kn451oAfGO2AJ8Ahh0Fezn0/peo1KErSyIApHVTiiPaexw6ph18+OZBmmu/EHfAxrVeRquhRegnlq/W9s+au0nWpUsJ1WoICYV5J3Sfa6Or4zS9P3cwdW2Mq5dGxEVVBFQFM3ufCf9pzE86Y2bGq+YqLo/a6D7XQleHlVHbBdF/dvnxIp5FQu4fgUrgj2CT/xvAw2J7At77GM7LdfEUE3JPyRBrybsyJpBXcRggzvjbUgIBuC2JfUHXAf4Cr0bHMDMl4dgAAAAASUVORK5CYII=") 3 3, pointer;
+}
+html[data-sd-theme="wii"] #sd-root input,
+html[data-sd-theme="wii"] #sd-root textarea { cursor: text; }
+html[data-sd-theme="wii"] #sd-root select,
+html[data-sd-theme="wii"] #sd-root .sd-table td { cursor: inherit; }
 
 /* ---- motion ----
  *
