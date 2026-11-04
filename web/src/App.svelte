@@ -12,6 +12,7 @@ import { readRail, writeRail } from './lib/rail.js';
   import { readAccent, writeAccent, applyAccent } from './lib/accent.js';
   import { menuFor } from './lib/menu.js';
 import Menu from './components/Menu.svelte';
+  import { runMesh } from './lib/mesh.js';
 
   export let model = { nav: [], week: null, list: null, form: null, view: null, title: '', url: '' };
   export let state = 'ready';
@@ -131,6 +132,13 @@ import Menu from './components/Menu.svelte';
     return result;
   }
 
+  // The header band's field starts when the node exists, so switching into the Wii
+  // theme later still gets one.
+  function meshField(node) {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    runMesh(node, 9);
+  }
+
   function openOriginal() {
     if (onOriginal) { onOriginal(); return; }
     location.href = model.url || location.href;
@@ -186,6 +194,11 @@ import Menu from './components/Menu.svelte';
 <div class="sd-main">
   <header class="sd-top">
     {#if resolvedTheme === 'wii'}
+      <span class="sd-top-field" aria-hidden="true">
+        <span class="sd-mesh" use:meshField style="--hue: 205deg">
+          {#each [0, 1, 2] as k (k)}<i></i>{/each}
+        </span>
+      </span>
       <button
         class="sd-home"
         type="button"

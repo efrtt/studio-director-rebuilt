@@ -3,6 +3,7 @@
   import { formatClock, formatMenuDate } from '../lib/clock.js';
   import { isActiveHref } from '../lib/activelink.js';
   import { initialOf } from '../lib/navicons.js';
+  import { runMesh, tintLightness } from '../lib/mesh.js';
 
   // The Wii's front end: one screen of channels, the clock, and the two round
   // buttons at the bottom. Every channel is one of the app's own nav links, so
@@ -43,6 +44,10 @@
     // navigable from the moment it appears.
     const first = screen && screen.querySelector('.sd-channel');
     if (first) first.focus();
+    // The drifting field on each channel, from the same helper as the header's.
+    if (!still && screen) {
+      screen.querySelectorAll('.sd-mesh').forEach((mesh, i) => runMesh(mesh, i));
+    }
     // It is painted off-screen for one frame, so there is a state to travel from.
     // Reading the layout commits that frame; taking the class off on the next one
     // is what starts the fall. A background tab runs no frames, so a timer lifts
@@ -58,11 +63,6 @@
   onDestroy(() => {
     if (timer) clearInterval(timer);
   });
-
-  // A real Menu is mostly white channels with a few in colour, so the colour is
-  // an accent that walks the grid rather than a theme per section.
-  const TONES = ['plain', 'blue', 'plain', 'green', 'plain', 'aqua', 'plain', 'orange'];
-  const toneOf = (i) => TONES[i % TONES.length];
 
   function isActive(link) {
     return isActiveHref(current || location.href, link.href, location.origin);
@@ -104,12 +104,18 @@
   <div class="sd-menu-grid">
     {#each nav as link, i}
       <a
-        class="sd-channel sd-channel--{toneOf(i)}"
+        class="sd-channel"
         class:sd-channel--on={isActive(link)}
         href={link.href}
         title={link.label}
         aria-current={isActive(link) ? 'page' : undefined}
+        style="--hue: {i * 45}deg; --l: {tintLightness(i * 45)}%; --base: {22 + i * 1.6}s; --delay: {-(
+          i * 3.1 + (i % 3) * 2.2
+        )}s"
       >
+        <span class="sd-mesh" aria-hidden="true">
+          {#each [0, 1, 2, 3] as k (k)}<i></i>{/each}
+        </span>
         {#if icons && icons[link.href]}
           <i class="sd-channel-icon {icons[link.href]}" aria-hidden="true"></i>
         {:else}

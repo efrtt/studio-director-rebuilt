@@ -957,10 +957,6 @@ html[data-sd-theme="wii"] #sd-root .sd-tile {
   from { opacity: 0; transform: scale(0.965); }
   to { opacity: 1; transform: scale(1); }
 }
-@keyframes sd-wii-sheen {
-  0%, 68% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
-}
 @keyframes sd-wii-drift {
   0%, 100% { opacity: 0.55; transform: translateY(0) scale(1); }
   50% { opacity: 0.9; transform: translateY(-10px) scale(1.03); }
@@ -987,23 +983,24 @@ html[data-sd-theme="wii"] #sd-root .sd-top {
   overflow: visible;
   z-index: 2;
 }
-html[data-sd-theme="wii"] #sd-root .sd-top::before {
-  content: "";
+/* The bar's drifting field: soft spots on the bar's own blue, screened over it. It
+   lives in a clipping wrapper because the bar has to keep `overflow: visible` for
+   the popovers that hang out of it. */
+html[data-sd-theme="wii"] #sd-root .sd-top-field {
   position: absolute;
   inset: 0;
   z-index: 0;
+  overflow: hidden;
   pointer-events: none;
-  background: linear-gradient(
-    100deg,
-    rgba(255, 255, 255, 0) 34%,
-    rgba(255, 255, 255, 0.34) 48%,
-    rgba(255, 255, 255, 0) 62%
-  );
-  background-size: 300% 100%;
-  background-repeat: no-repeat;
-  animation: sd-wii-sheen 9s ease-in-out infinite;
+}
+html[data-sd-theme="wii"] #sd-root .sd-top-field .sd-mesh {
+  inset: -34%;
+  opacity: 0.5;
+  mix-blend-mode: screen;
+  animation: none;
 }
 html[data-sd-theme="wii"] #sd-root .sd-top > * { position: relative; z-index: 1; }
+html[data-sd-theme="wii"] #sd-root .sd-top > .sd-top-field { position: absolute; z-index: 0; }
 
 /* The Menu's bloom, breathing behind the content. Negative z-index keeps it
    under every child of the column without touching the page's own background. */
@@ -1037,7 +1034,8 @@ html[data-sd-theme="wii"] #sd-root .sd-btn:active {
 /* Nothing moves for anybody who asked for that. */
 @media (prefers-reduced-motion: reduce) {
   html[data-sd-theme="wii"] #sd-root .sd-body > *,
-  html[data-sd-theme="wii"] #sd-root .sd-top::before,
+  html[data-sd-theme="wii"] #sd-root .sd-channel,
+  html[data-sd-theme="wii"] #sd-root .sd-mesh,
   html[data-sd-theme="wii"] #sd-root .sd-main::after {
     animation: none !important;
   }
@@ -1144,7 +1142,13 @@ html[data-sd-theme="wii"] #sd-root .sd-menu-grid {
 
 /* A channel: white keyline, gloss cap at the halfway line, soft ambient drop. */
 html[data-sd-theme="wii"] #sd-root .sd-channel {
+  /* See "channels that drift" below: --tile is the colour this channel is passing
+     through right now, and the gloss is mixed over it. */
+  --tile: #ffffff;
+  --ink: #041a29;
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1154,8 +1158,13 @@ html[data-sd-theme="wii"] #sd-root .sd-channel {
   padding: 12px 14px;
   border: 3px solid #ffffff;
   border-radius: 12px;
-  background: linear-gradient(180deg, #ffffff 0%, #ffffff 52%, #f4f8fa 53%, #e9f0f4 100%);
-  color: var(--wii-deep);
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--tile) 58%, #ffffff) 0%,
+    color-mix(in srgb, var(--tile) 58%, #ffffff) 52%,
+    color-mix(in srgb, var(--tile) 70%, #f3f8fa) 53%,
+    color-mix(in srgb, var(--tile) 80%, #e7f0f4) 100%);
+  border-color: color-mix(in srgb, var(--tile) 42%, #ffffff);
+  color: var(--ink);
   text-decoration: none;
   text-align: center;
   box-shadow:
@@ -1166,15 +1175,91 @@ html[data-sd-theme="wii"] #sd-root .sd-channel {
     transform 170ms cubic-bezier(0.2, 0.8, 0.3, 1),
     box-shadow 160ms ease;
 }
-html[data-sd-theme="wii"] #sd-root .sd-channel::after {
-  content: "";
+/* ---- channels that drift ----
+ *
+ * A channel is white at rest and walks through its own hue and back, each on its
+ * own clock, with a mesh field riding on top of the tint. --hue is the tile's own
+ * slice of the wheel and --l the lightness that hue needs to clear 4.6:1 against
+ * the label's ink, so blue and violet come out lighter than yellow. --base and
+ * --delay give every tile a different lap and starting point, which is what stops
+ * the grid pulsing in unison.
+ *
+ * The field is soft colour spots in neighbouring hues with one blur over the lot.
+ * The blur is what dissolves their edges - nothing here is a circle you could
+ * point at. Their motion comes from lib/mesh.js, because one property drives every
+ * background layer and CSS cannot move the spots independently. */
+@property --tile {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #ffffff;
+}
+
+html[data-sd-theme="wii"] #sd-root .sd-channel {
+  animation: sd-tint var(--base, 26s) ease-in-out var(--delay, 0s) infinite;
+}
+html[data-sd-theme="wii"] #sd-root .sd-mesh {
   position: absolute;
-  inset: -8%;
-  border-radius: inherit;
+  inset: -32%;
+  z-index: 0;
   pointer-events: none;
+  filter: blur(11px) saturate(1.12);
   opacity: 0;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--wii-blue) 55%, transparent), rgba(90, 205, 245, 0) 72%);
-  transition: opacity 170ms ease;
+  /* Rides the tint: present only while the channel has colour. */
+  animation: sd-mesh-rise var(--base, 26s) ease-in-out var(--delay, 0s) infinite;
+}
+html[data-sd-theme="wii"] #sd-root .sd-mesh i {
+  position: absolute;
+  display: block;
+  width: 68%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  /* oklch interpolation keeps a neighbouring hue from going muddy as it fades. */
+  background: radial-gradient(circle closest-side in oklch,
+    color-mix(in oklch, var(--c) 94%, transparent) 0%,
+    color-mix(in oklch, var(--c) 58%, transparent) 46%,
+    color-mix(in oklch, var(--c) 18%, transparent) 74%,
+    transparent 100%);
+  will-change: transform;
+}
+html[data-sd-theme="wii"] #sd-root .sd-mesh i:nth-child(1) {
+  left: -4%; top: -8%;
+  --c: hsl(var(--hue, 205deg) 94% 57%);
+}
+html[data-sd-theme="wii"] #sd-root .sd-mesh i:nth-child(2) {
+  right: -10%; top: 2%;
+  --c: hsl(calc(var(--hue, 205deg) + 28deg) 90% 62%);
+}
+html[data-sd-theme="wii"] #sd-root .sd-mesh i:nth-child(3) {
+  left: 12%; bottom: -18%;
+  --c: hsl(calc(var(--hue, 205deg) - 32deg) 92% 54%);
+}
+html[data-sd-theme="wii"] #sd-root .sd-mesh i:nth-child(4) {
+  right: 4%; bottom: -6%;
+  --c: hsl(calc(var(--hue, 205deg) + 10deg) 72% 88%);
+}
+
+@keyframes sd-tint {
+  0%, 22% { --tile: #ffffff; }
+  34%, 42% { --tile: hsl(var(--hue, 205deg) 92% var(--l, 62%)); }
+  60%, 100% { --tile: #ffffff; }
+}
+@keyframes sd-mesh-rise {
+  0%, 22% { opacity: 0; }
+  34%, 42% { opacity: 1; }
+  60%, 100% { opacity: 0; }
+}
+
+/* One ink on white and on colour alike. The halo is invisible on a white channel
+   and lifts the ground under the glyphs once the tint arrives. */
+html[data-sd-theme="wii"] #sd-root .sd-channel-icon,
+html[data-sd-theme="wii"] #sd-root .sd-channel-initial,
+html[data-sd-theme="wii"] #sd-root .sd-channel-name {
+  position: relative;
+  z-index: 1;
+  color: var(--ink, #041a29);
+  text-shadow:
+    0 0 6px rgba(255, 255, 255, 0.82),
+    0 0 14px rgba(255, 255, 255, 0.55);
 }
 html[data-sd-theme="wii"] #sd-root .sd-channel:hover,
 html[data-sd-theme="wii"] #sd-root .sd-channel:focus-visible {
@@ -1185,15 +1270,12 @@ html[data-sd-theme="wii"] #sd-root .sd-channel:focus-visible {
     0 0 0 3px color-mix(in srgb, var(--wii-blue) 55%, transparent);
   outline: none;
 }
-html[data-sd-theme="wii"] #sd-root .sd-channel:hover::after,
-html[data-sd-theme="wii"] #sd-root .sd-channel:focus-visible::after { opacity: 1; }
-
 html[data-sd-theme="wii"] #sd-root .sd-channel-icon { font-size: 34px; line-height: 1; }
 html[data-sd-theme="wii"] #sd-root .sd-channel-initial {
   font-size: 34px;
   font-weight: 700;
   line-height: 1;
-  opacity: 0.75;
+  opacity: 0.88;
 }
 html[data-sd-theme="wii"] #sd-root .sd-channel-name {
   font-size: 14px;
@@ -1207,32 +1289,6 @@ html[data-sd-theme="wii"] #sd-root .sd-channel-name {
   overflow: hidden;
 }
 
-/* The coloured few, as on the real grid: a saturated field with white type. */
-html[data-sd-theme="wii"] #sd-root .sd-channel--blue,
-html[data-sd-theme="wii"] #sd-root .sd-channel--green,
-html[data-sd-theme="wii"] #sd-root .sd-channel--aqua,
-html[data-sd-theme="wii"] #sd-root .sd-channel--orange { color: #ffffff; }
-html[data-sd-theme="wii"] #sd-root .sd-channel--blue .sd-channel-icon,
-html[data-sd-theme="wii"] #sd-root .sd-channel--green .sd-channel-icon,
-html[data-sd-theme="wii"] #sd-root .sd-channel--aqua .sd-channel-icon,
-html[data-sd-theme="wii"] #sd-root .sd-channel--orange .sd-channel-icon,
-html[data-sd-theme="wii"] #sd-root .sd-channel--blue .sd-channel-initial,
-html[data-sd-theme="wii"] #sd-root .sd-channel--green .sd-channel-initial,
-html[data-sd-theme="wii"] #sd-root .sd-channel--aqua .sd-channel-initial,
-html[data-sd-theme="wii"] #sd-root .sd-channel--orange .sd-channel-initial { opacity: 0.92; }
-html[data-sd-theme="wii"] #sd-root .sd-channel--blue {
-  background: linear-gradient(180deg, #2b74e0 0%, #1f63cd 52%, #1250ac 53%, #0b3f8f 100%);
-}
-html[data-sd-theme="wii"] #sd-root .sd-channel--green {
-  background: linear-gradient(180deg, #1f8a3a 0%, #177a30 52%, #0f6426 53%, #0b4d1d 100%);
-}
-html[data-sd-theme="wii"] #sd-root .sd-channel--aqua {
-  background: linear-gradient(180deg, #a8ebfa 0%, #7fdcf4 52%, #55c9ea 53%, #3fb4d8 100%);
-  color: #10475c;
-}
-html[data-sd-theme="wii"] #sd-root .sd-channel--orange {
-  background: linear-gradient(180deg, #f6a53c 0%, #ed9226 52%, #d97c15 53%, #bd6510 100%);
-}
 /* The section you are on is ringed, not filled: the Menu marks the pointer's
    channel, and the current section is the same idea. */
 html[data-sd-theme="wii"] #sd-root .sd-channel--on {
