@@ -162,7 +162,7 @@
   }
 </script>
 
-<div class="sd-list" data-sd-view={view} bind:this={root}>
+<div class="sd-list" data-sd-view={view} data-sd-type={lone} bind:this={root}>
   <div class="sd-listbar">
     <input
       class="sd-filter"
