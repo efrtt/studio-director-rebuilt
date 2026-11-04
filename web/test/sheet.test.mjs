@@ -294,6 +294,37 @@ test('a report names itself from its breadcrumb, not its first column', () => {
   assert.equal(read.tables[0].headings[0], 'First Name', 'a column heading is still a column');
 });
 
+// Attendance prints one cell per student per date, each holding a checkbox, a
+// "Reason" select and a "Studio notes" textarea. Read as data, every option and
+// caption collapsed into the cell's words, and the screen could no longer mark
+// anybody: the app's own page has to stand.
+test('a grid of controls is the app’s form, not a table of records', () => {
+  const doc = parseHtml(`<form id="idForm"><div class="contentContainer"><div class="Content">
+      <div class="formTitle">Attendance</div>
+      <table class="ReportTable">
+        <tr><th>First Name</th><th>Last Name</th><th>Mon, Nov 2, 2026<br>Cancel Class</th></tr>
+        <tr><td>Ada</td><td>Lovelace</td><td>
+          <input type="checkbox" name="present1">
+          <select name="reason1"><option>Out of Town</option><option>Sick</option></select>
+          <textarea name="notes1">Studio notes:</textarea>
+        </td></tr>
+        <tr><td>Grace</td><td>Hopper</td><td>
+          <input type="checkbox" name="present2">
+          <select name="reason2"><option>Sick</option></select>
+        </td></tr>
+      </table>
+    </div></div></form>`);
+
+  assert.equal(readSheet(doc), null, 'the cells carry controls, so the app keeps the page');
+});
+
+// A printed roster's date columns are already decided by the app: a tick box is
+// a cell with no words, which is what the row reads.
+test('a checkbox column alone is still a table of records', () => {
+  assert.equal(sheet.tables[0].rows[0][6].text, '');
+  assert.ok(readSheet(rosterDoc), 'PrintClassRoster still reads as a sheet');
+});
+
 // ManageScheduledEmails prints its four headings and then "No items to display."
 // The two-row floor refused the page, so it rendered as nothing.
 test('a table the app has emptied is a screen with an empty table', () => {
