@@ -110,6 +110,35 @@ test('a scheduled drop-in is an outcome, not a page with no view', () => {
   assert.ok(onward.includes('Go to Graduating Seniors'), 'the class it joined');
 });
 
+// Dropping a student from a single date, measured live (2026-11-05):
+// `page=DropStudentMakeup` asks the same question with two plain links, Drop and
+// Cancel, and no list beside it. `askedConfirmation` recognised it, but its model
+// had no `lines` — which the card the view draws iterates — so the mount threw
+// and the screen came up blank.
+const dropMakeupAsk = doc(`<body><div class="contentContainer"><div class="Content">
+  <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a></div>
+  <div class="formTitle">Drop Student</div>
+  <div class="ButtonBar"></div>
+  <div class="contentInfo">
+    <p>Are you sure you want to drop <a href="admin.sd?page=EditStudent&sident=2">Lily</a> from
+      <a href="admin.sd?page=EditClass&cident=1">Graduating Seniors</a> on Mon, Nov 2, 2026?</p>
+    <p><a class="Btn" href="admin.sd?page=DropStudentMakeup&amp;meth=yes&amp;tid=9">Drop</a>
+      <a class="BtnOutln" href="admin.sd?page=DropStudentMakeup&amp;meth=no&amp;tid=9">Cancel</a></p>
+  </div>
+</div></div></body>`);
+
+test('the drop question carries the sentence its card draws', () => {
+  const model = confirmationOf(dropMakeupAsk, {});
+
+  assert.ok(model, 'the page is recognised');
+  assert.equal(model.pending, true);
+  assert.deepEqual(model.lines, [
+    'Are you sure you want to drop Lily from Graduating Seniors on Mon, Nov 2, 2026?'
+  ], 'the view iterates `lines`; without one it drew nothing at all');
+  assert.equal(model.actions[0].label, 'Drop');
+  assert.equal(model.links[0].label, 'Cancel', 'the way out is on the card');
+});
+
 test('a paragraph that is only links is an action bar, not a question', () => {
   // Lifted from the two fixtures whose models must not move: the unenroll page's
   // "Switch Classes / Back to the student" pair, and the Email Class menu.
