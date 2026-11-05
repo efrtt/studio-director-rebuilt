@@ -18,7 +18,7 @@ const doc = (html) => new DOMParser().parseFromString(html, 'text/html');
 
 test('the registry order is the contract, most specific first', () => {
   assert.deepEqual(READERS.map((r) => r.id), [
-    'confirmation', 'week', 'list', 'report', 'task',
+    'confirmation', 'week', 'list', 'payment', 'report', 'task',
     'insights', 'trends', 'attendance',
     'sheet', 'index', 'settings', 'note'
   ]);

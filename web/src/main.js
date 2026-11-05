@@ -32,6 +32,7 @@ import { confirmSubject } from './lib/deletedname.js';
 import { saveSettingsInApp } from './lib/settings.js';
 import { clickActionInApp } from './lib/actions.js';
 import { changesFrom, saveInApp } from './lib/save.js';
+import { runPayment, addSplitInApp } from './lib/payment.js';
 import { probeTick, recordView } from './lib/probe.js';
 import { contradictsNote } from './lib/note.js';
 import { wantsLiveLook, decideMount, decideShellLess, chooseSource, searchReady } from './lib/choose.js';
@@ -98,6 +99,13 @@ export function mount(opts = {}) {
       onAttend: opts.onAttend || null,
       // Toggle screens: our controls, the app's own Save.
       onSaveSettings: opts.onSaveSettings || null,
+      // New Payment: process the payment, and cause a split. Both press the app's
+      // own anchors. Forwarded here for the same reason as `onAct` below — a
+      // handler this object does not list is a handler no view ever receives,
+      // and the split button answered "no handler" while the wiring above it was
+      // already correct.
+      onSubmitPayment: opts.onSubmitPayment || null,
+      onAddSplit: opts.onAddSplit || null,
       onSearch: opts.onSearch || null,
       // Every screen with a control gets a way to press it: the narrower wiring left
       // a dropped student's dialog with a dead button.
@@ -287,6 +295,13 @@ function mountView(model, onOriginal, source = 'fetched') {
     onSaveSettings: model.settings
       ? (values, action) => saveSettingsInApp(document, model.settings, values, action)
       : null,
+    // New Payment: our fields, the app's own Process Payment and Add Split.
+    onSubmitPayment: model.payment
+      ? (values) => runPayment(document, model.payment, values)
+      : null,
+    onAddSplit: model.payment
+      ? () => addSplitInApp(document, model.payment)
+      : null,
     onLoadAll: loadAllRecords,
     onSearch: searchEverything,
     onRefresh: refreshList,
@@ -459,6 +474,12 @@ function mountRecord(onOriginal) {
   // the page drawing as a bare list with its confirmation dropped.
   const answered = readPage(document, location.href, { allowRefused: true });
   if (answered.view === 'confirm') return mountView(answered, onOriginal);
+
+  // New Payment arrives on a URL that looks like a record's (`&meth=…&tid=…`),
+  // so routing brings it here — but it is not an editor, and the gateway URL
+  // answers a re-fetch with a different page. Its screen is the one the browser
+  // is already showing, so it is read where it stands.
+  if (answered.view === 'payment') return mountView(answered, onOriginal, 'live');
 
   // Live first, copy second. The form is server-rendered, but the app's JS fills
   // part of it after the response lands (the phone-label selects start empty),

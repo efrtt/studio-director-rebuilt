@@ -1,0 +1,336 @@
+// The New Payment screen.
+//
+// Measured on the live page (`?page=NewPayment&meth=onNewPayment_gateway`) on
+// 2026-11-05: the whole screen is a `table.Layout` of two cells. The left cell is
+// a `table.FlexForm` of labelled rows — Family, Amount, Payment Date, Deposit
+// Date, Notes, and the card on file with its plan — followed by *three* split
+// blocks ("Payment Split #1", "#2 (Optional)", "#3 (Optional)"), each a
+// `table.FlexForm` holding one `select[name=paid_towardN]` and one
+// `input[name=split_amtN]`, and then two anchors: "Add Another Split" and
+// "Process Payment". The right cell holds "Current Unpaid Charges", which is a
+// small `table.ReportTable` of three totals rather than a list of charges.
+//
+// Three things this reader is careful about, because they are what the page gets
+// wrong by default:
+//
+//   - The app prints three split blocks whether or not you split. Here the splits
+//     are read as a list (one per `paid_towardN`/`split_amtN` pair) and the view
+//     hides them until asked for, so a plain payment is four fields.
+//   - The amount and the split amounts must add up, and nothing on the app's page
+//     says so. The model carries both and the view shows them side by side; it
+//     never computes a total the app would not agree with.
+//   - "Process Payment" is printed twice and "Add Another Split" is a bare
+//     anchor. Neither can be a link here: the app's own script builds both
+//     requests. They are read as actions and pressed where they stand.
+//
+// Nothing is submitted from here. `runPayment` writes the edited values into the
+// app's live controls and clicks the app's own anchor, exactly as `saveInApp`
+// does for the editor.
+
+import { qs, qsa, textOf } from './shell.js';
+import { contentRoot } from '../model/root.js';
+import { optionsOf, valueOfSelect, selectorOf } from '../model/fields.js';
+import { diffFields, applyFields } from '../model/diff.js';
+
+// The app's own controls. Anchors carry their word as text; a submit input
+// carries it in `value`.
+const BUTTONS = 'a, button, input[type="submit"], input[type="button"], .Btn, .BtnOutln';
+
+// A control as the view needs it: a key, a live selector, what it holds now.
+function fieldOf(el, doc, split) {
+  if (!el) return null;
+  const tag = el.tagName.toLowerCase();
+  const name = el.getAttribute('name') || '';
+  const id = el.getAttribute('id') || '';
+  const selector = selectorOf(el, doc);
+  if (!selector) return null;
+
+  const type = tag === 'select' ? 'select' : tag === 'textarea' ? 'textarea' : 'text';
+  const options = tag === 'select' ? optionsOf(el) : null;
+  const value = type === 'select'
+    ? valueOfSelect(options)
+    : tag === 'textarea'
+      ? textOf(el)
+      : (el.value != null ? String(el.value) : el.getAttribute('value') || '');
+
+  return {
+    key: id || 'name:' + name,
+    name,
+    id,
+    selector,
+    type,
+    label: '',
+    value,
+    options,
+    // Which split this belongs to, so the view can group the list without
+    // re-deriving it from the name.
+    split: split == null ? null : split
+  };
+}
+
+// A labelled row of the base form: the first cell is the label, the second holds
+// the controls or the value.
+function rowsOf(table) {
+  const rows = [];
+  if (!table) return rows;
+  for (const tr of qsa(table, 'tr')) {
+    // Only this table's own rows: the splits are separate tables, and a nested
+    // one would otherwise be read as a row both times.
+    if (tr.closest && tr.closest('table') !== table) continue;
+    const cells = Array.from(tr.children || []).filter((c) => c.tagName === 'TD');
+    if (cells.length < 2) continue;
+    rows.push({ label: textOf(cells[0]), cell: cells[1] });
+  }
+  return rows;
+}
+
+function rowFor(rows, re) {
+  return rows.find((row) => re.test(row.label)) || null;
+}
+
+// The card on file is printed as one row under the form rather than as a
+// labelled two-cell row: "Payment Method: VISA: XXXXXXXXXXXX9002 Expires: Nov 29
+// Automatic/Recurring Payment Plan: Yes Notes: Click here to change". So it is
+// found by its words and the parts are cut out of that one string.
+function methodOf(table) {
+  if (!table) return null;
+  const rows = qsa(table, 'tr').filter((tr) => !tr.closest || tr.closest('table') === table);
+  const cardRow = rows.find((tr) => /payment method|card on file/i.test(textOf(tr)));
+  if (!cardRow) return null;
+
+  const planRow = rows.find((tr) => /payment plan|recurring/i.test(textOf(tr))) || cardRow;
+
+  const raw = textOf(cardRow);
+  const card = raw
+    .replace(/^[\s\S]*?payment method\s*:?\s*/i, '')
+    .split(/expires:?/i)[0]
+    .trim();
+  const brand = (card.match(/^[A-Za-z]+/) || [''])[0].toUpperCase();
+  const digits = card.replace(/\D+/g, '');
+  const last4 = digits.length >= 4 ? digits.slice(-4) : '';
+  const expiry = /expires?:?\s*([A-Za-z]{3,9}\s*\d{1,2}|\d{1,2}\/\d{2,4})/i.exec(raw);
+  // "Automatic/Recurring Payment Plan: Yes" — the answer follows the words, and
+  // a row that says "Recurring" first must not answer with "Payment".
+  const planText = textOf(planRow);
+  // The live row runs "Yes" straight into the next word ("YesNotes:"), so the
+  // answer is read as yes/no where the app offers one, and only then as a word.
+  const planMatch = /payment plan\s*:?\s*(yes|no)/i.exec(planText)
+    || /payment plan\s*:?\s*([A-Za-z]+)/i.exec(planText)
+    || /recurring[^A-Za-z]*([A-Za-z]+)/i.exec(planText);
+
+  const links = [cardRow, planRow]
+    .filter((row, i, all) => all.indexOf(row) === i)
+    .reduce((all, row) => all.concat(qsa(row, 'a[href]')), [])
+    .map((a) => ({ label: textOf(a), href: a.getAttribute('href') || '' }))
+    .filter((a) => a.href && a.href !== '#');
+
+  const change = links.find((a) => /change/i.test(a.label)) || links[0] || null;
+  const notes = links.find((a) => a !== change) || null;
+
+  return {
+    card,
+    brand,
+    last4,
+    expires: expiry ? expiry[1].trim() : '',
+    plan: planMatch ? planMatch[1] : '',
+    changeHref: change ? change.href : '',
+    planHref: notes ? notes.href : ''
+  };
+}
+
+// The three totals under "Current Unpaid Charges". The app prints them as
+// label/value rows with no headings, so the last cell of the row is the figure.
+function totalsOf(root) {
+  const table = qs(root, 'table.ReportTable');
+  if (!table) return [];
+
+  const out = [];
+  for (const tr of qsa(table, 'tr')) {
+    if (tr.closest && tr.closest('table') !== table) continue;
+    const cells = Array.from(tr.children || []).filter((c) => c.tagName === 'TD');
+    if (cells.length < 2) continue;
+    const label = textOf(cells[0]);
+    const value = textOf(cells[cells.length - 1]);
+    if (!label || !value) continue;
+    out.push({
+      label,
+      value,
+      strong: /balance due/i.test(label),
+      muted: /not applied|unapplied/i.test(label)
+    });
+  }
+  return out;
+}
+
+// An anchor the app's own script drives. Found by its word, anywhere in the
+// content — including inside `table.Layout` cells, which is where this page puts
+// them, and which the shared action reader deliberately skips (it treats a link
+// in a data table as a row).
+function actionOf(el) {
+  return {
+    label: (textOf(el) || el.getAttribute('value') || '').trim(),
+    id: el.getAttribute('id') || '',
+    href: el.getAttribute('href') || '',
+    js: true,
+    onclick: el.getAttribute('onclick') || ''
+  };
+}
+
+function actionIn(root, re) {
+  const el = qsa(root, BUTTONS)
+    .find((node) => re.test((textOf(node) || node.getAttribute('value') || '').trim()));
+  return el ? actionOf(el) : null;
+}
+
+// A control the app's own float bar also prints, with no handler at all. Picking
+// it would do nothing and look like a failure, so the one that carries the
+// submit wins; the decoy is only used if it is the only one there.
+function isReal(el) {
+  const handler = (el.getAttribute('onclick') || '').trim();
+  return !!handler && !/^void\(0\)/i.test(handler);
+}
+
+function primaryPayment(root) {
+  const candidates = qsa(root, BUTTONS)
+    .filter((el) => /^process payment$/i.test((textOf(el) || el.getAttribute('value') || '').trim()));
+  return candidates.length ? actionOf(candidates.find(isReal) || candidates[0]) : null;
+}
+
+export function readPayment(doc) {
+  const root = contentRoot(doc);
+  if (!root) return null;
+
+  const amount = fieldOf(qs(root, '[name="amount"]'), doc);
+  // Without an amount this is not the payment screen, whatever else it has.
+  if (!amount) return null;
+
+  const baseTable = qs(root, 'table.FlexForm');
+  const rows = rowsOf(baseTable);
+
+  const due = fieldOf(qs(root, '[name="due_date"]'), doc);
+  const deposit = fieldOf(qs(root, '[name="deposit_date"]'), doc);
+  const notes = fieldOf(qs(root, '[name="notes"]'), doc);
+
+  const named = {
+    amount: 'Amount',
+    due_date: 'Payment date',
+    deposit_date: 'Deposit date',
+    notes: 'Notes'
+  };
+  const labelOf = (field) => {
+    const row = rows.find((r) => qs(r.cell, '[name="' + field.name + '"]'));
+    return (row && row.label) || named[field.name] || '';
+  };
+
+  const base = [amount, due, deposit, notes].filter(Boolean);
+  for (const field of base) field.label = labelOf(field);
+
+  // One split per `paid_towardN` select, paired with its `split_amtN` amount.
+  // The app prints three of these whether you asked for them or not.
+  const splits = [];
+  const splitFields = [];
+  for (const select of qsa(root, 'select[name]')) {
+    const found = /^paid_toward(\d+)$/.exec(select.getAttribute('name') || '');
+    if (!found) continue;
+    const idx = Number(found[1]);
+    const toward = fieldOf(select, doc, idx);
+    const splitAmount = fieldOf(qs(root, '[name="split_amt' + found[1] + '"]'), doc, idx);
+    if (!toward || !splitAmount) continue;
+    toward.label = 'Paid toward';
+    splitAmount.label = 'Amount';
+    splits.push({ idx, toward, amount: splitAmount });
+    splitFields.push(toward, splitAmount);
+  }
+  splits.sort((a, b) => a.idx - b.idx);
+
+  const totals = totalsOf(root);
+  if (!splits.length && !totals.length) return null;
+
+  // "Split Payment" is what makes the app draw its split rows: on a fresh page
+  // there is not one `paid_toward` select, only this anchor. Pressing it is the
+  // only honest way to offer splits, because the rows it builds are the ones the
+  // form submits.
+  const splitPayment = actionIn(root, /^split payment$/i);
+
+  const familyRow = rowFor(rows, /^family$/i);
+
+  return {
+    kind: 'payment',
+    view: 'payment',
+    title: 'New Payment',
+    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    // Shown, never edited: the family is the page's subject, not one of its inputs.
+    family: familyRow ? textOf(familyRow.cell) : '',
+    base,
+    splits,
+    // An amount already in a split means the page arrived mid-split, so the view
+    // opens the table rather than hiding it.
+    filled: splits.some((s) => Number(String(s.amount.value).replace(/[^0-9.]/g, '')) > 0),
+    totals,
+    method: methodOf(baseTable),
+    // Every editable control, in one list, for diffing and writing back.
+    fields: base.concat(splitFields),
+    primary: primaryPayment(root),
+    addSplit: actionIn(root, /^add another split$/i),
+    splitPayment,
+    url: ''
+  };
+}
+
+// Press one of the page's own controls.
+//
+// This deliberately does not use `clickActionInApp`: that reader skips anything
+// inside a table, because a link in a data table is usually a row. This screen
+// wraps its whole form — buttons included — in `table.Layout`, so the shared
+// filter would report the app's own Process Payment as missing. The buttons are
+// found by their word here, and the app's first "Process Payment" is the same
+// submit as the second one it also prints.
+function press(doc, action) {
+  if (!action) return { ok: false, reason: 'no-action' };
+
+  if (action.id) {
+    const byId = doc.getElementById(action.id);
+    if (byId) {
+      byId.click();
+      return { ok: true, via: 'id' };
+    }
+  }
+
+  const matches = qsa(doc, BUTTONS)
+    .filter((el) => !(el.closest && el.closest('#sd-root')))
+    .filter((el) => ((textOf(el) || el.getAttribute('value') || '').trim() === action.label));
+  if (!matches.length) return { ok: false, reason: 'missing' };
+
+  const target = matches.find(isReal) || matches[0];
+  target.click();
+  return { ok: true, via: matches.length > 1 ? 'first' : 'label' };
+}
+
+// Write the edited values and press the app's own Process Payment. Only changes
+// are written, so every field this screen does not show keeps what the app sent.
+export function runPayment(doc, payment, values) {
+  if (!payment) return { ok: false, reason: 'no-payment', applied: [] };
+
+  const changes = diffFields(payment.fields, values);
+  const { applied, missing } = applyFields(doc, changes);
+  if (missing.length) return { ok: false, reason: 'missing', missing, applied };
+
+  const pressed = press(doc, payment.primary);
+  if (!pressed.ok) return { ok: false, reason: pressed.reason, applied };
+  return { ok: true, reason: 'ok', applied, via: pressed.via };
+}
+
+// Press the app's own Add Another Split, then read the page again: the app is
+// what builds the extra row, and its indices are what the form submits. Returns
+// the fresh model so the view can draw the row it just caused.
+export function addSplitInApp(doc, payment) {
+  // On a fresh page the app has not drawn a split yet, so the only control is
+  // "Split Payment", which builds the first rows; after that it is "Add Another
+  // Split". Both are the app's own anchor and both are followed by a re-read.
+  const pressed = press(doc, payment && (payment.addSplit || payment.splitPayment));
+  if (!pressed.ok) return { ok: false, reason: pressed.reason };
+
+  const next = readPayment(doc);
+  if (!next) return { ok: false, reason: 'reread' };
+  return { ok: true, payment: next, via: pressed.via };
+}

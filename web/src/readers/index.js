@@ -33,6 +33,7 @@ import { readAttendance } from '../lib/attendance.js';
 import { readSettings } from '../lib/settings.js';
 import { confirmationOf } from '../lib/confirmation.js';
 import { readNote } from '../lib/note.js';
+import { readPayment } from '../lib/payment.js';
 
 // Most specific first, the smallest last.
 const ORDER = [
@@ -42,25 +43,29 @@ const ORDER = [
   { id: 'week', key: 'week', after: ['confirmation'], read: (doc) => readWeek(doc) },
   // #idSearchSpan .searchResultList. Gated by the week only — see the note above.
   { id: 'list', key: 'list', after: ['week'], read: (doc, ctx) => readList(doc, { allowEmpty: !!ctx.allowEmpty }) },
+  // New Payment: a FlexForm of amount/dates/notes, split blocks, and the unpaid
+  // charges table beside them. Before the table readers, which would otherwise
+  // take it as a sheet.
+  { id: 'payment', key: 'payment', after: ['confirmation', 'week', 'list'], read: (doc) => readPayment(doc) },
   // A filter form plus a run control. Late, so NewClass keeps its list view.
-  { id: 'report', key: 'report', after: ['confirmation', 'week', 'list'], read: (doc) => readReport(doc) },
+  { id: 'report', key: 'report', after: ['confirmation', 'week', 'list', 'payment'], read: (doc) => readReport(doc) },
   // A form with a control that is not Run Report.
-  { id: 'task', key: 'task', after: ['confirmation', 'week', 'list', 'report'], read: (doc) => readTask(doc) },
+  { id: 'task', key: 'task', after: ['confirmation', 'week', 'list', 'payment', 'report'], read: (doc) => readTask(doc) },
   // The dashboard's Insights tab: stat cells and a donut, no records at all.
-  { id: 'insights', key: 'insights', after: ['confirmation', 'week', 'list', 'report', 'task'], read: (doc) => readInsights(doc) },
+  { id: 'insights', key: 'insights', after: ['confirmation', 'week', 'list', 'payment', 'report', 'task'], read: (doc) => readInsights(doc) },
   // The dashboard's Trends tab: the app's own chart images in a layout table.
-  { id: 'trends', key: 'trends', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights'], read: (doc) => readTrends(doc) },
+  { id: 'trends', key: 'trends', after: ['confirmation', 'week', 'list', 'payment', 'report', 'task', 'insights'], read: (doc) => readTrends(doc) },
   // A grid of controls is the app's own form, never a table of records: every
   // student on every date is a tick box with a reason and notes behind it.
-  { id: 'attendance', key: 'attendance', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights', 'trends'], read: (doc) => readAttendance(doc) },
+  { id: 'attendance', key: 'attendance', after: ['confirmation', 'week', 'list', 'payment', 'report', 'task', 'insights', 'trends'], read: (doc) => readAttendance(doc) },
   // Tables with rows: dashboards, print sheets, list-ish settings.
-  { id: 'sheet', key: 'sheet', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights', 'trends', 'attendance'], read: (doc) => readSheet(doc) },
+  { id: 'sheet', key: 'sheet', after: ['confirmation', 'week', 'list', 'payment', 'report', 'task', 'insights', 'trends', 'attendance'], read: (doc) => readSheet(doc) },
   // Landing pages: what is left when there is nothing but links.
-  { id: 'index', key: 'index', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights', 'trends', 'attendance', 'sheet'], read: (doc) => readIndex(doc) },
+  { id: 'index', key: 'index', after: ['confirmation', 'week', 'list', 'payment', 'report', 'task', 'insights', 'trends', 'attendance', 'sheet'], read: (doc) => readIndex(doc) },
   // A control and a save. After index, because a menu is not a settings card.
-  { id: 'settings', key: 'settings', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights', 'trends', 'attendance', 'sheet', 'index'], read: (doc) => readSettings(doc) },
+  { id: 'settings', key: 'settings', after: ['confirmation', 'week', 'list', 'payment', 'report', 'task', 'insights', 'trends', 'attendance', 'sheet', 'index'], read: (doc) => readSettings(doc) },
   // Last of all, and the smallest: a sentence and the app's own button.
-  { id: 'note', key: 'note', after: ['confirmation', 'week', 'list', 'report', 'task', 'insights', 'trends', 'attendance', 'sheet', 'index', 'settings'], read: (doc) => readNote(doc) }
+  { id: 'note', key: 'note', after: ['confirmation', 'week', 'list', 'payment', 'report', 'task', 'insights', 'trends', 'attendance', 'sheet', 'index', 'settings'], read: (doc) => readNote(doc) }
 ];
 
 export const READERS = ORDER.map((reader) => ({

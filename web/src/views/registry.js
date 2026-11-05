@@ -20,11 +20,13 @@ import Settings from '../components/Settings.svelte';
 import Index from '../components/Index.svelte';
 import Note from '../components/Note.svelte';
 import Confirmed from '../components/Confirmed.svelte';
+import Payment from '../components/Payment.svelte';
 
 export const VIEWS = {
   week: Week,
   month: Month,
   confirm: Confirmed,
+  payment: Payment,
   index: Index,
   report: Report,
   task: Task,
@@ -47,6 +49,7 @@ export function viewOf(model) {
   const m = model || {};
   if (m.view) return m.view;
   if (m.confirm) return 'confirm';
+  if (m.payment) return 'payment';
   if (m.week) return 'week';
   if (m.month) return 'month';
   if (m.list) return 'list';
@@ -88,6 +91,14 @@ export function propsFor(view, model, handlers) {
         url: model.url || '',
         onPress: h.onPress,
         back: h.back || null
+      };
+    case 'payment':
+      // Fields on the left, what is owed on the right. The two controls are the
+      // app's own anchors, pressed on the live page.
+      return {
+        payment: model.payment,
+        onSubmit: h.onSubmitPayment || null,
+        onAddSplit: h.onAddSplit || null
       };
     case 'index':
       return { index: model.index };
@@ -150,6 +161,7 @@ export function crumbsOf(model) {
 export function titleOf(model) {
   const m = model || {};
   const confirm = m.confirm;
+  const payment = m.payment;
   const form = m.form;
   const report = m.report;
   const task = m.task;
@@ -162,6 +174,7 @@ export function titleOf(model) {
   const note = m.note;
 
   if (confirm) return confirm.title || (confirm.ok ? 'Saved' : 'Not saved');
+  if (payment) return payment.title || 'New payment';
   return (form && form.title) || (report && report.title) || (task && task.title)
     || (insights && insights.title) || (trends && trends.title)
     || (attendance && attendance.title)
@@ -187,6 +200,7 @@ export function footerOf(model) {
     const settings = m.settings;
     const note = m.note;
     const confirm = m.confirm;
+    const payment = m.payment;
   const month = m.month;
 
   // A settings card can be a small flow step with its own buttons (Enroll,
@@ -241,6 +255,11 @@ export function footerOf(model) {
     else if (settings.save || settings.primary) left += ` \u00b7 ${settings.save ? settings.save.label : settings.primary.label}`;
   } else if (view === 'note' && note) {
     left = `${plural(note.lines.length, 'line', 'lines')} \u00b7 ${plural(note.actions.length, 'control', 'controls')}`;
+  } else if (view === 'payment' && payment) {
+    // Fields only. The splits are named by the table's own heading when they are
+    // open, and the count read here would be the page's, frozen at mount — the
+    // app builds a new split row after that, and the footer would still say none.
+    left = plural(payment.base.length, 'field', 'fields');
   } else if (view === 'list' && list) {
     left = `${list.items.length} ${list.items.length === 1 ? 'record' : 'records'}`;
   } else if (view === 'form' && m.form) {

@@ -29,6 +29,10 @@ import Menu from './components/Menu.svelte';
   // written into the app's live controls, which is why they arrive as one object.
   export let onAttend = null;
   export let onSaveSettings = null;
+  // The payment screen's own two gestures: process the payment, add a split.
+  // Both press the app's anchors on the live page.
+  export let onSubmitPayment = null;
+  export let onAddSplit = null;
   export let onLoadAll = null;
   export let canLoadAll = false;
   export let onSearch = null;
@@ -115,7 +119,8 @@ import Menu from './components/Menu.svelte';
   $: view = viewOf(model);
   $: entry = view ? VIEWS[view] || null : null;
   $: props = entry ? propsFor(view, model, {
-    onRun, onAct, onPress, onAttend, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, nav, back
+    onRun, onAct, onPress, onAttend, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, nav, back,
+    onSubmitPayment, onAddSplit
   }) : {};
   $: layout = layoutFor(view, !!model.list);
   $: split = layout.split !== 'none' && !!model.list;
