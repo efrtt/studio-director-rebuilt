@@ -1,0 +1,239 @@
+/* ---- the sign-in page ----
+ *
+ * The one screen the rebuild never replaces: it is where the session is made, so
+ * the app's own markup, fields and submit stay exactly as they are. This file is
+ * colour only — it is injected as a <style> beside that markup, and a stylesheet
+ * cannot change what a form sends. No element is added, moved or hidden.
+ *
+ * It is not a theme and not scoped `html[data-sd-theme]`, because there is no
+ * `#sd-root` here to hang tokens on: the page is styled by its own class,
+ * `body.LoginBody`, and the variables below are declared on it. The values are
+ * the Wii skin's palette (see wii.css) so the sign-in looks like the screen it
+ * leads to: a cool near-white field, white panels with a white keyline, cyan
+ * light rather than blue paint, and the skin's rounded scales.
+ *
+ * The app's own selectors are used as they are — this page is a live capture, so
+ * they are the ones that exist: `.LoginBox` inside two `.Pad24`s, `input.Login`,
+ * `a.LoginButton`, `.LoginPowerBy`, `.LoginSDLogo`, `.LoginCopyright`.
+ */
+
+body.LoginBody {
+  --lg-blue: #34beed;
+  --lg-light: #7fd8f7;
+  --lg-deep: #117fb5;
+  --lg-ink: #1b5169;
+  --lg-text: #26333d;
+  --lg-dim: #5d7180;
+  --lg-line: color-mix(in srgb, var(--lg-blue) 30%, #ffffff);
+  --lg-line-strong: color-mix(in srgb, var(--lg-blue) 50%, #ffffff);
+  --lg-surface: #ffffff;
+  --lg-wash: color-mix(in srgb, var(--lg-blue) 9%, #ffffff);
+  --lg-shadow: color-mix(in srgb, var(--lg-deep) 28%, transparent);
+
+  /* The same field the skin's Menu has: a near-white page that cools toward the
+     floor under one bloom of light from below. */
+  background:
+    radial-gradient(120% 62% at 50% 112%,
+      color-mix(in srgb, var(--lg-blue) 42%, transparent) 0%,
+      color-mix(in srgb, var(--lg-blue) 16%, transparent) 42%,
+      transparent 72%),
+    linear-gradient(var(--lg-wash), color-mix(in srgb, var(--lg-blue) 16%, #ffffff));
+  background-attachment: fixed;
+  color: var(--lg-text);
+  font: 14px/1.45 "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Centre the card in the window; the app's own markup is a column already. */
+body.LoginBody .LoginContainer {
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+body.LoginBody .LoginContainer > .Pad24 {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 392px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+body.LoginBody .LoginBox {
+  box-sizing: border-box;
+  width: 100%;
+  background: var(--lg-surface);
+  border: 1px solid var(--lg-line-strong);
+  border-radius: 16px;
+  box-shadow:
+    0 24px 48px -26px var(--lg-shadow),
+    inset 0 1px 0 #ffffff;
+  overflow: hidden;
+}
+
+body.LoginBody .LoginBox .Pad24 {
+  box-sizing: border-box;
+  padding: 28px 30px 30px;
+}
+
+/* The empty studio-logo slot: keep it as breathing room, not a 32px hole. */
+body.LoginBody .LoginStudioNameOrLogo {
+  padding: 0 0 18px;
+}
+
+body.LoginBody .LoginLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--lg-dim);
+  margin: 0 0 6px;
+}
+
+/* The app pins the wrapper to 300px, which is what kept the fields from filling
+   the card: a 100%-wide input inside a 300px line is still 300px. */
+body.LoginBody .LoginContainer form#idForm .LoginLine,
+body.LoginBody .LoginContainer form#idForm .LoginLabel {
+  width: 100%;
+  /* The app spaces this form with padding-top on its own Label/Line classes;
+     a card wants the gap between things, not inside them. */
+  padding: 0;
+}
+
+body.LoginBody .LoginLine {
+  position: relative;
+  margin: 0 0 16px;
+}
+
+body.LoginBody .LoginContainer form#idForm .LoginLine + .LoginLabel {
+  margin-top: 18px;
+}
+
+body.LoginBody .LoginContainer form#idForm .LoginLine:last-child {
+  margin-bottom: 0;
+}
+
+/* The empty spacers the app keeps at the end of the form and after it: their
+   only content is height, which is what left a gap under the button. */
+body.LoginBody .LoginContainer form#idForm > .LoginSpace1:empty,
+body.LoginBody .LoginBox > .Pad24 > .LoginSpace1:empty {
+  display: none;
+}
+
+/* The app pins its fields to 301px from an id-based rule, so these two carry the
+   form's id as well: full width is what makes the card a card. */
+body.LoginBody .LoginContainer form#idForm input.Login {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 11px 13px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--lg-ink);
+  background: var(--lg-wash);
+  border: 1px solid var(--lg-line);
+  border-radius: 11px;
+  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--lg-deep) 12%, transparent);
+  outline: none;
+  transition: border-color 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+}
+
+body.LoginBody .LoginContainer form#idForm input.Login:focus {
+  background: #ffffff;
+  border-color: var(--lg-blue);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--lg-blue) 22%, transparent);
+}
+
+body.LoginBody .LoginContainer form#idForm #passwordField {
+  padding-right: 40px;
+}
+
+/* The app parks the eye outside the field with negative margins measured for its
+   own 301px input, so it floated above the box. Sit it inside the field. */
+body.LoginBody #eyeIcon {
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  margin: 0;
+  transform: translateY(-50%);
+  color: var(--lg-dim);
+  cursor: pointer;
+}
+
+body.LoginBody .LoginContainer form#idForm a.LoginButton {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  color: #ffffff;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 52%),
+    linear-gradient(var(--lg-blue), var(--lg-deep));
+  border-radius: 12px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 10px 20px -12px var(--lg-deep);
+  transition: filter 120ms ease, transform 60ms ease;
+}
+
+body.LoginBody .LoginContainer form#idForm a.LoginButton:hover {
+  filter: brightness(1.06);
+}
+
+body.LoginBody .LoginContainer form#idForm a.LoginButton:active {
+  transform: translateY(1px);
+}
+
+body.LoginBody .LoginContainer form#idForm a.LoginButton:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--lg-blue) 45%, transparent);
+  outline-offset: 2px;
+}
+
+body.LoginBody .LoginPowerBy,
+body.LoginBody .LoginCopyright {
+  margin: 0;
+  padding: 0;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--lg-dim);
+  text-align: center;
+}
+
+body.LoginBody .LoginPowerBy {
+  text-transform: uppercase;
+}
+
+body.LoginBody .LoginSDLogo {
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+body.LoginBody .LoginSDLogo img {
+  max-height: 28px;
+  width: auto;
+  /* The mark is white, drawn for the blue page it used to sit on: as a dark
+     silhouette it reads on this field instead of vanishing. */
+  filter: brightness(0);
+  opacity: 0.4;
+}
+
+@media (max-width: 420px) {
+  body.LoginBody .LoginBox .Pad24 {
+    padding: 22px 20px 24px;
+  }
+}
