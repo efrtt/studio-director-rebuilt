@@ -199,7 +199,11 @@ export function footerOf(model) {
   let left = '';
 
   if (view === 'confirm' && confirm) {
-    left = `Saved \u00b7 ${confirm.breadcrumb.length ? confirm.breadcrumb.join(' / ') : 'the app confirmed it'}`;
+    // A question has not been answered yet, so nothing has been saved: the
+    // drop-in flow's "are you sure?" was reading "Saved" before Continue was
+    // ever pressed.
+    const where = confirm.breadcrumb.length ? confirm.breadcrumb.join(' / ') : 'the app confirmed it';
+    left = confirm.pending ? `Nothing changed yet \u00b7 ${where}` : `Saved \u00b7 ${where}`;
   } else if (view === 'month' && month) {
     left = `${month.label || month.title} \u00b7 ${plural(month.events, 'event', 'events')}`;
     if (month.holidays) left += ` \u00b7 ${plural(month.holidays, 'holiday', 'holidays')}`;
