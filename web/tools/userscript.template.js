@@ -80,7 +80,11 @@
   // change what that form sends, so this one page is skinned with colour only —
   // same markup, same controls, same submit.
   function skinLogin() {
-    if (document.getElementById(LOGIN_STYLE) || !app.loginCss) return;
+    if (!app.loginCss) return;
+    // The choice saved in the header's Colour scheme button travels here: same
+    // key, same attribute, so the sign-in does not need a switch of its own.
+    if (app.applyLoginTheme) app.applyLoginTheme(document.documentElement);
+    if (document.getElementById(LOGIN_STYLE)) return;
     var el = document.createElement('style');
     el.id = LOGIN_STYLE;
     el.textContent = app.loginCss;

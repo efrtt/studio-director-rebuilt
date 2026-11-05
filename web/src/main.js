@@ -5,6 +5,7 @@ import { injectStyles, removeStyles } from './lib/styles.js';
 // app's own markup. Exported as text because the artefact carries everything.
 import FONTS from './fonts.css?inline';
 import LOGIN from './login.css?inline';
+import { readTheme, applyTheme } from './lib/theme.js';
 import {
   fetchPage, hasShell, liveIsBare, parseHtml, SessionExpired, railLinks
 } from './lib/shell.js';
@@ -41,6 +42,14 @@ export { readPage };
 // The face has to travel with it: on a mount the fonts are in the same <style> as
 // everything else, and the sign-in page gets only this one.
 export const loginCss = `${FONTS}\n${LOGIN}`;
+
+// The sign-in page has no shell of its own to carry the colour scheme, and the
+// stylesheet's palettes hang off the same attribute: reading the stored choice
+// here means the page before the app arrives in the look the app will be in.
+// `auto` resolves the same way it does inside the app.
+export function applyLoginTheme(root) {
+  return applyTheme(readTheme(), root);
+}
 // Probe mode's two ends: `probeTick` measures the page before the overlay covers it, and
 // `dump` returns every screen measured so far. Neither is reachable from a console as `SD`
 // (the bundle is function-scoped inside the userscript wrapper): arm it with `?sdprobe=1`,
