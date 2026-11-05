@@ -64,11 +64,14 @@
         <p class="sd-confirm-hint">{line}</p>
       {/each}
       <div class="sd-editor-actions sd-confirm-actions">
-        {#each confirm.actions as action}
+        <!-- The page's first answer is the one it is asking you to take; the
+             second (Cancel, usually) is the way out and stays plain. -->
+        {#each confirm.actions as action, i}
           <button
-            class="sd-btn sd-primary"
+            class="sd-btn"
+            class:sd-primary={i === 0}
             type="button"
-            title={action.onclick || action.label}
+            title={action.href || action.onclick || action.label}
             on:click={() => press(action)}
           >{action.label}</button>
         {/each}

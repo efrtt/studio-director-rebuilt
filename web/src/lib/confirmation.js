@@ -195,7 +195,10 @@ export function confirmationOf(doc, opts = {}) {
     if (pending) return pending;
     // …or the same screen one step before a delete, which the app draws as a
     // question over the list rather than as a form.
-    return askedConfirmation(doc);
+    const asked = askedConfirmation(doc);
+    if (asked) return asked;
+    // …or a question the page answers with two links of its own.
+    return answeredQuestion(doc);
   }
 
   return {
@@ -283,5 +286,71 @@ export function askedConfirmation(doc) {
       href: button.getAttribute('href') || '',
       onclick: button.getAttribute('onclick') || ''
     }]
+  };
+}
+
+// A question the page answers with two links of its own.
+//
+// Measured live (2026-11-05) in the drop-in flow: after picking a date the app
+// asks "…Are you sure you want to schedule a trial/drop-in for Lily on this
+// day?" and offers `a.Btn` Continue (`meth=pickCharge`) beside `a.BtnOutln`
+// Cancel. Neither is a scripted button, so `pendingConfirmation` refuses the
+// page and the yes is not a Delete, so `askedConfirmation` refuses it too — and
+// the one screen in the flow that asks before it acts was the one screen left
+// unskinned. Both answers are plain GET links, so both are the app's own next
+// step and nothing here builds a request.
+const ANSWERS_YES = /^(continue|yes|ok|proceed|confirm|add|schedule|enroll|save|update)\b/i;
+const ANSWERS_NO = /^(cancel|no|back|go back|return)\b/i;
+
+function outsideChrome(anchor) {
+  return !(anchor.closest && anchor.closest('#sideNavBar, .topBarContainer, .Breadcrumb, #idSearchSpan'));
+}
+
+export function answeredQuestion(doc) {
+  const root = qs(doc, '.Content') || qs(doc, '#mainContent') || (doc && doc.body);
+  if (!root) return null;
+
+  const question = (String(root.textContent || '').replace(/\s+/g, ' ').match(ASKS_ABOUT) || [])[0];
+  if (!question) return null;
+
+  // A control to type into, or a table of rows, is a screen with its own reader.
+  const typed = qsa(root, 'input, select, textarea')
+    .filter((el) => String(el.getAttribute('type') || '').toLowerCase() !== 'hidden');
+  if (typed.length) return null;
+  if (qs(root, 'table tr td')) return null;
+
+  const title = textOf(qs(doc, '.formTitle, .ReportName, h1'));
+  if (!title) return null;
+
+  const links = qsa(root, 'a[href]').filter(outsideChrome);
+  const yes = links.filter((a) => ANSWERS_YES.test(textOf(a)));
+  const no = links.find((a) => ANSWERS_NO.test(textOf(a)));
+  // One way to say yes, and a way out: anything else is a menu, not a question.
+  if (yes.length !== 1 || !no) return null;
+
+  const action = (anchor) => ({
+    label: textOf(anchor),
+    id: anchor.getAttribute('id') || '',
+    href: anchor.getAttribute('href') || '',
+    onclick: anchor.getAttribute('onclick') || ''
+  });
+
+  // What the page says before it asks — "11 out of 15 students are enrolled …" —
+  // belongs on the screen: it is the reason the question is being asked.
+  const lines = qsa(root, 'p, li')
+    .map(sentenceOf)
+    .filter((text) => text && text !== textOf(yes[0]) && text !== textOf(no) && text.length <= MAX_LENGTH);
+
+  return {
+    kind: 'confirm',
+    // Nothing has happened yet: this is the page asking, not the app's answer.
+    pending: true,
+    ok: true,
+    message: question,
+    lines: lines.length ? lines : [question],
+    title,
+    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    links: [action(no)],
+    actions: [action(yes[0]), action(no)]
   };
 }
