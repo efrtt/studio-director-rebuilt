@@ -2538,6 +2538,20 @@ html[data-sd-theme="light"] #sd-root .sd-asktext { color: var(--dim); }
 
 /* A split is a row, not a printed block: adding one adds a row here. */
 .sd-paylist { width: 100%; border-collapse: collapse; }
+/* The app's own stylesheet reaches these cells too, the same way it reaches the
+   fields table: its header fill, its white cell borders and its text shadow. On
+   the charges card that put every label on a grey band and ran a dark rule
+   through the figures. Reset at id specificity, and draw the separators as an
+   inset shadow so the app cannot repaint them. */
+#sd-root .sd-paylist,
+#sd-root .sd-paylist th,
+#sd-root .sd-paylist td,
+#sd-root .sd-paylist tr {
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  text-shadow: none !important;
+}
 .sd-paylist th {
   padding: 0 10px 6px;
   color: var(--dim);
@@ -2547,23 +2561,43 @@ html[data-sd-theme="light"] #sd-root .sd-asktext { color: var(--dim); }
   letter-spacing: .07em;
   text-transform: uppercase;
 }
-.sd-paylist td { padding: 6px 10px; border-top: 1px solid var(--line); }
+/* Every data cell carries the rule above it, which draws the line under the
+   header and between the rows in one go. The charges card has no header row, so
+   there the first row's rule is dropped. */
+.sd-paylist td,
+.sd-paylist tbody th { box-shadow: inset 0 1px 0 var(--line); }
+.sd-paylist td { padding: 6px 10px; }
 .sd-paylist .sd-cell--right { text-align: right; }
 .sd-paylist .sd-input { width: 100%; }
 .sd-paylist td.sd-cell--right .sd-input { max-width: 160px; margin-left: auto; }
+/* The charges card is a reading table, not a form: the label is a sentence
+   ("Current payments not applied to unpaid charges…") and the figure is a
+   column, so the labels sit on one baseline, the figures keep one right edge
+   and never wrap, and a quiet row is set smaller than a loud one. */
 .sd-paytotals th {
-  padding: 6px 0;
+  padding: 7px 10px 7px 0;
   color: var(--text);
   text-align: left;
   font-size: var(--fs-base);
   font-weight: 400;
+  line-height: 1.35;
   letter-spacing: 0;
   text-transform: none;
+  vertical-align: baseline;
 }
-.sd-paytotals td { padding: 6px 0; font-variant-numeric: tabular-nums; }
-.sd-paytotals tr + tr > * { border-top: 1px solid var(--line); }
-.sd-paytotal > * { font-weight: 700; }
-.sd-paymuted > * { color: var(--dim); }
+.sd-paytotals td {
+  padding: 7px 0;
+  text-align: right;
+  vertical-align: baseline;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.sd-paytotals tr:first-child > * { box-shadow: none; }
+/* Row state has to carry the row's own cells: `.sd-paytotals th` sets the base
+   colour and weight on the label cell, so a bare `.sd-paytotal > *` lost to it
+   and the total stayed exactly as light as the lines above it. */
+.sd-paytotals tr.sd-paytotal > * { font-weight: 700; }
+.sd-paytotals tr.sd-paymuted > * { color: var(--dim); font-size: var(--fs-sm); }
 .sd-payadd {
   display: flex;
   justify-content: flex-end;
