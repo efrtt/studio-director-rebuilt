@@ -28,7 +28,7 @@ import { clickActionInApp } from './lib/actions.js';
 import { changesFrom, saveInApp } from './lib/save.js';
 import { probeTick, recordView } from './lib/probe.js';
 import { contradictsNote } from './lib/note.js';
-import { wantsLiveLook, decideMount, decideShellLess, chooseSource, looksLikeSearchResults, searchSettled } from './lib/choose.js';
+import { wantsLiveLook, decideMount, decideShellLess, chooseSource, searchReady } from './lib/choose.js';
 import { readRecordPage } from './lib/record.js';
 import { readLiveView } from './lib/live.js';
 
@@ -383,7 +383,7 @@ async function mountSearchResults(onOriginal) {
   let model = first;
   const started = Date.now();
   while (Date.now() - started < 8000) {
-    if (searchSettled(model, first)) break;
+    if (searchReady(model, first)) break;
     await new Promise((resolve) => setTimeout(resolve, 120));
     model = readPage(document, location.href, { allowEmpty: true });
   }

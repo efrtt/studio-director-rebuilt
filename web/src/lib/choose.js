@@ -114,6 +114,58 @@ export function searchSettled(model, first) {
   return false;
 }
 
+// The first record a panel shows, as one string. Two readings with the same
+// total *and* the same first record are the same record set: the app filling a
+// carried-over panel appends rows without changing either.
+function firstRecordOf(list) {
+  const item = list && Array.isArray(list.items) ? list.items[0] : null;
+  if (!item) return '';
+  return String(item.href || '') + '|' + String(item.label || '');
+}
+
+// Is this reading still the panel the page arrived with?
+//
+// The results page is served carrying the record panel of the page the search
+// started on, and the app finishes filling that panel *before* it draws the
+// results. So "items reached total" is not proof of anything: a 4272-record
+// Students panel completes itself while the search is still in flight, and the
+// wait ended on it — the list you were already looking at, under a search URL.
+// The results are a different record set, so the first record or the total
+// changes when they land; a panel that keeps its own first record is still the
+// page it arrived from.
+export function sameRecordSet(a, b) {
+  if (!a || !b) return false;
+  if (a.total == null || b.total == null || a.total !== b.total) return false;
+  // An empty panel is not a record set: a search that found nothing has nothing
+  // in common with whatever the page arrived carrying, and must not be made to
+  // wait for a change that will never come.
+  if (!Array.isArray(a.items) || !a.items.length) return false;
+  if (!Array.isArray(b.items) || !b.items.length) return false;
+  return firstRecordOf(a) === firstRecordOf(b);
+}
+
+// Has the search route's page finished showing *its* results?
+//
+// Three things, in order: the page names itself as the results, the panel is
+// complete, and the panel is no longer the record set the page arrived with.
+// The last is what a search started from a list page needs — that page's own
+// panel reaches its total too.
+export function searchReady(model, first) {
+  if (!looksLikeSearchResults(model)) return false;
+  const list = model.list;
+  if (!list) return false;
+  // The panel the page arrived with is still on screen: the app fills that panel
+  // to its own total before it draws the results, so waiting longer is right.
+  if (sameRecordSet(list, first ? first.list : null)) return false;
+  // Nothing drawn yet. An empty panel that states 0 is the answer; one that says
+  // nothing at all is the shell the results have not been written into.
+  if (!Array.isArray(list.items) || !list.items.length) return list.total === 0;
+  // Rows of a record set the page did not arrive with: the results, however many
+  // of them the app has drawn so far. The list follows the rest itself (a
+  // standalone list is `auto`), so the screen does not wait for the last row.
+  return true;
+}
+
 export function hasReadyView(model) {
   return !!model && READY.some((key) => !!model[key]);
 }
