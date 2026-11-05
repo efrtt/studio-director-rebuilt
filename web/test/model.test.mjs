@@ -174,6 +174,46 @@ test('a one-column list of links beside the form is read too', () => {
   assert.match(list.rows[1][0].href, /lident=101/);
 });
 
+test('a page with Save joins its sibling form tables into one editor', () => {
+  // Measured live on `page=ChangeEnrollDate` (Enrollment Dates) on 2026-11-05: two
+  // one-row `table.Form`s under the same `.contentInfo`, one per date, each three
+  // selects (month, day, year) and the hidden field the calendar widget keeps.
+  // Reading only the biggest table kept the first date and dropped the second,
+  // so the rebuilt page asked for one date where the app asks for two.
+  const d = doc(`
+    <body><div class="contentContainer"><div class="contentInfo">
+      <div class="formTitle">Enrollment Dates</div>
+      <p>Charge for classes starting:</p>
+      <table class="Form"><tr>
+        <td>Charge for classes starting:</td>
+        <td>
+          <select id="a_mon"><option>Nov</option><option>Dec</option></select>
+          <select id="a_day"><option>4</option><option>5</option></select>
+          <select id="a_year"><option>2026</option><option>2027</option></select>
+          <input type="hidden" id="a_hidden" value="">
+        </td>
+      </tr></table>
+      <p>Display on roster starting:</p>
+      <table class="Form"><tr>
+        <td>Display on roster starting:</td>
+        <td>
+          <select id="b_mon"><option>Nov</option></select>
+          <select id="b_day"><option>4</option></select>
+          <select id="b_year"><option>2026</option></select>
+        </td>
+      </tr></table>
+      <a href="#" id="save">Save</a>
+    </div></div></body>`);
+
+  const form = readForm(d);
+  assert.ok(form, 'the page is an editor');
+  assert.deepEqual(form.rows.map((row) => row.label),
+    ['Charge for classes starting:', 'Display on roster starting:']);
+  assert.equal(form.fields.length, 6);
+  // The hidden date the calendar widget keeps is not a field of its own.
+  assert.equal(form.fields.some((field) => /hidden/.test(field.id)), false);
+});
+
 test('a page without Save still needs four fields to be an editor', () => {
   // The floor that keeps a list page's three-control stub out of the editor.
   const stub = doc(`

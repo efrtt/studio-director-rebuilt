@@ -205,13 +205,14 @@ function isSideTable(read) {
     && read.rows.some((row) => row[0] && row[0].href);
 }
 
-function tablesBeside(doc, formTable) {
+function tablesBeside(doc, formTables) {
   const root = contentRoot(doc);
   if (!root) return [];
+  const skip = new Set(Array.isArray(formTables) ? formTables : [formTables]);
 
   const tables = [];
   for (const table of qsa(root, 'table')) {
-    if (table === formTable) continue;
+    if (skip.has(table)) continue;
     // A table inside another table's cell is that table's cell content.
     if (table.closest && table.closest('table') !== table) continue;
     if (table.closest && table.closest('.tabContent, .menu, .ButtonBar, #sideNavBar, .List')) continue;
@@ -228,23 +229,50 @@ function tablesBeside(doc, formTable) {
 // with two or three stray controls is not an editor, so it yields nothing and
 // the caller leaves the app alone rather than inventing a form.
 export function readForm(doc) {
-  let best = null;
+  const saved = !!(doc && doc.getElementById && doc.getElementById('save'));
   // The page's own Save is what makes a form an editor, so a page carrying it
   // is an editor whatever its size: `NewEditDel(content=LocationsContent)` is a
   // location name and a link, two fields. Four remains the floor without it —
   // a list page's editor stub has three, and those are not records.
-  const floor = doc && doc.getElementById && doc.getElementById('save') ? 2 : 4;
+  //
+  // One editor can also be printed as several form tables. `ChangeEnrollDate`
+  // (Enrollment Dates) is two one-row `table.Form`s under the same
+  // `.contentInfo`, one per date: reading only the biggest table kept the first
+  // date and silently dropped the second, so the rebuilt page asked for one date
+  // where the app asks for two. A page carrying its own Save is certainly an
+  // editor, so there its same-parent form tables are one form. Without a Save
+  // the old rule stands: the biggest single table has to carry the page, which
+  // keeps a list page's stray controls from being merged into an editor.
+  const floor = saved ? 2 : 4;
 
+  const groups = new Map();
   for (const table of qsa(doc, FORM_SELECTOR)) {
     const rows = rowsOf(table);
     const fields = rows.reduce((all, row) => all.concat(row.fields), []);
-    if (fields.length < floor) continue;
-    if (!best || fields.length > best.fields.length) best = { rows, fields, table };
+    if (!fields.length) continue;
+    // A *one-row* form table is a fragment of a form, not a form: the app prints
+    // one per field group, as it does for the two dates on Enrollment Dates. A
+    // table with several rows is a whole form (EditFamily, EditStudent), and two
+    // of those side by side are different screens' business, so they are not
+    // merged even when a Save is on the page.
+    const fragment = saved && rows.length === 1 && !!table.parentElement;
+    const holder = fragment ? table.parentElement : table;
+    if (!groups.has(holder)) groups.set(holder, { tables: [], rows: [], fields: [] });
+    const group = groups.get(holder);
+    group.tables.push(table);
+    group.rows.push(...rows);
+    group.fields.push(...fields);
+  }
+
+  let best = null;
+  for (const group of groups.values()) {
+    if (group.fields.length < floor) continue;
+    if (!best || group.fields.length > best.fields.length) best = group;
   }
 
   if (!best) return null;
 
-  const tables = tablesBeside(doc, best.table);
+  const tables = tablesBeside(doc, best.tables);
 
   return {
     kind: 'form',
