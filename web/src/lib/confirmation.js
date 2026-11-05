@@ -15,6 +15,7 @@
 // mistaken for an outcome screen.
 
 import { qs, qsa, textOf } from './shell.js';
+import { CONTROLS } from '../model/controls.js';
 
 // `scheduled` and `cancelled` are the drop flow's own outcomes: "Lily has been
 // scheduled to drop in on class …" when it is booked, "… session in … has been
@@ -98,7 +99,7 @@ export function pendingConfirmation(doc) {
 
   // A control someone could type into means a form, and a form has its own
   // readers. Hidden inputs are record ids, not fields.
-  const typed = qsa(root, 'input, select, textarea')
+  const typed = qsa(root, CONTROLS)
     .filter((el) => String(el.getAttribute('type') || '').toLowerCase() !== 'hidden');
   if (typed.length) return null;
 
@@ -328,7 +329,7 @@ export function answeredQuestion(doc) {
   if (!question) return null;
 
   // A control to type into, or a table of rows, is a screen with its own reader.
-  const typed = qsa(root, 'input, select, textarea')
+  const typed = qsa(root, CONTROLS)
     .filter((el) => String(el.getAttribute('type') || '').toLowerCase() !== 'hidden');
   if (typed.length) return null;
   if (qs(root, 'table tr td')) return null;

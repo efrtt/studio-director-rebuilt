@@ -26,6 +26,7 @@
 import { qs, qsa, textOf } from './shell.js';
 import { readActions, primaryAction } from './actions.js';
 import { contentRoot, CHROME, FURNITURE } from '../model/root.js';
+import { CONTROLS } from '../model/controls.js';
 import { MENU_LINKS, TABLE_ROWS } from './thresholds.js';
 
 // How many lines of instruction to keep. These pages say one thing; a page that
@@ -61,7 +62,7 @@ function dataRows(root) {
 export function contradictsNote(doc) {
   const root = rootOf(doc);
   if (!root) return false;
-  if (qsa(root, 'input, select, textarea').length > 0) return true;
+  if (qsa(root, CONTROLS).length > 0) return true;
   if (dataRows(root) >= TABLE_ROWS) return true;
   return qsa(root, 'a[href]').length >= MENU_LINKS;
 }
@@ -127,7 +128,7 @@ function scriptedLinks(root) {
 function onlyHiddenInputs(doc) {
   const root = rootOf(doc);
   if (!root) return false;
-  return qsa(root, 'input, select, textarea')
+  return qsa(root, CONTROLS)
     .every((el) => String(el.getAttribute('type') || '').toLowerCase() === 'hidden');
 }
 

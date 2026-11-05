@@ -16,6 +16,8 @@
 // view they already have.
 
 import { qs, qsa, textOf } from './shell.js';
+import { contentRoot } from '../model/root.js';
+import { CONTROLS } from '../model/controls.js';
 import { MENU_LINKS, TABLE_ROWS } from './thresholds.js';
 import { menuFor, layoutForTitle } from './menu.js';
 import { groupCharges } from './charges.js';
@@ -103,7 +105,9 @@ function sectionLabels(root) {
 }
 
 export function readIndex(doc) {
-  const root = qs(doc, '.contentContainer') || qs(doc, '#mainContent') || doc.body;
+  // Where a page's content starts is `model/root.js`'s answer, the same one every
+  // other reader asks for. This had its own copy of the fallback order.
+  const root = contentRoot(doc);
   if (!root) return null;
 
   // Rows mean this page shows data, not a menu.
@@ -138,7 +142,7 @@ export function readIndex(doc) {
   }
 
   const listed = items.length >= MIN_LIST_LINKS
-    && !qsa(root, 'input, select, textarea').length
+    && !qsa(root, CONTROLS).length
     && items.every((item) => item.li && item.li.querySelectorAll('a[href]').length === 1);
 
   if (items.length < MENU_LINKS && !listed) return null;

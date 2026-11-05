@@ -138,16 +138,40 @@ export function fieldsIn(cell, doc, rowLabel) {
   return { fields, shown, passed };
 }
 
+// The cells of one row *of this table*: a field can contain a nested table (the
+// weekday checkboxes live in one), and its rows would otherwise be read a second
+// time as fields of their own, with no label. Every reader that splits a row
+// asks this, so it is asked once — the record editor's rows, a payment's base
+// form and its split blocks, and the totals beside them.
+export function rowCells(tr, table) {
+  if (!tr) return [];
+  if (tr.closest && table && tr.closest('table') !== table) return [];
+  return Array.from(tr.children || []).filter((c) => c.tagName === 'TD');
+}
+
+// Every two-cell row of a table, with the cell that names it and the cell that
+// holds its content: the plain shape a screen prints with no heading row. A
+// payment's base form is the shape outside an editor — "Family | the family",
+// "Amount | an input" — so it reads its rows here rather than keeping a second
+// copy of the split.
+export function labelledRows(table) {
+  const rows = [];
+  if (!table) return rows;
+  for (const tr of qsa(table, 'tr')) {
+    const cells = rowCells(tr, table);
+    if (cells.length < 2) continue;
+    rows.push({ label: textOf(cells[0]).slice(0, 120), cell: cells[1] });
+  }
+  return rows;
+}
+
 export function rowsOf(table) {
   const rows = [];
   const shown = [];
   const passed = [];
   for (const tr of qsa(table, 'tr')) {
-    // Only this table's own rows: a field can contain a nested table (the
-    // weekday checkboxes live in one), and its rows would otherwise be read a
-    // second time as fields of their own, with no label.
     if (tr.closest && tr.closest('table') !== table) continue;
-    const cells = Array.from(tr.children || []).filter((c) => c.tagName === 'TD');
+    const cells = rowCells(tr, table);
     if (cells.length < 2) {
       // A caption or a spacer row. Anything typed into it is still on the page,
       // so it counts as passed over rather than lost.

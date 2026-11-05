@@ -30,7 +30,8 @@
 import { qs, qsa, textOf, pageName } from './shell.js';
 import { contentRoot } from '../model/root.js';
 import { coverageOf } from '../model/coverage.js';
-import { optionsOf, valueOfSelect, selectorOf } from '../model/fields.js';
+import { controlOf } from '../model/controls.js';
+import { labelledRows, rowCells } from '../model/rows.js';
 import { diffFields, applyFields } from '../model/diff.js';
 
 // The app's own controls. Anchors carry their word as text; a submit input
@@ -38,51 +39,30 @@ import { diffFields, applyFields } from '../model/diff.js';
 const BUTTONS = 'a, button, input[type="submit"], input[type="button"], .Btn, .BtnOutln';
 
 // A control as the view needs it: a key, a live selector, what it holds now.
+//
+// The reading is `model/controls.js`'s — the one walk the record editor and the
+// settings card use — so this screen cannot drift on addressing, on what a
+// control holds, or on what is a field at all. It used to read its own value out
+// of `el.value`, trusted the same address rule by copy, and had its own list of
+// types; three places to be wrong about one control.
 function fieldOf(el, doc, split) {
   if (!el) return null;
-  const tag = el.tagName.toLowerCase();
-  const name = el.getAttribute('name') || '';
-  const id = el.getAttribute('id') || '';
-  const selector = selectorOf(el, doc);
-  if (!selector) return null;
-
-  const type = tag === 'select' ? 'select' : tag === 'textarea' ? 'textarea' : 'text';
-  const options = tag === 'select' ? optionsOf(el) : null;
-  const value = type === 'select'
-    ? valueOfSelect(options)
-    : tag === 'textarea'
-      ? textOf(el)
-      : (el.value != null ? String(el.value) : el.getAttribute('value') || '');
-
+  // The edit screen prints each date as text beside the hidden input that
+  // submits it, so that one exception is asked for here; everything else about
+  // the reading is the shared walk's.
+  const field = controlOf(el, doc, { includeHidden: true });
+  if (!field) return null;
   return {
-    key: id || 'name:' + name,
-    name,
-    id,
-    selector,
-    type,
+    ...field,
+    // The view draws the printed text, and the hidden input is only what the
+    // app submits it through, so the type is adapted where the page shape is
+    // known rather than in the shared reading.
+    type: field.type === 'hidden' ? 'text' : field.type,
     label: '',
-    value,
-    options,
     // Which split this belongs to, so the view can group the list without
     // re-deriving it from the name.
     split: split == null ? null : split
   };
-}
-
-// A labelled row of the base form: the first cell is the label, the second holds
-// the controls or the value.
-function rowsOf(table) {
-  const rows = [];
-  if (!table) return rows;
-  for (const tr of qsa(table, 'tr')) {
-    // Only this table's own rows: the splits are separate tables, and a nested
-    // one would otherwise be read as a row both times.
-    if (tr.closest && tr.closest('table') !== table) continue;
-    const cells = Array.from(tr.children || []).filter((c) => c.tagName === 'TD');
-    if (cells.length < 2) continue;
-    rows.push({ label: textOf(cells[0]), cell: cells[1] });
-  }
-  return rows;
 }
 
 function rowFor(rows, re) {
@@ -147,8 +127,7 @@ function totalsOf(root) {
 
   const out = [];
   for (const tr of qsa(table, 'tr')) {
-    if (tr.closest && tr.closest('table') !== table) continue;
-    const cells = Array.from(tr.children || []).filter((c) => c.tagName === 'TD');
+    const cells = rowCells(tr, table);
     if (cells.length < 2) continue;
     const label = textOf(cells[0]);
     const value = textOf(cells[cells.length - 1]);
@@ -265,7 +244,7 @@ export function readPayment(doc, url) {
   if (!amount) return null;
 
   const baseTable = qs(root, 'table.FlexForm');
-  const rows = rowsOf(baseTable);
+  const rows = labelledRows(baseTable);
 
   const due = take(qs(root, '[name="due_date"]'));
   const deposit = take(qs(root, '[name="deposit_date"]'));
