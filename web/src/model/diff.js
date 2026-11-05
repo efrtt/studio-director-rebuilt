@@ -141,7 +141,12 @@ export function applyFields(doc, changes) {
     }
 
     const el = doc.querySelector(change.selector);
-    if (!el) {
+    // A selector can resolve to the wrong element and still "work": an id shared
+    // with a button-bar anchor pointed this write at the anchor, which took the
+    // assignment silently and left the field untouched. A target that is not a
+    // control is a field this page does not have, and the caller is told.
+    const controlTag = el && el.tagName && /^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName);
+    if (!el || !controlTag) {
       missing.push(change.key);
       continue;
     }

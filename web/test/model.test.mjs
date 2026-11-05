@@ -379,6 +379,44 @@ test('a control outside any form table is counted as unread', () => {
   assert.equal(form.unread[0].id, 'stray');
 });
 
+test('an id shared with a button-bar anchor is not the field\u2019s address', () => {
+  // Measured on the EditFamily capture: the page prints `<a id="email">Email</a>`
+  // in its button bar beside `input#email`. Addressing the field by id made
+  // `querySelector('#email')` return the anchor, so a save wrote the value onto an
+  // anchor, reported success, and the app submitted what it already had.
+  const d = doc(`
+    <body>
+      <a id="email" href="#">Email</a>
+      <div class="contentContainer">
+        <table class="Form">
+          <tr><td>Email</td><td><input id="email" name="email" value="old@example.test"></td></tr>
+          <tr><td>Zip</td><td><input id="zip" name="zip" value="90210"></td></tr>
+        </table>
+        <a id="save" href="#">Save</a>
+      </div>
+    </body>`);
+  const form = readForm(d);
+  const email = form.fields.find((f) => f.name === 'email');
+  assert.equal(email.selector, '[name="email"]', 'the shared id is not an address');
+
+  const changes = changesFrom(form, valuesFor(form, { email: 'new@example.test' }));
+  const { applied, missing } = applyFields(d, changes);
+  assert.deepEqual(missing, []);
+  assert.deepEqual(applied, ['email']);
+  assert.equal(d.querySelector('input[name="email"]').value, 'new@example.test');
+  assert.equal(d.querySelector('a#email').getAttribute('href'), '#');
+});
+
+test('a write aimed at something that is not a control is refused', () => {
+  // The backstop for the same shape on a page this suite has never seen: a target
+  // that is not a control means the field is not there, and the caller is told
+  // rather than shown a confirmation for a write that went nowhere.
+  const d = doc('<body><a id="email" href="#">Email</a></body>');
+  const { applied, missing } = applyFields(d, [{ selector: '#email', value: 'x', key: 'email' }]);
+  assert.deepEqual(missing, ['email']);
+  assert.deepEqual(applied, []);
+});
+
 test('coverage counts only the controls nobody accounted for', () => {
   // The four answers coverage gives, in one page: a shown control, a control that
   // belongs to another reader (the record list's filter), a control the app is not

@@ -145,7 +145,7 @@
         "masked": false,
         "name": "email",
         "options": null,
-        "selector": "#email",
+        "selector": "[name=\"email\"]",
         "type": "text",
         "value": "dana@example.com"
       },
@@ -493,7 +493,7 @@
             "masked": false,
             "name": "email",
             "options": null,
-            "selector": "#email",
+            "selector": "[name=\"email\"]",
             "type": "text",
             "value": "dana@example.com"
           }

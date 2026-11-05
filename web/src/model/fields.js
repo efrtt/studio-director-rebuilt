@@ -83,7 +83,13 @@ export function humanise(raw) {
 // never when it could be one of several.
 export function selectorOf(el, doc) {
   const id = el.getAttribute('id') || '';
-  if (id) return '#' + id;
+  // An id is the best address, but only when it addresses one element. Record
+  // pages print a button-bar anchor with the same id as a field
+  // (`<a id="email">Email</a>` beside `input#email` on EditFamily), and
+  // `querySelector('#email')` then returns the anchor: a save wrote the value onto
+  // an anchor, reported success, and the app submitted what it already had. Where
+  // the id is not unique, the control's own name is the address that works.
+  if (id && qsa(doc, '[id="' + id + '"]').length === 1) return '#' + id;
   const name = el.getAttribute('name') || '';
   // `name="-"` is the app's placeholder for a helper input that submits nothing.
   // It is unique on the page, so without this it would become a field called "-";
