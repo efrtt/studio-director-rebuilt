@@ -49,6 +49,37 @@ test('a dropped student is an outcome, and the command link is not part of it', 
   assert.doesNotMatch(model.message, /Review the account/);
 });
 
+// The drop-in flow's own question, measured live (2026-11-05). After a date is
+// picked the app asks before it goes on, and answers with two plain links: no
+// scripted button (so `pendingConfirmation` refuses) and no Delete (so
+// `askedConfirmation` refuses), which left the one screen that asks unskinned.
+const dropInAsk = doc(`<body><div class="contentContainer"><div class="Content">
+  <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a></div>
+  <div class="formTitle">Add Trial/Drop-in</div>
+  <div class="ButtonBar"></div>
+  <div class="contentInfo">
+    <p>11 out of 15 students are enrolled in
+      <a href="admin.sd?page=EditClass&cident=1">Graduating Seniors</a> on Mon, Nov 2, 2026.
+      There are 0 make-ups and 0 drop-ins/trials. Are you sure you want to schedule a
+      trial/drop-in for <a href="admin.sd?page=EditStudent&sident=2">Lily</a> on this day?</p>
+    <p><a class="Btn" href="admin.sd?page=AddStudentDropIn&amp;meth=pickCharge&amp;tid=9">Continue</a>
+      <a class="BtnOutln" href="admin.sd?page=AddStudentDropIn&amp;sident=2&amp;tid=9">Cancel</a></p>
+  </div>
+</div></div></body>`);
+
+test('a question answered by the page\u2019s own links is still a question', () => {
+  const model = confirmationOf(dropInAsk, {});
+
+  assert.ok(model, 'the page is recognised');
+  assert.equal(model.pending, true, 'nothing has been scheduled yet');
+  assert.equal(model.title, 'Add Trial/Drop-in');
+  assert.match(model.message, /Are you sure you want to schedule a trial\/drop-in for Lily on this day\?/);
+  assert.deepEqual(model.actions.map((a) => a.label), ['Continue', 'Cancel'], 'both answers are the app\u2019s links');
+  assert.match(model.actions[0].href, /meth=pickCharge/);
+  assert.match(model.actions[1].href, /sident=2/);
+  assert.match(model.lines[0], /11 out of 15 students/, 'the reason it asks is kept');
+});
+
 test('a paragraph that is only links is an action bar, not a question', () => {
   // Lifted from the two fixtures whose models must not move: the unenroll page's
   // "Switch Classes / Back to the student" pair, and the Email Class menu.
