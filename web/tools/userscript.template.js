@@ -53,6 +53,7 @@
   }
 
   var ORIGINAL = '#original';
+  var LOGIN_STYLE = 'sd-login';
   var instance = null;
 
   function wantsOriginal() {
@@ -74,8 +75,21 @@
     if (location.hash === ORIGINAL) history.replaceState(null, '', location.pathname + location.search);
   }
 
+  // The sign-in page is never rebuilt or replaced: it is where the session is
+  // made, so the app's own form stays exactly as it is. A stylesheet cannot
+  // change what that form sends, so this one page is skinned with colour only —
+  // same markup, same controls, same submit.
+  function skinLogin() {
+    if (document.getElementById(LOGIN_STYLE) || !app.loginCss) return;
+    var el = document.createElement('style');
+    el.id = LOGIN_STYLE;
+    el.textContent = app.loginCss;
+    (document.head || document.documentElement).appendChild(el);
+  }
+
   async function start() {
-    if (wantsOriginal() || isLoginPage()) return;
+    if (wantsOriginal()) return;
+    if (isLoginPage()) { skinLogin(); return; }
     if (document.getElementById('sd-root')) return;
     try {
       instance = await app.autoMount({
