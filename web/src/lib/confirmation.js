@@ -16,7 +16,10 @@
 
 import { qs, qsa, textOf } from './shell.js';
 
-const CONFIRMED = /\bhas been\s+(updated|saved|added|created|deleted|removed|changed|cloned|unenrolled|enrolled|dropped|withdrawn)\b/i;
+// `scheduled` is the drop-in flow's own outcome: "Lily has been scheduled to drop
+// in on class …". Without it the last page of that flow read as no view at all,
+// because every other reader refuses a page that is one sentence and three links.
+const CONFIRMED = /\bhas been\s+(updated|saved|added|created|deleted|removed|changed|cloned|unenrolled|enrolled|dropped|withdrawn|scheduled)\b/i;
 const REFUSED = /\b(has not been|was not|could not be|cannot be|unable to|not saved|not updated|error|failed|requires?|invalid)\b/i;
 
 // The screen is sometimes *before* the outcome: the app asks, then saves. The
@@ -137,7 +140,11 @@ export function pendingConfirmation(doc) {
 // the student". Those are the app's links, so they are offered as buttons - and a
 // referrer link is only a fallback, because the page before a save can be one step
 // short of where you want to return to.
-const MAX_LINKS = 5;
+// The page's own ways onward, kept in the page's order: the breadcrumb first,
+// then the record it changed and where to go next. Five cut the drop-in's outcome
+// short — three crumbs and "Return to Lily" / "Review the account" used the budget
+// and "Go to Graduating Seniors", the link that screen exists to offer, fell off.
+const MAX_LINKS = 8;
 
 function linksOf(doc, root) {
   const seen = new Set();

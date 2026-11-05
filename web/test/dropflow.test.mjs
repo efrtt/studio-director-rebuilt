@@ -80,6 +80,36 @@ test('a question answered by the page\u2019s own links is still a question', () 
   assert.match(model.lines[0], /11 out of 15 students/, 'the reason it asks is kept');
 });
 
+// The last page of the same flow, measured live (2026-11-05): a bare `admin.sd`
+// with one sentence — "… has been scheduled to drop in on class …" — and three
+// links onward. `scheduled` was not a known outcome, so the page the flow ends on
+// was the other one left unskinned.
+const scheduled = doc(`<body><div class="contentContainer"><div class="Content">
+  <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a></div>
+  <div class="formTitle">Add Trial/Drop-in</div>
+  <div class="ButtonBar"></div>
+  <div class="contentInfo">
+    <p><a href="admin.sd?page=EditStudent&sident=2">Lily</a> has been scheduled to drop in on class
+      <a href="admin.sd?page=EditClass&cident=1">Graduating Seniors</a> on Mon, Nov 2, 2026.</p>
+    <p><a href="admin.sd?page=EditStudent&sident=2">Return to Lily</a></p>
+    <p><a href="admin.sd?page=EditFamily&fident=3">Review the account for Lily</a>
+      <a href="admin.sd?page=EditClass&cident=1">Go to Graduating Seniors</a></p>
+  </div>
+</div></div></body>`);
+
+test('a scheduled drop-in is an outcome, not a page with no view', () => {
+  const model = confirmationOf(scheduled, {});
+
+  assert.ok(model, 'the page is recognised');
+  assert.equal(model.pending, undefined, 'it has happened');
+  assert.equal(model.ok, true);
+  assert.equal(model.title, 'Add Trial/Drop-in');
+  assert.match(model.message, /has been scheduled to drop in on class Graduating Seniors/);
+  const onward = model.links.map((l) => l.label);
+  assert.ok(onward.includes('Return to Lily'), 'the record it changed');
+  assert.ok(onward.includes('Go to Graduating Seniors'), 'the class it joined');
+});
+
 test('a paragraph that is only links is an action bar, not a question', () => {
   // Lifted from the two fixtures whose models must not move: the unenroll page's
   // "Switch Classes / Back to the student" pair, and the Email Class menu.
