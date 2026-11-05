@@ -79,7 +79,15 @@ export function coverageOf(root, shown = [], passed = []) {
 // shape.
 function carriers(model) {
   const m = model || {};
-  return [m, m.form, m.payment, m.report && m.report.form, m.task && m.task.form];
+  return [
+    m,
+    m.form,
+    m.payment,
+    m.settings,
+    m.attendance,
+    m.report && m.report.form,
+    m.task && m.task.form
+  ];
 }
 
 export function unreadOf(model) {

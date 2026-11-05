@@ -16,6 +16,7 @@ import { DOMParser } from 'linkedom';
 import { contentRoot, CHROME } from '../src/model/root.js';
 import { weekdayOf, WEEKDAY } from '../src/model/fields.js';
 import { readForm } from '../src/lib/form.js';
+import { coverageOf } from '../src/model/coverage.js';
 import { diffFields, applyFields, changesFrom } from '../src/model/diff.js';
 import { saveInApp } from '../src/lib/save.js';
 
@@ -376,6 +377,24 @@ test('a control outside any form table is counted as unread', () => {
   assert.ok(form);
   assert.equal(form.unread.length, 1, JSON.stringify(form.unread));
   assert.equal(form.unread[0].id, 'stray');
+});
+
+test('coverage counts only the controls nobody accounted for', () => {
+  // The four answers coverage gives, in one page: a shown control, a control that
+  // belongs to another reader (the record list's filter), a control the app is not
+  // showing, and a posted hidden key. Only the stray one is a shortfall.
+  const d = doc(`
+    <body><div class="contentContainer">
+      <table class="Form"><tr><td>Name</td><td><input id="shown"></td></tr></table>
+      <div class="List"><input id="listfilter"></div>
+      <table class="Form table-hidden"><tr><td>Hidden</td><td><input id="storage"></td></tr></table>
+      <input type="hidden" id="key" value="1">
+      <input id="stray">
+    </div></body>`);
+  const root = d.querySelector('.contentContainer');
+  const unread = coverageOf(root, [d.querySelector('#shown')], [d.querySelector('#key')]);
+  assert.deepEqual(unread.map((u) => u.id), ['stray']);
+  assert.equal(unread[0].type, 'text');
 });
 
 test('a page with no Save takes one form table, not the whole page', () => {

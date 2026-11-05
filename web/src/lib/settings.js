@@ -31,6 +31,7 @@ import { contentRoot } from '../model/root.js';
 import { optionsOf, humanise, WEEKDAY } from '../model/fields.js';
 import { readActions, primaryAction, clickActionInApp } from './actions.js';
 import { pageSave } from './save.js';
+import { coverageOf } from '../model/coverage.js';
 
 // At most this many fields: a screen with more is a form (or a table), and the
 // editor and sheet readers own those.
@@ -172,6 +173,12 @@ export function readSettings(doc) {
   if (headed >= 2) return null;
 
   const fields = [];
+  // Same accounting as the record editor and the payment screen: every control is
+  // either shown, or knowingly passed over (a hidden id, the search box, an empty
+  // select, a duplicate selector). Anything else is a control this screen does not
+  // draw, and it is reported instead of quietly missing.
+  const shown = [];
+  const passed = [];
   const radioGroups = new Map();
   const checkboxGroups = new Map();
   const seen = new Set();
@@ -180,7 +187,10 @@ export function readSettings(doc) {
   const order = new Map();
 
   for (const el of qsa(root, 'input, select, textarea')) {
-    if (skipped(el)) continue;
+    if (skipped(el)) {
+      passed.push(el);
+      continue;
+    }
     order.set(el, order.size);
 
     const tag = el.tagName.toLowerCase();
@@ -190,12 +200,16 @@ export function readSettings(doc) {
 
     if (type === 'radio') {
       const key = name || id;
-      if (!key) continue;
+      if (!key) {
+        passed.push(el);
+        continue;
+      }
       let group = radioGroups.get(key);
       if (!group) {
         group = { options: [], checked: null, el: el, at: order.get(el) };
         radioGroups.set(key, group);
       }
+      shown.push(el);
       const label = labelFor(el, doc);
       group.options.push({
         value: el.getAttribute('value') != null ? el.getAttribute('value') : '',
@@ -222,6 +236,7 @@ export function readSettings(doc) {
         checkboxGroups.set(name, group);
       }
       const value = el.getAttribute('value') || '';
+      shown.push(el);
       group.options.push({
         // The weekday boxes carry no words of their own: the bit mask is the
         // only name they have, so it is read as the day it stands for.
@@ -235,15 +250,25 @@ export function readSettings(doc) {
     }
 
     const selector = selectorOf(el, doc);
-    if (!selector) continue;
+    if (!selector) {
+      passed.push(el);
+      continue;
+    }
     // Two controls can share a name where only one is addressable; skip the
     // duplicate rather than writing to whichever querySelector finds first.
-    if (seen.has(selector)) continue;
+    if (seen.has(selector)) {
+      passed.push(el);
+      continue;
+    }
     seen.add(selector);
 
     const control = controlOf(el);
-    if (!control) continue;
+    if (!control) {
+      passed.push(el);
+      continue;
+    }
 
+    shown.push(el);
     const label = labelFor(el, doc);
     fields.push({
       key: id || 'name:' + name || selector,
@@ -306,6 +331,8 @@ export function readSettings(doc) {
   if (!fields.length || fields.length > MAX_FIELDS) return null;
   fields.sort((a, b) => (a.at == null ? 0 : a.at) - (b.at == null ? 0 : b.at));
 
+  const unread = coverageOf(root, shown, passed);
+
   const actions = readActions(root);
   // A setting nobody can save is not a screen this adapter may take over: the
   // app's own Save is what writes it (`#save`), or one of its own controls.
@@ -319,6 +346,7 @@ export function readSettings(doc) {
     fields,
     actions,
     primary: primaryAction(actions),
+    ...(unread.length ? { unread } : {}),
     save: save
       ? { id: 'save', label: (textOf(save) || 'Save').trim(), href: save.getAttribute('href') || '#', js: true }
       : null
