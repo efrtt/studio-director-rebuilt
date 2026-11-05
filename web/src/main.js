@@ -69,6 +69,14 @@ let instance = null;
 export function mount(opts = {}) {
   if (instance) return instance;
 
+  // Probe mode's second half. `sdProbe.dump()` says what the page contained;
+  // this says what this build made of it — the model it drew, with the selectors
+  // it will write through — so a live check can ask the reader instead of
+  // re-deriving the answer from the markup and then agreeing with itself. Only
+  // published while the probe is armed (`?sdprobe=1`); otherwise there is no
+  // handle to write to and a production page pays nothing.
+  if (globalThis.sdProbe) globalThis.sdProbe.model = opts.model || null;
+
   injectStyles();
   document.documentElement.classList.add('sd-app');
 
