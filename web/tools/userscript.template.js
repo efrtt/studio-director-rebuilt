@@ -82,7 +82,16 @@
         onOriginal: function () { location.hash = ORIGINAL; }
       });
     } catch (err) {
+      // A view that throws must not leave a blank shell over the app. Drop what
+      // was mounted and let the app's own page show — the same state Esc gives.
+      // (The drop question did exactly this: an empty root, no way back.)
       console.error('[sd] mount failed', err);
+      if (instance) {
+        try { instance.destroy(); } catch (e) { console.warn('[sd] teardown', e); }
+        instance = null;
+      }
+      var root = document.getElementById('sd-root');
+      if (root && root.parentNode) root.parentNode.removeChild(root);
     }
   }
 

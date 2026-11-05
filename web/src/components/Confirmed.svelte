@@ -60,7 +60,7 @@
     <div class="sd-confirm-card">
       <div class="sd-confirm-mark sd-confirm-mark--ask" aria-hidden="true">?</div>
       <p class="sd-confirm-msg">{confirm.title}</p>
-      {#each confirm.lines as line}
+      {#each confirm.lines || [] as line}
         <p class="sd-confirm-hint">{line}</p>
       {/each}
       <div class="sd-editor-actions sd-confirm-actions">
@@ -74,6 +74,11 @@
             title={action.href || action.onclick || action.label}
             on:click={() => press(action)}
           >{action.label}</button>
+        {/each}
+        <!-- The page's way out, beside its answer: the drop question offers
+             Drop and Cancel, and this card is the whole screen. -->
+        {#each confirm.links || [] as link}
+          <a class="sd-btn" href={link.href} title={link.href}>{link.label}</a>
         {/each}
       </div>
       {#if status}<p class="sd-editorstatus">{status}</p>{/if}

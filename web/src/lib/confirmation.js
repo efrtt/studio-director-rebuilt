@@ -277,6 +277,11 @@ export function askedConfirmation(doc) {
     ok: true,
     // The app's sentence, verbatim: nothing is invented about what it asked.
     message: sentence,
+    // The card the view draws reads `lines`. The delete case never noticed this
+    // was missing, because it always arrives beside the list it changes and is
+    // drawn over that instead — but the same question on a page with no list
+    // (dropping a student from one date) came up blank.
+    lines: [sentence],
     title: textOf(qs(doc, '.formTitle')) || '',
     breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
     // What the modal asks, for the screen that draws it over the list.
