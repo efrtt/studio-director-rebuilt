@@ -46,7 +46,7 @@ const ORDER = [
   // New Payment: a FlexForm of amount/dates/notes, split blocks, and the unpaid
   // charges table beside them. Before the table readers, which would otherwise
   // take it as a sheet.
-  { id: 'payment', key: 'payment', after: ['confirmation', 'week', 'list'], read: (doc) => readPayment(doc) },
+  { id: 'payment', key: 'payment', after: ['confirmation', 'week', 'list'], read: (doc, ctx) => readPayment(doc, ctx.url) },
   // A filter form plus a run control. Late, so NewClass keeps its list view.
   { id: 'report', key: 'report', after: ['confirmation', 'week', 'list', 'payment'], read: (doc) => readReport(doc) },
   // A form with a control that is not Run Report.

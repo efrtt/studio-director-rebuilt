@@ -113,6 +113,7 @@ check('plan answer', method && method.plan === 'Yes', method && method.plan);
 check('plan notes link', method && method.planHref === '?page=ManagePaymentPlan', method && method.planHref);
 
 check('primary is the app anchor', model && model.primary && model.primary.label === 'Process Payment');
+check('every control on the screen is accounted for', model && model.unread === undefined, model && JSON.stringify(model.unread));
 check('add split is its own action', model && model.addSplit && model.addSplit.label === 'Add Another Split');
 
 // The registry takes the page, and the view it lands on is this one.
@@ -272,6 +273,33 @@ function editPage() {
   const fresh = readPayment(page());
   check('a new payment is not an edit', fresh.mode === 'new' && fresh.extras.length === 0,
     JSON.stringify({ mode: fresh.mode, extras: fresh.extras.length }));
+}
+
+// ---- the mode comes from the app's name for the screen ----
+//
+// It used to be read off the button words, which shipped an edit of an existing
+// payment as a new one. The route says what the screen is; the words are the
+// fallback for a route this code does not know, and the model records which
+// answered so the guess is visible.
+{
+  const byRoute = readPayment(editPage(), 'https://example.test/admin.sd?page=EditPayment&xident=1');
+  check('the route names an edit', byRoute.mode === 'edit' && byRoute.modeSource === 'url', byRoute.modeSource);
+  check('a route-named edit keeps the app Save', byRoute.primary && byRoute.primary.label === 'Save');
+
+  const noUrl = readPayment(editPage());
+  check('without a route the label decides, and says so',
+    noUrl.mode === 'edit' && noUrl.modeSource === 'label', noUrl.modeSource);
+
+  // The route wins even when the markup disagrees: the app posted that page under
+  // that name, and a model that quietly switched to the buttons would be the bug
+  // again. No control then, rather than saving the wrong screen.
+  const conflict = readPayment(page(), 'https://example.test/admin.sd?page=EditPayment&xident=1');
+  check('the route outranks the words', conflict.mode === 'edit' && conflict.modeSource === 'url', conflict.mode);
+  check('a conflicted edit presses neither control', conflict.primary === null, conflict.primary && conflict.primary.label);
+
+  const named = readPayment(page(), 'https://example.test/admin.sd?page=NewPayment&meth=onNewPayment_gateway');
+  check('the new-payment route keeps its own mode',
+    named.mode === 'new' && named.modeSource === 'url' && named.primary.label === 'Process Payment');
 }
 
 // ---- a page that is not there ----

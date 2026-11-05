@@ -33,6 +33,7 @@ import { saveSettingsInApp } from './lib/settings.js';
 import { clickActionInApp } from './lib/actions.js';
 import { changesFrom, saveInApp } from './lib/save.js';
 import { runPayment, addSplitInApp } from './lib/payment.js';
+import { unreadNote } from './model/coverage.js';
 import { probeTick, recordView } from './lib/probe.js';
 import { contradictsNote } from './lib/note.js';
 import { wantsLiveLook, decideMount, decideShellLess, chooseSource, searchReady } from './lib/choose.js';
@@ -254,7 +255,7 @@ function mountView(model, onOriginal, source = 'fetched') {
   // for every page rather than inside each reader. The record screen is the one
   // that draws it — New and Delete come from there — and a page with no bar (the
   // add screen, which *is* the form) must not grow one.
-  model = pageModel(model, document);
+  model = warnUnread(pageModel(model, document));
   // What this screen became, and where it came from. Only written when probe
   // mode is armed, so a production page pays nothing for it.
   recordView(model.view || null, source);
@@ -300,7 +301,9 @@ function mountView(model, onOriginal, source = 'fetched') {
       ? (values) => runPayment(document, model.payment, values)
       : null,
     onAddSplit: model.payment
-      ? () => addSplitInApp(document, model.payment)
+      // The URL comes along so the re-read names the screen the same way the
+      // first read did, instead of falling back to the buttons' words.
+      ? () => addSplitInApp(document, model.payment, model.url || location.href)
       : null,
     onLoadAll: loadAllRecords,
     onSearch: searchEverything,
@@ -339,6 +342,24 @@ function pageModel(model, doc) {
   }
 
   return next;
+}
+
+// A screen that drew fewer controls than the page has says so, once, in the
+// console — the diagnostic half of `model/coverage.js`. It is not chrome: the one
+// page that reports anything today is Edit Family, whose three phone-type selects
+// sit in the row's *label* cell and are not offered yet, and a rebuild that says
+// nothing about that is the bug this exists to stop. A warning nobody looks at is
+// not a check, so it names the controls rather than counting them.
+function warnUnread(model) {
+  const note = unreadNote(model);
+  if (!note) return model;
+  const m = model || {};
+  const list = m.unread
+    || (m.form && m.form.unread)
+    || (m.payment && m.payment.unread)
+    || [];
+  console.info('[sd] ' + note + ':', list);
+  return model;
 }
 
 // The month grid: the same rail and season picker as the week, drawn as a
@@ -446,6 +467,7 @@ function mountLive(onOriginal) {
 // The editor's mount: the one view that saves. Every other kind goes through
 // mountView, which is why this is separate rather than a branch inside it.
 function mountEditor(model, onOriginal) {
+  warnUnread(model);
   recordView('form', 'live');
   return mount({
     model,

@@ -27,8 +27,9 @@
 // app's live controls and clicks the app's own anchor, exactly as `saveInApp`
 // does for the editor.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, pageName } from './shell.js';
 import { contentRoot } from '../model/root.js';
+import { coverageOf } from '../model/coverage.js';
 import { optionsOf, valueOfSelect, selectorOf } from '../model/fields.js';
 import { diffFields, applyFields } from '../model/diff.js';
 
@@ -190,21 +191,43 @@ function isReal(el) {
   return !!handler && !/^void\(0\)/i.test(handler);
 }
 
-// Which payment screen this is, and the control that ends it. A new payment ends
-// with "Process Payment"; an edit of one the app already has ends with its own
-// "Save". The form, the totals and the split row are the same shape on both, so
-// these words are the only thing the page offers to tell them apart.
-function primaryAction(root) {
+// The app's own name for the screen, from its URL: `page=NewPayment`,
+// `page=EditPayment`. A name is a statement; a button label is presentation.
+//
+// This existed as a text guess first, and it shipped a bug: an edit of an
+// existing payment rendered as a new one, because the mode read "Process
+// Payment" vs "Save" and anything else on the screen — the float bar repeats
+// some of these controls — could answer for it. The mode decides the title, the
+// primary button and whether the splits start open, so being wrong about it is
+// wrong three times. The route is read where the app states it; the labels are
+// the fallback for a route this code has never seen, and `modeSource` says which
+// one answered so a guess is never silent.
+const PAYMENT_PAGE = /payment/i;
+function modeFromUrl(url) {
+  const page = pageName(url);
+  if (!page || !PAYMENT_PAGE.test(page)) return null;
+  if (/edit/i.test(page)) return 'edit';
+  if (/new/i.test(page)) return 'new';
+  return null;
+}
+
+// Which payment screen this is, and the control that ends it.
+function primaryAction(root, url) {
   const find = (re) => {
     const candidates = qsa(root, BUTTONS)
       .filter((el) => re.test((textOf(el) || el.getAttribute('value') || '').trim()));
     return candidates.length ? actionOf(candidates.find(isReal) || candidates[0]) : null;
   };
   const process = find(/^process payment$/i);
-  if (process) return { mode: 'new', primary: process };
   const save = find(/^save$/i);
-  if (save) return { mode: 'edit', primary: save };
-  return { mode: 'new', primary: null };
+
+  const named = modeFromUrl(url);
+  if (named) {
+    return { mode: named, primary: named === 'edit' ? save : process, source: 'url' };
+  }
+  if (process) return { mode: 'new', primary: process, source: 'label' };
+  if (save) return { mode: 'edit', primary: save, source: 'label' };
+  return { mode: 'new', primary: null, source: 'none' };
 }
 
 // What only an edit of an existing payment carries: the receipt the app has and
@@ -224,20 +247,29 @@ function extrasOf(root) {
   return out;
 }
 
-export function readPayment(doc) {
+export function readPayment(doc, url) {
   const root = contentRoot(doc);
   if (!root) return null;
 
-  const amount = fieldOf(qs(root, '[name="amount"]'), doc);
+  // The controls this screen draws, kept as nodes as well as fields: coverage is
+  // a fact about the page, so it needs the elements rather than the model.
+  const shown = [];
+  const take = (el) => {
+    const field = fieldOf(el, doc);
+    if (field) shown.push(el);
+    return field;
+  };
+
+  const amount = take(qs(root, '[name="amount"]'));
   // Without an amount this is not the payment screen, whatever else it has.
   if (!amount) return null;
 
   const baseTable = qs(root, 'table.FlexForm');
   const rows = rowsOf(baseTable);
 
-  const due = fieldOf(qs(root, '[name="due_date"]'), doc);
-  const deposit = fieldOf(qs(root, '[name="deposit_date"]'), doc);
-  const notes = fieldOf(qs(root, '[name="notes"]'), doc);
+  const due = take(qs(root, '[name="due_date"]'));
+  const deposit = take(qs(root, '[name="deposit_date"]'));
+  const notes = take(qs(root, '[name="notes"]'));
 
   const named = {
     amount: 'Amount',
@@ -261,9 +293,11 @@ export function readPayment(doc) {
     const found = /^paid_toward(\d+)$/.exec(select.getAttribute('name') || '');
     if (!found) continue;
     const idx = Number(found[1]);
+    const amountEl = qs(root, '[name="split_amt' + found[1] + '"]');
     const toward = fieldOf(select, doc, idx);
-    const splitAmount = fieldOf(qs(root, '[name="split_amt' + found[1] + '"]'), doc, idx);
+    const splitAmount = fieldOf(amountEl, doc, idx);
     if (!toward || !splitAmount) continue;
+    shown.push(select, amountEl);
     toward.label = 'Paid toward';
     splitAmount.label = 'Amount';
     splits.push({ idx, toward, amount: splitAmount });
@@ -281,8 +315,9 @@ export function readPayment(doc) {
   const splitPayment = actionIn(root, /^split payment$/i);
 
   const familyRow = rowFor(rows, /^family$/i);
-  const primary = primaryAction(root);
+  const primary = primaryAction(root, url);
   const editing = primary.mode === 'edit';
+  const unread = coverageOf(root, shown);
 
   return {
     kind: 'payment',
@@ -291,6 +326,9 @@ export function readPayment(doc) {
     // keeps the family, the amount and the dates, but not the word "New".
     title: editing ? 'Edit Payment' : 'New Payment',
     mode: primary.mode,
+    // 'url' when the app named the screen, 'label' when the words decided,
+    // 'none' when neither did. A crawl can ask which pages are being guessed at.
+    modeSource: primary.source,
     breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
     // Shown, never edited: the family is the page's subject, not one of its inputs.
     family: familyRow ? textOf(familyRow.cell) : '',
@@ -308,6 +346,9 @@ export function readPayment(doc) {
     splitPayment,
     // Only the edit screen has these; a new payment has nothing to receipt yet.
     extras: editing ? extrasOf(root) : [],
+    // Controls on the page that this screen does not draw. Empty on both payment
+    // shapes measured so far, which is the point: the field is the check.
+    ...(unread.length ? { unread } : {}),
     url: ''
   };
 }
@@ -358,14 +399,14 @@ export function runPayment(doc, payment, values) {
 // Press the app's own Add Another Split, then read the page again: the app is
 // what builds the extra row, and its indices are what the form submits. Returns
 // the fresh model so the view can draw the row it just caused.
-export function addSplitInApp(doc, payment) {
+export function addSplitInApp(doc, payment, url) {
   // On a fresh page the app has not drawn a split yet, so the only control is
   // "Split Payment", which builds the first rows; after that it is "Add Another
   // Split". Both are the app's own anchor and both are followed by a re-read.
   const pressed = press(doc, payment && (payment.addSplit || payment.splitPayment));
   if (!pressed.ok) return { ok: false, reason: pressed.reason };
 
-  const next = readPayment(doc);
+  const next = readPayment(doc, url);
   if (!next) return { ok: false, reason: 'reread' };
   return { ok: true, payment: next, via: pressed.via };
 }

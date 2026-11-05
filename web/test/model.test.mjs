@@ -113,6 +113,8 @@ test('the app\'s own record id in an unlabelled row is not a field', () => {
   // cannot be presented, and it is a key rather than something to fill in.
   assert.deepEqual(form.fields.map((f) => f.key), ['item_style', 'color', 'deposit', 'gender']);
   assert.equal(form.rows.length, 4);
+  // Passed over on purpose, so coverage does not call it a shortfall.
+  assert.equal(form.unread, undefined, 'the id row is a decision, not an omission');
   // Leaving it out of the model does not remove it from the page: the app's own
   // Save still carries the id it shipped.
   assert.equal(d.getElementById('item_id').getAttribute('value'), '1792595222235');
@@ -298,4 +300,91 @@ test('an unchanged form submits nothing', () => {
   const result = saveInApp(d, []);
   assert.equal(result.submitted, false);
   assert.equal(result.reason, 'unchanged');
+});
+
+// ---- coverage: a page cannot be silently half-read ----
+//
+// The Enrollment Dates page printed its editor as two one-row form tables and the
+// reader kept the biggest, so the second date vanished with nothing said. These
+// two cases pin the two halves of the answer: fragments that belong together are
+// read together, and a control that no reader reached is reported.
+
+test('a page printed as two form tables is one form, with nothing unread', () => {
+  const d = doc(`
+    <body><div class="contentContainer">
+      <div class="formTitle">Enrollment Dates</div>
+      <table class="Form"><tr><td>Charge for classes starting:</td><td>
+        <select id="charge__mon"><option>Nov</option></select>
+        <select id="charge__day"><option>4</option></select>
+        <select id="charge__year"><option>2026</option></select>
+        <input type="hidden" id="charge__hidden" value="x">
+      </td></tr></table>
+      <table class="Form"><tr><td>Display on roster starting:</td><td>
+        <select id="roster__mon"><option>Nov</option></select>
+        <select id="roster__day"><option>4</option></select>
+        <select id="roster__year"><option>2026</option></select>
+      </td></tr></table>
+      <a id="save" href="#">Save</a>
+    </div></body>`);
+  const form = readForm(d);
+  assert.ok(form, 'the editor is read');
+  assert.equal(form.fields.length, 6);
+  assert.deepEqual(form.fields.map((f) => f.key), [
+    'charge__mon', 'charge__day', 'charge__year',
+    'roster__mon', 'roster__day', 'roster__year'
+  ]);
+  // Both dates read, and the hidden calendar value is a control nobody shows on
+  // purpose - neither is a shortfall.
+  assert.equal(form.unread, undefined, 'nothing was left out');
+});
+
+test('a control no reader reached is counted as unread', () => {
+  // A second form under a different parent is not this editor — the old bug —
+  // but the model now says so instead of rendering as if the page were complete.
+  const d = doc(`
+    <body><div class="contentContainer">
+      <table class="Form">
+        <tr><td>Name</td><td><input id="name" value="Ada"></td></tr>
+        <tr><td>Zip</td><td><input id="zip" value="90210"></td></tr>
+      </table>
+      <div class="aside">
+        <table class="Form"><tr><td>Note</td><td><input id="aside_note" value="x"></td></tr></table>
+      </div>
+      <a id="save" href="#">Save</a>
+    </div></body>`);
+  const form = readForm(d);
+  assert.ok(form);
+  assert.deepEqual(form.fields.map((f) => f.key), ['name', 'zip']);
+  assert.equal(form.unread.length, 1, JSON.stringify(form.unread));
+  assert.equal(form.unread[0].id, 'aside_note');
+});
+
+test('the family editor reports the phone-type selects it does not offer', () => {
+  // Found by the check itself, on the live-capture fixture: the app prints each
+  // phone's type chooser as the row's *label* cell and the number as the value
+  // cell, so the editor reads the number and never the type. That is a real gap
+  // (you cannot set a number's type here) and it used to be invisible; now the
+  // model says which controls it left, and this pins the three by name so losing
+  // a fourth is a diff rather than a surprise.
+  const html = fs.readFileSync(new URL('./fixtures/editor-family.html', import.meta.url), 'utf8');
+  const form = readForm(doc(html));
+  assert.ok(form);
+  assert.deepEqual((form.unread || []).map((u) => u.name), ['phone1_label', 'phone2_label', 'phone3_label']);
+});
+
+test('the record panel beside an editor is not counted against it', () => {
+  // The list's own filter box belongs to the list reader; counting it would make
+  // every record page look short, and a warning that always fires is not a check.
+  const d = doc(`
+    <body><div class="contentContainer">
+      <table class="Form">
+        <tr><td>Name</td><td><input id="name" value="Ada"></td></tr>
+        <tr><td>Zip</td><td><input id="zip" value="90210"></td></tr>
+      </table>
+      <div class="List"><input id="filter" value=""><a id="searchidx" href="#">Search</a></div>
+      <a id="save" href="#">Save</a>
+    </div></body>`);
+  const form = readForm(d);
+  assert.ok(form);
+  assert.equal(form.unread, undefined, JSON.stringify(form.unread));
 });

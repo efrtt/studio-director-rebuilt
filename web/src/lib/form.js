@@ -24,6 +24,7 @@ import { qs, qsa, textOf, titledTextOf } from './shell.js';
 import { weekdayOf, optionsOf, valueOfSelect, selectorOf } from '../model/fields.js';
 import { readTable } from '../model/table.js';
 import { contentRoot } from '../model/root.js';
+import { coverageOf } from '../model/coverage.js';
 
 const FORM_SELECTOR = 'table.Form, table.FormEx';
 const CONTROLS = 'input, select, textarea';
@@ -105,8 +106,14 @@ function radioOf(name, radios, rowLabel) {
   };
 }
 
+// Returns the fields of the cell, plus the two lists coverage needs: the controls
+// that became fields, and the ones this adapter knowingly walked past (a hidden
+// key, `name="-"`, an empty select the app fills later). A control in neither
+// list is one nobody looked at, which is what `unread` means.
 function fieldsIn(cell, doc, rowLabel) {
   const fields = [];
+  const shown = [];
+  const passed = [];
   const groups = new Map();
 
   for (const el of qsa(cell, CONTROLS)) {
@@ -115,33 +122,53 @@ function fieldsIn(cell, doc, rowLabel) {
 
     if (type === 'radio') {
       const name = el.getAttribute('name') || el.getAttribute('id') || '';
-      if (!name) continue;
+      if (!name) {
+        passed.push(el);
+        continue;
+      }
       if (!groups.has(name)) groups.set(name, []);
       groups.get(name).push(el);
       continue;
     }
 
     const field = controlOf(el, doc);
-    if (field) fields.push(field);
+    if (field) {
+      fields.push(field);
+      shown.push(el);
+    } else {
+      passed.push(el);
+    }
   }
 
   for (const [name, radios] of groups) {
     const field = radioOf(name, radios, rowLabel);
-    if (field) fields.push(field);
+    if (field) {
+      fields.push(field);
+      shown.push(...radios);
+    } else {
+      passed.push(...radios);
+    }
   }
 
-  return fields;
+  return { fields, shown, passed };
 }
 
 function rowsOf(table) {
   const rows = [];
+  const shown = [];
+  const passed = [];
   for (const tr of qsa(table, 'tr')) {
     // Only this table's own rows: a field can contain a nested table (the
     // weekday checkboxes live in one), and its rows would otherwise be read a
     // second time as fields of their own, with no label.
     if (tr.closest && tr.closest('table') !== table) continue;
     const cells = Array.from(tr.children || []).filter((c) => c.tagName === 'TD');
-    if (cells.length < 2) continue;
+    if (cells.length < 2) {
+      // A caption or a spacer row. Anything typed into it is still on the page,
+      // so it counts as passed over rather than lost.
+      passed.push(...qsa(tr, CONTROLS));
+      continue;
+    }
 
     const label = textOf(cells[0]);
     // The app ends a record editor with its own id in a row that has no label:
@@ -152,13 +179,21 @@ function rowsOf(table) {
     // field: it used to be offered as a bare number under the last one.
     // Nothing is lost by leaving it out — the input stays in the page, and a
     // save writes only the fields that changed.
-    if (!label) continue;
-    const fields = fieldsIn(cells[1], table.ownerDocument, label);
-    if (!fields.length) continue;
+    if (!label) {
+      passed.push(...qsa(cells[1], CONTROLS));
+      continue;
+    }
+    const found = fieldsIn(cells[1], table.ownerDocument, label);
+    if (!found.fields.length) {
+      passed.push(...found.passed);
+      continue;
+    }
 
-    rows.push({ label, fields });
+    rows.push({ label, fields: found.fields });
+    shown.push(...found.shown);
+    passed.push(...found.passed);
   }
-  return rows;
+  return { rows, shown, passed };
 }
 
 // Tables that sit *beside* a form, which the editor used to drop.
@@ -247,7 +282,8 @@ export function readForm(doc) {
 
   const groups = new Map();
   for (const table of qsa(doc, FORM_SELECTOR)) {
-    const rows = rowsOf(table);
+    const read = rowsOf(table);
+    const rows = read.rows;
     const fields = rows.reduce((all, row) => all.concat(row.fields), []);
     if (!fields.length) continue;
     // A *one-row* form table is a fragment of a form, not a form: the app prints
@@ -257,11 +293,13 @@ export function readForm(doc) {
     // merged even when a Save is on the page.
     const fragment = saved && rows.length === 1 && !!table.parentElement;
     const holder = fragment ? table.parentElement : table;
-    if (!groups.has(holder)) groups.set(holder, { tables: [], rows: [], fields: [] });
+    if (!groups.has(holder)) groups.set(holder, { tables: [], rows: [], fields: [], shown: [], passed: [] });
     const group = groups.get(holder);
     group.tables.push(table);
     group.rows.push(...rows);
     group.fields.push(...fields);
+    group.shown.push(...read.shown);
+    group.passed.push(...read.passed);
   }
 
   let best = null;
@@ -274,6 +312,13 @@ export function readForm(doc) {
 
   const tables = tablesBeside(doc, best.tables);
 
+  // What the page has that this editor does not draw. It is the check that would
+  // have caught the two-date page: reading only the biggest form table left three
+  // selects unaccounted for, which is a fact the screen can state instead of
+  // looking finished. Absent when there is nothing to report, so a complete read
+  // adds nothing to the model (and nothing to a golden).
+  const unread = coverageOf(contentRoot(doc), best.shown, best.passed);
+
   return {
     kind: 'form',
     // The div can hold a warning block and the page's name after it; the name is
@@ -284,7 +329,8 @@ export function readForm(doc) {
     fields: best.fields,
     // Other tables on the page — the seasons list beside its editor. Only when
     // the page has one, so a plain editor's model is exactly what it was.
-    ...(tables.length ? { tables } : {})
+    ...(tables.length ? { tables } : {}),
+    ...(unread.length ? { unread } : {})
   };
 }
 
