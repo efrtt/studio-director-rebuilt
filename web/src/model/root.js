@@ -22,3 +22,23 @@ export const FURNITURE = '.formTitle, .Breadcrumb, .ButtonBar, .ButtonArea, .men
 export function contentRoot(doc) {
   return qs(doc, '.contentContainer') || qs(doc, '#mainContent') || (doc && doc.body) || null;
 }
+
+// Is this element, or anything above it, something the app keeps rather than
+// shows? The class editor marks its hidden tab forms `table-hidden`, and that is
+// the signal: a table the page itself calls hidden is storage, not a field.
+//
+// `display:none` is deliberately *not* a signal, and this is measured rather than
+// assumed: the family and student editors arrive with their own form inside a
+// `.tabContent` that is `display:none` in the served HTML and is revealed by the
+// app's tab script on load. Treating that as hidden made three live captures
+// unreadable — a reader that trusts initial visibility would refuse to read the
+// screen it is looking at.
+//
+// Nothing here reads a stylesheet: only what the page says about itself.
+export function isHidden(el) {
+  for (let node = el; node && node.getAttribute; node = node.parentElement) {
+    if (node.hasAttribute && node.hasAttribute('hidden')) return true;
+    if (/(^|\s)table-hidden(\s|$)/.test(node.getAttribute('class') || '')) return true;
+  }
+  return false;
+}

@@ -33,7 +33,7 @@ import { saveSettingsInApp } from './lib/settings.js';
 import { clickActionInApp } from './lib/actions.js';
 import { changesFrom, saveInApp } from './lib/save.js';
 import { runPayment, addSplitInApp } from './lib/payment.js';
-import { unreadNote } from './model/coverage.js';
+import { unreadNote, unreadOf } from './model/coverage.js';
 import { probeTick, recordView } from './lib/probe.js';
 import { contradictsNote } from './lib/note.js';
 import { wantsLiveLook, decideMount, decideShellLess, chooseSource, searchReady } from './lib/choose.js';
@@ -351,14 +351,9 @@ function pageModel(model, doc) {
 // nothing about that is the bug this exists to stop. A warning nobody looks at is
 // not a check, so it names the controls rather than counting them.
 function warnUnread(model) {
-  const note = unreadNote(model);
-  if (!note) return model;
-  const m = model || {};
-  const list = m.unread
-    || (m.form && m.form.unread)
-    || (m.payment && m.payment.unread)
-    || [];
-  console.info('[sd] ' + note + ':', list);
+  const list = unreadOf(model);
+  if (!list.length) return model;
+  console.info('[sd] ' + unreadNote(model) + ':', list);
   return model;
 }
 

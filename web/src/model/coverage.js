@@ -18,6 +18,7 @@
 // which table is the editor; it tells you when the reader stopped early.
 
 import { qsa } from '../lib/shell.js';
+import { isHidden } from './root.js';
 
 const CONTROLS = 'input, select, textarea';
 
@@ -28,8 +29,12 @@ const NEVER_A_FIELD = /^(hidden|file|submit|button|reset|image)$/i;
 // Everything covered by another reader, or by the app's shell. The record panel
 // beside an editor is the list reader's business (`filter`, `searchidx`, its own
 // checkboxes), and counting it here would report every editor as short.
+// Everything covered by another reader, or by the app's shell. What the page is
+// not showing at all (`display:none`, `table-hidden`) is handled by `isHidden`
+// separately: a hidden panel is storage, not a shortfall, while a *visible* panel
+// this screen does not draw is exactly what this check is for.
 const NOT_OURS = '#sideNavBar, #sd-root, .topBarContainer, .topBar, .copyright, .Breadcrumb,'
-  + ' .List, #idSearchSpan, .searchResultList, .tabContent, .menu, .ButtonBar, .ButtonArea';
+  + ' .List, #idSearchSpan, .searchResultList, .menu, .ButtonBar, .ButtonArea';
 
 const inOurs = (el) => {
   try {
@@ -49,6 +54,7 @@ export function coverageOf(root, shown = [], passed = []) {
   for (const el of qsa(root, CONTROLS)) {
     if (taken.has(el)) continue;
     if (!inOurs(el)) continue;
+    if (isHidden(el)) continue;
 
     const tag = el.tagName.toLowerCase();
     const type = tag === 'input' ? (el.getAttribute('type') || 'text').toLowerCase() : tag;
@@ -65,13 +71,28 @@ export function coverageOf(root, shown = [], passed = []) {
   return unread;
 }
 
+// Where coverage can live on a model. Every view shape nests its reader's model
+// one level down — a record page is the form itself, a report and a task keep
+// theirs under `form`, a payment screen is `payment` — so the question "what did
+// this screen leave out?" is asked in one place rather than once per view. A
+// reader that gains coverage is picked up here without every caller learning its
+// shape.
+function carriers(model) {
+  const m = model || {};
+  return [m, m.form, m.payment, m.report && m.report.form, m.task && m.task.form];
+}
+
+export function unreadOf(model) {
+  for (const holder of carriers(model)) {
+    const list = holder && Array.isArray(holder.unread) ? holder.unread : null;
+    if (list && list.length) return list;
+  }
+  return [];
+}
+
 // The one line a screen needs to say: "this page had more than I drew".
 export function unreadNote(model) {
-  const m = model || {};
-  const list = m.unread
-    || (m.form && m.form.unread)
-    || (m.payment && m.payment.unread)
-    || [];
+  const list = unreadOf(model);
   if (!list.length) return '';
   return list.length === 1 ? '1 control not shown' : list.length + ' controls not shown';
 }

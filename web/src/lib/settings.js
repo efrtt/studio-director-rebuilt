@@ -30,6 +30,7 @@ import { diffFields, applyFields } from '../model/diff.js';
 import { contentRoot } from '../model/root.js';
 import { optionsOf, humanise, WEEKDAY } from '../model/fields.js';
 import { readActions, primaryAction, clickActionInApp } from './actions.js';
+import { pageSave } from './save.js';
 
 // At most this many fields: a screen with more is a form (or a table), and the
 // editor and sheet readers own those.
@@ -308,7 +309,7 @@ export function readSettings(doc) {
   const actions = readActions(root);
   // A setting nobody can save is not a screen this adapter may take over: the
   // app's own Save is what writes it (`#save`), or one of its own controls.
-  const save = doc.getElementById('save');
+  const save = pageSave(doc);
   if (!actions.length && !save) return null;
 
   return {
@@ -346,7 +347,7 @@ export function saveSettingsInApp(doc, settings, values, action) {
   if (missing.length) return { applied, missing, submitted: false, reason: 'missing' };
   if (!target) return { applied, submitted: false, reason: 'no-action' };
   if (target === settings.save || target.id === 'save') {
-    const save = doc.getElementById('save');
+    const save = pageSave(doc);
     if (!save) return { applied, submitted: false, reason: 'missing', label: 'Save' };
     save.click();
     return { applied, submitted: true, reason: 'ok', label: 'Save' };

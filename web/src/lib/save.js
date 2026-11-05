@@ -21,6 +21,18 @@
 
 import { diffFields, applyFields } from '../model/diff.js';
 
+// The page's own Save, once.
+//
+// Five modules asked "is this an editor?" and each asked it a little
+// differently: the form reader looked for `#save`, the record ladder for `#save`
+// or a tab strip, the settings card for `#save` or any action, the attendance
+// register twice more. One definition, so the reader that decides what a screen
+// is and the writer that presses its Save cannot drift apart — every write here
+// ends by clicking the element this returns.
+export function pageSave(doc) {
+  return (doc && doc.getElementById && doc.getElementById('save')) || null;
+}
+
 // Kept for the editor view, which asks "what changed?" to enable its button.
 export function changesFrom(form, values) {
   return diffFields(form ? form.fields : [], values);
@@ -45,7 +57,7 @@ export function saveInApp(doc, changes) {
     return { applied, missing, submitted: false, reason: 'missing' };
   }
 
-  const save = doc.getElementById('save');
+  const save = pageSave(doc);
   if (!save) return { applied, submitted: false, reason: 'no-save-link' };
 
   save.click();

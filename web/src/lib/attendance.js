@@ -28,6 +28,7 @@
 // it, dated by `--page-gutter` like every other view.
 
 import { qs, qsa, textOf } from './shell.js';
+import { pageSave } from './save.js';
 
 // The app's own handler is the marker: a printed roster's tick boxes carry none,
 // and it must keep reading as a sheet.
@@ -216,7 +217,7 @@ export function readAttendance(doc) {
     nav.push({ label: textOf(anchor), onclick, exact: true });
   }
 
-  const saveLink = doc.getElementById('save');
+  const saveLink = pageSave(doc);
   const save = saveLink
     ? { id: 'save', label: textOf(saveLink) || 'Save', onclick: saveLink.getAttribute('onclick') || '' }
     : null;
@@ -332,7 +333,7 @@ export function writeNotesInApp(doc, field, value) {
 
 // The page's own Save: a full-page submit the app builds.
 export function pressAttendanceSave(doc) {
-  const save = doc.getElementById('save');
+  const save = pageSave(doc);
   if (!save || typeof save.click !== 'function') return { submitted: false, reason: 'no-save-link' };
   save.click();
   return { submitted: true };

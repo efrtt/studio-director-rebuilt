@@ -23,8 +23,9 @@
 import { qs, qsa, textOf, titledTextOf } from './shell.js';
 import { weekdayOf, optionsOf, valueOfSelect, selectorOf } from '../model/fields.js';
 import { readTable } from '../model/table.js';
-import { contentRoot } from '../model/root.js';
+import { contentRoot, isHidden } from '../model/root.js';
 import { coverageOf } from '../model/coverage.js';
+import { pageSave } from './save.js';
 
 const FORM_SELECTOR = 'table.Form, table.FormEx';
 const CONTROLS = 'input, select, textarea';
@@ -260,64 +261,96 @@ function tablesBeside(doc, formTables) {
   return tables;
 }
 
-// The editor is the form-shaped table with the most fields on the page. A page
-// with two or three stray controls is not an editor, so it yields nothing and
-// the caller leaves the app alone rather than inventing a form.
+// The editor is the page, read row by row.
+//
+// This used to be a contest: group the page's form tables, then take the group
+// with the most fields. Two shipped bugs came out of it — a screen printed as two
+// one-row tables lost the smaller one, and a page whose editor is spread across
+// parents lost everything but the biggest part. Each was patched by adding a
+// condition to the contest (same parent, one row, a Save on the page), which is
+// three guesses stacked up to recover one fact the page states plainly.
+//
+// So the rule is the page, not a score. A page carrying its own Save is an
+// editor, and the editor is what that page contains: every `table.Form`/`FormEx`
+// under the content root is read, in document order, and every labelled row
+// becomes a row of it. The only judgement left is per row, which `rowsOf` already
+// makes well. There is no floor either — `NewEditDel` is a location name and a
+// link, and it is an editor because the app says so.
+//
+// A page with no Save is not an editor at all: it is a form-shaped screen another
+// reader may own (a report's filters, a task's fields). There the largest single
+// form table carries the form, with the four-field floor that keeps a list page's
+// stub out of the editor. That is a fallback for "not an editor", not an
+// identity — which is why `hasForm` is still the editor test.
+const UNSAVED_FLOOR = 4;
+
+const fieldsOfRows = (rows) => rows.reduce((all, row) => all.concat(row.fields), []);
+
 export function readForm(doc) {
-  const saved = !!(doc && doc.getElementById && doc.getElementById('save'));
-  // The page's own Save is what makes a form an editor, so a page carrying it
-  // is an editor whatever its size: `NewEditDel(content=LocationsContent)` is a
-  // location name and a link, two fields. Four remains the floor without it —
-  // a list page's editor stub has three, and those are not records.
+  const root = contentRoot(doc);
+  if (!root) return null;
+
+  const saved = !!pageSave(doc);
+  const reads = new Map();
+  const readOf = (table) => {
+    if (!reads.has(table)) reads.set(table, rowsOf(table));
+    return reads.get(table);
+  };
+
+  // A table the page is not showing is not part of the editor's form: the class
+  // editor's hidden tab panels ship four extra controls (`weeklyregopen` and its
+  // neighbours), and taking every table merged them into the main form — which is
+  // how a rule that removes one guess can quietly add another. `isHidden` is the
+  // page's own statement (`table-hidden`, `hidden`), not a guess about panels.
   //
-  // One editor can also be printed as several form tables. `ChangeEnrollDate`
-  // (Enrollment Dates) is two one-row `table.Form`s under the same
-  // `.contentInfo`, one per date: reading only the biggest table kept the first
-  // date and silently dropped the second, so the rebuilt page asked for one date
-  // where the app asks for two. A page carrying its own Save is certainly an
-  // editor, so there its same-parent form tables are one form. Without a Save
-  // the old rule stands: the biggest single table has to carry the page, which
-  // keeps a list page's stray controls from being merged into an editor.
-  const floor = saved ? 2 : 4;
+  // The query runs from the document and is then narrowed to the content root.
+  // Asking the root instead reads better and is what this did first, but a
+  // `<body>` is not always the node that holds its children (a parsed fragment
+  // has a detached one), and an editor there came back empty. When the root *is*
+  // the body the whole document is the screen, so there is nothing to narrow.
+  const formTables = qsa(doc, FORM_SELECTOR)
+    .filter((table) => (root === doc.body || !root.contains ? true : root.contains(table)))
+    .filter((table) => !isHidden(table));
+  let chosen = [];
 
-  const groups = new Map();
-  for (const table of qsa(doc, FORM_SELECTOR)) {
-    const read = rowsOf(table);
-    const rows = read.rows;
-    const fields = rows.reduce((all, row) => all.concat(row.fields), []);
-    if (!fields.length) continue;
-    // A *one-row* form table is a fragment of a form, not a form: the app prints
-    // one per field group, as it does for the two dates on Enrollment Dates. A
-    // table with several rows is a whole form (EditFamily, EditStudent), and two
-    // of those side by side are different screens' business, so they are not
-    // merged even when a Save is on the page.
-    const fragment = saved && rows.length === 1 && !!table.parentElement;
-    const holder = fragment ? table.parentElement : table;
-    if (!groups.has(holder)) groups.set(holder, { tables: [], rows: [], fields: [], shown: [], passed: [] });
-    const group = groups.get(holder);
-    group.tables.push(table);
-    group.rows.push(...rows);
-    group.fields.push(...fields);
-    group.shown.push(...read.shown);
-    group.passed.push(...read.passed);
+  if (saved) {
+    chosen = formTables.filter((table) => readOf(table).rows.length);
+  } else {
+    let best = null;
+    let most = 0;
+    for (const table of formTables) {
+      const count = fieldsOfRows(readOf(table).rows).length;
+      if (count > most) {
+        best = table;
+        most = count;
+      }
+    }
+    if (best && most >= UNSAVED_FLOOR) chosen = [best];
   }
 
-  let best = null;
-  for (const group of groups.values()) {
-    if (group.fields.length < floor) continue;
-    if (!best || group.fields.length > best.fields.length) best = group;
+  if (!chosen.length) return null;
+
+  const rows = [];
+  const shown = [];
+  const passed = [];
+  for (const table of chosen) {
+    const one = readOf(table);
+    rows.push(...one.rows);
+    shown.push(...one.shown);
+    passed.push(...one.passed);
   }
 
-  if (!best) return null;
+  const fields = fieldsOfRows(rows);
+  if (!fields.length) return null;
 
-  const tables = tablesBeside(doc, best.tables);
+  const beside = tablesBeside(doc, chosen);
 
   // What the page has that this editor does not draw. It is the check that would
   // have caught the two-date page: reading only the biggest form table left three
   // selects unaccounted for, which is a fact the screen can state instead of
   // looking finished. Absent when there is nothing to report, so a complete read
   // adds nothing to the model (and nothing to a golden).
-  const unread = coverageOf(contentRoot(doc), best.shown, best.passed);
+  const unread = coverageOf(root, shown, passed);
 
   return {
     kind: 'form',
@@ -325,11 +358,11 @@ export function readForm(doc) {
     // what a title means. See `titledTextOf`.
     title: titledTextOf(qs(doc, '.formTitle')) || 'Edit',
     breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
-    rows: best.rows,
-    fields: best.fields,
+    rows,
+    fields,
     // Other tables on the page — the seasons list beside its editor. Only when
     // the page has one, so a plain editor's model is exactly what it was.
-    ...(tables.length ? { tables } : {}),
+    ...(beside.length ? { tables: beside } : {}),
     ...(unread.length ? { unread } : {})
   };
 }

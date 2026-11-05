@@ -338,9 +338,11 @@ test('a page printed as two form tables is one form, with nothing unread', () =>
   assert.equal(form.unread, undefined, 'nothing was left out');
 });
 
-test('a control no reader reached is counted as unread', () => {
-  // A second form under a different parent is not this editor — the old bug —
-  // but the model now says so instead of rendering as if the page were complete.
+test('an editor is the whole page, not its biggest table', () => {
+  // The rule this replaced: group the form tables and keep the group with the
+  // most fields. A page printing its editor across two parents lost the smaller
+  // half with nothing said. A page carrying its own Save is an editor, so every
+  // form table it contains is read, in document order.
   const d = doc(`
     <body><div class="contentContainer">
       <table class="Form">
@@ -354,9 +356,50 @@ test('a control no reader reached is counted as unread', () => {
     </div></body>`);
   const form = readForm(d);
   assert.ok(form);
-  assert.deepEqual(form.fields.map((f) => f.key), ['name', 'zip']);
+  assert.deepEqual(form.fields.map((f) => f.key), ['name', 'zip', 'aside_note']);
+  assert.equal(form.unread, undefined, 'nothing was left out, so nothing to report');
+});
+
+test('a control outside any form table is counted as unread', () => {
+  // A control the editor does not draw, on a page that says it is an editor.
+  // Coverage states the shortfall instead of the screen looking finished.
+  const d = doc(`
+    <body><div class="contentContainer">
+      <table class="Form">
+        <tr><td>Name</td><td><input id="name" value="Ada"></td></tr>
+        <tr><td>Zip</td><td><input id="zip" value="90210"></td></tr>
+      </table>
+      <div class="pane"><input id="stray" value="x"></div>
+      <a id="save" href="#">Save</a>
+    </div></body>`);
+  const form = readForm(d);
+  assert.ok(form);
   assert.equal(form.unread.length, 1, JSON.stringify(form.unread));
-  assert.equal(form.unread[0].id, 'aside_note');
+  assert.equal(form.unread[0].id, 'stray');
+});
+
+test('a page with no Save takes one form table, not the whole page', () => {
+  // Without a Save the page is not an editor: it may be a report's filters or a
+  // task's fields, so another screen's small form beside it is not this form's.
+  const d = doc(`
+    <body><div class="contentContainer">
+      <table class="Form">
+        <tr><td>Season</td><td><input id="season" value="1"></td></tr>
+        <tr><td>Type</td><td><input id="type" value="all"></td></tr>
+        <tr><td>Day</td><td><input id="day" value=""></td></tr>
+        <tr><td>Level</td><td><input id="level" value=""></td></tr>
+      </table>
+      <div class="aside">
+        <table class="Form"><tr><td>Other</td><td><input id="other" value="x"></td></tr></table>
+      </div>
+      <a id="runreport" href="#">Run Report</a>
+    </div></body>`);
+  const form = readForm(d);
+  assert.ok(form);
+  assert.deepEqual(form.fields.map((f) => f.key), ['season', 'type', 'day', 'level']);
+  // Still reported: the page has a control this screen does not draw.
+  assert.equal(form.unread.length, 1, JSON.stringify(form.unread));
+  assert.equal(form.unread[0].id, 'other');
 });
 
 test('the family editor reports the phone-type selects it does not offer', () => {

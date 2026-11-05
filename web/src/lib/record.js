@@ -24,6 +24,7 @@ import { readTask } from './task.js';
 import { readSheet } from './sheet.js';
 import { readAttendance } from './attendance.js';
 import { readSettings } from './settings.js';
+import { pageSave } from './save.js';
 
 // The record editor's model, or null when the page is not one.
 //
@@ -35,7 +36,7 @@ export function recordModel(doc, url, form = readForm(doc)) {
 
   const tabs = readTabs(doc);
   const tabbed = !!(tabs && tabs.tabs.length > 1);
-  if (!doc.getElementById('save') && !tabbed) return null;
+  if (!pageSave(doc) && !tabbed) return null;
 
   return {
     nav: railLinks(doc),
