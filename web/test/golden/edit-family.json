@@ -145,7 +145,7 @@
         "masked": false,
         "name": "email",
         "options": null,
-        "selector": "#email",
+        "selector": "[name=\"email\"]",
         "type": "text",
         "value": "dana@example.com"
       },
@@ -493,7 +493,7 @@
             "masked": false,
             "name": "email",
             "options": null,
-            "selector": "#email",
+            "selector": "[name=\"email\"]",
             "type": "text",
             "value": "dana@example.com"
           }
@@ -695,7 +695,807 @@
   },
   "model": {
     "attendance": null,
+    "bar": {
+      "items": [
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "new",
+          "js": true,
+          "label": "New",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "print",
+          "js": true,
+          "label": "Print",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "email",
+          "js": true,
+          "label": "Email",
+          "onclick": ""
+        },
+        {
+          "danger": true,
+          "hint": "",
+          "href": "#",
+          "id": "delete",
+          "js": true,
+          "label": "Delete",
+          "onclick": ""
+        }
+      ],
+      "kind": "bar",
+      "menu": [
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "A",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "B",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "C",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "D",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "E",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "F",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "G",
+          "onclick": ""
+        }
+      ],
+      "moreLabel": "More"
+    },
     "confirm": null,
+    "form": {
+      "breadcrumb": [
+        "Families",
+        "Lovelace"
+      ],
+      "fields": [
+        {
+          "checked": null,
+          "id": "guardian",
+          "key": "guardian",
+          "label": null,
+          "masked": false,
+          "name": "guardian",
+          "options": null,
+          "selector": "#guardian",
+          "type": "text",
+          "value": "Dana Lovelace"
+        },
+        {
+          "checked": null,
+          "id": "last_name",
+          "key": "last_name",
+          "label": null,
+          "masked": false,
+          "name": "last_name",
+          "options": null,
+          "selector": "#last_name",
+          "type": "text",
+          "value": "Lovelace"
+        },
+        {
+          "checked": null,
+          "id": "address1",
+          "key": "address1",
+          "label": null,
+          "masked": false,
+          "name": "address1",
+          "options": null,
+          "selector": "#address1",
+          "type": "text",
+          "value": "12 Ada Way"
+        },
+        {
+          "checked": null,
+          "id": "address2",
+          "key": "address2",
+          "label": null,
+          "masked": false,
+          "name": "address2",
+          "options": null,
+          "selector": "#address2",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "city",
+          "key": "city",
+          "label": null,
+          "masked": false,
+          "name": "city",
+          "options": null,
+          "selector": "#city",
+          "type": "text",
+          "value": "Springfield"
+        },
+        {
+          "checked": null,
+          "id": "state",
+          "key": "state",
+          "label": null,
+          "masked": false,
+          "name": "state",
+          "options": [
+            {
+              "label": "California",
+              "selected": false,
+              "value": "CA"
+            },
+            {
+              "label": "New York",
+              "selected": true,
+              "value": "NY"
+            }
+          ],
+          "selector": "#state",
+          "type": "select",
+          "value": "NY"
+        },
+        {
+          "checked": null,
+          "id": "zip",
+          "key": "zip",
+          "label": null,
+          "masked": false,
+          "name": "zip",
+          "options": null,
+          "selector": "#zip",
+          "type": "text",
+          "value": "10001"
+        },
+        {
+          "checked": null,
+          "id": "phone1",
+          "key": "phone1",
+          "label": null,
+          "masked": true,
+          "name": "phone1",
+          "options": null,
+          "selector": "#phone1",
+          "type": "text",
+          "value": "(555) 010-2000"
+        },
+        {
+          "checked": null,
+          "id": "phone2",
+          "key": "phone2",
+          "label": null,
+          "masked": true,
+          "name": "phone2",
+          "options": null,
+          "selector": "#phone2",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "phone3",
+          "key": "phone3",
+          "label": null,
+          "masked": true,
+          "name": "phone3",
+          "options": null,
+          "selector": "#phone3",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "email",
+          "key": "email",
+          "label": null,
+          "masked": false,
+          "name": "email",
+          "options": null,
+          "selector": "[name=\"email\"]",
+          "type": "text",
+          "value": "dana@example.com"
+        },
+        {
+          "checked": null,
+          "id": "extra_emails",
+          "key": "extra_emails",
+          "label": null,
+          "masked": false,
+          "name": "extra_emails",
+          "options": null,
+          "selector": "#extra_emails",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "opt_out",
+          "key": "opt_out",
+          "label": null,
+          "masked": false,
+          "name": "opt_out",
+          "options": [
+            {
+              "label": "No",
+              "selected": false,
+              "value": "0"
+            },
+            {
+              "label": "Yes",
+              "selected": true,
+              "value": "1"
+            }
+          ],
+          "selector": "#opt_out",
+          "type": "select",
+          "value": "1"
+        },
+        {
+          "checked": null,
+          "id": "emergency_contact",
+          "key": "emergency_contact",
+          "label": null,
+          "masked": false,
+          "name": "emergency_contact",
+          "options": null,
+          "selector": "#emergency_contact",
+          "type": "text",
+          "value": "Sam Rivera"
+        },
+        {
+          "checked": null,
+          "id": "emergency_contact_phone",
+          "key": "emergency_contact_phone",
+          "label": null,
+          "masked": true,
+          "name": "emergency_contact_phone",
+          "options": null,
+          "selector": "#emergency_contact_phone",
+          "type": "text",
+          "value": "(555) 010-3000"
+        },
+        {
+          "checked": null,
+          "id": "howheard",
+          "key": "howheard",
+          "label": null,
+          "masked": false,
+          "name": "howheard",
+          "options": [
+            {
+              "label": "Friend",
+              "selected": true,
+              "value": "Friend"
+            },
+            {
+              "label": "Web search",
+              "selected": false,
+              "value": "Web search"
+            },
+            {
+              "label": "Drove by",
+              "selected": false,
+              "value": "Drove by"
+            }
+          ],
+          "selector": "#howheard",
+          "type": "select",
+          "value": "Friend"
+        },
+        {
+          "checked": null,
+          "id": "howheard_details",
+          "key": "howheard_details",
+          "label": null,
+          "masked": false,
+          "name": "howheard_details",
+          "options": null,
+          "selector": "#howheard_details",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "enrollment_blocked",
+          "key": "enrollment_blocked",
+          "label": null,
+          "masked": false,
+          "name": "enrollment_blocked",
+          "options": [
+            {
+              "label": "No",
+              "selected": true,
+              "value": "0"
+            },
+            {
+              "label": "Yes",
+              "selected": false,
+              "value": "1"
+            }
+          ],
+          "selector": "#enrollment_blocked",
+          "type": "select",
+          "value": "0"
+        },
+        {
+          "checked": null,
+          "id": "tags",
+          "key": "tags",
+          "label": null,
+          "masked": false,
+          "name": "tags",
+          "options": [
+            {
+              "label": "None",
+              "selected": false,
+              "value": "None"
+            },
+            {
+              "label": "Recital",
+              "selected": true,
+              "value": "Recital"
+            },
+            {
+              "label": "Competition",
+              "selected": false,
+              "value": "Competition"
+            }
+          ],
+          "selector": "#tags",
+          "type": "select",
+          "value": "Recital"
+        }
+      ],
+      "kind": "form",
+      "rows": [
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "guardian",
+              "key": "guardian",
+              "label": null,
+              "masked": false,
+              "name": "guardian",
+              "options": null,
+              "selector": "#guardian",
+              "type": "text",
+              "value": "Dana Lovelace"
+            }
+          ],
+          "label": "Guardian Name(s)"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "last_name",
+              "key": "last_name",
+              "label": null,
+              "masked": false,
+              "name": "last_name",
+              "options": null,
+              "selector": "#last_name",
+              "type": "text",
+              "value": "Lovelace"
+            }
+          ],
+          "label": "Last Name"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "address1",
+              "key": "address1",
+              "label": null,
+              "masked": false,
+              "name": "address1",
+              "options": null,
+              "selector": "#address1",
+              "type": "text",
+              "value": "12 Ada Way"
+            }
+          ],
+          "label": "Address 1"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "address2",
+              "key": "address2",
+              "label": null,
+              "masked": false,
+              "name": "address2",
+              "options": null,
+              "selector": "#address2",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Address 2"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "city",
+              "key": "city",
+              "label": null,
+              "masked": false,
+              "name": "city",
+              "options": null,
+              "selector": "#city",
+              "type": "text",
+              "value": "Springfield"
+            }
+          ],
+          "label": "City"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "state",
+              "key": "state",
+              "label": null,
+              "masked": false,
+              "name": "state",
+              "options": [
+                {
+                  "label": "California",
+                  "selected": false,
+                  "value": "CA"
+                },
+                {
+                  "label": "New York",
+                  "selected": true,
+                  "value": "NY"
+                }
+              ],
+              "selector": "#state",
+              "type": "select",
+              "value": "NY"
+            }
+          ],
+          "label": "State"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "zip",
+              "key": "zip",
+              "label": null,
+              "masked": false,
+              "name": "zip",
+              "options": null,
+              "selector": "#zip",
+              "type": "text",
+              "value": "10001"
+            }
+          ],
+          "label": "ZIP"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "phone1",
+              "key": "phone1",
+              "label": null,
+              "masked": true,
+              "name": "phone1",
+              "options": null,
+              "selector": "#phone1",
+              "type": "text",
+              "value": "(555) 010-2000"
+            }
+          ],
+          "label": "Home Phone"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "phone2",
+              "key": "phone2",
+              "label": null,
+              "masked": true,
+              "name": "phone2",
+              "options": null,
+              "selector": "#phone2",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Home Phone"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "phone3",
+              "key": "phone3",
+              "label": null,
+              "masked": true,
+              "name": "phone3",
+              "options": null,
+              "selector": "#phone3",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Home Phone"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "email",
+              "key": "email",
+              "label": null,
+              "masked": false,
+              "name": "email",
+              "options": null,
+              "selector": "[name=\"email\"]",
+              "type": "text",
+              "value": "dana@example.com"
+            }
+          ],
+          "label": "Email Reset Password"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "extra_emails",
+              "key": "extra_emails",
+              "label": null,
+              "masked": false,
+              "name": "extra_emails",
+              "options": null,
+              "selector": "#extra_emails",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "More Emails (comma separated list)"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "opt_out",
+              "key": "opt_out",
+              "label": null,
+              "masked": false,
+              "name": "opt_out",
+              "options": [
+                {
+                  "label": "No",
+                  "selected": false,
+                  "value": "0"
+                },
+                {
+                  "label": "Yes",
+                  "selected": true,
+                  "value": "1"
+                }
+              ],
+              "selector": "#opt_out",
+              "type": "select",
+              "value": "1"
+            }
+          ],
+          "label": "Opt-out of emails"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "emergency_contact",
+              "key": "emergency_contact",
+              "label": null,
+              "masked": false,
+              "name": "emergency_contact",
+              "options": null,
+              "selector": "#emergency_contact",
+              "type": "text",
+              "value": "Sam Rivera"
+            }
+          ],
+          "label": "Emergency Contact (other than parents)"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "emergency_contact_phone",
+              "key": "emergency_contact_phone",
+              "label": null,
+              "masked": true,
+              "name": "emergency_contact_phone",
+              "options": null,
+              "selector": "#emergency_contact_phone",
+              "type": "text",
+              "value": "(555) 010-3000"
+            }
+          ],
+          "label": "Emergency Contact Phone"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "howheard",
+              "key": "howheard",
+              "label": null,
+              "masked": false,
+              "name": "howheard",
+              "options": [
+                {
+                  "label": "Friend",
+                  "selected": true,
+                  "value": "Friend"
+                },
+                {
+                  "label": "Web search",
+                  "selected": false,
+                  "value": "Web search"
+                },
+                {
+                  "label": "Drove by",
+                  "selected": false,
+                  "value": "Drove by"
+                }
+              ],
+              "selector": "#howheard",
+              "type": "select",
+              "value": "Friend"
+            }
+          ],
+          "label": "How did you hear about us?"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "howheard_details",
+              "key": "howheard_details",
+              "label": null,
+              "masked": false,
+              "name": "howheard_details",
+              "options": null,
+              "selector": "#howheard_details",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "How did you hear details"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "enrollment_blocked",
+              "key": "enrollment_blocked",
+              "label": null,
+              "masked": false,
+              "name": "enrollment_blocked",
+              "options": [
+                {
+                  "label": "No",
+                  "selected": true,
+                  "value": "0"
+                },
+                {
+                  "label": "Yes",
+                  "selected": false,
+                  "value": "1"
+                }
+              ],
+              "selector": "#enrollment_blocked",
+              "type": "select",
+              "value": "0"
+            }
+          ],
+          "label": "Enrollment Blocked"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "tags",
+              "key": "tags",
+              "label": null,
+              "masked": false,
+              "name": "tags",
+              "options": [
+                {
+                  "label": "None",
+                  "selected": false,
+                  "value": "None"
+                },
+                {
+                  "label": "Recital",
+                  "selected": true,
+                  "value": "Recital"
+                },
+                {
+                  "label": "Competition",
+                  "selected": false,
+                  "value": "Competition"
+                }
+              ],
+              "selector": "#tags",
+              "type": "select",
+              "value": "Recital"
+            }
+          ],
+          "label": "Tags"
+        }
+      ],
+      "title": "Edit Family"
+    },
     "index": null,
     "insights": null,
     "list": {
@@ -776,13 +1576,241 @@
     "report": null,
     "settings": null,
     "sheet": null,
+    "tabs": {
+      "kind": "tabs",
+      "tabs": [
+        {
+          "actions": [],
+          "blocks": [],
+          "controls": 0,
+          "key": "overview",
+          "kind": "form",
+          "label": "Overview",
+          "note": "",
+          "selected": false
+        },
+        {
+          "actions": [],
+          "blocks": [
+            {
+              "caption": "",
+              "cls": "SimpleSD",
+              "headings": [
+                "First Name",
+                "Last Name",
+                "Age",
+                "Gender",
+                "Medical Conditions, Allergies",
+                "Performing",
+                "Comments",
+                "Actions"
+              ],
+              "id": "",
+              "rowTotal": 1,
+              "rows": [
+                [
+                  {
+                    "href": "admin.sd?page=EditStudent&sident=9001",
+                    "right": false,
+                    "text": "Ada"
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "Lovelace"
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "9"
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "F"
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": ""
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": ""
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": ""
+                  },
+                  {
+                    "action": true,
+                    "href": "admin.sd?page=EditStudent&sident=9001",
+                    "right": true,
+                    "text": "Edit"
+                  }
+                ]
+              ],
+              "section": ""
+            }
+          ],
+          "controls": 0,
+          "key": "students",
+          "kind": "table",
+          "label": "Students",
+          "note": "",
+          "selected": true
+        },
+        {
+          "actions": [],
+          "blocks": [
+            {
+              "caption": "",
+              "cls": "LedgerHeader",
+              "headings": [],
+              "id": "",
+              "rowTotal": 1,
+              "rows": [
+                [
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "Balance"
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "$120.00"
+                  }
+                ]
+              ],
+              "section": ""
+            },
+            {
+              "caption": "",
+              "cls": "Ledger",
+              "headings": [
+                "Due/Payment Date",
+                "Description",
+                "Student",
+                "Class",
+                "Charge $",
+                "Payment $",
+                "Payment Method",
+                "Paid Toward",
+                "Notes",
+                "Balance"
+              ],
+              "id": "Ledger",
+              "rowTotal": 1,
+              "rows": [
+                [
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "10/01"
+                  },
+                  {
+                    "href": "admin.sd?page=EditCharge&xident=77",
+                    "right": false,
+                    "text": "Tuition"
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "Ada"
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "Ballet III"
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "120.00"
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": ""
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": ""
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": ""
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": ""
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "120.00"
+                  }
+                ]
+              ],
+              "section": ""
+            }
+          ],
+          "controls": 0,
+          "key": "ledger",
+          "kind": "table",
+          "label": "Ledger",
+          "note": "",
+          "selected": false
+        },
+        {
+          "actions": [
+            {
+              "href": "#",
+              "id": "addnote",
+              "js": true,
+              "label": "Add note"
+            }
+          ],
+          "blocks": [
+            {
+              "caption": "",
+              "cls": "ReportTable",
+              "headings": [
+                "Note Text",
+                "Created By",
+                "Created Date",
+                "Modified By",
+                "Modified Date",
+                "Actions"
+              ],
+              "id": "",
+              "rowTotal": 0,
+              "rows": [],
+              "section": ""
+            }
+          ],
+          "controls": 0,
+          "key": "notes",
+          "kind": "table",
+          "label": "Notes",
+          "note": "No notes.",
+          "selected": false
+        }
+      ]
+    },
     "task": null,
     "title": "Edit Family",
     "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EditFamily&fident=1503525685676",
-    "view": "list",
+    "view": "form",
     "week": null
   },
   "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EditFamily&fident=1503525685676",
-  "view": "list"
+  "view": "form"
 }

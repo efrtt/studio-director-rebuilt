@@ -78,12 +78,68 @@ export function humanise(raw) {
   return out.charAt(0).toUpperCase() + out.slice(1);
 }
 
+// Controls that are never a field, on any screen: the app's own plumbing. Two
+// readers used to keep two lists of this, one longer than the other, so a control
+// could be "not a field" to the settings card and a field to the editor.
+export const NON_FIELD_TYPES = new Set(['hidden', 'file', 'submit', 'button', 'reset', 'image']);
+export const NON_FIELD_NAMES = new Set([
+  'filter', 'filterInput', 'searchidx', 'searchText', 'idPage', 'idMeth', 'idMethArgs', 'ResetPwdFlag'
+]);
+
+// True when this control is not something a person fills in — the reason is
+// returned so a caller can say why it was passed over.
+export function notAField(el) {
+  const tag = el.tagName.toLowerCase();
+  const type = tag === 'input' ? (el.getAttribute('type') || 'text').toLowerCase() : tag;
+  if (NON_FIELD_TYPES.has(type)) return 'type:' + type;
+  const id = el.getAttribute('id') || '';
+  const name = el.getAttribute('name') || '';
+  if (id && NON_FIELD_NAMES.has(id)) return 'id:' + id;
+  if (name && NON_FIELD_NAMES.has(name)) return 'name:' + name;
+  return null;
+}
+
+// What a control holds, in one place. The editor's row, the settings card and the
+// day-mask all compare an edit against this, and both readers had their own copy:
+// the settings one knew about `multiple` selects and the editor's did not, so a
+// multi-choice list read as its first chosen option on one screen and as a set on
+// the other. `null` means "not a control this can offer" — an empty select, which
+// the app fills in by script (the class page's date picker).
+export function valueOfControl(el) {
+  const tag = el.tagName.toLowerCase();
+  if (tag === 'select') {
+    const options = optionsOf(el);
+    if (!options.length) return null;
+    if (el.hasAttribute('multiple')) {
+      return { type: 'multiselect', options, value: options.filter((o) => o.selected).map((o) => o.value) };
+    }
+    return { type: 'select', options, value: valueOfSelect(options) };
+  }
+  if (tag === 'textarea') return { type: 'textarea', value: textOf(el) };
+  const type = (el.getAttribute('type') || 'text').toLowerCase();
+  // A checkbox is on or off in the DOM; both the property and the attribute say
+  // so, and the readers disagree about which one they call `value`.
+  if (type === 'checkbox') {
+    return { type: 'checkbox', value: el.hasAttribute('checked') };
+  }
+  // The input's own type is kept, not flattened to `text`: the family editor's
+  // phone inputs are literally `type="phone_number"` (with `class="masked"`),
+  // and the pinned model names that type.
+  return { type, value: el.getAttribute('value') || '' };
+}
+
 // A control is addressed by id when it has one. Some fields carry only a name
 // (`select name="family"`), so a name is used when it is unique on the page —
 // never when it could be one of several.
 export function selectorOf(el, doc) {
   const id = el.getAttribute('id') || '';
-  if (id) return '#' + id;
+  // An id is the best address, but only when it addresses one element. Record
+  // pages print a button-bar anchor with the same id as a field
+  // (`<a id="email">Email</a>` beside `input#email` on EditFamily), and
+  // `querySelector('#email')` then returns the anchor: a save wrote the value onto
+  // an anchor, reported success, and the app submitted what it already had. Where
+  // the id is not unique, the control's own name is the address that works.
+  if (id && qsa(doc, '[id="' + id + '"]').length === 1) return '#' + id;
   const name = el.getAttribute('name') || '';
   // `name="-"` is the app's placeholder for a helper input that submits nothing.
   // It is unique on the page, so without this it would become a field called "-";

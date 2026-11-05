@@ -720,22 +720,608 @@
   },
   "model": {
     "attendance": null,
+    "bar": null,
     "confirm": null,
-    "index": null,
-    "insights": null,
-    "list": null,
-    "nav": [],
-    "note": null,
-    "report": null,
-    "settings": null,
-    "sheet": {
-      "actions": [],
+    "form": {
       "breadcrumb": [
         "Home"
       ],
-      "kind": "sheet",
-      "rows": 2,
-      "shown": 2,
+      "fields": [
+        {
+          "checked": null,
+          "id": "season_name",
+          "key": "season_name",
+          "label": null,
+          "masked": false,
+          "name": "season_name",
+          "options": null,
+          "selector": "#season_name",
+          "type": "text",
+          "value": "2027 Sign Ups"
+        },
+        {
+          "checked": null,
+          "id": "start_month",
+          "key": "start_month",
+          "label": null,
+          "masked": false,
+          "name": "start_month",
+          "options": [
+            {
+              "label": "Jan",
+              "selected": false,
+              "value": "Jan"
+            },
+            {
+              "label": "Aug",
+              "selected": true,
+              "value": "Aug"
+            }
+          ],
+          "selector": "#start_month",
+          "type": "select",
+          "value": "Aug"
+        },
+        {
+          "checked": null,
+          "id": "start_day",
+          "key": "start_day",
+          "label": null,
+          "masked": false,
+          "name": "start_day",
+          "options": [
+            {
+              "label": "1",
+              "selected": false,
+              "value": "1"
+            },
+            {
+              "label": "3",
+              "selected": true,
+              "value": "3"
+            }
+          ],
+          "selector": "#start_day",
+          "type": "select",
+          "value": "3"
+        },
+        {
+          "checked": null,
+          "id": "start_year",
+          "key": "start_year",
+          "label": null,
+          "masked": false,
+          "name": "start_year",
+          "options": [
+            {
+              "label": "2027",
+              "selected": true,
+              "value": "2027"
+            }
+          ],
+          "selector": "#start_year",
+          "type": "select",
+          "value": "2027"
+        },
+        {
+          "checked": null,
+          "id": "end_month",
+          "key": "end_month",
+          "label": null,
+          "masked": false,
+          "name": "end_month",
+          "options": [
+            {
+              "label": "Jan",
+              "selected": false,
+              "value": "Jan"
+            },
+            {
+              "label": "Jun",
+              "selected": true,
+              "value": "Jun"
+            }
+          ],
+          "selector": "#end_month",
+          "type": "select",
+          "value": "Jun"
+        },
+        {
+          "checked": null,
+          "id": "end_day",
+          "key": "end_day",
+          "label": null,
+          "masked": false,
+          "name": "end_day",
+          "options": [
+            {
+              "label": "1",
+              "selected": false,
+              "value": "1"
+            },
+            {
+              "label": "10",
+              "selected": false,
+              "value": "10"
+            }
+          ],
+          "selector": "#end_day",
+          "type": "select",
+          "value": "1"
+        },
+        {
+          "checked": null,
+          "id": "end_year",
+          "key": "end_year",
+          "label": null,
+          "masked": false,
+          "name": "end_year",
+          "options": [
+            {
+              "label": "2027",
+              "selected": true,
+              "value": "2027"
+            }
+          ],
+          "selector": "#end_year",
+          "type": "select",
+          "value": "2027"
+        },
+        {
+          "checked": null,
+          "id": "viewable",
+          "key": "viewable",
+          "label": null,
+          "masked": false,
+          "name": "viewable",
+          "options": [
+            {
+              "label": "yes",
+              "selected": true,
+              "value": "yes"
+            },
+            {
+              "label": "no",
+              "selected": false,
+              "value": "no"
+            }
+          ],
+          "selector": "#viewable",
+          "type": "select",
+          "value": "yes"
+        },
+        {
+          "checked": null,
+          "id": "prorate",
+          "key": "prorate",
+          "label": null,
+          "masked": false,
+          "name": "prorate",
+          "options": [
+            {
+              "label": "yes",
+              "selected": true,
+              "value": "yes"
+            },
+            {
+              "label": "no",
+              "selected": false,
+              "value": "no"
+            }
+          ],
+          "selector": "#prorate",
+          "type": "select",
+          "value": "yes"
+        },
+        {
+          "checked": null,
+          "id": "holidays",
+          "key": "holidays",
+          "label": null,
+          "masked": false,
+          "name": "holidays",
+          "options": [
+            {
+              "label": "yes",
+              "selected": true,
+              "value": "yes"
+            },
+            {
+              "label": "no",
+              "selected": false,
+              "value": "no"
+            }
+          ],
+          "selector": "#holidays",
+          "type": "select",
+          "value": "yes"
+        },
+        {
+          "checked": null,
+          "id": "reg_fee",
+          "key": "reg_fee",
+          "label": null,
+          "masked": false,
+          "name": "reg_fee",
+          "options": [
+            {
+              "label": "yes",
+              "selected": true,
+              "value": "yes"
+            },
+            {
+              "label": "no",
+              "selected": false,
+              "value": "no"
+            }
+          ],
+          "selector": "#reg_fee",
+          "type": "select",
+          "value": "yes"
+        },
+        {
+          "checked": null,
+          "id": "season_order",
+          "key": "season_order",
+          "label": null,
+          "masked": false,
+          "name": "season_order",
+          "options": [
+            {
+              "label": "1",
+              "selected": true,
+              "value": "1"
+            }
+          ],
+          "selector": "#season_order",
+          "type": "select",
+          "value": "1"
+        },
+        {
+          "checked": null,
+          "id": "season_type",
+          "key": "season_type",
+          "label": null,
+          "masked": false,
+          "name": "season_type",
+          "options": [
+            {
+              "label": "Weekly Series",
+              "selected": true,
+              "value": "Weekly Series"
+            },
+            {
+              "label": "Date Specific",
+              "selected": false,
+              "value": "Date Specific"
+            }
+          ],
+          "selector": "#season_type",
+          "type": "select",
+          "value": "Weekly Series"
+        }
+      ],
+      "kind": "form",
+      "rows": [
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "season_name",
+              "key": "season_name",
+              "label": null,
+              "masked": false,
+              "name": "season_name",
+              "options": null,
+              "selector": "#season_name",
+              "type": "text",
+              "value": "2027 Sign Ups"
+            }
+          ],
+          "label": "Season"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "start_month",
+              "key": "start_month",
+              "label": null,
+              "masked": false,
+              "name": "start_month",
+              "options": [
+                {
+                  "label": "Jan",
+                  "selected": false,
+                  "value": "Jan"
+                },
+                {
+                  "label": "Aug",
+                  "selected": true,
+                  "value": "Aug"
+                }
+              ],
+              "selector": "#start_month",
+              "type": "select",
+              "value": "Aug"
+            },
+            {
+              "checked": null,
+              "id": "start_day",
+              "key": "start_day",
+              "label": null,
+              "masked": false,
+              "name": "start_day",
+              "options": [
+                {
+                  "label": "1",
+                  "selected": false,
+                  "value": "1"
+                },
+                {
+                  "label": "3",
+                  "selected": true,
+                  "value": "3"
+                }
+              ],
+              "selector": "#start_day",
+              "type": "select",
+              "value": "3"
+            },
+            {
+              "checked": null,
+              "id": "start_year",
+              "key": "start_year",
+              "label": null,
+              "masked": false,
+              "name": "start_year",
+              "options": [
+                {
+                  "label": "2027",
+                  "selected": true,
+                  "value": "2027"
+                }
+              ],
+              "selector": "#start_year",
+              "type": "select",
+              "value": "2027"
+            }
+          ],
+          "label": "Start Date"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "end_month",
+              "key": "end_month",
+              "label": null,
+              "masked": false,
+              "name": "end_month",
+              "options": [
+                {
+                  "label": "Jan",
+                  "selected": false,
+                  "value": "Jan"
+                },
+                {
+                  "label": "Jun",
+                  "selected": true,
+                  "value": "Jun"
+                }
+              ],
+              "selector": "#end_month",
+              "type": "select",
+              "value": "Jun"
+            },
+            {
+              "checked": null,
+              "id": "end_day",
+              "key": "end_day",
+              "label": null,
+              "masked": false,
+              "name": "end_day",
+              "options": [
+                {
+                  "label": "1",
+                  "selected": false,
+                  "value": "1"
+                },
+                {
+                  "label": "10",
+                  "selected": false,
+                  "value": "10"
+                }
+              ],
+              "selector": "#end_day",
+              "type": "select",
+              "value": "1"
+            },
+            {
+              "checked": null,
+              "id": "end_year",
+              "key": "end_year",
+              "label": null,
+              "masked": false,
+              "name": "end_year",
+              "options": [
+                {
+                  "label": "2027",
+                  "selected": true,
+                  "value": "2027"
+                }
+              ],
+              "selector": "#end_year",
+              "type": "select",
+              "value": "2027"
+            }
+          ],
+          "label": "End Date"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "viewable",
+              "key": "viewable",
+              "label": null,
+              "masked": false,
+              "name": "viewable",
+              "options": [
+                {
+                  "label": "yes",
+                  "selected": true,
+                  "value": "yes"
+                },
+                {
+                  "label": "no",
+                  "selected": false,
+                  "value": "no"
+                }
+              ],
+              "selector": "#viewable",
+              "type": "select",
+              "value": "yes"
+            }
+          ],
+          "label": "Viewable"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "prorate",
+              "key": "prorate",
+              "label": null,
+              "masked": false,
+              "name": "prorate",
+              "options": [
+                {
+                  "label": "yes",
+                  "selected": true,
+                  "value": "yes"
+                },
+                {
+                  "label": "no",
+                  "selected": false,
+                  "value": "no"
+                }
+              ],
+              "selector": "#prorate",
+              "type": "select",
+              "value": "yes"
+            }
+          ],
+          "label": "Prorate upon Enrollment"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "holidays",
+              "key": "holidays",
+              "label": null,
+              "masked": false,
+              "name": "holidays",
+              "options": [
+                {
+                  "label": "yes",
+                  "selected": true,
+                  "value": "yes"
+                },
+                {
+                  "label": "no",
+                  "selected": false,
+                  "value": "no"
+                }
+              ],
+              "selector": "#holidays",
+              "type": "select",
+              "value": "yes"
+            }
+          ],
+          "label": "Charge for Holidays"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "reg_fee",
+              "key": "reg_fee",
+              "label": null,
+              "masked": false,
+              "name": "reg_fee",
+              "options": [
+                {
+                  "label": "yes",
+                  "selected": true,
+                  "value": "yes"
+                },
+                {
+                  "label": "no",
+                  "selected": false,
+                  "value": "no"
+                }
+              ],
+              "selector": "#reg_fee",
+              "type": "select",
+              "value": "yes"
+            }
+          ],
+          "label": "Reg Fee"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "season_order",
+              "key": "season_order",
+              "label": null,
+              "masked": false,
+              "name": "season_order",
+              "options": [
+                {
+                  "label": "1",
+                  "selected": true,
+                  "value": "1"
+                }
+              ],
+              "selector": "#season_order",
+              "type": "select",
+              "value": "1"
+            }
+          ],
+          "label": "Order"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "season_type",
+              "key": "season_type",
+              "label": null,
+              "masked": false,
+              "name": "season_type",
+              "options": [
+                {
+                  "label": "Weekly Series",
+                  "selected": true,
+                  "value": "Weekly Series"
+                },
+                {
+                  "label": "Date Specific",
+                  "selected": false,
+                  "value": "Date Specific"
+                }
+              ],
+              "selector": "#season_type",
+              "type": "select",
+              "value": "Weekly Series"
+            }
+          ],
+          "label": "Season Type"
+        }
+      ],
       "tables": [
         {
           "caption": "",
@@ -852,16 +1438,24 @@
           "section": "Existing Season Dates"
         }
       ],
-      "title": "Seasons",
-      "truncated": false
+      "title": "Seasons"
     },
+    "index": null,
+    "insights": null,
+    "list": null,
+    "nav": [],
+    "note": null,
+    "report": null,
+    "settings": null,
+    "sheet": null,
+    "tabs": null,
     "task": null,
     "title": "Seasons",
     "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=NewEditArchive&content=SeasonContent&state=new",
-    "view": "sheet",
+    "view": "form",
     "week": null
   },
   "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=NewEditArchive&content=SeasonContent&state=new",
-  "view": "sheet"
+  "view": "form"
 }

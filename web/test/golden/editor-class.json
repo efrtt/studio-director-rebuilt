@@ -1,6 +1,137 @@
 {
   "file": "editor-class.html",
-  "form": null,
+  "form": {
+    "breadcrumb": [],
+    "fields": [
+      {
+        "checked": null,
+        "id": "name",
+        "key": "name",
+        "label": null,
+        "masked": false,
+        "name": "name",
+        "options": null,
+        "selector": "#name",
+        "type": "text",
+        "value": ""
+      },
+      {
+        "checked": null,
+        "id": "season",
+        "key": "season",
+        "label": null,
+        "masked": false,
+        "name": "season",
+        "options": [
+          {
+            "label": "Fall",
+            "selected": false,
+            "value": "Fall"
+          },
+          {
+            "label": "Winter",
+            "selected": false,
+            "value": "Winter"
+          }
+        ],
+        "selector": "#season",
+        "type": "select",
+        "value": "Fall"
+      },
+      {
+        "checked": null,
+        "id": "max_size",
+        "key": "max_size",
+        "label": null,
+        "masked": false,
+        "name": "max_size",
+        "options": null,
+        "selector": "#max_size",
+        "type": "text",
+        "value": ""
+      }
+    ],
+    "kind": "form",
+    "rows": [
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "name",
+            "key": "name",
+            "label": null,
+            "masked": false,
+            "name": "name",
+            "options": null,
+            "selector": "#name",
+            "type": "text",
+            "value": ""
+          }
+        ],
+        "label": "Name"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "season",
+            "key": "season",
+            "label": null,
+            "masked": false,
+            "name": "season",
+            "options": [
+              {
+                "label": "Fall",
+                "selected": false,
+                "value": "Fall"
+              },
+              {
+                "label": "Winter",
+                "selected": false,
+                "value": "Winter"
+              }
+            ],
+            "selector": "#season",
+            "type": "select",
+            "value": "Fall"
+          }
+        ],
+        "label": "Season"
+      },
+      {
+        "fields": [
+          {
+            "checked": null,
+            "id": "max_size",
+            "key": "max_size",
+            "label": null,
+            "masked": false,
+            "name": "max_size",
+            "options": null,
+            "selector": "#max_size",
+            "type": "text",
+            "value": ""
+          }
+        ],
+        "label": "Max Size"
+      }
+    ],
+    "title": "New Class",
+    "unread": [
+      {
+        "id": "day__1",
+        "name": "day",
+        "tag": "input",
+        "type": "checkbox"
+      },
+      {
+        "id": "day__2",
+        "name": "day",
+        "tag": "input",
+        "type": "checkbox"
+      }
+    ]
+  },
   "model": {
     "attendance": null,
     "confirm": null,

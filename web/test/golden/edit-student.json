@@ -594,7 +594,724 @@
   },
   "model": {
     "attendance": null,
+    "bar": {
+      "items": [
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "new",
+          "js": true,
+          "label": "New",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "print",
+          "js": true,
+          "label": "Print",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "email",
+          "js": true,
+          "label": "Email",
+          "onclick": ""
+        },
+        {
+          "danger": true,
+          "hint": "",
+          "href": "#",
+          "id": "delete",
+          "js": true,
+          "label": "Delete",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "editfamily",
+          "js": true,
+          "label": "Family",
+          "onclick": ""
+        }
+      ],
+      "kind": "bar",
+      "menu": [
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "A",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "B",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "C",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "D",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "E",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "F",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "G",
+          "onclick": ""
+        },
+        {
+          "danger": false,
+          "hint": "",
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "H",
+          "onclick": ""
+        }
+      ],
+      "moreLabel": "More"
+    },
     "confirm": null,
+    "form": {
+      "breadcrumb": [
+        "Students"
+      ],
+      "fields": [
+        {
+          "checked": null,
+          "id": "first_name",
+          "key": "first_name",
+          "label": null,
+          "masked": false,
+          "name": "first_name",
+          "options": null,
+          "selector": "#first_name",
+          "type": "text",
+          "value": "Ada"
+        },
+        {
+          "checked": null,
+          "id": "student_last_name",
+          "key": "student_last_name",
+          "label": null,
+          "masked": false,
+          "name": "student_last_name",
+          "options": null,
+          "selector": "#student_last_name",
+          "type": "text",
+          "value": "Lovelace"
+        },
+        {
+          "checked": null,
+          "id": null,
+          "key": "name:family",
+          "label": null,
+          "masked": false,
+          "name": "family",
+          "options": [
+            {
+              "label": "Lovelace Family",
+              "selected": true,
+              "value": "4401"
+            },
+            {
+              "label": "Hopper Family",
+              "selected": false,
+              "value": "4402"
+            }
+          ],
+          "selector": "[name=\"family\"]",
+          "type": "select",
+          "value": "4401"
+        },
+        {
+          "checked": null,
+          "id": "birthday__mon",
+          "key": "birthday__mon",
+          "label": null,
+          "masked": false,
+          "name": "birthday__mon",
+          "options": [
+            {
+              "label": "Jan",
+              "selected": false,
+              "value": "1"
+            },
+            {
+              "label": "Dec",
+              "selected": true,
+              "value": "12"
+            }
+          ],
+          "selector": "#birthday__mon",
+          "type": "select",
+          "value": "12"
+        },
+        {
+          "checked": null,
+          "id": "birthday__day",
+          "key": "birthday__day",
+          "label": null,
+          "masked": false,
+          "name": "birthday__day",
+          "options": [
+            {
+              "label": "10",
+              "selected": true,
+              "value": "10"
+            }
+          ],
+          "selector": "#birthday__day",
+          "type": "select",
+          "value": "10"
+        },
+        {
+          "checked": null,
+          "id": "birthday__year",
+          "key": "birthday__year",
+          "label": null,
+          "masked": false,
+          "name": "birthday__year",
+          "options": [
+            {
+              "label": "2016",
+              "selected": true,
+              "value": "2016"
+            }
+          ],
+          "selector": "#birthday__year",
+          "type": "select",
+          "value": "2016"
+        },
+        {
+          "checked": null,
+          "id": "sex",
+          "key": "sex",
+          "label": null,
+          "masked": false,
+          "name": "sex",
+          "options": [
+            {
+              "label": "Female",
+              "selected": true,
+              "value": "F"
+            },
+            {
+              "label": "Male",
+              "selected": false,
+              "value": "M"
+            }
+          ],
+          "selector": "#sex",
+          "type": "select",
+          "value": "F"
+        },
+        {
+          "checked": null,
+          "id": "medcond",
+          "key": "medcond",
+          "label": null,
+          "masked": false,
+          "name": "medcond",
+          "options": null,
+          "selector": "#medcond",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "comments",
+          "key": "comments",
+          "label": null,
+          "masked": false,
+          "name": "comments",
+          "options": null,
+          "selector": "#comments",
+          "type": "text",
+          "value": "Loves tap"
+        },
+        {
+          "checked": null,
+          "id": "waiver",
+          "key": "waiver",
+          "label": null,
+          "masked": false,
+          "name": "waiver",
+          "options": [
+            {
+              "label": "No",
+              "selected": false,
+              "value": "0"
+            },
+            {
+              "label": "Yes",
+              "selected": true,
+              "value": "1"
+            }
+          ],
+          "selector": "#waiver",
+          "type": "select",
+          "value": "1"
+        },
+        {
+          "checked": null,
+          "id": "performing",
+          "key": "performing",
+          "label": null,
+          "masked": false,
+          "name": "performing",
+          "options": [
+            {
+              "label": "No",
+              "selected": true,
+              "value": "0"
+            },
+            {
+              "label": "Yes",
+              "selected": false,
+              "value": "1"
+            }
+          ],
+          "selector": "#performing",
+          "type": "select",
+          "value": "0"
+        },
+        {
+          "checked": null,
+          "id": "field1",
+          "key": "field1",
+          "label": null,
+          "masked": false,
+          "name": "field1",
+          "options": null,
+          "selector": "#field1",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "field2",
+          "key": "field2",
+          "label": null,
+          "masked": false,
+          "name": "field2",
+          "options": null,
+          "selector": "#field2",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "field3",
+          "key": "field3",
+          "label": null,
+          "masked": false,
+          "name": "field3",
+          "options": null,
+          "selector": "#field3",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "tags",
+          "key": "tags",
+          "label": null,
+          "masked": false,
+          "name": "tags",
+          "options": [
+            {
+              "label": "None",
+              "selected": false,
+              "value": "None"
+            },
+            {
+              "label": "Competition",
+              "selected": true,
+              "value": "Competition"
+            }
+          ],
+          "selector": "#tags",
+          "type": "select",
+          "value": "Competition"
+        }
+      ],
+      "kind": "form",
+      "rows": [
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "first_name",
+              "key": "first_name",
+              "label": null,
+              "masked": false,
+              "name": "first_name",
+              "options": null,
+              "selector": "#first_name",
+              "type": "text",
+              "value": "Ada"
+            }
+          ],
+          "label": "First Name"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "student_last_name",
+              "key": "student_last_name",
+              "label": null,
+              "masked": false,
+              "name": "student_last_name",
+              "options": null,
+              "selector": "#student_last_name",
+              "type": "text",
+              "value": "Lovelace"
+            }
+          ],
+          "label": "Last Name"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": null,
+              "key": "name:family",
+              "label": null,
+              "masked": false,
+              "name": "family",
+              "options": [
+                {
+                  "label": "Lovelace Family",
+                  "selected": true,
+                  "value": "4401"
+                },
+                {
+                  "label": "Hopper Family",
+                  "selected": false,
+                  "value": "4402"
+                }
+              ],
+              "selector": "[name=\"family\"]",
+              "type": "select",
+              "value": "4401"
+            }
+          ],
+          "label": "Family"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "birthday__mon",
+              "key": "birthday__mon",
+              "label": null,
+              "masked": false,
+              "name": "birthday__mon",
+              "options": [
+                {
+                  "label": "Jan",
+                  "selected": false,
+                  "value": "1"
+                },
+                {
+                  "label": "Dec",
+                  "selected": true,
+                  "value": "12"
+                }
+              ],
+              "selector": "#birthday__mon",
+              "type": "select",
+              "value": "12"
+            },
+            {
+              "checked": null,
+              "id": "birthday__day",
+              "key": "birthday__day",
+              "label": null,
+              "masked": false,
+              "name": "birthday__day",
+              "options": [
+                {
+                  "label": "10",
+                  "selected": true,
+                  "value": "10"
+                }
+              ],
+              "selector": "#birthday__day",
+              "type": "select",
+              "value": "10"
+            },
+            {
+              "checked": null,
+              "id": "birthday__year",
+              "key": "birthday__year",
+              "label": null,
+              "masked": false,
+              "name": "birthday__year",
+              "options": [
+                {
+                  "label": "2016",
+                  "selected": true,
+                  "value": "2016"
+                }
+              ],
+              "selector": "#birthday__year",
+              "type": "select",
+              "value": "2016"
+            }
+          ],
+          "label": "Birthday"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "sex",
+              "key": "sex",
+              "label": null,
+              "masked": false,
+              "name": "sex",
+              "options": [
+                {
+                  "label": "Female",
+                  "selected": true,
+                  "value": "F"
+                },
+                {
+                  "label": "Male",
+                  "selected": false,
+                  "value": "M"
+                }
+              ],
+              "selector": "#sex",
+              "type": "select",
+              "value": "F"
+            }
+          ],
+          "label": "Sex"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "medcond",
+              "key": "medcond",
+              "label": null,
+              "masked": false,
+              "name": "medcond",
+              "options": null,
+              "selector": "#medcond",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Medical"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "comments",
+              "key": "comments",
+              "label": null,
+              "masked": false,
+              "name": "comments",
+              "options": null,
+              "selector": "#comments",
+              "type": "text",
+              "value": "Loves tap"
+            }
+          ],
+          "label": "Comments"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "waiver",
+              "key": "waiver",
+              "label": null,
+              "masked": false,
+              "name": "waiver",
+              "options": [
+                {
+                  "label": "No",
+                  "selected": false,
+                  "value": "0"
+                },
+                {
+                  "label": "Yes",
+                  "selected": true,
+                  "value": "1"
+                }
+              ],
+              "selector": "#waiver",
+              "type": "select",
+              "value": "1"
+            }
+          ],
+          "label": "Waiver"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "performing",
+              "key": "performing",
+              "label": null,
+              "masked": false,
+              "name": "performing",
+              "options": [
+                {
+                  "label": "No",
+                  "selected": true,
+                  "value": "0"
+                },
+                {
+                  "label": "Yes",
+                  "selected": false,
+                  "value": "1"
+                }
+              ],
+              "selector": "#performing",
+              "type": "select",
+              "value": "0"
+            }
+          ],
+          "label": "Performing"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "field1",
+              "key": "field1",
+              "label": null,
+              "masked": false,
+              "name": "field1",
+              "options": null,
+              "selector": "#field1",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Field 1"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "field2",
+              "key": "field2",
+              "label": null,
+              "masked": false,
+              "name": "field2",
+              "options": null,
+              "selector": "#field2",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Field 2"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "field3",
+              "key": "field3",
+              "label": null,
+              "masked": false,
+              "name": "field3",
+              "options": null,
+              "selector": "#field3",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Field 3"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "tags",
+              "key": "tags",
+              "label": null,
+              "masked": false,
+              "name": "tags",
+              "options": [
+                {
+                  "label": "None",
+                  "selected": false,
+                  "value": "None"
+                },
+                {
+                  "label": "Competition",
+                  "selected": true,
+                  "value": "Competition"
+                }
+              ],
+              "selector": "#tags",
+              "type": "select",
+              "value": "Competition"
+            }
+          ],
+          "label": "Tags"
+        }
+      ],
+      "title": "Edit Student"
+    },
     "index": null,
     "insights": null,
     "list": {
@@ -665,13 +1382,164 @@
     "report": null,
     "settings": null,
     "sheet": null,
+    "tabs": {
+      "kind": "tabs",
+      "tabs": [
+        {
+          "actions": [],
+          "blocks": [],
+          "controls": 0,
+          "key": "overview",
+          "kind": "form",
+          "label": "Overview",
+          "note": "",
+          "selected": false
+        },
+        {
+          "actions": [
+            {
+              "href": "#",
+              "id": "enrollinnewclass",
+              "js": true,
+              "label": "Enroll in a new class"
+            }
+          ],
+          "blocks": [
+            {
+              "caption": "",
+              "cls": "SimpleSD",
+              "headings": [
+                "Day",
+                "Time",
+                "Description",
+                "Length",
+                "Type",
+                "Instructor",
+                "Actions"
+              ],
+              "id": "",
+              "rowTotal": 1,
+              "rows": [
+                [
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "Mon"
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "4:00p"
+                  },
+                  {
+                    "href": "admin.sd?page=EditClass&cident=101",
+                    "right": false,
+                    "text": "Ballet III"
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "60"
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": ""
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "Ms. Rivera"
+                  },
+                  {
+                    "action": true,
+                    "href": "admin.sd?page=EditClass&cident=101",
+                    "right": true,
+                    "text": "Edit"
+                  }
+                ]
+              ],
+              "section": ""
+            }
+          ],
+          "controls": 0,
+          "key": "enrollment",
+          "kind": "table",
+          "label": "Enrollment",
+          "note": "",
+          "selected": true
+        },
+        {
+          "actions": [],
+          "blocks": [
+            {
+              "caption": "",
+              "cls": "SimpleSD",
+              "headings": [],
+              "id": "",
+              "rowTotal": 1,
+              "rows": [
+                [
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "Guardian"
+                  },
+                  {
+                    "href": null,
+                    "right": false,
+                    "text": "Dana Lovelace"
+                  }
+                ]
+              ],
+              "section": ""
+            }
+          ],
+          "controls": 0,
+          "key": "family",
+          "kind": "table",
+          "label": "Family",
+          "note": "",
+          "selected": false
+        },
+        {
+          "actions": [],
+          "blocks": [
+            {
+              "caption": "",
+              "cls": "ReportTable",
+              "headings": [
+                "Level",
+                "Skill Category",
+                "Skill Name",
+                "Score",
+                "Date Achieved",
+                "Signed Off By",
+                "Private Notes",
+                "Public Notes"
+              ],
+              "id": "",
+              "rowTotal": 0,
+              "rows": [],
+              "section": ""
+            }
+          ],
+          "controls": 0,
+          "key": "skills",
+          "kind": "table",
+          "label": "Skills",
+          "note": "No skills.",
+          "selected": false
+        }
+      ]
+    },
     "task": null,
     "title": "Edit Student",
     "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EditStudent&sident=1629799984805",
-    "view": "list",
+    "view": "form",
     "week": null
   },
   "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EditStudent&sident=1629799984805",
-  "view": "list"
+  "view": "form"
 }

@@ -174,8 +174,11 @@ test('a one-column list of links beside the form is read too', () => {
   assert.match(list.rows[1][0].href, /lident=101/);
 });
 
-test('a page without Save still needs four fields to be an editor', () => {
-  // The floor that keeps a list page's three-control stub out of the editor.
+test('a page without Save reads its form; being an editor is a separate fact', async () => {
+  // This used to assert a four-field floor, which is how a list page's three
+  // control stub was "not a form at all". The floor belonged to the size contest
+  // that picked an editor's biggest table: with the page read row by row, the
+  // shape is the table and being an *editor* is the page having its own Save.
   const stub = doc(`
     <body><div class="contentContainer"><div class="formTitle">Classes</div>
       <table class="Form">
@@ -184,7 +187,13 @@ test('a page without Save still needs four fields to be an editor', () => {
         <tr><td>Date</td><td><input id="c" value=""></td></tr>
       </table>
     </div></body>`);
-  assert.equal(readForm(stub), null);
+  const form = readForm(stub);
+  assert.equal(form.rows.length, 3, 'three labelled rows are three rows, however few');
+  assert.deepEqual(form.fields.map((f) => f.key), ['a', 'b', 'c']);
+
+  const { recordModel } = await import('../src/lib/record.js');
+  assert.equal(recordModel(stub, 'https://x.test/admin.sd?page=Classes'), null,
+    'no Save, so a form it may be, an editor it is not');
 });
 
 test('a radio choice is written to the set, not to the first input', () => {

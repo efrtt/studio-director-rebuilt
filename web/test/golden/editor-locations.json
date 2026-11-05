@@ -111,56 +111,133 @@
   },
   "model": {
     "attendance": null,
+    "bar": null,
     "confirm": null,
+    "form": {
+      "breadcrumb": [
+        "Home"
+      ],
+      "fields": [
+        {
+          "checked": null,
+          "id": "name",
+          "key": "name",
+          "label": null,
+          "masked": false,
+          "name": "name",
+          "options": null,
+          "selector": "#name",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "url",
+          "key": "url",
+          "label": null,
+          "masked": false,
+          "name": "url",
+          "options": null,
+          "selector": "#url",
+          "type": "text",
+          "value": ""
+        }
+      ],
+      "kind": "form",
+      "rows": [
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "name",
+              "key": "name",
+              "label": null,
+              "masked": false,
+              "name": "name",
+              "options": null,
+              "selector": "#name",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Location Name"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "url",
+              "key": "url",
+              "label": null,
+              "masked": false,
+              "name": "url",
+              "options": null,
+              "selector": "#url",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Virtual Locations Link"
+        }
+      ],
+      "tables": [
+        {
+          "caption": "",
+          "cls": "SimpleSD",
+          "headings": [],
+          "id": "",
+          "rowTotal": 4,
+          "rows": [
+            [
+              {
+                "href": "admin.sd?page=NewEditDel&content=LocationsContent&state=edit&lident=0",
+                "right": false,
+                "text": ""
+              }
+            ],
+            [
+              {
+                "href": "admin.sd?page=NewEditDel&content=LocationsContent&state=edit&lident=101",
+                "right": false,
+                "text": "Downtown"
+              }
+            ],
+            [
+              {
+                "href": "admin.sd?page=NewEditDel&content=LocationsContent&state=edit&lident=102",
+                "right": false,
+                "text": "North"
+              }
+            ],
+            [
+              {
+                "href": "admin.sd?page=NewEditDel&content=LocationsContent&state=edit&lident=103",
+                "right": false,
+                "text": "West"
+              }
+            ]
+          ],
+          "section": "Existing Class Locations"
+        }
+      ],
+      "title": "Class Locations"
+    },
     "index": null,
     "insights": null,
     "list": null,
     "nav": [],
     "note": null,
     "report": null,
-    "settings": {
-      "actions": [],
-      "breadcrumb": [
-        "Home"
-      ],
-      "fields": [
-        {
-          "at": 0,
-          "key": "name",
-          "label": "Location Name",
-          "selector": "#name",
-          "source": "cell",
-          "type": "text",
-          "value": ""
-        },
-        {
-          "at": 1,
-          "key": "url",
-          "label": "Virtual Locations Link",
-          "selector": "#url",
-          "source": "cell",
-          "type": "text",
-          "value": ""
-        }
-      ],
-      "kind": "settings",
-      "primary": null,
-      "save": {
-        "href": "#save",
-        "id": "save",
-        "js": true,
-        "label": "Save"
-      },
-      "title": "Class Locations"
-    },
+    "settings": null,
     "sheet": null,
+    "tabs": null,
     "task": null,
     "title": "Class Locations",
     "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=NewEditDel&content=LocationsContent&state=new",
-    "view": "settings",
+    "view": "form",
     "week": null
   },
   "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=NewEditDel&content=LocationsContent&state=new",
-  "view": "settings"
+  "view": "form"
 }

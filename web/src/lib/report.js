@@ -19,6 +19,7 @@ import { qs, qsa, textOf } from './shell.js';
 import { readForm } from './form.js';
 import { diffFields, applyFields } from '../model/diff.js';
 import { readTable } from '../model/table.js';
+import { contentRoot } from '../model/root.js';
 
 // The app's own label on every report page seen so far.
 const RUN = /^(run|generate|create|show|view|update|apply)\s+(the\s+)?report$|^run$/i;
@@ -59,7 +60,7 @@ function readResults(doc) {
 }
 
 export function readReport(doc) {
-  const root = qs(doc, '.contentContainer') || qs(doc, '#mainContent') || doc.body;
+  const root = contentRoot(doc);
   if (!root) return null;
 
   const trigger = reportTrigger(doc);

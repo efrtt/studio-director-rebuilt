@@ -103,13 +103,13 @@
             {
               "checked": true,
               "label": "Admin calendar",
-              "selector": "[name=\"admincal\"]",
+              "selector": null,
               "value": "admincal"
             },
             {
               "checked": false,
               "label": "Calendar table",
-              "selector": "[name=\"admincal\"]",
+              "selector": null,
               "value": "caltable"
             }
           ],
