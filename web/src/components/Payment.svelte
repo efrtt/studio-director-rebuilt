@@ -22,8 +22,9 @@
   let model = payment;
   let values = seed(payment);
   // A page that arrives mid-split (an amount already typed in a row) shows its
-  // splits; a plain payment does not.
-  let splitOpen = !!payment.filled;
+  // splits; a plain payment does not. An edit always does: the app prints its own
+  // allocation row from the start, already carrying the payment's amount.
+  let splitOpen = !!payment.filled || payment.mode === 'edit';
   let busy = false;
   let message = '';
 
@@ -51,6 +52,11 @@
   $: totals = (model && model.totals) || [];
   $: method = (model && model.method) || null;
   $: family = (model && model.family) || '';
+  // Two screens wear this view. A new payment asks what to charge; an edit opens
+  // one the app already holds, so its control is Save rather than Process Payment,
+  // and it also carries the receipt and the applied details.
+  $: editing = !!(model && model.mode === 'edit');
+  $: extras = (model && model.extras) || [];
 
   function dateCaption(field) {
     return /deposit/i.test(field.name) ? 'Deposit' : 'Payment';
@@ -101,26 +107,34 @@
     if (!result || !result.ok) {
       message = result && result.reason === 'missing'
         ? `The app no longer has the control for: ${(result.missing || []).join(', ')}.`
-        : 'The app’s “Process Payment” control is not on this page — use Original.';
+        : `The app’s “${editing ? 'Save' : 'Process Payment'}” control is not on this page — use Original.`;
       return;
     }
-    message = 'Asked the app to process the payment…';
+    message = editing
+      ? 'Asked the app to save the payment…'
+      : 'Asked the app to process the payment…';
   }
 </script>
 
 <div class="sd-editor">
   <div class="sd-editorbar">
     <span class="sd-dirty">
-      {family ? `New payment · ${family}` : 'New payment'}
+      {editing ? 'Edit payment' : 'New payment'}{family ? ` · ${family}` : ''}
     </span>
     <div class="sd-editor-actions">
-      {#if !splitOpen && (splits.length || (model && (model.splitPayment || model.addSplit)))}
+      {#if extras.length}
+        {#each extras as extra (extra.href)}
+          <a class="sd-btn" href={extra.href}>{extra.label}</a>
+        {/each}
+        <span class="sd-barsep"></span>
+      {/if}
+      {#if !editing && !splitOpen && (splits.length || (model && (model.splitPayment || model.addSplit)))}
         <button class="sd-btn" type="button" disabled={busy} on:click={openSplits}>
           Split payment
         </button>
       {/if}
       <button class="sd-btn sd-primary" type="button" disabled={busy} on:click={submit}>
-        {busy ? 'Working…' : 'Process payment'}
+        {busy ? (editing ? 'Saving…' : 'Working…') : (editing ? 'Save' : 'Process payment')}
       </button>
     </div>
   </div>

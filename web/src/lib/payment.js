@@ -190,10 +190,38 @@ function isReal(el) {
   return !!handler && !/^void\(0\)/i.test(handler);
 }
 
-function primaryPayment(root) {
-  const candidates = qsa(root, BUTTONS)
-    .filter((el) => /^process payment$/i.test((textOf(el) || el.getAttribute('value') || '').trim()));
-  return candidates.length ? actionOf(candidates.find(isReal) || candidates[0]) : null;
+// Which payment screen this is, and the control that ends it. A new payment ends
+// with "Process Payment"; an edit of one the app already has ends with its own
+// "Save". The form, the totals and the split row are the same shape on both, so
+// these words are the only thing the page offers to tell them apart.
+function primaryAction(root) {
+  const find = (re) => {
+    const candidates = qsa(root, BUTTONS)
+      .filter((el) => re.test((textOf(el) || el.getAttribute('value') || '').trim()));
+    return candidates.length ? actionOf(candidates.find(isReal) || candidates[0]) : null;
+  };
+  const process = find(/^process payment$/i);
+  if (process) return { mode: 'new', primary: process };
+  const save = find(/^save$/i);
+  if (save) return { mode: 'edit', primary: save };
+  return { mode: 'new', primary: null };
+}
+
+// What only an edit of an existing payment carries: the receipt the app has and
+// the allocations behind the figure. Plain links, so they are followed where they
+// stand rather than rebuilt.
+const EXTRA = /^(print receipt|email receipt|see details)$/i;
+
+function extrasOf(root) {
+  const out = [];
+  for (const a of qsa(root, 'a[href]')) {
+    const label = (textOf(a) || '').trim();
+    if (!EXTRA.test(label)) continue;
+    const href = a.getAttribute('href') || '';
+    if (!href || href === '#' || out.some((x) => x.href === href)) continue;
+    out.push({ label, href });
+  }
+  return out;
 }
 
 export function readPayment(doc) {
@@ -253,11 +281,16 @@ export function readPayment(doc) {
   const splitPayment = actionIn(root, /^split payment$/i);
 
   const familyRow = rowFor(rows, /^family$/i);
+  const primary = primaryAction(root);
+  const editing = primary.mode === 'edit';
 
   return {
     kind: 'payment',
     view: 'payment',
-    title: 'New Payment',
+    // The app names both screens, and its name is what the chrome says: an edit
+    // keeps the family, the amount and the dates, but not the word "New".
+    title: editing ? 'Edit Payment' : 'New Payment',
+    mode: primary.mode,
     breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
     // Shown, never edited: the family is the page's subject, not one of its inputs.
     family: familyRow ? textOf(familyRow.cell) : '',
@@ -270,9 +303,11 @@ export function readPayment(doc) {
     method: methodOf(baseTable),
     // Every editable control, in one list, for diffing and writing back.
     fields: base.concat(splitFields),
-    primary: primaryPayment(root),
+    primary: primary.primary,
     addSplit: actionIn(root, /^add another split$/i),
     splitPayment,
+    // Only the edit screen has these; a new payment has nothing to receipt yet.
+    extras: editing ? extrasOf(root) : [],
     url: ''
   };
 }

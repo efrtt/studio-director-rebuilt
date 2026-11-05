@@ -180,6 +180,100 @@ check('one split, no charges still reads', !!readPayment(page({ splits: 1, charg
   check('the page is read again', result.ok && result.payment.splits.length === 2, result.ok ? String(result.payment.splits.length) : '');
 }
 
+// ---- the same view, on the screen the app calls Edit Payment ----
+// Analysed on the live page (`?page=EditPayment&xident=…`) on 2026-11-05. The form
+// and the totals are the same shape as a new payment's, but: the dates are printed
+// text beside hidden inputs, the split row is there from the start and already
+// carries the payment's amount, the totals table has a header row, the control at
+// the end says Save, and the page carries the receipt it already has and the
+// applied details. Nothing on it says "Process Payment" or "Split Payment".
+function editPage() {
+  return new DOMParser().parseFromString(`
+    <html><body>
+      <div class="contentContainer">
+        <div class="Breadcrumb"><a href="?page=Home">Home</a></div>
+        <div class="formTitle">Edit Payment</div>
+        <table class="Layout"><tr>
+          <td class="Top">
+            <table class="FlexForm">
+              <tr><td>Family</td><td>Example Family</td></tr>
+              <tr><td>Amount</td><td><input name="amount" value="40.00"></td></tr>
+              <tr><td>Payment Date</td><td>Sep 01, 2026</td><td><input type="hidden" name="due_date" value="2026-09-01"></td></tr>
+              <tr><td>Deposit Date</td><td>Sep 01, 2026</td><td><input type="hidden" name="deposit_date" value="2026-09-01"></td></tr>
+              <tr><td>Notes</td><td><input name="notes" value=""></td></tr>
+              <tr><td>Payment Method</td><td>VISA</td></tr>
+            </table>
+            <table class="FlexForm">
+              <tr><td>Paid Toward</td><td>
+                <select name="paid_toward1">
+                  <option value="">Adjustment</option>
+                  <option value="1">Tuition</option>
+                </select>
+              </td></tr>
+              <tr><td>Amount</td><td><input name="split_amt1" value="40.00"></td></tr>
+            </table>
+            <div class="WithinSectionSpace">
+              <a class="Btn" href="#" id="addanothersplit">Add Another Split</a>
+              <a class="Btn" href="#" onclick="StudioDir.onCallMethodSubmit('EditPayment','onSave')">Save</a>
+            </div>
+          </td>
+          <td class="Top">
+            <table class="ReportTable">
+              <tr><th>Category</th><th>Amount Unpaid</th></tr>
+              <tr><td>Total unpaid charges</td><td>$0.00</td></tr>
+              <tr><td>Current payments not applied to a charge</td><td>-$0.00</td></tr>
+              <tr><td>Current Balance Due</td><td>$0.00</td></tr>
+            </table>
+            <a href="?page=EditPayment&amp;meth=onAppliedDetails">see details</a>
+            <a href="?page=LedgerPaymentReceiptPage&amp;xident=1">Print Receipt</a>
+            <a href="?page=LedgerPaymentReceiptPage&amp;meth=sendEmail">Email Receipt</a>
+          </td>
+        </tr></table>
+      </div>
+    </body></html>
+  `, 'text/html');
+}
+
+{
+  const edit = readPayment(editPage());
+  check('an edit is claimed', !!edit);
+  check('an edit names itself', edit && edit.title === 'Edit Payment', edit && edit.title);
+  check('the mode is read', edit && edit.mode === 'edit', edit && edit.mode);
+  check('an edit ends with the app Save', edit && edit.primary && edit.primary.label === 'Save', edit && edit.primary && edit.primary.label);
+  check('an edit has no split anchor', edit && edit.splitPayment === null);
+  check('the allocation row is read', edit && edit.splits.length === 1, edit && String(edit.splits.length));
+  check('its amount opens the splits', edit && edit.filled === true);
+  check('a printed date still reads as a date field',
+    edit && edit.base.map((f) => f.name).join(',') === 'amount,due_date,deposit_date,notes',
+    edit && edit.base.map((f) => f.name).join(','));
+  check('the totals header is not a total', edit && edit.totals.length === 3, edit && edit.totals.map((t) => t.label).join('|'));
+  check('the receipt links are read',
+    edit && edit.extras.map((x) => x.label).join(',') === 'see details,Print Receipt,Email Receipt',
+    edit && edit.extras.map((x) => x.label).join(','));
+  check('the routed title is the edit screen',
+    readPage(editPage(), 'https://example.test/admin.sd?page=EditPayment').payment.title === 'Edit Payment');
+
+  const doc = editPage();
+  const found = readPayment(doc);
+  let pressed = 0;
+  const save = Array.from(doc.querySelectorAll('a'))
+    .find((a) => (a.textContent || '').trim() === 'Save');
+  save.addEventListener('click', () => { pressed += 1; });
+  const values = {};
+  for (const field of found.fields) values[field.key] = field.value;
+  values['name:amount'] = '41.00';
+  const result = runPayment(doc, found, values);
+  check('an edit saves through the app control',
+    result.ok && pressed === 1 && doc.querySelector('[name="amount"]').value === '41.00',
+    JSON.stringify({ ok: result.ok, pressed }));
+}
+
+{
+  const fresh = readPayment(page());
+  check('a new payment is not an edit', fresh.mode === 'new' && fresh.extras.length === 0,
+    JSON.stringify({ mode: fresh.mode, extras: fresh.extras.length }));
+}
+
 // ---- a page that is not there ----
 check('an empty document is refused', readPayment(new DOMParser().parseFromString('<html><body></body></html>', 'text/html')) === null);
 
