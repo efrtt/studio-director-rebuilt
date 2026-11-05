@@ -7,17 +7,19 @@
  *
  * It is not a theme and not scoped `html[data-sd-theme]`, because there is no
  * `#sd-root` here to hang tokens on: the page is styled by its own class,
- * `body.LoginBody`, and the variables below are declared on it. The values are
- * the Wii skin's palette (see wii.css) so the sign-in looks like the screen it
- * leads to: a cool near-white field, white panels with a white keyline, cyan
- * light rather than blue paint, and the skin's rounded scales.
+ * `body.LoginBody`. The three palettes below are keyed off the same attribute the
+ * app's own screens read, and the userscript sets it from the same stored choice
+ * before the stylesheet lands — so the sign-in arrives in whatever look the app
+ * will be in, and nothing new has to be pressed for it.
  *
  * The app's own selectors are used as they are — this page is a live capture, so
  * they are the ones that exist: `.LoginBox` inside two `.Pad24`s, `input.Login`,
  * `a.LoginButton`, `.LoginPowerBy`, `.LoginSDLogo`, `.LoginCopyright`.
  */
 
-body.LoginBody {
+/* ---- Wii (the default, and what a fresh install gets) ---- */
+body.LoginBody,
+html[data-sd-theme="wii"] body.LoginBody {
   --lg-blue: #34beed;
   --lg-light: #7fd8f7;
   --lg-deep: #117fb5;
@@ -28,16 +30,72 @@ body.LoginBody {
   --lg-line-strong: color-mix(in srgb, var(--lg-blue) 50%, #ffffff);
   --lg-surface: #ffffff;
   --lg-wash: color-mix(in srgb, var(--lg-blue) 9%, #ffffff);
+  --lg-input-focus: #ffffff;
   --lg-shadow: color-mix(in srgb, var(--lg-deep) 28%, transparent);
+  --lg-sheen: rgba(255, 255, 255, 0.5);
+  --lg-logo-filter: brightness(0);
+  --lg-logo-opacity: 0.4;
 
   /* The same field the skin's Menu has: a near-white page that cools toward the
      floor under one bloom of light from below. */
-  background:
+  --lg-field:
     radial-gradient(120% 62% at 50% 112%,
       color-mix(in srgb, var(--lg-blue) 42%, transparent) 0%,
       color-mix(in srgb, var(--lg-blue) 16%, transparent) 42%,
       transparent 72%),
     linear-gradient(var(--lg-wash), color-mix(in srgb, var(--lg-blue) 16%, #ffffff));
+  color-scheme: light;
+}
+
+/* ---- dark: the app's own dark field and its blue accent ---- */
+html[data-sd-theme="dark"] body.LoginBody {
+  --lg-blue: #7aa2ff;
+  --lg-light: #a8c4ff;
+  --lg-deep: #4f6fbf;
+  --lg-ink: #e6ebf3;
+  --lg-text: #e6ebf3;
+  --lg-dim: #93a1b5;
+  --lg-line: color-mix(in srgb, var(--lg-blue) 22%, #0f141c);
+  --lg-line-strong: color-mix(in srgb, var(--lg-blue) 34%, #0f141c);
+  --lg-surface: #161d28;
+  --lg-wash: #1b2431;
+  --lg-input-focus: #202b3a;
+  --lg-shadow: rgba(0, 0, 0, 0.55);
+  --lg-sheen: rgba(255, 255, 255, 0.32);
+  --lg-logo-filter: brightness(0) invert(1);
+  --lg-logo-opacity: 0.45;
+  --lg-field:
+    radial-gradient(120% 62% at 50% 112%,
+      color-mix(in srgb, var(--lg-blue) 22%, transparent) 0%,
+      color-mix(in srgb, var(--lg-blue) 8%, transparent) 42%,
+      transparent 72%),
+    #0f141c;
+  color-scheme: dark;
+}
+
+/* ---- light: the warm paper the light theme uses ---- */
+html[data-sd-theme="light"] body.LoginBody {
+  --lg-blue: #34599f;
+  --lg-light: #5b7cc0;
+  --lg-deep: #24406f;
+  --lg-ink: #2b2621;
+  --lg-text: #2b2621;
+  --lg-dim: #6d6154;
+  --lg-line: color-mix(in srgb, var(--lg-blue) 24%, #fdfaf3);
+  --lg-line-strong: color-mix(in srgb, var(--lg-blue) 40%, #fdfaf3);
+  --lg-surface: #fdfaf3;
+  --lg-wash: #f4efe6;
+  --lg-input-focus: #ffffff;
+  --lg-shadow: rgba(72, 56, 34, 0.22);
+  --lg-sheen: rgba(255, 255, 255, 0.45);
+  --lg-logo-filter: brightness(0);
+  --lg-logo-opacity: 0.4;
+  --lg-field: linear-gradient(#f7f2e9, #efe7d9);
+  color-scheme: light;
+}
+
+body.LoginBody {
+  background: var(--lg-field);
   background-attachment: fixed;
   color: var(--lg-text);
   font: 14px/1.45 "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -77,7 +135,7 @@ body.LoginBody .LoginBox {
   border-radius: 16px;
   box-shadow:
     0 24px 48px -26px var(--lg-shadow),
-    inset 0 1px 0 #ffffff;
+    inset 0 1px 0 var(--lg-sheen);
   overflow: hidden;
 }
 
@@ -101,12 +159,12 @@ body.LoginBody .LoginLabel {
 }
 
 /* The app pins the wrapper to 300px, which is what kept the fields from filling
-   the card: a 100%-wide input inside a 300px line is still 300px. */
+   the card: a 100%-wide input inside a 300px line is still 300px. It also spaces
+   the form with padding-top on its own Label/Line classes, where a card wants the
+   gap between things rather than inside them. */
 body.LoginBody .LoginContainer form#idForm .LoginLine,
 body.LoginBody .LoginContainer form#idForm .LoginLabel {
   width: 100%;
-  /* The app spaces this form with padding-top on its own Label/Line classes;
-     a card wants the gap between things, not inside them. */
   padding: 0;
 }
 
@@ -130,7 +188,7 @@ body.LoginBody .LoginBox > .Pad24 > .LoginSpace1:empty {
   display: none;
 }
 
-/* The app pins its fields to 301px from an id-based rule, so these two carry the
+/* The app pins its fields to 301px from an id-based rule, so these carry the
    form's id as well: full width is what makes the card a card. */
 body.LoginBody .LoginContainer form#idForm input.Login {
   box-sizing: border-box;
@@ -144,11 +202,13 @@ body.LoginBody .LoginContainer form#idForm input.Login {
   border-radius: 11px;
   box-shadow: inset 0 1px 2px color-mix(in srgb, var(--lg-deep) 12%, transparent);
   outline: none;
-  transition: border-color 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+  /* No background transition: the skin lands after load, so a fade would read as
+     a flash from the app's white field to this one. Focus still eases. */
+  transition: border-color 120ms ease, box-shadow 120ms ease;
 }
 
 body.LoginBody .LoginContainer form#idForm input.Login:focus {
-  background: #ffffff;
+  background: var(--lg-input-focus);
   border-color: var(--lg-blue);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--lg-blue) 22%, transparent);
 }
@@ -181,7 +241,7 @@ body.LoginBody .LoginContainer form#idForm a.LoginButton {
   text-decoration: none;
   color: #ffffff;
   background:
-    linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 52%),
+    linear-gradient(var(--lg-sheen), rgba(255, 255, 255, 0) 52%),
     linear-gradient(var(--lg-blue), var(--lg-deep));
   border-radius: 12px;
   box-shadow:
@@ -226,10 +286,10 @@ body.LoginBody .LoginSDLogo {
 body.LoginBody .LoginSDLogo img {
   max-height: 28px;
   width: auto;
-  /* The mark is white, drawn for the blue page it used to sit on: as a dark
-     silhouette it reads on this field instead of vanishing. */
-  filter: brightness(0);
-  opacity: 0.4;
+  /* The mark is drawn for a coloured page: as a silhouette it reads on all three
+     fields instead of vanishing into one of them. */
+  filter: var(--lg-logo-filter);
+  opacity: var(--lg-logo-opacity);
 }
 
 @media (max-width: 420px) {
