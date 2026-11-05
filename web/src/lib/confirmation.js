@@ -16,10 +16,12 @@
 
 import { qs, qsa, textOf } from './shell.js';
 
-// `scheduled` is the drop-in flow's own outcome: "Lily has been scheduled to drop
-// in on class …". Without it the last page of that flow read as no view at all,
-// because every other reader refuses a page that is one sentence and three links.
-const CONFIRMED = /\bhas been\s+(updated|saved|added|created|deleted|removed|changed|cloned|unenrolled|enrolled|dropped|withdrawn|scheduled)\b/i;
+// `scheduled` and `cancelled` are the drop flow's own outcomes: "Lily has been
+// scheduled to drop in on class …" when it is booked, "… session in … has been
+// cancelled" when it is dropped again. Without them those pages read as no view
+// at all, because every other reader refuses a page that is one sentence and a
+// handful of links. Both spellings of cancelled, because the app is American.
+const CONFIRMED = /\bhas been\s+(updated|saved|added|created|deleted|removed|changed|cloned|unenrolled|enrolled|dropped|withdrawn|scheduled|cancell?ed)\b/i;
 const REFUSED = /\b(has not been|was not|could not be|cannot be|unable to|not saved|not updated|error|failed|requires?|invalid)\b/i;
 
 // The screen is sometimes *before* the outcome: the app asks, then saves. The

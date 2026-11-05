@@ -139,6 +139,34 @@ test('the drop question carries the sentence its card draws', () => {
   assert.equal(model.links[0].label, 'Cancel', 'the way out is on the card');
 });
 
+// Dropping it again, measured live (2026-11-05): `page=DropStudentMakeup&meth=yes`
+// answers "Lily's make-up/trial/drop-in session in Graduating Seniors on Mon,
+// Nov 2, 2026 has been cancelled." — the other half of the same pair of pages.
+const cancelled = doc(`<body><div class="contentContainer"><div class="Content">
+  <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a></div>
+  <div class="formTitle">Drop Student</div>
+  <div class="ButtonBar"></div>
+  <div class="contentInfo">
+    <p><a href="admin.sd?page=EditStudent&sident=2">Lily</a>'s make-up/trial/drop-in session in
+      <a href="admin.sd?page=EditClass&cident=1">Graduating Seniors</a> on Mon, Nov 2, 2026 has been cancelled.</p>
+    <p><a href="admin.sd?page=EditStudent&sident=2">Return to Lily</a>
+      <a href="admin.sd?page=EditClass&cident=1">Go to Graduating Seniors</a></p>
+  </div>
+</div></div></body>`);
+
+test('a cancelled drop-in session is an outcome too', () => {
+  const model = confirmationOf(cancelled, {});
+
+  assert.ok(model, 'the page is recognised');
+  assert.equal(model.pending, undefined);
+  assert.equal(model.ok, true);
+  assert.equal(model.title, 'Drop Student');
+  assert.match(model.message, /has been cancelled\.$/);
+  const onward = model.links.map((l) => l.label);
+  assert.ok(onward.includes('Return to Lily'));
+  assert.ok(onward.includes('Go to Graduating Seniors'));
+});
+
 test('a paragraph that is only links is an action bar, not a question', () => {
   // Lifted from the two fixtures whose models must not move: the unenroll page's
   // "Switch Classes / Back to the student" pair, and the Email Class menu.
