@@ -2,22 +2,30 @@
  *
  * The one screen the rebuild never replaces: it is where the session is made, so
  * the app's own markup, fields and submit stay exactly as they are. This file is
- * colour only — it is injected as a <style> beside that markup, and a stylesheet
- * cannot change what a form sends. No element is added, moved or hidden.
+ * colour and shape only — it is injected as a <style> beside that markup, and a
+ * stylesheet cannot change what a form sends. No element is added or moved.
  *
- * It is not a theme and not scoped `html[data-sd-theme]`, because there is no
- * `#sd-root` here to hang tokens on: the page is styled by its own class,
- * `body.LoginBody`. The three palettes below are keyed off the same attribute the
- * app's own screens read, and the userscript sets it from the same stored choice
- * before the stylesheet lands — so the sign-in arrives in whatever look the app
- * will be in, and nothing new has to be pressed for it.
+ * Two visual languages live here, and they are not shared:
+ *
+ *   - Dark and Light are the guide's (`web/styleguide.html`): a hairline box that
+ *     grows an accent edge, nothing filled solid, one field height, 13px base,
+ *     6px control corners and 8px cards, labels 11px uppercase dim, elevation a
+ *     1px shadow rather than a bloom. The page is a flat `--bg`; there is no light
+ *     in the air.
+ *   - Wii is its own skin and does not borrow from them: the cool field with one
+ *     bloom from below, a 16px card, taller controls, and the gloss-capped button.
+ *     Its rules are the only ones with a sheen or a gradient in them.
+ *
+ * The three palettes hang off the same `data-sd-theme` attribute the app's own
+ * screens read, and the userscript sets it from the stored choice before the
+ * stylesheet lands, so the sign-in arrives in whatever look the app will be in.
  *
  * The app's own selectors are used as they are — this page is a live capture, so
  * they are the ones that exist: `.LoginBox` inside two `.Pad24`s, `input.Login`,
  * `a.LoginButton`, `.LoginPowerBy`, `.LoginSDLogo`, `.LoginCopyright`.
  */
 
-/* ---- Wii (the default, and what a fresh install gets) ---- */
+/* ---- Wii: the skin, with its gloss and its light ---- */
 body.LoginBody,
 html[data-sd-theme="wii"] body.LoginBody {
   --lg-blue: #34beed;
@@ -30,24 +38,50 @@ html[data-sd-theme="wii"] body.LoginBody {
   --lg-line-strong: color-mix(in srgb, var(--lg-blue) 50%, #ffffff);
   --lg-surface: #ffffff;
   --lg-wash: color-mix(in srgb, var(--lg-blue) 9%, #ffffff);
-  --lg-input-focus: #ffffff;
-  --lg-shadow: color-mix(in srgb, var(--lg-deep) 28%, transparent);
-  --lg-sheen: rgba(255, 255, 255, 0.5);
+  --lg-focus-bg: #ffffff;
   --lg-logo-filter: brightness(0);
   --lg-logo-opacity: 0.4;
 
-  /* The same field the skin's Menu has: a near-white page that cools toward the
-     floor under one bloom of light from below. */
+  /* The field: a near-white page that cools toward the floor under one bloom. */
   --lg-field:
     radial-gradient(120% 62% at 50% 112%,
       color-mix(in srgb, var(--lg-blue) 42%, transparent) 0%,
       color-mix(in srgb, var(--lg-blue) 16%, transparent) 42%,
       transparent 72%),
     linear-gradient(var(--lg-wash), color-mix(in srgb, var(--lg-blue) 16%, #ffffff));
+
+  /* The skin's own scales: rounder corners, taller controls, a glossed button. */
+  --lg-card-radius: 16px;
+  --lg-card-border: var(--lg-line-strong);
+  --lg-card-shadow:
+    0 24px 48px -26px color-mix(in srgb, var(--lg-deep) 28%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --lg-card-pad: 28px 30px 30px;
+  --lg-gap: 16px;
+  --lg-field-radius: 11px;
+  --lg-field-h: 45px;
+  --lg-field-pad: 0 13px;
+  --lg-field-font: 15px;
+  --lg-btn-radius: 12px;
+  --lg-btn-h: 46px;
+  --lg-btn-fg: #ffffff;
+  --lg-btn-border: transparent;
+  --lg-btn-bg:
+    linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 52%),
+    linear-gradient(var(--lg-blue), var(--lg-deep));
+  --lg-btn-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 10px 20px -12px var(--lg-deep);
+  --lg-btn-weight: 600;
+  --lg-focus-outline: none;
+  --lg-focus-offset: 0;
+  --lg-focus-ring: 0 0 0 3px color-mix(in srgb, var(--lg-blue) 22%, transparent);
+  --lg-label-font: 11px;
+  --lg-foot-font: 11px;
   color-scheme: light;
 }
 
-/* ---- dark: the app's own dark field and its blue accent ---- */
+/* ---- Dark: the guide's hairline controls on the app's dark field ---- */
 html[data-sd-theme="dark"] body.LoginBody {
   --lg-blue: #7aa2ff;
   --lg-light: #a8c4ff;
@@ -55,25 +89,42 @@ html[data-sd-theme="dark"] body.LoginBody {
   --lg-ink: #e6ebf3;
   --lg-text: #e6ebf3;
   --lg-dim: #93a1b5;
-  --lg-line: color-mix(in srgb, var(--lg-blue) 22%, #0f141c);
-  --lg-line-strong: color-mix(in srgb, var(--lg-blue) 34%, #0f141c);
+  --lg-line: #27303f;
+  --lg-line-strong: #27303f;
   --lg-surface: #161d28;
   --lg-wash: #1b2431;
-  --lg-input-focus: #202b3a;
-  --lg-shadow: rgba(0, 0, 0, 0.55);
-  --lg-sheen: rgba(255, 255, 255, 0.32);
+  --lg-focus-bg: #1b2431;
   --lg-logo-filter: brightness(0) invert(1);
   --lg-logo-opacity: 0.45;
-  --lg-field:
-    radial-gradient(120% 62% at 50% 112%,
-      color-mix(in srgb, var(--lg-blue) 22%, transparent) 0%,
-      color-mix(in srgb, var(--lg-blue) 8%, transparent) 42%,
-      transparent 72%),
-    #0f141c;
+
+  --lg-field: #0f141c;
+
+  --lg-card-radius: 8px;
+  --lg-card-border: #27303f;
+  --lg-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  --lg-card-pad: 24px 24px 26px;
+  --lg-gap: 12px;
+  --lg-field-radius: 6px;
+  --lg-field-h: 36px;
+  --lg-field-pad: 4px 9px;
+  --lg-field-font: 13px;
+  /* A hairline box that carries the accent; nothing is filled solid. */
+  --lg-btn-radius: 6px;
+  --lg-btn-h: 30px;
+  --lg-btn-fg: var(--lg-blue);
+  --lg-btn-border: var(--lg-blue);
+  --lg-btn-bg: var(--lg-wash);
+  --lg-btn-shadow: none;
+  --lg-btn-weight: 400;
+  --lg-focus-outline: 2px solid var(--lg-blue);
+  --lg-focus-offset: 1px;
+  --lg-focus-ring: none;
+  --lg-label-font: 11px;
+  --lg-foot-font: 12px;
   color-scheme: dark;
 }
 
-/* ---- light: the warm paper the light theme uses ---- */
+/* ---- Light: the guide's warm paper ---- */
 html[data-sd-theme="light"] body.LoginBody {
   --lg-blue: #34599f;
   --lg-light: #5b7cc0;
@@ -81,16 +132,37 @@ html[data-sd-theme="light"] body.LoginBody {
   --lg-ink: #2b2621;
   --lg-text: #2b2621;
   --lg-dim: #6d6154;
-  --lg-line: color-mix(in srgb, var(--lg-blue) 24%, #fdfaf3);
-  --lg-line-strong: color-mix(in srgb, var(--lg-blue) 40%, #fdfaf3);
+  --lg-line: #ded2be;
+  --lg-line-strong: #ded2be;
   --lg-surface: #fdfaf3;
-  --lg-wash: #f4efe6;
-  --lg-input-focus: #ffffff;
-  --lg-shadow: rgba(72, 56, 34, 0.22);
-  --lg-sheen: rgba(255, 255, 255, 0.45);
+  --lg-wash: #efe7d9;
+  --lg-focus-bg: #efe7d9;
   --lg-logo-filter: brightness(0);
   --lg-logo-opacity: 0.4;
-  --lg-field: linear-gradient(#f7f2e9, #efe7d9);
+
+  --lg-field: #f4efe6;
+
+  --lg-card-radius: 8px;
+  --lg-card-border: #ded2be;
+  --lg-card-shadow: 0 1px 2px rgba(72, 56, 34, 0.12);
+  --lg-card-pad: 24px 24px 26px;
+  --lg-gap: 12px;
+  --lg-field-radius: 6px;
+  --lg-field-h: 36px;
+  --lg-field-pad: 4px 9px;
+  --lg-field-font: 13px;
+  --lg-btn-radius: 6px;
+  --lg-btn-h: 30px;
+  --lg-btn-fg: var(--lg-blue);
+  --lg-btn-border: var(--lg-blue);
+  --lg-btn-bg: var(--lg-wash);
+  --lg-btn-shadow: none;
+  --lg-btn-weight: 400;
+  --lg-focus-outline: 2px solid var(--lg-blue);
+  --lg-focus-offset: 1px;
+  --lg-focus-ring: none;
+  --lg-label-font: 11px;
+  --lg-foot-font: 12px;
   color-scheme: light;
 }
 
@@ -113,35 +185,36 @@ body.LoginBody .LoginContainer {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: var(--lg-gap);
 }
 
+/* Wider than the card: the card has its own cap below, and the copyright line
+   is a sentence that looks broken wrapped in a 392px column. */
 body.LoginBody .LoginContainer > .Pad24 {
   box-sizing: border-box;
   width: 100%;
-  max-width: 392px;
+  max-width: 460px;
   padding: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: var(--lg-gap);
 }
 
 body.LoginBody .LoginBox {
   box-sizing: border-box;
   width: 100%;
+  max-width: 392px;
   background: var(--lg-surface);
-  border: 1px solid var(--lg-line-strong);
-  border-radius: 16px;
-  box-shadow:
-    0 24px 48px -26px var(--lg-shadow),
-    inset 0 1px 0 var(--lg-sheen);
+  border: 1px solid var(--lg-card-border);
+  border-radius: var(--lg-card-radius);
+  box-shadow: var(--lg-card-shadow);
   overflow: hidden;
 }
 
 body.LoginBody .LoginBox .Pad24 {
   box-sizing: border-box;
-  padding: 28px 30px 30px;
+  padding: var(--lg-card-pad);
 }
 
 /* The empty studio-logo slot: keep it as breathing room, not a 32px hole. */
@@ -150,7 +223,7 @@ body.LoginBody .LoginStudioNameOrLogo {
 }
 
 body.LoginBody .LoginLabel {
-  font-size: 11px;
+  font-size: var(--lg-label-font);
   font-weight: 600;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -193,24 +266,24 @@ body.LoginBody .LoginBox > .Pad24 > .LoginSpace1:empty {
 body.LoginBody .LoginContainer form#idForm input.Login {
   box-sizing: border-box;
   width: 100%;
-  padding: 11px 13px;
+  min-height: var(--lg-field-h);
+  padding: var(--lg-field-pad);
   font: inherit;
-  font-size: 15px;
+  font-size: var(--lg-field-font);
   color: var(--lg-ink);
   background: var(--lg-wash);
   border: 1px solid var(--lg-line);
-  border-radius: 11px;
-  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--lg-deep) 12%, transparent);
+  border-radius: var(--lg-field-radius);
   outline: none;
-  /* No background transition: the skin lands after load, so a fade would read as
-     a flash from the app's white field to this one. Focus still eases. */
   transition: border-color 120ms ease, box-shadow 120ms ease;
 }
 
 body.LoginBody .LoginContainer form#idForm input.Login:focus {
-  background: var(--lg-input-focus);
+  background: var(--lg-focus-bg);
   border-color: var(--lg-blue);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--lg-blue) 22%, transparent);
+  outline: var(--lg-focus-outline);
+  outline-offset: var(--lg-focus-offset);
+  box-shadow: var(--lg-focus-ring);
 }
 
 body.LoginBody .LoginContainer form#idForm #passwordField {
@@ -231,23 +304,22 @@ body.LoginBody #eyeIcon {
 
 body.LoginBody .LoginContainer form#idForm a.LoginButton {
   box-sizing: border-box;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  padding: 12px 16px;
+  height: var(--lg-btn-h);
+  padding: 0 16px;
   font: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  text-align: center;
+  font-size: var(--lg-field-font);
+  font-weight: var(--lg-btn-weight);
   text-decoration: none;
-  color: #ffffff;
-  background:
-    linear-gradient(var(--lg-sheen), rgba(255, 255, 255, 0) 52%),
-    linear-gradient(var(--lg-blue), var(--lg-deep));
-  border-radius: 12px;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 10px 20px -12px var(--lg-deep);
-  transition: filter 120ms ease, transform 60ms ease;
+  color: var(--lg-btn-fg);
+  background: var(--lg-btn-bg);
+  border: 1px solid var(--lg-btn-border);
+  border-radius: var(--lg-btn-radius);
+  box-shadow: var(--lg-btn-shadow);
+  transition: filter 120ms ease, transform 60ms ease, background-color 120ms ease;
 }
 
 body.LoginBody .LoginContainer form#idForm a.LoginButton:hover {
@@ -259,15 +331,15 @@ body.LoginBody .LoginContainer form#idForm a.LoginButton:active {
 }
 
 body.LoginBody .LoginContainer form#idForm a.LoginButton:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--lg-blue) 45%, transparent);
-  outline-offset: 2px;
+  outline: 2px solid var(--lg-blue);
+  outline-offset: var(--lg-focus-offset, 2px);
 }
 
 body.LoginBody .LoginPowerBy,
 body.LoginBody .LoginCopyright {
   margin: 0;
   padding: 0;
-  font-size: 11px;
+  font-size: var(--lg-foot-font);
   letter-spacing: 0.06em;
   color: var(--lg-dim);
   text-align: center;
@@ -275,6 +347,7 @@ body.LoginBody .LoginCopyright {
 
 body.LoginBody .LoginPowerBy {
   text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 body.LoginBody .LoginSDLogo {
@@ -294,6 +367,6 @@ body.LoginBody .LoginSDLogo img {
 
 @media (max-width: 420px) {
   body.LoginBody .LoginBox .Pad24 {
-    padding: 22px 20px 24px;
+    padding: 20px;
   }
 }
