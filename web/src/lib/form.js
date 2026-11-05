@@ -21,16 +21,12 @@
 // controls and its own Save link is clicked — see save.js.
 
 import { qs, qsa, textOf, titledTextOf } from './shell.js';
-import { weekdayOf, optionsOf, valueOfSelect, selectorOf } from '../model/fields.js';
 import { readTable } from '../model/table.js';
-import { contentRoot, isHidden } from '../model/root.js';
+import { contentRoot } from '../model/root.js';
 import { coverageOf } from '../model/coverage.js';
-import { pageSave } from './save.js';
-
-const FORM_SELECTOR = 'table.Form, table.FormEx';
-const CONTROLS = 'input, select, textarea';
-const IGNORE_IDS = new Set(['filter', 'searchidx', 'ResetPwdFlag', 'idPage', 'idMeth', 'idMethArgs']);
-const IGNORE_TYPES = new Set(['hidden', 'file', 'submit', 'button', 'reset', 'image']);
+// The row judgement — which tables are the form, which rows are field rows,
+// which controls belong to which row — is shared with every form-shaped reader.
+import { formTablesIn, rowsOf, fieldsOfRows } from '../model/rows.js';
 
 // Tables that are structure rather than content: the form itself, the layout
 // table the app wraps whole screens in, the weekday checkbox grid, the calendar
@@ -40,162 +36,6 @@ const NOT_DATA = /^(Form|FormEx|Layout|WeekdayCheckboxes|TimeBlock|WeekCal|Month
 // Where a table's own heading sits: `<div class="formTitle">Existing Season
 // Dates</div><table class="SimpleSD">` is the shape on the seasons page.
 const HEADING = '.formTitle, .ReportTableSubtitle, .sectionHeader, .sectionTitle, h2, h3, h4';
-
-// A control is addressed by id when it has one; otherwise by a unique name.
-function controlOf(el, doc) {
-  const tag = el.tagName.toLowerCase();
-  const type = tag === 'input' ? (el.getAttribute('type') || 'text').toLowerCase() : tag;
-  if (IGNORE_TYPES.has(type)) return null;
-
-  const id = el.getAttribute('id');
-  const name = el.getAttribute('name') || '';
-  if (id && IGNORE_IDS.has(id)) return null;
-
-  const selector = selectorOf(el, doc);
-  if (!selector) return null;
-
-  const options = tag === 'select' ? optionsOf(el) : null;
-  // An empty select cannot be edited (the class page's date picker is filled in
-  // by the app's own JS), so it is not offered as a field.
-  if (options && options.length === 0) return null;
-
-  return {
-    key: id || 'name:' + name,
-    selector,
-    id,
-    name,
-    type,
-    // What the rebuilt editor prints for this control.
-    label: weekdayOf(id),
-    value: type === 'checkbox'
-      ? null
-      : tag === 'textarea'
-        ? textOf(el)
-        : options
-          ? valueOfSelect(options)
-          : (el.getAttribute('value') || ''),
-    checked: type === 'checkbox' ? el.hasAttribute('checked') : null,
-    options,
-    // The app masks phone inputs with JS; it stays masked, we just carry the text.
-    masked: /(^|\s)masked(\s|$)/.test(el.getAttribute('class') || '')
-  };
-}
-
-// A radio pair inside one row is one field. Its label is the row's label, and
-// its value is the chosen input's value; the group is addressed as a set.
-function radioOf(name, radios, rowLabel) {
-  const options = radios.map((el) => ({
-    value: el.getAttribute('value') != null ? el.getAttribute('value') : '',
-    label: textOf(el.closest('label')) || el.getAttribute('title') || '',
-    checked: el.hasAttribute('checked')
-  }));
-  const chosen = options.find((o) => o.checked);
-  if (!name) return null;
-
-  return {
-    key: 'radio:' + name,
-    group: name,
-    selector: '[name="' + name + '"]',
-    id: radios[0].getAttribute('id') || '',
-    name,
-    type: 'radio',
-    label: rowLabel || null,
-    value: chosen ? chosen.value : '',
-    checked: null,
-    options,
-    masked: false
-  };
-}
-
-// Returns the fields of the cell, plus the two lists coverage needs: the controls
-// that became fields, and the ones this adapter knowingly walked past (a hidden
-// key, `name="-"`, an empty select the app fills later). A control in neither
-// list is one nobody looked at, which is what `unread` means.
-function fieldsIn(cell, doc, rowLabel) {
-  const fields = [];
-  const shown = [];
-  const passed = [];
-  const groups = new Map();
-
-  for (const el of qsa(cell, CONTROLS)) {
-    const tag = el.tagName.toLowerCase();
-    const type = tag === 'input' ? (el.getAttribute('type') || 'text').toLowerCase() : tag;
-
-    if (type === 'radio') {
-      const name = el.getAttribute('name') || el.getAttribute('id') || '';
-      if (!name) {
-        passed.push(el);
-        continue;
-      }
-      if (!groups.has(name)) groups.set(name, []);
-      groups.get(name).push(el);
-      continue;
-    }
-
-    const field = controlOf(el, doc);
-    if (field) {
-      fields.push(field);
-      shown.push(el);
-    } else {
-      passed.push(el);
-    }
-  }
-
-  for (const [name, radios] of groups) {
-    const field = radioOf(name, radios, rowLabel);
-    if (field) {
-      fields.push(field);
-      shown.push(...radios);
-    } else {
-      passed.push(...radios);
-    }
-  }
-
-  return { fields, shown, passed };
-}
-
-function rowsOf(table) {
-  const rows = [];
-  const shown = [];
-  const passed = [];
-  for (const tr of qsa(table, 'tr')) {
-    // Only this table's own rows: a field can contain a nested table (the
-    // weekday checkboxes live in one), and its rows would otherwise be read a
-    // second time as fields of their own, with no label.
-    if (tr.closest && tr.closest('table') !== table) continue;
-    const cells = Array.from(tr.children || []).filter((c) => c.tagName === 'TD');
-    if (cells.length < 2) {
-      // A caption or a spacer row. Anything typed into it is still on the page,
-      // so it counts as passed over rather than lost.
-      passed.push(...qsa(tr, CONTROLS));
-      continue;
-    }
-
-    const label = textOf(cells[0]);
-    // The app ends a record editor with its own id in a row that has no label:
-    // <tr><td></td><td><input id="item_id" value="1792595222235"></td></tr>.
-    // Measured live on EditClass (`cident`) and ManageInventoryItems
-    // (`item_id`). There is nothing to call it, and it is the record's key
-    // rather than something a person fills in, so an unlabelled row is not a
-    // field: it used to be offered as a bare number under the last one.
-    // Nothing is lost by leaving it out — the input stays in the page, and a
-    // save writes only the fields that changed.
-    if (!label) {
-      passed.push(...qsa(cells[1], CONTROLS));
-      continue;
-    }
-    const found = fieldsIn(cells[1], table.ownerDocument, label);
-    if (!found.fields.length) {
-      passed.push(...found.passed);
-      continue;
-    }
-
-    rows.push({ label, fields: found.fields });
-    shown.push(...found.shown);
-    passed.push(...found.passed);
-  }
-  return { rows, shown, passed };
-}
 
 // Tables that sit *beside* a form, which the editor used to drop.
 //
@@ -263,70 +103,41 @@ function tablesBeside(doc, formTables) {
 
 // The editor is the page, read row by row.
 //
-// This used to be a contest: group the page's form tables, then take the group
-// with the most fields. Two shipped bugs came out of it — a screen printed as two
-// one-row tables lost the smaller one, and a page whose editor is spread across
-// parents lost everything but the biggest part. Each was patched by adding a
-// condition to the contest (same parent, one row, a Save on the page), which is
-// three guesses stacked up to recover one fact the page states plainly.
+// There is no contest and no floor. It used to be a contest — group the page's
+// form tables, then take the group with the most fields — and two shipped bugs
+// came out of it: a screen printed as two one-row tables lost the smaller one,
+// and a page whose editor is spread across parents lost everything but the
+// biggest part. Each was patched by adding a condition to the contest (same
+// parent, one row, a Save on the page), which is three guesses stacked up to
+// recover one fact the page states plainly.
 //
-// So the rule is the page, not a score. A page carrying its own Save is an
-// editor, and the editor is what that page contains: every `table.Form`/`FormEx`
-// under the content root is read, in document order, and every labelled row
-// becomes a row of it. The only judgement left is per row, which `rowsOf` already
-// makes well. There is no floor either — `NewEditDel` is a location name and a
-// link, and it is an editor because the app says so.
+// What replaced it was still a ranking, for pages with no Save: the largest
+// single form table, with a four-field floor to keep a list page's stub out.
+// That is the last of the size contest, and it has the same defect in a quieter
+// form — a report whose filters are printed as two tables shows one, a settings
+// page whose two controls sit in a small table is "too small to be a form", and
+// which table wins is decided by a number the reader cannot explain. It is gone.
 //
-// A page with no Save is not an editor at all: it is a form-shaped screen another
-// reader may own (a report's filters, a task's fields). There the largest single
-// form table carries the form, with the four-field floor that keeps a list page's
-// stub out of the editor. That is a fallback for "not an editor", not an
-// identity — which is why `hasForm` is still the editor test.
-const UNSAVED_FLOOR = 4;
-
-const fieldsOfRows = (rows) => rows.reduce((all, row) => all.concat(row.fields), []);
-
+// So the rule is the page, not a score: every `table.Form`/`FormEx` the page is
+// showing inside its content root is read, in document order, and every labelled
+// row becomes a row of it. Which rows are field rows, and which controls belong to
+// which row, is `model/rows.js` — the same judgement the report, task, settings
+// and record readers use. Whether the page is an *editor* is a separate fact,
+// `pageSave`, and it belongs to the caller (`recordModel`); a page with a form
+// table and no Save is a report's filters or a task's fields, which is what those
+// readers ask about it.
+//
+// There is no floor either — `NewEditDel` is a location name and a link, and a
+// report's two-filter form is a form.
 export function readForm(doc) {
   const root = contentRoot(doc);
   if (!root) return null;
 
-  const saved = !!pageSave(doc);
-  const reads = new Map();
-  const readOf = (table) => {
-    if (!reads.has(table)) reads.set(table, rowsOf(table));
-    return reads.get(table);
-  };
-
-  // A table the page is not showing is not part of the editor's form: the class
-  // editor's hidden tab panels ship four extra controls (`weeklyregopen` and its
-  // neighbours), and taking every table merged them into the main form — which is
-  // how a rule that removes one guess can quietly add another. `isHidden` is the
-  // page's own statement (`table-hidden`, `hidden`), not a guess about panels.
-  //
-  // The query runs from the document and is then narrowed to the content root.
-  // Asking the root instead reads better and is what this did first, but a
-  // `<body>` is not always the node that holds its children (a parsed fragment
-  // has a detached one), and an editor there came back empty. When the root *is*
-  // the body the whole document is the screen, so there is nothing to narrow.
-  const formTables = qsa(doc, FORM_SELECTOR)
-    .filter((table) => (root === doc.body || !root.contains ? true : root.contains(table)))
-    .filter((table) => !isHidden(table));
-  let chosen = [];
-
-  if (saved) {
-    chosen = formTables.filter((table) => readOf(table).rows.length);
-  } else {
-    let best = null;
-    let most = 0;
-    for (const table of formTables) {
-      const count = fieldsOfRows(readOf(table).rows).length;
-      if (count > most) {
-        best = table;
-        most = count;
-      }
-    }
-    if (best && most >= UNSAVED_FLOOR) chosen = [best];
-  }
+  // Every table the page is showing, and rows inside each one stand on their
+  // own: a table the page itself calls hidden (`table-hidden`) is storage, not
+  // part of the editor, and a row with no label is the record's key rather than
+  // a field. Both are the page's own statements, not a size guess.
+  const chosen = formTablesIn(doc, root);
 
   if (!chosen.length) return null;
 
@@ -334,7 +145,7 @@ export function readForm(doc) {
   const shown = [];
   const passed = [];
   for (const table of chosen) {
-    const one = readOf(table);
+    const one = rowsOf(table);
     rows.push(...one.rows);
     shown.push(...one.shown);
     passed.push(...one.passed);
@@ -367,7 +178,13 @@ export function readForm(doc) {
   };
 }
 
-// Is this document a record editor already?
+// Does this page carry a form of the editor's shape?
+//
+// This is about the page, not about whether the page is an editor: that is
+// `pageSave` plus a form, which `recordModel` asks. Kept separate because the
+// mount path uses the answer to decide whether the live tree can be read where
+// it stands instead of paying a GET, and a report's filters are just as real a
+// page as a record.
 //
 // The editor arrives server-rendered, so the page can be read where it stands
 // and the copy fetched only when there is no form: one request less, and the

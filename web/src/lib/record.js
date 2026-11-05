@@ -14,91 +14,28 @@
 // editor contains a hidden Calendar tab with seven TimeBlock tables, and the week
 // reader would claim it.
 
-import { railLinks } from './shell.js';
 import { readPage } from './page.js';
-import { readForm } from './form.js';
-import { readBar } from './bar.js';
-import { readTabs } from './tabs.js';
 import { readList } from './list.js';
-import { readTask } from './task.js';
-import { readSheet } from './sheet.js';
-import { readAttendance } from './attendance.js';
-import { readSettings } from './settings.js';
-import { pageSave } from './save.js';
+import { recordModel } from './editor.js';
 
-// The record editor's model, or null when the page is not one.
-//
-// A record editor is a form *plus a way to save it*. The app puts Save in the
-// top bar, so `#save` is the check; the tabbed record pages are editors even
-// when that id differs, because they are the only record screens with tabs.
-export function recordModel(doc, url, form = readForm(doc)) {
-  if (!form) return null;
-
-  const tabs = readTabs(doc);
-  const tabbed = !!(tabs && tabs.tabs.length > 1);
-  if (!pageSave(doc) && !tabbed) return null;
-
-  return {
-    nav: railLinks(doc),
-    form,
-    // The bar above the tabs: New, Print, Email, Delete, Edit Family, More.
-    bar: readBar(doc),
-    // Enrollment, Skills, Calendar: the page already carries them hidden, so
-    // they are rebuilt from the same response as the form.
-    tabs,
-    list: readList(doc),
-    view: 'form',
-    title: form.title,
-    url
-  };
-}
+// Kept as the module's own name for the editor, so callers that ask the record
+// module do not have to know where it moved to.
+export { recordModel };
 
 // What a record URL turned out to be: the editor, or the reader that claims it,
 // or nothing at all (the app keeps its page). `view` is the string `mountRecord`
 // switches on; `model` is what to mount.
 export function readRecordPage(doc, url) {
-  const nav = railLinks(doc);
-  const list = readList(doc);
-
-  const form = readForm(doc);
-  const editor = recordModel(doc, url, form);
-  if (editor) return { view: 'form', model: editor };
-
-  // Attendance is a grid of controls, so nothing below would read it: the sheet
-  // refuses it on purpose, and a task/editor built from it would be a dead wall
-  // of inputs. It has its own reader, and its own view drives the app's controls.
-  const attendance = readAttendance(doc);
-  if (attendance) {
-    return {
-      view: 'attendance',
-      model: { nav, list, url, attendance, view: 'attendance', title: attendance.title }
-    };
-  }
-
-  // A form without a save control is not an editor: `PrintClassRoster` carries
-  // forty controls, and an editor built from them would be a dead wall of
-  // inputs. Their own controls do the work, so they are read as a task, or as a
-  // table when that is all they have.
-  const task = form ? readTask(doc) : null;
-  if (task) {
-    return { view: 'task', model: { nav, list, url, task, view: 'task', title: task.title } };
-  }
-
-  const sheet = readSheet(doc);
-  if (sheet) {
-    return { view: 'sheet', model: { nav, list, url, sheet, view: 'sheet', title: sheet.title } };
-  }
-
-  const settings = readSettings(doc);
-  if (settings) {
-    return { view: 'settings', model: { nav, list, url, settings, view: 'settings', title: settings.title } };
-  }
-
-  // Not an editor, a form, a table or a toggle, but a page can carry a record
-  // parameter and still be something else entirely. Those are real screens, so
-  // the page router gets the last word before the app does.
-  const other = readPage(doc, url);
-  if (other.view) return { view: other.view, model: { ...other, list: other.list || list } };
-
-  return null;
+  // One registry decides this page too. `readers/index.js` puts the editor first
+  // in its order and only claims a record URL, so a record URL that is a report,
+  // a task, a sheet or a toggle is read by the same reader, in the same place in
+  // the same order, as that page reached any other way — which is what this module
+  // used to duplicate with a ladder of its own (attendance, task, sheet, settings)
+  // that could not produce a report at all.
+  //
+  // The list is read here as well: a page with no list of its own still answers a
+  // save or a delete beside the one the record panel showed.
+  const page = readPage(doc, url);
+  if (!page.view) return null;
+  return { view: page.view, model: { ...page, list: page.list || readList(doc) } };
 }

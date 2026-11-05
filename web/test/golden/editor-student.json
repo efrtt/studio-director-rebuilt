@@ -523,7 +523,529 @@
   },
   "model": {
     "attendance": null,
+    "bar": null,
     "confirm": null,
+    "form": {
+      "breadcrumb": [
+        "Students"
+      ],
+      "fields": [
+        {
+          "checked": null,
+          "id": "first_name",
+          "key": "first_name",
+          "label": null,
+          "masked": false,
+          "name": "first_name",
+          "options": null,
+          "selector": "#first_name",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "student_last_name",
+          "key": "student_last_name",
+          "label": null,
+          "masked": false,
+          "name": "student_last_name",
+          "options": null,
+          "selector": "#student_last_name",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": null,
+          "key": "name:family",
+          "label": null,
+          "masked": false,
+          "name": "family",
+          "options": [
+            {
+              "label": "Lovelace Family",
+              "selected": false,
+              "value": "Lovelace Family"
+            },
+            {
+              "label": "Hopper Family",
+              "selected": false,
+              "value": "Hopper Family"
+            }
+          ],
+          "selector": "[name=\"family\"]",
+          "type": "select",
+          "value": "Lovelace Family"
+        },
+        {
+          "checked": null,
+          "id": "birthday__mon",
+          "key": "birthday__mon",
+          "label": null,
+          "masked": false,
+          "name": "birthday__mon",
+          "options": [
+            {
+              "label": "Jan",
+              "selected": false,
+              "value": "Jan"
+            }
+          ],
+          "selector": "#birthday__mon",
+          "type": "select",
+          "value": "Jan"
+        },
+        {
+          "checked": null,
+          "id": "birthday__day",
+          "key": "birthday__day",
+          "label": null,
+          "masked": false,
+          "name": "birthday__day",
+          "options": [
+            {
+              "label": "1",
+              "selected": false,
+              "value": "1"
+            }
+          ],
+          "selector": "#birthday__day",
+          "type": "select",
+          "value": "1"
+        },
+        {
+          "checked": null,
+          "id": "birthday__year",
+          "key": "birthday__year",
+          "label": null,
+          "masked": false,
+          "name": "birthday__year",
+          "options": [
+            {
+              "label": "2015",
+              "selected": false,
+              "value": "2015"
+            }
+          ],
+          "selector": "#birthday__year",
+          "type": "select",
+          "value": "2015"
+        },
+        {
+          "checked": null,
+          "id": "sex",
+          "key": "sex",
+          "label": null,
+          "masked": false,
+          "name": "sex",
+          "options": [
+            {
+              "label": "F",
+              "selected": false,
+              "value": "F"
+            },
+            {
+              "label": "M",
+              "selected": false,
+              "value": "M"
+            }
+          ],
+          "selector": "#sex",
+          "type": "select",
+          "value": "F"
+        },
+        {
+          "checked": null,
+          "id": "medcond",
+          "key": "medcond",
+          "label": null,
+          "masked": false,
+          "name": "medcond",
+          "options": null,
+          "selector": "#medcond",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "comments",
+          "key": "comments",
+          "label": null,
+          "masked": false,
+          "name": "comments",
+          "options": null,
+          "selector": "#comments",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "waiver",
+          "key": "waiver",
+          "label": null,
+          "masked": false,
+          "name": "waiver",
+          "options": [
+            {
+              "label": "No",
+              "selected": false,
+              "value": "No"
+            },
+            {
+              "label": "Yes",
+              "selected": false,
+              "value": "Yes"
+            }
+          ],
+          "selector": "#waiver",
+          "type": "select",
+          "value": "No"
+        },
+        {
+          "checked": null,
+          "id": "performing",
+          "key": "performing",
+          "label": null,
+          "masked": false,
+          "name": "performing",
+          "options": [
+            {
+              "label": "No",
+              "selected": false,
+              "value": "No"
+            }
+          ],
+          "selector": "#performing",
+          "type": "select",
+          "value": "No"
+        },
+        {
+          "checked": null,
+          "id": "field1",
+          "key": "field1",
+          "label": null,
+          "masked": false,
+          "name": "field1",
+          "options": null,
+          "selector": "#field1",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "field2",
+          "key": "field2",
+          "label": null,
+          "masked": false,
+          "name": "field2",
+          "options": null,
+          "selector": "#field2",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "id": "field3",
+          "key": "field3",
+          "label": null,
+          "masked": false,
+          "name": "field3",
+          "options": null,
+          "selector": "#field3",
+          "type": "text",
+          "value": ""
+        }
+      ],
+      "kind": "form",
+      "rows": [
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "first_name",
+              "key": "first_name",
+              "label": null,
+              "masked": false,
+              "name": "first_name",
+              "options": null,
+              "selector": "#first_name",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "First Name"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "student_last_name",
+              "key": "student_last_name",
+              "label": null,
+              "masked": false,
+              "name": "student_last_name",
+              "options": null,
+              "selector": "#student_last_name",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Last Name"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": null,
+              "key": "name:family",
+              "label": null,
+              "masked": false,
+              "name": "family",
+              "options": [
+                {
+                  "label": "Lovelace Family",
+                  "selected": false,
+                  "value": "Lovelace Family"
+                },
+                {
+                  "label": "Hopper Family",
+                  "selected": false,
+                  "value": "Hopper Family"
+                }
+              ],
+              "selector": "[name=\"family\"]",
+              "type": "select",
+              "value": "Lovelace Family"
+            }
+          ],
+          "label": "Family"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "birthday__mon",
+              "key": "birthday__mon",
+              "label": null,
+              "masked": false,
+              "name": "birthday__mon",
+              "options": [
+                {
+                  "label": "Jan",
+                  "selected": false,
+                  "value": "Jan"
+                }
+              ],
+              "selector": "#birthday__mon",
+              "type": "select",
+              "value": "Jan"
+            },
+            {
+              "checked": null,
+              "id": "birthday__day",
+              "key": "birthday__day",
+              "label": null,
+              "masked": false,
+              "name": "birthday__day",
+              "options": [
+                {
+                  "label": "1",
+                  "selected": false,
+                  "value": "1"
+                }
+              ],
+              "selector": "#birthday__day",
+              "type": "select",
+              "value": "1"
+            },
+            {
+              "checked": null,
+              "id": "birthday__year",
+              "key": "birthday__year",
+              "label": null,
+              "masked": false,
+              "name": "birthday__year",
+              "options": [
+                {
+                  "label": "2015",
+                  "selected": false,
+                  "value": "2015"
+                }
+              ],
+              "selector": "#birthday__year",
+              "type": "select",
+              "value": "2015"
+            }
+          ],
+          "label": "Birthday"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "sex",
+              "key": "sex",
+              "label": null,
+              "masked": false,
+              "name": "sex",
+              "options": [
+                {
+                  "label": "F",
+                  "selected": false,
+                  "value": "F"
+                },
+                {
+                  "label": "M",
+                  "selected": false,
+                  "value": "M"
+                }
+              ],
+              "selector": "#sex",
+              "type": "select",
+              "value": "F"
+            }
+          ],
+          "label": "Sex"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "medcond",
+              "key": "medcond",
+              "label": null,
+              "masked": false,
+              "name": "medcond",
+              "options": null,
+              "selector": "#medcond",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Medical"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "comments",
+              "key": "comments",
+              "label": null,
+              "masked": false,
+              "name": "comments",
+              "options": null,
+              "selector": "#comments",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Comments"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "waiver",
+              "key": "waiver",
+              "label": null,
+              "masked": false,
+              "name": "waiver",
+              "options": [
+                {
+                  "label": "No",
+                  "selected": false,
+                  "value": "No"
+                },
+                {
+                  "label": "Yes",
+                  "selected": false,
+                  "value": "Yes"
+                }
+              ],
+              "selector": "#waiver",
+              "type": "select",
+              "value": "No"
+            }
+          ],
+          "label": "Waiver"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "performing",
+              "key": "performing",
+              "label": null,
+              "masked": false,
+              "name": "performing",
+              "options": [
+                {
+                  "label": "No",
+                  "selected": false,
+                  "value": "No"
+                }
+              ],
+              "selector": "#performing",
+              "type": "select",
+              "value": "No"
+            }
+          ],
+          "label": "Performing"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "field1",
+              "key": "field1",
+              "label": null,
+              "masked": false,
+              "name": "field1",
+              "options": null,
+              "selector": "#field1",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Field 1"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "field2",
+              "key": "field2",
+              "label": null,
+              "masked": false,
+              "name": "field2",
+              "options": null,
+              "selector": "#field2",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Field 2"
+        },
+        {
+          "fields": [
+            {
+              "checked": null,
+              "id": "field3",
+              "key": "field3",
+              "label": null,
+              "masked": false,
+              "name": "field3",
+              "options": null,
+              "selector": "#field3",
+              "type": "text",
+              "value": ""
+            }
+          ],
+          "label": "Field 3"
+        }
+      ],
+      "title": "New Student"
+    },
     "index": null,
     "insights": null,
     "list": {
@@ -604,13 +1126,14 @@
     "report": null,
     "settings": null,
     "sheet": null,
+    "tabs": null,
     "task": null,
     "title": "New Student",
     "trends": null,
     "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EditStudent&sident=1629799984805",
-    "view": "list",
+    "view": "form",
     "week": null
   },
   "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=EditStudent&sident=1629799984805",
-  "view": "list"
+  "view": "form"
 }

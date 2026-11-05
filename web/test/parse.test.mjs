@@ -15,6 +15,7 @@ const { readWeek, PX_PER_MIN } = await import('../src/lib/calendar.js');
 const { readList } = await import('../src/lib/list.js');
 const { readPage } = await import('../src/lib/page.js');
 const { readForm } = await import('../src/lib/form.js');
+const { recordModel } = await import('../src/lib/record.js');
 const { readTabs } = await import('../src/lib/tabs.js');
 const { showAllTrigger, expandInApp } = await import('../src/lib/expand.js');
 const { confirmationOf } = await import('../src/lib/confirmation.js');
@@ -669,9 +670,13 @@ test('the class editor’s calendar tab is not the week calendar', () => {
   assert.equal(form.fields.filter((f) => f.key === 'day__2').length, 1);
 });
 
-test('a page that is not an editor yields no form', () => {
+test('a small form is a form; being an editor is the page having a way to save', () => {
+  // This used to assert that `readForm` refused anything under four fields, which
+  // is how a report's two filters and a settings page's one select were "not a
+  // form" at all. The floor goes with the rest of the size contest: the shape is
+  // the table, read row by row, and whether the page is an *editor* is a separate
+  // fact — its own Save, which is `recordModel`'s question.
   assert.equal(readForm(calendarDoc), null);
-  assert.equal(readForm(classDoc), null); // the New* stub has only 3 controls
   assert.equal(readForm(weekOnlyDoc), null);
   assert.equal(readForm(null), null);
 
@@ -679,7 +684,16 @@ test('a page that is not an editor yields no form', () => {
     <tr><td>A</td><td><input id="a"></td></tr>
     <tr><td>B</td><td><input id="b"></td></tr>
   </tbody></table>`);
-  assert.equal(readForm(tiny), null);
+  const form = readForm(tiny);
+  assert.equal(form.rows.length, 2, 'two labelled rows are two rows, however few');
+  assert.equal(form.fields.length, 2);
+  assert.equal(recordModel(tiny, 'https://x.test/admin.sd?page=Thing'), null,
+    'no Save, so a form it may be, an editor it is not');
+
+  // The New* stub is the capture the floor used to refuse outright. It has three
+  // controls and no Save: read as a form, still not an editor.
+  assert.equal(readForm(classDoc).fields.length, 3);
+  assert.equal(recordModel(classDoc, 'https://x.test/admin.sd?page=EditClass'), null);
 });
 
 test('only the fields that changed are written back to the live page', () => {

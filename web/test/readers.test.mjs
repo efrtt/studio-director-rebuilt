@@ -18,6 +18,10 @@ const doc = (html) => new DOMParser().parseFromString(html, 'text/html');
 
 test('the registry order is the contract, most specific first', () => {
   assert.deepEqual(READERS.map((r) => r.id), [
+    // The editor first: a record URL that is an editor must not be claimed by
+    // the week reader, which would otherwise take the class editor's hidden
+    // Calendar tab, or by the list reader, which would take its record panel.
+    'editor',
     'confirmation', 'week', 'list', 'payment', 'report', 'task',
     'insights', 'trends', 'attendance',
     'sheet', 'index', 'settings', 'note'

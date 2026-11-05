@@ -28,7 +28,9 @@
 import { qs, qsa, textOf } from './shell.js';
 import { diffFields, applyFields } from '../model/diff.js';
 import { contentRoot } from '../model/root.js';
-import { optionsOf, humanise, WEEKDAY } from '../model/fields.js';
+import { WEEKDAY, humanise, selectorOf } from '../model/fields.js';
+import { controlsIn } from '../model/controls.js';
+import { labelOfControl, labelOfBlock } from '../model/labels.js';
 import { readActions, primaryAction, clickActionInApp } from './actions.js';
 import { pageSave } from './save.js';
 import { coverageOf } from '../model/coverage.js';
@@ -37,123 +39,18 @@ import { coverageOf } from '../model/coverage.js';
 // editor and sheet readers own those.
 const MAX_FIELDS = 30;
 
-const SKIP_IDS = new Set(['filter', 'filterInput', 'searchidx', 'idPage', 'idMeth', 'idMethArgs', 'searchText', 'ResetPwdFlag']);
-const SKIP_TYPES = new Set(['hidden', 'file', 'submit', 'button', 'reset', 'image']);
-// The record panel's own filter and the global search box are not settings.
-const SKIP_NAMES = new Set(['filter', 'searchText', 'idPage', 'idMeth']);
+// The app marks its search chrome by class, and that chrome is not a setting.
+// It is the one control this page adds to the shared policy's ignore list.
+const SEARCH_CHROME = /(^|\s)(hidden|searchinput)(\s|$)/;
 
-function skipped(el) {
-  const tag = el.tagName.toLowerCase();
-  const type = tag === 'input' ? (el.getAttribute('type') || 'text').toLowerCase() : tag;
-  if (SKIP_TYPES.has(type)) return true;
-  const id = el.getAttribute('id') || '';
-  const name = el.getAttribute('name') || '';
-  if (id && SKIP_IDS.has(id)) return true;
-  if (name && SKIP_NAMES.has(name)) return true;
-  // The app marks its own non-settings chrome this way.
-  if (/(^|\s)(hidden|searchinput)(\s|$)/.test(el.getAttribute('class') || '')) return true;
-  return false;
-}
-
-const CONTROL = 'input, select, textarea, button';
-
-// The words around a control, without using the control's own wrapper as a
-// label: "the cell before it", "the block before it", "the title it carries".
-// Shared by single controls and by a radio group's container.
-// Page furniture that is never a field's label: the title above the first
-// control, a breadcrumb, a button row.
-const FURNITURE = '.formTitle, .Breadcrumb, .ButtonBar, .ButtonArea, .menu';
-
-// A control is not a label for the control after it. Two date pickers side by
-// side with nothing between them would otherwise take turns naming each other —
-// the second one's "label" came back as the first one's selected option.
-function isControl(el) {
-  return !!(el.matches && el.matches(CONTROL));
-}
-
-function blockLabel(el, doc) {
-  const cell = el.closest && el.closest('td');
-  let prev = cell && cell.previousElementSibling;
-  while (prev) {
-    const text = textOf(prev);
-    // A cell that only holds another control is not a label.
-    if (text && !isControl(prev) && !qsa(prev, CONTROL).length) return { label: text.slice(0, 120), source: 'cell' };
-    prev = prev.previousElementSibling;
-  }
-
-  const aria = (el.getAttribute('aria-label') || el.getAttribute('title') || '').trim();
-  if (aria) return { label: aria.slice(0, 120), source: 'title' };
-
-  // The block before it: `<div class="SettingLabel">Send to</div><select>`.
-  let before = el.previousElementSibling;
-  while (before) {
-    if (isControl(before) || (before.matches && before.matches(FURNITURE))) {
-      before = before.previousElementSibling;
-      continue;
-    }
-    const text = textOf(before);
-    if (text && text.length <= 120 && !qsa(before, CONTROL).length) {
-      return { label: text, source: 'block' };
-    }
-    before = before.previousElementSibling;
-  }
-
-  const name = el.getAttribute('name') || '';
-  return { label: humanise(el.getAttribute('id') || name) || 'Setting', source: 'name' };
-}
-
-// What a person would read above this control. Returns { label, source } so the
-// view can be honest about a label it had to guess from the field name.
-export function labelFor(el, doc) {
-  const id = el.getAttribute('id') || '';
-
-  if (id) {
-    const text = textOf(doc.querySelector('label[for="' + id + '"]'));
-    if (text) return { label: text, source: 'label' };
-  }
-
-  // A label that wraps the control ("<label><input> Yes</label>").
-  const wrapText = textOf(el.closest && el.closest('label'));
-  if (wrapText) return { label: wrapText.slice(0, 120), source: 'label' };
-
-  return blockLabel(el, doc);
-}
-
-function controlOf(el) {
-  const tag = el.tagName.toLowerCase();
-  if (tag === 'select') {
-    const options = optionsOf(el);
-    // An empty select is filled in by the app's own JS (the date pickers), so it
-    // cannot be offered as a setting.
-    if (!options.length) return null;
-    // A list you can pick several from is not a one-choice select. The calendar
-    // filters' Instructor, Class Type and Location are all `multiple`: reading
-    // the first chosen option turned each into a single choice, so saving one
-    // instructor silently cleared the others.
-    if (el.hasAttribute('multiple')) {
-      return {
-        type: 'multiselect',
-        options,
-        value: options.filter((o) => o.selected).map((o) => o.value)
-      };
-    }
-    const chosen = options.find((o) => o.selected) || options[0];
-    return { type: 'select', options, value: chosen.value };
-  }
-  if (tag === 'textarea') return { type: 'textarea', value: textOf(el) };
-  const type = (el.getAttribute('type') || 'text').toLowerCase();
-  if (type === 'checkbox') return { type: 'checkbox', value: !!el.hasAttribute('checked') };
-  return { type: 'text', value: el.getAttribute('value') || '' };
-}
-
-function selectorOf(el, doc) {
-  const id = el.getAttribute('id') || '';
-  if (id) return '#' + id;
-  const name = el.getAttribute('name') || '';
-  if (name && qsa(doc, '[name="' + name + '"]').length === 1) return '[name="' + name + '"]';
-  if (name) return '[name="' + name + '"]';
-  return null;
-}
+// What a control is called is `model/labels.js`'s ladder, shared with the record
+// editor's rows. This card adds nothing to it: the same page shapes that forced
+// the ladder (plain divs, unclassed tables, aria-only labels) are the ones both
+// readers see.
+// Addressing is `model/fields.js`'s, not this reader's. This had its own copy,
+// and the copy trusted any id — the same defect the record editor fixed when an
+// id shared with a button-bar anchor sent a save to the anchor. A setting whose
+// id is not unique is now addressed by its name, or passed over.
 
 export function readSettings(doc) {
   const root = contentRoot(doc);
@@ -186,11 +83,15 @@ export function readSettings(doc) {
   // rather than in the order this loop happens to collect them.
   const order = new Map();
 
-  for (const el of qsa(root, 'input, select, textarea')) {
-    if (skipped(el)) {
-      passed.push(el);
-      continue;
-    }
+  // One walk, shared with the record editor (`model/controls.js`). It is handed
+  // this page's content root because a settings page has no row container to
+  // give it: its controls live in divs and in bare `<table>` rows with no class
+  // (the calendar-filters page, `SetTimeBlockCalendarFilters`), which is exactly
+  // why the editor's `table.Form` selector cannot be the shared one.
+  const found = controlsIn(root, doc, { skipClass: SEARCH_CHROME });
+  for (const el of found.ignored) passed.push(el);
+
+  for (const { el, field } of found.entries) {
     order.set(el, order.size);
 
     const tag = el.tagName.toLowerCase();
@@ -210,7 +111,7 @@ export function readSettings(doc) {
         radioGroups.set(key, group);
       }
       shown.push(el);
-      const label = labelFor(el, doc);
+      const label = labelOfControl(el, doc);
       group.options.push({
         value: el.getAttribute('value') != null ? el.getAttribute('value') : '',
         // The radio's own words when it has them ("Admin calendar"), otherwise
@@ -219,6 +120,11 @@ export function readSettings(doc) {
           ? (el.getAttribute('value') || label.label)
           : label.label,
         checked: el.hasAttribute('checked'),
+        // Addressing is the shared rule's, so an id that is not unique is not an
+        // address. One radio input in a group of two has no unique address of its
+        // own — the group is written to as a set, by its name — and this is
+        // therefore null, which is the truth; both options used to claim the
+        // group's `[name=…]` selector, which named two elements as one.
         selector: selectorOf(el, doc)
       });
       if (el.hasAttribute('checked')) group.checked = el.getAttribute('value');
@@ -262,14 +168,13 @@ export function readSettings(doc) {
     }
     seen.add(selector);
 
-    const control = controlOf(el);
-    if (!control) {
+    if (!field) {
       passed.push(el);
       continue;
     }
 
     shown.push(el);
-    const label = labelFor(el, doc);
+    const label = labelOfControl(el, doc);
     fields.push({
       key: id || 'name:' + name || selector,
       at: order.get(el),
@@ -278,7 +183,13 @@ export function readSettings(doc) {
       // marks those rows so nobody reads a guess as the app's wording.
       source: label.source,
       selector,
-      ...control
+      // Projected, not spread: this card's fields carry type and value, plus
+      // options only where the control has them (the model has always left the
+      // key off a text box), and a checkbox's value is its state — the editor
+      // keeps that same state in `checked`.
+      type: field.type,
+      ...(field.options ? { options: field.options } : {}),
+      value: field.type === 'checkbox' ? !!field.checked : field.value
     });
   }
 
@@ -292,7 +203,7 @@ export function readSettings(doc) {
     const container = (group.el.closest('label') && group.el.closest('label').parentElement)
       || group.el.parentElement
       || group.el;
-    const label = blockLabel(container, doc);
+    const label = labelOfBlock(container, doc);
     fields.push({
       key: 'radio:' + name,
       at: group.at,
@@ -314,7 +225,7 @@ export function readSettings(doc) {
   for (const [name, group] of checkboxGroups) {
     if (!group.options.length) continue;
     const container = group.el.parentElement || group.el;
-    const label = blockLabel(container, doc);
+    const label = labelOfBlock(container, doc);
     fields.push({
       key: 'checks:' + name,
       at: group.at,

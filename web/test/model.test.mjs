@@ -217,8 +217,11 @@ test('a page with Save joins its sibling form tables into one editor', () => {
   assert.equal(form.fields.some((field) => /hidden/.test(field.id)), false);
 });
 
-test('a page without Save still needs four fields to be an editor', () => {
-  // The floor that keeps a list page's three-control stub out of the editor.
+test('a page without Save reads its form; it is still not an editor', async () => {
+  // This used to assert a four-field floor, so a list page's three-control stub
+  // came back as "not a form at all". The floor goes with the rest of the size
+  // contest — three labelled rows are three rows — and being an *editor* is a
+  // separate fact: the page has its own Save.
   const stub = doc(`
     <body><div class="contentContainer"><div class="formTitle">Classes</div>
       <table class="Form">
@@ -227,7 +230,13 @@ test('a page without Save still needs four fields to be an editor', () => {
         <tr><td>Date</td><td><input id="c" value=""></td></tr>
       </table>
     </div></body>`);
-  assert.equal(readForm(stub), null);
+  const form = readForm(stub);
+  assert.ok(form, 'three labelled rows are a form');
+  assert.deepEqual(form.fields.map((f) => f.key), ['a', 'b', 'c']);
+
+  const { recordModel } = await import('../src/lib/record.js');
+  assert.equal(recordModel(stub, 'https://x.test/admin.sd?page=Classes'), null,
+    'no Save, so a form it may be, an editor it is not');
 });
 
 test('a radio choice is written to the set, not to the first input', () => {
@@ -435,9 +444,13 @@ test('coverage counts only the controls nobody accounted for', () => {
   assert.equal(unread[0].type, 'text');
 });
 
-test('a page with no Save takes one form table, not the whole page', () => {
-  // Without a Save the page is not an editor: it may be a report's filters or a
-  // task's fields, so another screen's small form beside it is not this form's.
+test('a page with no Save reads every form table it shows, in document order', async () => {
+  // The complement of the old rule. Without a Save the page is not an editor,
+  // and the reader used to take its largest form table and leave the rest to
+  // "another screen" — which is the size contest in its last disguise, and the
+  // reason a report printed as two filter tables showed one. Every form table
+  // the page shows is read now; a control the reader still cannot place is what
+  // `unread` is for, and here there is none.
   const d = doc(`
     <body><div class="contentContainer">
       <table class="Form">
@@ -453,10 +466,12 @@ test('a page with no Save takes one form table, not the whole page', () => {
     </div></body>`);
   const form = readForm(d);
   assert.ok(form);
-  assert.deepEqual(form.fields.map((f) => f.key), ['season', 'type', 'day', 'level']);
-  // Still reported: the page has a control this screen does not draw.
-  assert.equal(form.unread.length, 1, JSON.stringify(form.unread));
-  assert.equal(form.unread[0].id, 'other');
+  assert.deepEqual(form.fields.map((f) => f.key), ['season', 'type', 'day', 'level', 'other']);
+  assert.equal(form.unread, undefined, 'every control is either shown or knowingly passed');
+
+  const { recordModel } = await import('../src/lib/record.js');
+  assert.equal(recordModel(d, 'https://x.test/admin.sd?page=Report'), null,
+    'a report\u2019s filters are a form, not an editor');
 });
 
 test('the family editor reports the phone-type selects it does not offer', () => {
