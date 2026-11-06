@@ -1,7 +1,7 @@
 {
   "name": "sd-rebuilt",
   "private": true,
-  "userscriptBranch": "wii-skin",
+  "userscriptBranch": "main",
   "version": "0.31.29",
   "type": "module",
   "description": "Rebuilt UI for The Studio Director: week calendar plus the record lists the app puts beside its forms.",
@@ -14,6 +14,7 @@
     "map": "node tools/crawl-report.mjs data/pages.json docs/crawl-map.md",
     "parity": "node tools/parity.mjs",
     "parity:fixtures": "node tools/parity.mjs fixtures",
+    "sync:main": "node tools/main-from-skin.mjs",
     "golden": "node tools/golden.mjs check",
     "golden:write": "node tools/golden.mjs write",
     "destinations": "node tools/build-destinations.mjs"
