@@ -63,42 +63,41 @@
 
     const fitted = new Map();
 
-    // One canvas, one hotspot. The three files are exported on the same 76-unit canvas
-    // with the same group transform, so the offset that puts the pointing hand's tip on
-    // the box corner puts every other sprite's tip there as well. Measuring each sprite
-    // on its own was the bug: the topmost painted path is not the same one in all three
-    // (the closed hand's finger line is shorter, so a different path wins), and browsers
-    // round and expand stroke extents differently — Chrome agreed with itself, Firefox
-    // put the two a pixel apart, and the change of hand slid sideways.
+    // One canvas, and a shared hotspot sideways only. Measuring the x offset per sprite
+    // was the browser bug: the topmost painted path is not the same one in all three files
+    // (the closed hand's finger line is shorter), so Chrome and Firefox expanded the two
+    // by different stroke amounts and the change of hand slid sideways. One x measurement
+    // for the whole set, taken from the first sprite to have a size, removes that.
     //
-    // The offset is measured once, from whichever sprite first has a size, and reused.
+    // The y offset stays per sprite, because it is what puts each hand's top on the point:
+    // a shared y would hang the closed hand below the cursor, its shorter finger line no
+    // longer reaching the origin. It is measured once per sprite here, and the cached
+    // markup carries it, so a swap still costs nothing.
+    //
     // Returns false when nothing could be measured (the glyph can be inserted before the
     // stylesheet gives it a size), so the caller does not cache an unfitted sprite.
-    let sharedOffset = null;
+    let sharedX = null;
 
     function fit(svg) {
-      if (!sharedOffset) {
-        const box = svg.getBoundingClientRect();
-        // The tip is the topmost painted thing: taking that one path, rather than the
-        // union of the artwork, keeps the hand's left edge from dragging the hotspot off
-        // the point you are aiming with.
-        let tip = null;
-        for (const path of svg.querySelectorAll('path')) {
-          const style = getComputedStyle(path);
-          if (style.display === 'none' || style.visibility === 'hidden') continue;
-          const rect = path.getBoundingClientRect();
-          if (!rect.width && !rect.height) continue;
-          if (!tip || rect.top < tip.top - 0.5
-            || (Math.abs(rect.top - tip.top) <= 0.5 && rect.left < tip.left)) {
-            tip = { top: rect.top, left: rect.left };
-          }
+      const box = svg.getBoundingClientRect();
+      // The tip is the topmost painted thing: taking that one path, rather than the union
+      // of the artwork, keeps the hand's left edge from dragging the hotspot off the point
+      // you are aiming with.
+      let tip = null;
+      for (const path of svg.querySelectorAll('path')) {
+        const style = getComputedStyle(path);
+        if (style.display === 'none' || style.visibility === 'hidden') continue;
+        const rect = path.getBoundingClientRect();
+        if (!rect.width && !rect.height) continue;
+        if (!tip || rect.top < tip.top - 0.5
+          || (Math.abs(rect.top - tip.top) <= 0.5 && rect.left < tip.left)) {
+          tip = { top: rect.top, left: rect.left };
         }
-        if (!tip) return false;
-        sharedOffset = { x: box.left - tip.left, y: box.top - tip.top };
       }
+      if (!tip) return false;
+      if (sharedX === null) sharedX = box.left - tip.left;
       svg.style.transformOrigin = '0 0';
-      svg.style.transform = 'translate(' + sharedOffset.x + 'px, '
-        + sharedOffset.y + 'px)';
+      svg.style.transform = 'translate(' + sharedX + 'px, ' + (box.top - tip.top) + 'px)';
       return true;
     }
 
