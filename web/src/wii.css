@@ -831,57 +831,6 @@ html[data-sd-theme="wii"] #sd-root ::-webkit-scrollbar-thumb {
   background-clip: content-box;
 }
 
-/* ---- the pointer ----
- *
- * The Wii's pointer is a gloved hand with the player's number on it, and this is
- * the pack's own artwork: cursors/PointerP1.svg, its recoloured hover twin
- * PointerP1Hover.svg, and the closed fist, drawn at sixty-four
- * pixels - twice a system cursor's size - so the hand reads from the sofa. The
- * player-1 set is the one a solo admin sees; P2-P4 carry their own numbers.
- *
- * The hover hand is the same drawing with its own two-stop body gradient swapped
- * for the pack's bright blue, so it is the pointer that lights up rather than a
- * different hand; its numeral takes the file's white so the digit still reads.
- *
- * The hotspot of each is the point of the hand, measured off the raster: both
- * pointer states share the fingertip at 24,6, and the fist takes the knuckle at
- * 28,21 so it stays under the cursor when it closes.
- *
- * A stylesheet cannot reach a file the userscript does not carry, and the artefact
- * has to stay one offline piece, so each hand is pasted here as a PNG: the SVGs
- * are Inkscape documents with gradients and embedded style, ten kilobytes apiece,
- * and the raster is a fraction of that. (Chrome also refuses an SVG served as
- * anything but image/svg+xml, and it is the PNG decoder a cursor goes through.)
- *
- * Three states, the ones a mouse actually passes through: the pointing hand, that
- * hand lit up over anything that goes somewhere, and the closed fist while it is
- * being pressed. Text controls keep the text cursor, because that is what says
- * "type here". The B badge above is the pack's other marking, not a pointer.
- *
- * The pack's two .ani files are not used: no browser animates a CSS cursor, and
- * an .ani does not even decode as an image. */
-html[data-sd-theme="wii"] #sd-root {
-  cursor: url("data:image/png;base64,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") 24 6, pointer;
-}
-html[data-sd-theme="wii"] #sd-root a,
-html[data-sd-theme="wii"] #sd-root button,
-html[data-sd-theme="wii"] #sd-root summary,
-html[data-sd-theme="wii"] #sd-root [role="button"],
-html[data-sd-theme="wii"] #sd-root input[type="checkbox"],
-html[data-sd-theme="wii"] #sd-root input[type="radio"] {
-  cursor: url("data:image/png;base64,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") 24 5, pointer;
-}
-html[data-sd-theme="wii"] #sd-root a:active,
-html[data-sd-theme="wii"] #sd-root button:active,
-html[data-sd-theme="wii"] #sd-root summary:active,
-html[data-sd-theme="wii"] #sd-root [role="button"]:active {
-  cursor: url("data:image/png;base64,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") 28 21, pointer;
-}
-html[data-sd-theme="wii"] #sd-root input,
-html[data-sd-theme="wii"] #sd-root textarea { cursor: text; }
-html[data-sd-theme="wii"] #sd-root select,
-html[data-sd-theme="wii"] #sd-root .sd-table td { cursor: inherit; }
-
 /* ---- motion ----
  *
  * The Wii answers the pointer with light and a little growth, not with a colour
