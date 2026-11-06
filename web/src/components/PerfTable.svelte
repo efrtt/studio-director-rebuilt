@@ -1,4 +1,6 @@
 <script>
+  import CellAction from './CellAction.svelte';
+
   // The event page's Performance Info list.
   //
   // Arranging the rows is a local edit until it is saved: the row order lives in
@@ -239,16 +241,9 @@
                 >{row.locked ? 'Locked' : 'Open'}</button>
               </td>
 
-              <td>
-                {#if row.song.href}
-                  <a
-                    class="sd-perflink"
-                    href={row.song.href}
-                    title="Edit this performance in the app"
-                    on:click={beforeLeave}
-                  >{row.song.label || 'Untitled'}</a>
-                {:else}{row.song.label}{/if}
-              </td>
+              <!-- The name is the row, the buttons are the way in: a linked
+                   name beside an Edit button made two targets for one page. -->
+              <td>{row.song.label || 'Untitled'}</td>
 
               <td>{row.className}</td>
               <td>{row.instructor}</td>
@@ -256,15 +251,25 @@
               <td class="sd-cell--right">{row.start}</td>
               <td class="sd-cell--right">{row.length}</td>
               <td class="sd-perfnote" title={row.notes}>{row.notes}</td>
-              <td class="sd-cell--right">
-                {#if row.deleteHref}
-                  <a
-                    class="sd-perfdel"
-                    href={row.deleteHref}
-                    title="Delete this performance"
-                    on:click={(e) => beforeDelete(e, row)}
-                  >Delete</a>
-                {/if}
+              <td class="sd-cell--right sd-cell--action">
+                <span class="sd-cell-actions">
+                  {#if row.song.href}
+                    <CellAction
+                      href={row.song.href}
+                      label="Edit"
+                      title="Edit this performance in the app"
+                      onPress={beforeLeave}
+                    />
+                  {/if}
+                  {#if row.deleteHref}
+                    <CellAction
+                      href={row.deleteHref}
+                      label="Delete"
+                      title="Delete this performance"
+                      onPress={(e) => beforeDelete(e, row)}
+                    />
+                  {/if}
+                </span>
               </td>
             </tr>
           {/each}

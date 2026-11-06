@@ -2709,8 +2709,6 @@ html[data-sd-theme="light"] #sd-root .sd-asktext { color: var(--dim); }
   font-size: var(--fs-micro); font-weight: 600;
 }
 .sd-perflock--on { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
-.sd-perflink { font-weight: 600; }
-.sd-perfdel { color: var(--danger); font-size: var(--fs-sm); font-weight: 600; }
 .sd-perfnote { max-width: 26ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sd-perfempty { margin: 0; padding: 14px 16px; color: var(--dim); }
 .sd-perfstatus {
