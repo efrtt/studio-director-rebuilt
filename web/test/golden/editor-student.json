@@ -525,6 +525,7 @@
     "attendance": null,
     "bar": null,
     "charges": null,
+    "composer": null,
     "confirm": null,
     "form": {
       "breadcrumb": [

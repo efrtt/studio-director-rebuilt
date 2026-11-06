@@ -29,7 +29,9 @@ export const LAYOUT = {
   attendance: { width: 'wide' },
   report: { width: 'wide' },
   // An editable table of four controls a row needs the window, not a column.
-  charges: { width: 'wide' }
+  charges: { width: 'wide' },
+  // Fields beside an editor that is the app's own: it needs the window.
+  composer: { width: 'wide' }
 };
 
 export const DEFAULT_LAYOUT = Object.freeze({

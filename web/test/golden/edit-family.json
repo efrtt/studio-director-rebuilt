@@ -803,6 +803,7 @@
       "moreLabel": "More"
     },
     "charges": null,
+    "composer": null,
     "confirm": null,
     "form": {
       "breadcrumb": [
