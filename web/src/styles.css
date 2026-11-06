@@ -2330,8 +2330,20 @@ html[data-sd-theme="light"] #sd-root .sd-jump-scrim { background: rgba(52, 44, 3
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: var(--panel);
+  /* The card clips what it frames, so the sheet's header takes the card's top
+     corners instead of squaring them off inside its border. */
+  overflow: hidden;
 }
-.sd-recordcard .sd-tablewrap { margin: 0; }
+/* The card owns the only frame. The wrapper inside it drew a second border one
+   pixel in on every side, and its rounded top corners sat just inside the
+   card's own, so the column headings read as a smaller card tucked underneath
+   and the two rims met at the corners. */
+.sd-recordcard .sd-tablewrap {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
 .sd-recordcard .sd-table th,
 .sd-recordcard .sd-table td { padding: 9px 14px; }
 .sd-recordcard .sd-table th:first-child,
@@ -2668,6 +2680,9 @@ html[data-sd-theme="light"] #sd-root .sd-asktext { color: var(--dim); }
   border-radius: var(--radius-lg);
   background: var(--panel);
   margin-top: var(--space-3);
+  /* The panel is the card; its heading band is the first thing inside it, so
+     the corners have to be the panel's or the band's square corners poke out. */
+  overflow: hidden;
 }
 .sd-perfhead {
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
