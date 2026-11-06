@@ -22,7 +22,8 @@
 //   npm run sync:main -- --from <ref> strip from another ref (default wii-skin)
 //
 // It leaves the work staged in main's checkout and never commits or pushes: read
-// `git diff --cached` before you commit.
+// `git diff --cached` before you commit. Nothing is staged until after the build,
+// so the index is the finished tree and not the synced copy of the skin's.
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -486,14 +487,9 @@ for (const file of files) {
   fs.writeFileSync(path.join(main, file), after);
 }
 
-git(main, 'add', '-A');
-
 const version = JSON.parse(fs.readFileSync(path.join(main, 'web/package.json'), 'utf8')).version;
 const theirs = JSON.parse(gitRaw(main, 'show', FROM + ':web/package.json')).version;
 if (version !== theirs) throw new Error('the two lines disagree on version: main ' + version + ', ' + FROM + ' ' + theirs);
-
-const changed = git(main, 'status', '--short').split('\n').filter(Boolean);
-console.log('stripped the skin from ' + changed.length + ' staged paths at v' + version);
 
 if (BUILD) {
   const web = path.join(main, 'web');
@@ -506,5 +502,24 @@ if (BUILD) {
   skinIn(artefact);
   console.log('\n' + ARTEFACT + ' v' + version + ', ' + artefact.length + ' bytes, no skin');
 }
+
+// Stage once, here, after everything has been generated. The checkout above put
+// the *skin's* artefact in this tree, and the build only then rewrote it; staging
+// before that point left the index holding the skinned build, so a commit taken
+// from it shipped an artefact with `wii-skin` update URLs and the whole skin in
+// it. Adding afterwards means the index is the final tree, whatever BUILD did.
+git(main, 'add', '-A');
+
+// What is staged has to be what is on disk. This is the check that would have
+// caught that artefact, and it is cheap enough to run every time.
+for (const file of git(main, 'diff', '--cached', '--name-only').split('\n').filter(Boolean)) {
+  const staged = execFileSync('git', ['show', ':' + file], { cwd: main, maxBuffer: 64 * 1024 * 1024 });
+  if (!staged.equals(fs.readFileSync(path.join(main, file)))) {
+    throw new Error('the staged copy of ' + file + ' is not the one on disk: stage again before committing');
+  }
+}
+
+const changed = git(main, 'status', '--short').split('\n').filter(Boolean);
+console.log('stripped the skin from ' + changed.length + ' staged paths at v' + version);
 
 console.log('\nReview `git diff --cached` in ' + main + ', then commit and push that line.');
