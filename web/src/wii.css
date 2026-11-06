@@ -272,6 +272,24 @@ html[data-sd-theme="wii"] #sd-root .sd-tablewrap {
     inset 0 1px 0 #ffffff,
     0 12px 26px -18px color-mix(in srgb, var(--wii-deep) 70%, transparent);
 }
+/* A sheet's frame belongs to the card, not to the wrapper inside it. The event
+ * page's performance panel and every record list already draw this border, so a
+ * second frame put its rounded top corners just inside the card's own: the column
+ * headings read as a second, smaller card tucked under the panel header, and the
+ * two rims showed together at the corners. Here the card owns the frame. */
+html[data-sd-theme="wii"] #sd-root .sd-perf > .sd-tablewrap,
+html[data-sd-theme="wii"] #sd-root .sd-recordcard > .sd-tablewrap {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+/* The card clips what it frames, so the sheet's tinted header takes the card's
+ * top corners rather than squaring them off inside its border. */
+html[data-sd-theme="wii"] #sd-root .sd-perf,
+html[data-sd-theme="wii"] #sd-root .sd-recordcard {
+  overflow: hidden;
+}
 html[data-sd-theme="wii"] #sd-root .sd-table thead th {
   background: linear-gradient(180deg, var(--wii-w0) 0%, var(--wii-w2) 100%) !important;
   color: var(--wii-deep) !important;
