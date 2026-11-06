@@ -10,11 +10,21 @@
   export let href = '';
   export let label = '';
   export let title = '';
+  // A guard the caller wants between the press and the app's own link: the
+  // event page's delete asks before it leaves, and an unsaved arrangement asks
+  // before anything navigates away from it.
+  export let onPress = null;
 
   $: icon = actionIcon(label);
 </script>
 
-<a class="sd-pill" class:sd-pill--icon={!!icon} {href} title={title || label}>
+<a
+  class="sd-pill"
+  class:sd-pill--icon={!!icon}
+  {href}
+  title={title || label}
+  on:click={(e) => { if (onPress) onPress(e); }}
+>
   {#if icon}
     <span class="sd-icon sd-icon--{icon}" aria-hidden="true"></span>
     <span class="sd-sr">{label}</span>
