@@ -59,25 +59,28 @@ const ORDER = [
   // charges table beside them. Before the table readers, which would otherwise
   // take it as a sheet.
   { id: 'payment', key: 'payment', after: ['editor', 'confirmation', 'week', 'list'], read: (doc, ctx) => readPayment(doc, ctx.url) },
-  // A filter form plus a run control. Late, so NewClass keeps its list view.
-  { id: 'report', key: 'report', after: ['editor', 'confirmation', 'week', 'list', 'payment'], read: (doc) => readReport(doc) },
-  // A form with a control that is not Run Report.
-  { id: 'task', key: 'task', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'report'], read: (doc) => readTask(doc) },
-  // The dashboard's Insights tab: stat cells and a donut, no records at all.
-  { id: 'insights', key: 'insights', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'report', 'task'], read: (doc) => readInsights(doc) },
-  // The dashboard's Trends tab: the app's own chart images in a layout table.
-  { id: 'trends', key: 'trends', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'report', 'task', 'insights'], read: (doc) => readTrends(doc) },
   // A grid of controls is the app's own form, never a table of records: every
-  // student on every date is a tick box with a reason and notes behind it.
-  { id: 'attendance', key: 'attendance', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'report', 'task', 'insights', 'trends'], read: (doc) => readAttendance(doc) },
+  // student on every date is a tick box with a reason and notes behind it. It is
+  // here, ahead of the form readers, because the app's own attendance field is
+  // what names the page even when the register has no dates to tick: that shape
+  // is a form with a save, and `task` used to take it as one field.
+  { id: 'attendance', key: 'attendance', after: ['editor', 'confirmation', 'week', 'list', 'payment'], read: (doc) => readAttendance(doc) },
+  // A filter form plus a run control. Late, so NewClass keeps its list view.
+  { id: 'report', key: 'report', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance'], read: (doc) => readReport(doc) },
+  // A form with a control that is not Run Report.
+  { id: 'task', key: 'task', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report'], read: (doc) => readTask(doc) },
+  // The dashboard's Insights tab: stat cells and a donut, no records at all.
+  { id: 'insights', key: 'insights', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task'], read: (doc) => readInsights(doc) },
+  // The dashboard's Trends tab: the app's own chart images in a layout table.
+  { id: 'trends', key: 'trends', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task', 'insights'], read: (doc) => readTrends(doc) },
   // Tables with rows: dashboards, print sheets, list-ish settings.
-  { id: 'sheet', key: 'sheet', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'report', 'task', 'insights', 'trends', 'attendance'], read: (doc) => readSheet(doc) },
+  { id: 'sheet', key: 'sheet', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task', 'insights', 'trends'], read: (doc) => readSheet(doc) },
   // Landing pages: what is left when there is nothing but links.
-  { id: 'index', key: 'index', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'report', 'task', 'insights', 'trends', 'attendance', 'sheet'], read: (doc) => readIndex(doc) },
+  { id: 'index', key: 'index', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task', 'insights', 'trends', 'sheet'], read: (doc) => readIndex(doc) },
   // A control and a save. After index, because a menu is not a settings card.
-  { id: 'settings', key: 'settings', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'report', 'task', 'insights', 'trends', 'attendance', 'sheet', 'index'], read: (doc) => readSettings(doc) },
+  { id: 'settings', key: 'settings', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task', 'insights', 'trends', 'sheet', 'index'], read: (doc) => readSettings(doc) },
   // Last of all, and the smallest: a sentence and the app's own button.
-  { id: 'note', key: 'note', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'report', 'task', 'insights', 'trends', 'attendance', 'sheet', 'index', 'settings'], read: (doc) => readNote(doc) }
+  { id: 'note', key: 'note', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task', 'insights', 'trends', 'sheet', 'index', 'settings'], read: (doc) => readNote(doc) }
 ];
 
 export const READERS = ORDER.map((reader) => ({

@@ -2,6 +2,10 @@
   "name": "editor",
   "reader": "form",
   "url": "/srvda/admin.sd?page=EditFamily&fident=1784123965271",
+  "stale": {
+    "captured": "0.31.20",
+    "why": "captured at 0.31.20 against main v0.28.76; 0.31.21-24 only change the attendance reader (the page’s own href links, a register whose dates all fall outside the view, and the family’s own note), so every other shape reads unchanged."
+  },
   "current": {
     "url": "/srvda/admin.sd?page=EditFamily&fident=1784123965271",
     "mounted": true,

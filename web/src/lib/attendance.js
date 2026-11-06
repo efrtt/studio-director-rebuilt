@@ -36,6 +36,13 @@ import { pageRegions } from '../model/regions.js';
 const BOX = 'input[type="checkbox"][onclick*="Attendance.onChange"]';
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
+// The family's own note on an absence: the app prints it after the studio's,
+// in the cell's reason block, with `disabled` on the field. It is read as text
+// and never written — a disabled control is the app saying so, and a form post
+// would not carry it anyway. Named by the app's own suffix for that field
+// (`{sident}_{date}_0_family`), beside `…_notes`, which is the studio's.
+const FAMILY = 'textarea[name$="_family"]';
+
 // The header and the body disagree about the element (TH against TD), so cells
 // are counted by position rather than by tag: the fifth cell of the header and
 // the fifth cell of a row are the same date.
@@ -66,7 +73,10 @@ function readCell(cell) {
   // the page marks the cell and prints what the number means in its key.
   const sup = qs(cell, 'sup');
   const select = qs(cell, 'select');
+  // The studio's own notes, not the family's after it: two textareas now share
+  // this cell, and `qs(cell, 'textarea')` takes the first, as it always has.
   const area = qs(cell, 'textarea');
+  const familyArea = qs(cell, FAMILY);
   const options = select
     ? qsa(select, 'option').map((option) => ({ value: optionValue(option), label: textOf(option) }))
     : [];
@@ -88,7 +98,15 @@ function readCell(cell) {
     notes: {
       name: area ? area.getAttribute('name') || '' : '',
       value: area ? String(area.value != null ? area.value : textOf(area)) : ''
-    }
+    },
+    // What the family wrote when they marked this absence themselves. Text, not
+    // a field: there is no write to offer, so the dialog only shows it.
+    family: familyArea
+      ? {
+        name: familyArea.getAttribute('name') || '',
+        value: String(familyArea.value != null ? familyArea.value : textOf(familyArea))
+      }
+      : null
   };
 }
 
@@ -131,14 +149,23 @@ export function readAttendance(doc) {
     .filter((entry) => entry.kind !== 'chrome')
     .find((entry) => qs(entry.table, BOX));
   const table = found ? found.table : null;
-  if (!table) return null;
 
-  const head = qsa(table, 'tr').find((tr) => qs(tr, 'th'));
-  if (!head) return null;
+  // The app's own attendance-notes field, by its own name. It is what makes a
+  // register without dates still this page: measured live (2026-11-06), a class
+  // whose dates all fall outside the view prints the register as a bare header
+  // — `First Name | Last Name` and no columns at all — so there are no tick
+  // boxes while the page, its class links and its notes are still there. The
+  // reader used to bail on the missing dates, the ladder fell through to the
+  // task reader, and the screen showed one field and none of those links.
+  const notesArea = qs(doc, 'textarea[name="att_notes"]');
+  if (!table && !notesArea) return null;
 
+  const head = table ? qsa(table, 'tr').find((tr) => qs(tr, 'th')) : null;
   const seen = new Set();
   const dates = [];
-  rowCells(head).forEach((cell, index) => {
+  // No header at all is not a register; a notes field with no dates still is.
+  if (!head && !notesArea) return null;
+  if (head) rowCells(head).forEach((cell, index) => {
     const key = (cell.getAttribute('id') || '').trim();
     if (!ISO_DATE.test(key) || seen.has(key)) return;
     seen.add(key);
@@ -156,12 +183,11 @@ export function readAttendance(doc) {
         : null
     });
   });
-  if (!dates.length) return null;
 
-  const firstDate = Math.min(...dates.map((date) => date.index));
+  const firstDate = dates.length ? Math.min(...dates.map((date) => date.index)) : 0;
   const students = [];
 
-  for (const tr of qsa(table, 'tr')) {
+  for (const tr of table && dates.length ? qsa(table, 'tr') : []) {
     if (tr === head || qs(tr, 'th')) continue;
     const cells = rowCells(tr);
     if (!qs(tr, BOX)) continue;
@@ -199,9 +225,8 @@ export function readAttendance(doc) {
     }
   }
 
-  if (!students.length) return null;
-
-  const notesArea = qs(doc, 'textarea[name="att_notes"]');
+  // A class with nobody on the dates shown is still the page: the class's own
+  // links and its notes are the reason to be here.
   const notes = notesArea
     ? { name: 'att_notes', value: String(notesArea.value != null ? notesArea.value : textOf(notesArea)) }
     : null;
@@ -209,13 +234,26 @@ export function readAttendance(doc) {
   // The notes sit in a cell that also carries the page's own ways of adding a
   // make-up or a drop-in to this class. Those are the app's controls, so they
   // stay beside the notes, where the app puts them.
+  //
+  // Two kinds of control sit there, and the live page (2026-11-06) shows both:
+  // "Schedule a make-up class for <name>" and "Add a trial/drop-in for <name>"
+  // are plain `href` links to the app's own pages, while the timesheet line is
+  // an `onclick` call. Reading only `a[onclick]` dropped the two links and left
+  // the row half empty, so an anchor counts when it has either — a handler to
+  // press, or somewhere of its own to go. A bare `#` is neither.
   const notesCell = notesArea ? notesArea.closest('td') : null;
   const actions = notesCell
-    ? qsa(notesCell, 'a[onclick]')
-      .map((anchor) => ({ label: textOf(anchor), onclick: anchor.getAttribute('onclick') || '', exact: true }))
+    ? qsa(notesCell, 'a[onclick], a[href]')
+      .map((anchor) => ({
+        label: textOf(anchor),
+        onclick: anchor.getAttribute('onclick') || '',
+        href: anchor.getAttribute('href') || '',
+        exact: true
+      }))
       // The numbered key to the superscripts lives in this cell too, and it is
       // not one of this screen's controls.
       .filter((action) => action.label && !LEGEND.test(action.label))
+      .filter((action) => action.onclick || (action.href && action.href !== '#'))
     : [];
 
   const nav = [];
