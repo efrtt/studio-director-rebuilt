@@ -8,10 +8,10 @@
 // It used to live in the sheet reader, which is why the dashboard had a strip
 // and the Insights and Trends screens did not.
 
-import { qs, textOf } from './shell.js';
+import { textOf, tabStrip } from './shell.js';
 
 export function readPageTabs(doc) {
-  const strip = qs(doc, '.tabContainer');
+  const strip = tabStrip(doc);
   if (!strip) return [];
 
   const tabs = [];

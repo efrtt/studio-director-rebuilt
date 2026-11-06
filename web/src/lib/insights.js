@@ -15,7 +15,8 @@
 // had no representation at all. There is nothing to write back — every figure is
 // a count with a link to the list behind it.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, titleOf } from './shell.js';
+import { inReportTable } from '../model/appdom.js';
 import { contentRoot } from '../model/root.js';
 import { pageRegions } from '../model/regions.js';
 import { readPageTabs } from './pagetabs.js';
@@ -51,7 +52,7 @@ export function readInsights(doc) {
   // a table too, and they are not the records that make a page a sheet.
   const reportRows = pageRegions(doc).tables
     .filter((entry) => entry.kind === 'data')
-    .filter((entry) => /(^|\s)ReportTable(\s|$)/.test(String(entry.table.getAttribute('class') || '')))
+    .filter((entry) => inReportTable(entry.table))
     .reduce((n, entry) => n + entry.rows.filter((row) => row.kind === 'repeated').length, 0);
   if (reportRows) return null;
 
@@ -96,7 +97,7 @@ export function readInsights(doc) {
 
   return {
     kind: 'insights',
-    title: textOf(qs(doc, '.formTitle, h1')) || 'Insights',
+    title: titleOf(doc, 'heading') || 'Insights',
     donut,
     stats,
     tabs: readPageTabs(doc)

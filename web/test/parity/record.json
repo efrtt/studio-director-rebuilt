@@ -1,0 +1,105 @@
+{
+  "name": "record",
+  "reader": "record",
+  "url": "/srvda/admin.sd?page=ManageHolidays",
+  "current": {
+    "url": "/srvda/admin.sd?page=ManageHolidays",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": ".contentContainer",
+      "source": "tables",
+      "controls": 7,
+      "links": 24,
+      "tables": {
+        "form": 1,
+        "data": 1,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 1
+      },
+      "rows": {
+        "field": 4,
+        "section": 1,
+        "repeated": 23,
+        "noise": 1
+      },
+      "fallback": "none"
+    },
+    "panel": {
+      "cards": 1,
+      "count": "23 holidays",
+      "tabs": []
+    },
+    "view": {
+      "record": {
+        "cards": 1,
+        "count": "23 holidays",
+        "tabs": []
+      },
+      "kind": "record",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 3,
+        "rows": 57
+      }
+    },
+    "detected": true,
+    "digest": "ead371f5",
+    "version": "0.31.29"
+  },
+  "reference": {
+    "url": "/srvda/admin.sd?page=ManageHolidays",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": "#mainContent",
+      "source": "tables",
+      "controls": 7,
+      "links": 24,
+      "tables": {
+        "form": 1,
+        "data": 1,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 1
+      },
+      "rows": {
+        "field": 4,
+        "section": 1,
+        "repeated": 23,
+        "noise": 1
+      },
+      "fallback": "none"
+    },
+    "panel": {
+      "cards": 1,
+      "count": "23 holidays",
+      "tabs": []
+    },
+    "view": {
+      "record": {
+        "cards": 1,
+        "count": "23 holidays",
+        "tabs": []
+      },
+      "kind": "record",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 3,
+        "rows": 57
+      }
+    },
+    "detected": true,
+    "digest": "e2b1612c",
+    "version": "0.28.83"
+  }
+}

@@ -7,7 +7,7 @@ import FONTS from './fonts.css?inline';
 import LOGIN from './login.css?inline';
 import { readTheme, applyTheme } from './lib/theme.js';
 import {
-  fetchPage, hasShell, liveIsBare, parseHtml, SessionExpired, railLinks
+  fetchPage, liveIsBare, parseHtml, SessionExpired, railLinks
 } from './lib/shell.js';
 import { routeOf } from './lib/route.js';
 import { readList, panelPeek } from './lib/list.js';
@@ -32,12 +32,15 @@ import { confirmSubject } from './lib/deletedname.js';
 import { saveSettingsInApp } from './lib/settings.js';
 import { clickActionInApp } from './lib/actions.js';
 import { changesFrom, saveInApp } from './lib/save.js';
+import { runPayment, addSplitInApp } from './lib/payment.js';
+import { unreadNote, unreadOf } from './model/coverage.js';
+import { decisionOf } from './model/regions.js';
+import { pageShape } from './model/root.js';
 import { probeTick, recordView } from './lib/probe.js';
 import { contradictsNote } from './lib/note.js';
 import { wantsLiveLook, decideMount, decideShellLess, chooseSource, searchReadyOrLate } from './lib/choose.js';
 import { readRecordPage } from './lib/record.js';
 import { readLiveView } from './lib/live.js';
-import { decisionOf } from './model/regions.js';
 
 export { readPage };
 // The face has to travel with it: on a mount the fonts are in the same <style> as
@@ -68,25 +71,40 @@ let instance = null;
 export function mount(opts = {}) {
   if (instance) return instance;
 
+  // Probe mode's second half. `sdProbe.dump()` says what the page contained;
+  // this says what this build made of it — the model it drew, with the selectors
+  // it will write through — so a live check can ask the reader instead of
+  // re-deriving the answer from the markup and then agreeing with itself. Only
+  // published while the probe is armed (`?sdprobe=1`); otherwise there is no
+  // handle to write to and a production page pays nothing.
+  if (globalThis.sdProbe) globalThis.sdProbe.model = opts.model || null;
+
   injectStyles();
   document.documentElement.classList.add('sd-app');
 
   const root = document.createElement('div');
   root.id = 'sd-root';
   // Which decision produced this page: the content root and the row judgement,
-  // recorded where it can be read back. A page that cannot name its path cannot
-  // tell a real read from a fallback that quietly did the work.
-  try {
-    const decision = decisionOf(document);
-    root.dataset.sdPath = decision.path;
-    root.dataset.sdRoot = decision.root;
-    root.dataset.sdSource = decision.source;
-    root.dataset.sdControls = String(decision.controls);
-    root.dataset.sdLinks = String(decision.links);
-    root.dataset.sdTables = JSON.stringify(decision.tables);
-    root.dataset.sdRows = JSON.stringify(decision.rows);
-    root.dataset.sdFallback = decision.fallback;
-  } catch (e) { /* a page mid-load still mounts */ }
+  // recorded where the parity probe can read it. A dump that cannot name its
+  // path cannot tell a real read from a fallback that quietly did the work.
+  const stampDecision = () => {
+    try {
+      const decision = decisionOf(document);
+      root.dataset.sdPath = decision.path;
+      root.dataset.sdRoot = decision.root;
+      root.dataset.sdSource = decision.source;
+      root.dataset.sdControls = String(decision.controls);
+      root.dataset.sdLinks = String(decision.links);
+      root.dataset.sdTables = JSON.stringify(decision.tables);
+      root.dataset.sdRows = JSON.stringify(decision.rows);
+      root.dataset.sdFallback = decision.fallback;
+    } catch (e) { /* a page mid-load still mounts */ }
+  };
+  stampDecision();
+  // The app reveals its tab panels after load; a decision measured at mount can
+  // see them still hidden. The probe asks for a fresh stamp against the page as
+  // it stands when measured, so "which path decided this" describes that page.
+  if (globalThis.sdProbe) globalThis.sdProbe.refreshDecision = stampDecision;
   (opts.container || document.body).appendChild(root);
 
   const app = new App({
@@ -113,6 +131,13 @@ export function mount(opts = {}) {
       onAttend: opts.onAttend || null,
       // Toggle screens: our controls, the app's own Save.
       onSaveSettings: opts.onSaveSettings || null,
+      // New Payment: process the payment, and cause a split. Both press the app's
+      // own anchors. Forwarded here for the same reason as `onAct` below — a
+      // handler this object does not list is a handler no view ever receives,
+      // and the split button answered "no handler" while the wiring above it was
+      // already correct.
+      onSubmitPayment: opts.onSubmitPayment || null,
+      onAddSplit: opts.onAddSplit || null,
       onSearch: opts.onSearch || null,
       // Every screen with a control gets a way to press it: the narrower wiring left
       // a dropped student's dialog with a dead button.
@@ -190,7 +215,7 @@ export async function autoMount(opts = {}) {
   const liveModel = readPage(document, location.href);
   const source = chooseSource({
     liveView: liveModel && liveModel.view ? liveModel : null,
-    liveHasShell: hasShell(document),
+    liveHasShell: pageShape(document).shell,
     liveIsEmpty: liveIsBare(document)
   });
   if (source === 'live') return mountView(liveModel, onOriginal, 'live');
@@ -206,22 +231,20 @@ export async function autoMount(opts = {}) {
     });
   }
 
-  // A print window has no shell at all: `PrintClassRoster` is a title, one
-  // table and the browser's own extension roots, with no rail and no top bar
-  // (confirmed by a dump of the real page). That is still a screen worth
-  // reading, and the only thing that must not happen is covering it with "no
-  // view for this page".
-  if (!hasShell(page.doc)) {
-    const print = readSheet(page.doc);
-    // The rule is in choose.js, where it has a test: a print window is a screen
-    // only when a reader claims it and the page names itself.
-    const bare = decideShellLess({
-      hasSheet: !!print,
-      hasTitle: !!page.doc.querySelector('.formTitle, .ReportName')
-    });
-    if (bare === 'sheet') {
-      return mountView({ nav: [], sheet: print, view: 'sheet', title: print.title, url: page.finalUrl }, onOriginal);
-    }
+  // A page with no shell is a document of its own: a print window, a popup, the
+  // outcome screen the app returns to. It is read by exactly the same chain as an
+  // admin page — `model/root.js` says where its content is, the chain says what it
+  // is — and the only thing that must not happen is covering it with "no view for
+  // this page".
+  //
+  // This branch used to read a sheet specifically and mount only that, so a
+  // shell-free list, report or notice was a coin flip. Now the shape asks the one
+  // question it can answer (is there a shell?) and the chain answers the rest.
+  const shape = pageShape(page.doc);
+  if (shape.shellFree) {
+    const shellFree = readPage(page.doc, page.finalUrl);
+    const decision = decideShellLess({ view: shellFree.view, hasTitle: shape.titled });
+    if (decision !== 'none') return mountView(shellFree, onOriginal);
     return mount({ state: 'none', onOriginal });
   }
 
@@ -261,7 +284,7 @@ function mountView(model, onOriginal, source = 'fetched') {
   // for every page rather than inside each reader. The record screen is the one
   // that draws it — New and Delete come from there — and a page with no bar (the
   // add screen, which *is* the form) must not grow one.
-  model = pageModel(model, document);
+  model = warnUnread(pageModel(model, document));
   // What this screen became, and where it came from. Only written when probe
   // mode is armed, so a production page pays nothing for it.
   recordView(model.view || null, source);
@@ -302,6 +325,15 @@ function mountView(model, onOriginal, source = 'fetched') {
     onSaveSettings: model.settings
       ? (values, action) => saveSettingsInApp(document, model.settings, values, action)
       : null,
+    // New Payment: our fields, the app's own Process Payment and Add Split.
+    onSubmitPayment: model.payment
+      ? (values) => runPayment(document, model.payment, values)
+      : null,
+    onAddSplit: model.payment
+      // The URL comes along so the re-read names the screen the same way the
+      // first read did, instead of falling back to the buttons' words.
+      ? () => addSplitInApp(document, model.payment, model.url || location.href)
+      : null,
     onLoadAll: loadAllRecords,
     onSearch: searchEverything,
     onRefresh: refreshList,
@@ -339,6 +371,19 @@ function pageModel(model, doc) {
   }
 
   return next;
+}
+
+// A screen that drew fewer controls than the page has says so, once, in the
+// console — the diagnostic half of `model/coverage.js`. It is not chrome: the one
+// page that reports anything today is Edit Family, whose three phone-type selects
+// sit in the row's *label* cell and are not offered yet, and a rebuild that says
+// nothing about that is the bug this exists to stop. A warning nobody looks at is
+// not a check, so it names the controls rather than counting them.
+function warnUnread(model) {
+  const list = unreadOf(model);
+  if (!list.length) return model;
+  console.info('[sd] ' + unreadNote(model) + ':', list);
+  return model;
 }
 
 // The month grid: the same rail and season picker as the week, drawn as a
@@ -479,6 +524,7 @@ function mountLive(onOriginal) {
 // The editor's mount: the one view that saves. Every other kind goes through
 // mountView, which is why this is separate rather than a branch inside it.
 function mountEditor(model, onOriginal) {
+  warnUnread(model);
   recordView('form', 'live');
   return mount({
     model,
@@ -507,6 +553,12 @@ function mountRecord(onOriginal) {
   // the page drawing as a bare list with its confirmation dropped.
   const answered = readPage(document, location.href, { allowRefused: true });
   if (answered.view === 'confirm') return mountView(answered, onOriginal);
+
+  // New Payment arrives on a URL that looks like a record's (`&meth=…&tid=…`),
+  // so routing brings it here — but it is not an editor, and the gateway URL
+  // answers a re-fetch with a different page. Its screen is the one the browser
+  // is already showing, so it is read where it stands.
+  if (answered.view === 'payment') return mountView(answered, onOriginal, 'live');
 
   // Live first, copy second. The form is server-rendered, but the app's JS fills
   // part of it after the response lands (the phone-label selects start empty),

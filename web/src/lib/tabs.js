@@ -19,9 +19,11 @@
 // already rendered. Anything that changes them ("Add student", "Add skill") is a
 // JS control, listed as an action rather than faked.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, tabPanels, tabStrip } from './shell.js';
+import { TAB_PANEL } from '../model/appdom.js';
 import { labelAbove } from './heading.js';
 import { readTable } from '../model/table.js';
+import { hasHeadings, hasRows } from '../model/rows.js';
 
 // Re-exported so a caller that already had it from here keeps working.
 export { readTable };
@@ -80,14 +82,14 @@ function panelOf(panel) {
 
   // A table with headings but no rows still says what it would hold.
   for (const block of blocks) {
-    if (block.rows.length || !block.headings.length) continue;
+    if (hasRows(block) || !hasHeadings(block)) continue;
     if (!note) note = block.section ? `${block.section}: nothing here yet.` : 'Nothing here yet.';
   }
 
   const controls = panel.querySelectorAll('input,select,textarea,button').length;
 
   return {
-    blocks: blocks.filter((b) => b.headings.length || b.rows.length),
+    blocks: blocks.filter((b) => hasHeadings(b) || hasRows(b)),
     actions: actions.filter((a) => a.label),
     note,
     controls
@@ -101,7 +103,7 @@ function panelOf(panel) {
 function tabElements(strip) {
   const direct = Array.from(strip.children || []).filter((el) => {
     if (/^(SCRIPT|STYLE|INPUT|SELECT|TABLE)$/.test(el.tagName)) return false;
-    if (el.querySelector && el.querySelector('.tabContent')) return false;
+    if (el.querySelector && el.querySelector(TAB_PANEL)) return false;
     // An icon-only tab has no text but is still a tab: keep the app's own class.
     return !!textOf(el) || /(^|\s)(tab|tabButton|selectedTab)(\s|$)/.test(el.getAttribute('class') || '');
   });
@@ -113,16 +115,17 @@ function tabElements(strip) {
 // Returns null when the page has no tab strip: an editor without tabs (or a list
 // page) should not grow an empty tab bar.
 export function readTabs(doc) {
-  const strip = qs(doc, '.tabContainer');
+  const strip = tabStrip(doc);
   if (!strip) return null;
 
   const tabEls = tabElements(strip);
   if (tabEls.length < 2) return null;
 
+  // Panels come from the same frame as the strip: a hidden tab's panel on a
+  // screen you are not on is not part of this page.
+  const panelsInOrder = tabPanels(doc);
   const panels = new Map();
-  for (const panel of qsa(doc, '.tabContent')) panels.set(keyOf(panel.id), panel);
-
-  const panelsInOrder = qsa(doc, '.tabContent');
+  for (const panel of panelsInOrder) panels.set(keyOf(panel.id), panel);
 
   const tabs = tabEls.map((el, i) => {
     const key = keyOf(el.id);

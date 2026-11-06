@@ -27,6 +27,10 @@ import { readRail, writeRail } from './lib/rail.js';
   // written into the app's live controls, which is why they arrive as one object.
   export let onAttend = null;
   export let onSaveSettings = null;
+  // The payment screen's own two gestures: process the payment, add a split.
+  // Both press the app's anchors on the live page.
+  export let onSubmitPayment = null;
+  export let onAddSplit = null;
   export let onLoadAll = null;
   export let canLoadAll = false;
   export let onSearch = null;
@@ -103,7 +107,8 @@ import { readRail, writeRail } from './lib/rail.js';
   $: view = viewOf(model);
   $: entry = view ? VIEWS[view] || null : null;
   $: props = entry ? propsFor(view, model, {
-    onRun, onAct, onPress, onAttend, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, nav, back
+    onRun, onAct, onPress, onAttend, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, nav, back,
+    onSubmitPayment, onAddSplit
   }) : {};
   $: layout = layoutFor(view, !!model.list);
   $: split = layout.split !== 'none' && !!model.list;
@@ -129,8 +134,10 @@ import { readRail, writeRail } from './lib/rail.js';
   }
 
   function onKey(e) {
-    // A view's own dialog owns Escape too: Esc in the absence editor closes the
-    // editor, never the page it sits on.
+    // While the menu is open it owns Escape: closing the menu must not also open
+    // the app's own page underneath it. A view's own dialog owns it too — Esc in
+    // the absence editor closes the editor, never the page it sits on.
+    if (menuOpen) return;
     if (typeof document !== 'undefined' && document.querySelector('.sd-overlay')) return;
     if (e.key === 'Escape') {
       e.preventDefault();

@@ -56,22 +56,26 @@ test('a page that already has a view never takes the extra look', () => {
 });
 
 /*
- * Print windows: no shell, no rail, no top bar — and often no `form#idForm` at
- * all, which is why `readPage` refuses them and this separate rule exists. The
- * branch used to be `print && querySelector('.formTitle, .ReportName')` inline
- * in main.js, where nothing could test it.
+ * Shell-free pages: no shell, no rail, no top bar — a print window, a popup, the
+ * outcome screen the app returns to. `model/root.js` says whether the page has a
+ * shell; this decides only whether a reader's claim is enough to mount over it.
+ *
+ * The rule used to ask for a sheet specifically, which made every other
+ * shell-free shape a coin flip: readable, but never consulted.
  */
-test('a print window with a table and a title is a sheet', () => {
-  assert.equal(decideShellLess({ hasSheet: true, hasTitle: true }), 'sheet');
+test('a shell-free page a reader claims and the page names is a screen', () => {
+  assert.equal(decideShellLess({ view: 'sheet', hasTitle: true }), 'sheet');
+  assert.equal(decideShellLess({ view: 'note', hasTitle: true }), 'note');
+  assert.equal(decideShellLess({ view: 'list', hasTitle: true }), 'list');
 });
 
-test('a print window whose table reader declines is not a screen', () => {
-  assert.equal(decideShellLess({ hasSheet: false, hasTitle: true }), 'none');
+test('a shell-free page nothing claims is not a screen', () => {
+  assert.equal(decideShellLess({ view: null, hasTitle: true }), 'none');
 });
 
-test('a shell-less page with no title stays with the app', () => {
-  // One table and no name is not enough to cover the popup with an overlay.
-  assert.equal(decideShellLess({ hasSheet: true, hasTitle: false }), 'none');
+test('a shell-free page with no title stays with the app', () => {
+  // A claim is not enough on its own: an unnamed popup is not something to cover.
+  assert.equal(decideShellLess({ view: 'sheet', hasTitle: false }), 'none');
 });
 
 /*

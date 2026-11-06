@@ -23,7 +23,8 @@
 // navigates. `readActions` drops plain links on purpose — on every other screen
 // a link is navigation — so this reader adds the page's own in-content links.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, titleOf, breadcrumbOf } from './shell.js';
+import { CONTENT_INFO, TITLE_DIV, TITLE_REPORT } from '../model/appdom.js';
 import { readActions, primaryAction } from './actions.js';
 import { contentRoot, CHROME, FURNITURE } from '../model/root.js';
 import { CONTROLS } from '../model/controls.js';
@@ -138,7 +139,7 @@ function hasScriptedAction(doc) {
 // `contentInfo` block carrying bare text and no paragraphs is the fallback.
 function linesOf(root, actions) {
   const paragraphs = qsa(root, 'p, li');
-  const nodes = paragraphs.length ? paragraphs : qsa(root, '.contentInfo');
+  const nodes = paragraphs.length ? paragraphs : qsa(root, CONTENT_INFO);
   const labels = new Set(actions.map((a) => a.label));
   const seen = new Set();
   const lines = [];
@@ -167,7 +168,7 @@ function linesOf(root, actions) {
     const copy = root.cloneNode(true);
     if (copy && copy.querySelectorAll) {
       // Everything the app draws a control - or a piece of page chrome - with.
-      copy.querySelectorAll('script, style, .formTitle, .ReportName, .Breadcrumb, .ButtonBar, '
+      copy.querySelectorAll('script, style, ' + TITLE_DIV + ', ' + TITLE_REPORT + ', .Breadcrumb, .ButtonBar, '
         + 'a, ol, ul, li, input, select, textarea, button, .Btn, .BtnOutln, [onclick]')
         .forEach((el) => el.remove());
     }
@@ -202,8 +203,8 @@ export function readNote(doc) {
 
   return {
     kind: 'note',
-    title: textOf(qs(doc, '.formTitle, .ReportName, h1')) || 'Notice',
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    title: titleOf(doc) || 'Notice',
+    breadcrumb: breadcrumbOf(doc),
     lines,
     actions,
     primary: primaryAction(actions)

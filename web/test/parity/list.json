@@ -1,0 +1,101 @@
+{
+  "name": "list",
+  "reader": "list",
+  "url": "/srvda/admin.sd?page=SearchResults&searchText=a",
+  "current": {
+    "url": "/srvda/admin.sd?page=SearchResults&searchText=a",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": ".contentContainer",
+      "source": "panels",
+      "controls": 0,
+      "links": 501,
+      "tables": {
+        "form": 0,
+        "data": 0,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 0,
+        "repeated": 500,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "list": {
+        "rows": 500,
+        "count": "500 of 8281",
+        "filters": 1,
+        "columns": [],
+        "letters": 0
+      },
+      "kind": "list",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 0,
+        "rows": 0
+      }
+    },
+    "detected": true,
+    "digest": "5039a2f0",
+    "version": "0.31.29"
+  },
+  "reference": {
+    "url": "/srvda/admin.sd?page=SearchResults&searchText=a",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": "#mainContent",
+      "source": "panels",
+      "controls": 0,
+      "links": 501,
+      "tables": {
+        "form": 0,
+        "data": 0,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 0,
+        "repeated": 500,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "list": {
+        "rows": 500,
+        "count": "500 of 8281",
+        "filters": 1,
+        "columns": [],
+        "letters": 0
+      },
+      "kind": "list",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 0,
+        "rows": 0
+      }
+    },
+    "detected": true,
+    "digest": "acdfc007",
+    "version": "0.28.83"
+  }
+}

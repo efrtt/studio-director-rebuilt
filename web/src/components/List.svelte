@@ -120,7 +120,8 @@
 
   // A standalone list page can be browsed by name. A mixed result set is a list
   // of answers, not a directory, and the narrow panel beside an editor has no
-  // room for an index — both stay plain rows.
+  // room for an index — both stay plain rows. Instructors are people with
+  // surnames, so they take the same index as families and students.
   const BROWSED = {
     Family: 'letters',
     Student: 'letters',

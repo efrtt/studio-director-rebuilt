@@ -14,6 +14,7 @@ no server, no API key.
 
 ## What it does
 
+- **Three themes.** Dark (the default), light, or follow the system.
 - **Week and month calendars.** Classes as blocks sized by real duration, studio columns, seat and
   waitlist counts read from the page rather than from colour, and a footer that totals the week.
 - **Record lists.** Classes, families and students get a filterable list with live counts and mixed-type
@@ -24,7 +25,6 @@ no server, no API key.
 - **Reports, table screens and settings.** The 66 report screens share one adapter, so do the print
   forms and the big sheets. Settings pages offer their own controls rather than an invented Save.
 - **Landing pages as a grid.** Menu screens become a searchable tile grid instead of a wall of links.
-- **Themes.** Light, dark, or follow the system.
 - **Esc gets you out.** The original page is still there, untouched, one keypress away.
 
 ## How it works
@@ -53,7 +53,7 @@ Requires [Tampermonkey](https://www.tampermonkey.net/) (Chrome, Edge, Safari) or
 
 2. In your userscript manager, create a new script and paste in the contents of
    `studio-director-rebuilt.user.js`.
-3. Open The Studio Director and sign in as usual.
+3. Open The Studio Director and sign in as usual. The header's theme control cycles dark, light and auto.
 
 The `@match` is `https://app.thestudiodirector.com/*/*`, so it works on any studio tenant; the tenant is
 read from the URL. The metadata block points `@updateURL` at the built file on this repo's `main`
@@ -63,7 +63,7 @@ branch, so an installed copy picks up a new build when the version is bumped.
 
 - **Esc**, the **Original** button, or `#original` on a URL returns the app's own page. Anything
   unsaved is discarded.
-- The rebuilt rail replaces the app's navigation and links to the same pages, rebuilt.
+- The channel menu replaces the app's navigation and links to the same pages, rebuilt.
 - On a record, the left column lists sibling records when the page itself carries that list — so moving
   from one family to the next is one click.
 
@@ -96,7 +96,7 @@ fails if the committed userscript does not match the source it was built from.
 
 ```text
 web/
-  src/            readers, model, views (Svelte), styles
+  src/            readers, model, views (Svelte), themes, styles
   test/           fixtures, golden models, suites
   tools/          build, golden, capture, crawl and demo scripts
   docs/           contract, design notes, crawl map, screenshots

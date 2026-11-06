@@ -60,13 +60,18 @@ export function chooseSource({ liveView = null, liveHasShell = true, liveIsEmpty
   return 'app';
 }
 
-// A print window has no shell at all: no rail, no top bar, often no `form#idForm`
-// (`PrintClassRoster` was dumped and has none). It is still a screen worth
-// rebuilding when a reader claims it **and** the page names itself; otherwise
-// "no view" is the honest answer, because a print popup with no title and no
-// table is not something to cover with an overlay.
-export function decideShellLess({ hasSheet, hasTitle }) {
-  return hasSheet && hasTitle ? 'sheet' : 'none';
+// A page with no shell at all — a print window, a popup, the outcome screen the
+// app returns to — is still a screen when a reader claims it **and** the page
+// names itself; otherwise "no view" is the honest answer, because an unnamed
+// popup is not something to cover with an overlay.
+//
+// The question is about the *view*, not about a reader. It used to ask for a
+// sheet specifically, so every other shell-free shape (a list, a report, a
+// notice) was left to chance: the shape was readable but nothing consulted it.
+// `model/root.js` decides whether the page has a shell; this decides whether the
+// claim is enough to mount.
+export function decideShellLess({ view, hasTitle }) {
+  return view && hasTitle ? view : 'none';
 }
 
 // Which views end the live re-read's wait.

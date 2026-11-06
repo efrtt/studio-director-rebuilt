@@ -27,7 +27,7 @@
 // Radios are grouped by name — they are mutually exclusive by definition, and
 // `admincal` is one setting with two choices, not two settings.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, titleOf, breadcrumbOf } from './shell.js';
 import { diffFields, applyFields } from '../model/diff.js';
 import { contentRoot } from '../model/root.js';
 import { WEEKDAY, humanise, selectorOf } from '../model/fields.js';
@@ -36,7 +36,7 @@ import { labelOfControl, labelOfBlock } from '../model/labels.js';
 import { readActions, primaryAction, clickActionInApp } from './actions.js';
 import { pageSave } from './save.js';
 import { coverageOf } from '../model/coverage.js';
-import { pageRegions } from '../model/regions.js';
+import { namedControls, pageRegions } from '../model/regions.js';
 
 // At most this many fields: a screen with more is a form (or a table), and the
 // editor and sheet readers own those.
@@ -135,7 +135,7 @@ export function readSettings(doc) {
     // filters' seven DAYS boxes are the weekday mask (1 = Sunday .. 64 =
     // Saturday); read one at a time, six of the seven vanished and the seventh
     // was offered as a single on/off with no day named.
-    if (type === 'checkbox' && name && qsa(doc, 'input[name="' + name + '"]').length > 1) {
+    if (type === 'checkbox' && name && namedControls(root, name).length > 1) {
       let group = checkboxGroups.get(name);
       if (!group) {
         group = { options: [], el, at: order.get(el) };
@@ -252,8 +252,8 @@ export function readSettings(doc) {
 
   return {
     kind: 'settings',
-    title: textOf(qs(doc, '.formTitle, h1')) || 'Settings',
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    title: titleOf(doc, 'heading') || 'Settings',
+    breadcrumb: breadcrumbOf(doc),
     fields,
     actions,
     primary: primaryAction(actions),

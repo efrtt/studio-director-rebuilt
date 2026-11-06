@@ -17,7 +17,7 @@
 // an `a#save` in its ButtonBar and is read here, which is why the task view also
 // prints the holiday list the page shows beside the form.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, titleOf } from './shell.js';
 import { readForm } from './form.js';
 import { readActions, primaryAction, clickActionInApp } from './actions.js';
 import { diffFields, applyFields } from '../model/diff.js';
@@ -38,7 +38,7 @@ export function readTask(doc) {
 
   return {
     kind: 'task',
-    title: textOf(qs(doc, '.formTitle')) || form.title || 'Form',
+    title: titleOf(doc, 'div') || form.title || 'Form',
     breadcrumb: form.breadcrumb,
     rows: form.rows,
     fields: form.fields,

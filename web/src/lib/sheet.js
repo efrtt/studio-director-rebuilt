@@ -15,13 +15,14 @@
 // bare-link menus), and a page with a form and a real control is a task, which
 // is why routing tries this after task.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, titleOf, breadcrumbOf, reportTitle } from './shell.js';
 import { readPageTabs } from './pagetabs.js';
 import { labelAbove } from './heading.js';
 import { readTable } from '../model/table.js';
+import { hasHeadings, isEmptyTable, isValueTable } from '../model/rows.js';
 import { readActions } from './actions.js';
 import { contentRoot } from '../model/root.js';
-import { pageRegions } from '../model/regions.js';
+import { dataRegions } from '../model/regions.js';
 import { TABLE_ROWS } from './thresholds.js';
 
 // Which tables are records is `model/regions.js`'s judgement: a table is data
@@ -42,19 +43,18 @@ export function readSheet(doc) {
   const tables = [];
   let rows = 0;
 
-  const regions = pageRegions(doc);
-  for (const { table, kind } of regions.tables) {
+  // One page-wide judgement, asked of every table in the root: only the page's
+  // record grids are read here, and every one of them is read.
+  for (const { table } of dataRegions(doc)) {
     if (table.closest && table.closest('table') !== table) continue;
-    // One page-wide judgement, asked of every table: only records are read here.
-    if (kind !== 'data') continue;
 
     const read = readTable(table);
-    if (!read.headings.length && !read.rows.length) continue;
+    if (isEmptyTable(read)) continue;
     // A two-column table with no headings is a form laid out as a table —
     // "label cell, control cell" — which is how several settings pages print
     // themselves. It is not a list of records, and the settings reader is the
     // one that should get it.
-    if (!read.headings.length && read.rows.every((row) => row.length <= 2)) continue;
+    if (isValueTable(read)) continue;
 
     // The nearest heading before this table, if the page puts one there.
     const heading = previousHeading(table, root);
@@ -67,7 +67,7 @@ export function readSheet(doc) {
   // prints a four-column heading row and "No items to display." underneath it.
   // The two-row floor refused that, and the page rendered as nothing at all
   // rather than as the empty table it is.
-  const emptyNotice = tables.some((table) => table.headings.length && table.message);
+  const emptyNotice = tables.some((table) => hasHeadings(table) && table.message);
   if (rows < TABLE_ROWS && !emptyNotice) return null;
 
   const actions = readActions(root);
@@ -75,8 +75,8 @@ export function readSheet(doc) {
 
   return {
     kind: 'sheet',
-    title: textOf(qs(doc, '.formTitle, .ReportName, h1')) || crumbTitle(doc) || tables[0].headings[0] || 'Data',
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    title: titleOf(doc) || reportTitle(doc) || tables[0].headings[0] || 'Data',
+    breadcrumb: breadcrumbOf(doc),
     tables,
     rows,
     // How many rows this view actually carries, when a table was cut short.
@@ -156,19 +156,6 @@ function followingContent(table) {
     ...(total ? { total } : {}),
     ...(links.length ? { links } : {})
   };
-}
-
-// Report pages carry no heading: their name is the last crumb of
-// `div.ReportBreadcrumb`, followed by the moment the report ran —
-// "Business Insights - Tue, Nov 3, 2026 1:48 PM". Without this the sheet named
-// itself after its first column (Alerts read "First Name").
-function crumbTitle(doc) {
-  const crumb = qs(doc, '.ReportBreadcrumb');
-  if (!crumb) return '';
-  const named = crumb.querySelector('span[style]') || crumb.lastElementChild || crumb;
-  return textOf(named)
-    .replace(/\s+[-–]\s+(?=[A-Z][a-z]{2},\s).*$/, '')
-    .trim();
 }
 
 function previousHeading(table, root) {

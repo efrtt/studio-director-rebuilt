@@ -1,0 +1,124 @@
+{
+  "name": "sheet-rehearsals",
+  "reader": "sheet",
+  "url": "/srvda/admin.sd?page=PrintClassRoster&cident=1787904851173&class_day=2026-10-17",
+  "note": "A print window for a rehearsal date: the rehearsal class's roster print (PrintClassRoster&cident=…&class_day=…), reached from the Extra Rehearsals season on the calendar. No shell; the body is the content root, and the roster is the page's one data table.",
+  "current": {
+    "url": "/srvda/admin.sd?page=PrintClassRoster&cident=1787904851173&class_day=2026-10-17",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": "body",
+      "source": "tables",
+      "controls": 11,
+      "links": 4,
+      "tables": {
+        "form": 0,
+        "data": 1,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 11,
+        "section": 2,
+        "repeated": 0,
+        "noise": 11
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "sheet": {
+        "tables": 1,
+        "rows": 22,
+        "digest": "76b7d78a",
+        "first": {
+          "headings": [
+            "First Name",
+            "Last Name",
+            "Age",
+            "Birthday",
+            "Performing",
+            "Gender",
+            "Sat, Oct 17, 2026"
+          ],
+          "rows": 22,
+          "digest": "e353e082"
+        }
+      },
+      "kind": "sheet",
+      "detected": true,
+      "app": {
+        "root": "body",
+        "text": true,
+        "tables": 1,
+        "rows": 24
+      }
+    },
+    "detected": true,
+    "digest": "8e8a6cf3",
+    "version": "0.31.29"
+  },
+  "reference": {
+    "url": "/srvda/admin.sd?page=PrintClassRoster&cident=1787904851173&class_day=2026-10-17",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": "body",
+      "source": "tables",
+      "controls": 11,
+      "links": 4,
+      "tables": {
+        "form": 0,
+        "data": 1,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 11,
+        "section": 2,
+        "repeated": 0,
+        "noise": 11
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "sheet": {
+        "tables": 1,
+        "rows": 22,
+        "digest": "76b7d78a",
+        "first": {
+          "headings": [
+            "First Name",
+            "Last Name",
+            "Age",
+            "Birthday",
+            "Performing",
+            "Gender",
+            "Sat, Oct 17, 2026"
+          ],
+          "rows": 22,
+          "digest": "e353e082"
+        }
+      },
+      "kind": "sheet",
+      "detected": true,
+      "app": {
+        "root": "body",
+        "text": true,
+        "tables": 1,
+        "rows": 24
+      }
+    },
+    "detected": true,
+    "digest": "8e8a6cf3",
+    "version": "0.28.83"
+  }
+}

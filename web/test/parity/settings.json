@@ -1,0 +1,103 @@
+{
+  "name": "settings",
+  "reader": "settings",
+  "url": "/srvda/admin.sd?page=SearchDisplayFormat",
+  "current": {
+    "url": "/srvda/admin.sd?page=SearchDisplayFormat",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": ".contentContainer",
+      "source": "controls",
+      "controls": 2,
+      "links": 2,
+      "tables": {
+        "form": 0,
+        "data": 0,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 0,
+        "repeated": 0,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "settings": {
+        "count": 2,
+        "labels": [
+          "Fmt",
+          "Order By"
+        ],
+        "controls": 2
+      },
+      "kind": "settings",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 0,
+        "rows": 0
+      }
+    },
+    "detected": true,
+    "digest": "c4c3b22c",
+    "version": "0.31.29"
+  },
+  "reference": {
+    "url": "/srvda/admin.sd?page=SearchDisplayFormat",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": "#mainContent",
+      "source": "controls",
+      "controls": 2,
+      "links": 2,
+      "tables": {
+        "form": 0,
+        "data": 0,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 0,
+        "repeated": 0,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "settings": {
+        "count": 2,
+        "labels": [
+          "Fmt",
+          "Order By"
+        ],
+        "controls": 2
+      },
+      "kind": "settings",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 0,
+        "rows": 0
+      }
+    },
+    "detected": true,
+    "digest": "f40e8e3b",
+    "version": "0.28.83"
+  }
+}

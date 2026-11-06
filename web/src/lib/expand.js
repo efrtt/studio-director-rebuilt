@@ -12,16 +12,18 @@
 // happens every XHR/fetch URL is recorded, so a control that quietly does
 // nothing leaves evidence behind instead of a shrug.
 
+import { RESULT_ITEM, SEARCH_SPAN } from '../model/appdom.js';
+
 export const SHOW_ALL = /^show\s*all$/i;
 
 export function showAllTrigger(root) {
-  const panel = root.querySelector('#idSearchSpan');
+  const panel = root.querySelector(SEARCH_SPAN);
   if (!panel) return null;
 
   const candidates = panel.querySelectorAll('a, span, button, div, p, label, li, td, input[type="button"]');
   for (const el of candidates) {
     // A container that merely holds the label is not the label.
-    if (typeof el.querySelector === 'function' && el.querySelector('.searchResultItem')) continue;
+    if (typeof el.querySelector === 'function' && el.querySelector(RESULT_ITEM)) continue;
     const text = (el.textContent || '').trim();
     if (!SHOW_ALL.test(text)) continue;
     return el;
@@ -30,7 +32,7 @@ export function showAllTrigger(root) {
 }
 
 export function countItems(root) {
-  return root.querySelectorAll('#idSearchSpan .searchResultItem').length;
+  return root.querySelectorAll(SEARCH_SPAN + ' ' + RESULT_ITEM).length;
 }
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

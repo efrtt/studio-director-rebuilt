@@ -1,0 +1,116 @@
+{
+  "name": "drop-question",
+  "reader": "settings",
+  "url": "/srvda/admin.sd?page=EditClass&meth=dropStudents&cident=1782910697458",
+  "note": "EditClass&meth=dropStudents. A question page the app draws with typed controls, so it reads as settings on both builds.",
+  "current": {
+    "url": "/srvda/admin.sd?page=EditClass&meth=dropStudents&cident=1782910697458",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": ".contentContainer",
+      "source": "controls",
+      "controls": 12,
+      "links": 4,
+      "tables": {
+        "form": 0,
+        "data": 0,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 0,
+        "repeated": 0,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "settings": {
+        "count": 8,
+        "labels": [
+          "Drop charge date mon",
+          "Drop charge date day",
+          "Drop charge date year",
+          "Drop classes date mon",
+          "Drop classes date day",
+          "Drop classes date year",
+          "Drop reason",
+          "Drop notes"
+        ],
+        "controls": 8
+      },
+      "kind": "settings",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 0,
+        "rows": 0
+      }
+    },
+    "detected": true,
+    "digest": "415eb1a6",
+    "version": "0.31.29"
+  },
+  "reference": {
+    "url": "/srvda/admin.sd?page=EditClass&meth=dropStudents&cident=1782910697458",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": "#mainContent",
+      "source": "controls",
+      "controls": 12,
+      "links": 4,
+      "tables": {
+        "form": 0,
+        "data": 0,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 0,
+        "repeated": 0,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "settings": {
+        "count": 8,
+        "labels": [
+          "Drop charge date mon",
+          "Drop charge date day",
+          "Drop charge date year",
+          "Drop classes date mon",
+          "Drop classes date day",
+          "Drop classes date year",
+          "Drop reason",
+          "Drop notes"
+        ],
+        "controls": 8
+      },
+      "kind": "settings",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 0,
+        "rows": 0
+      }
+    },
+    "detected": true,
+    "digest": "46aee519",
+    "version": "0.28.83"
+  }
+}

@@ -15,9 +15,8 @@
 //   - the view it claims agrees with what the page marks itself as.
 //
 // A reader can be wrong about a page in ways no snapshot notices. This is where
-// that shows up: it is the layer the dropped second date, and the settings card
-// that offered one field where the page held seven, would both have failed — without
-// needing a new golden or a live session.
+// that shows up: it is the layer the edit-payment misread and the dropped second
+// date would both have failed, without needing a new golden or a live session.
 //
 // What it deliberately does not do is re-derive the reader. It counts labelled rows,
 // resolves selectors and reads control values — the plain facts — and never decides

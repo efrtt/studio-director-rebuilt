@@ -20,7 +20,7 @@
 // Nothing here submits anything. Values are written back into the app's own
 // controls and its own Save link is clicked — see save.js.
 
-import { qs, qsa, textOf, titledTextOf, isRecordPage } from './shell.js';
+import { qs, qsa, textOf, titledTitleOf, isRecordPage, breadcrumbOf } from './shell.js';
 import { readTable } from '../model/table.js';
 import { contentRoot } from '../model/root.js';
 import { CHROME, HEADING, PANELS } from '../model/appdom.js';
@@ -28,7 +28,7 @@ import { coverageOf } from '../model/coverage.js';
 // The row judgement — which tables are the form, which rows are field rows,
 // which controls belong to which row — is shared with every form-shaped reader.
 import { rowsOf, fieldsOfRows } from '../model/rows.js';
-import { editorRegions, formFromRoot, pageRegions } from '../model/regions.js';
+import { editorRegions, formFromRoot, isRecordList, pageRegions } from '../model/regions.js';
 
 // Where a table's own heading sits: `<div class="formTitle">Existing Season
 // Dates</div><table class="SimpleSD">` is the shape on the seasons page. The
@@ -59,25 +59,10 @@ function headingFor(table) {
   return '';
 }
 
-// Two shapes count as a table beside a form:
-//   - a grid: column headings and at least one row ("Existing Season Dates");
-//   - a one-column list of links ("Existing Class Locations" on `NewEditDel`,
-//     which has no heading row at all — just a link per location).
-// Anything else is a spacer, an empty grid, or a two-column label/value block,
-// which is a form or another reader's business.
-function isSideTable(read) {
-  if (!read.rowTotal) return false;
-  if (read.headings.length >= 2) return true;
-  // One column is enough when its cells are records. Two shapes are real:
-  //   - "Existing Vendors" prints one heading ("Vendor") over a link per vendor;
-  //   - "Existing Class Locations" prints no heading at all, just a link per
-  //     location.
-  // The heading used to be a refusal, which dropped the vendor list from the
-  // page entirely: the form rendered and the list it manages never appeared.
-  if (read.headings.length > 1) return false;
-  return read.rows.every((row) => row.length === 1)
-    && read.rows.some((row) => row[0] && row[0].href);
-}
+// Which tables display beside the editor is `model/regions.js#isRecordList`: a
+// list of records, judged from each row's own cells. This module used to decide
+// it from heading and column counts — the same question asked twice, with a
+// different answer for a heading-less grid.
 
 function tablesBeside(doc, formTables) {
   const root = contentRoot(doc);
@@ -104,7 +89,7 @@ function tablesBeside(doc, formTables) {
     if (table.closest && table.closest(PANELS)) continue;
 
     const read = readTable(table);
-    if (!isSideTable(read)) continue;
+    if (!isRecordList(read)) continue;
     tables.push({ ...read, section: headingFor(table) });
   }
   return tables;
@@ -156,7 +141,7 @@ export function readForm(doc, opts = {}) {
   // alone cannot decide it — a settings card is two labelled controls too.
   if (!chosen.length) {
     if (!routeSaysEditor) return null;
-    const loose = formFromRoot(doc, root, titledTextOf(qs(doc, '.formTitle')) || 'Edit');
+    const loose = formFromRoot(doc, root, titledTitleOf(doc) || 'Edit');
     if (!loose) return null;
     const unread = coverageOf(root, loose.shown, loose.passed);
     // Coverage consumes the element lists; they are not part of the model. The
@@ -166,7 +151,7 @@ export function readForm(doc, opts = {}) {
     return {
       kind: loose.kind,
       title: loose.title,
-      breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+      breadcrumb: breadcrumbOf(doc),
       rows: loose.rows,
       fields: loose.fields,
       ...(unread.length ? { unread } : {})
@@ -199,8 +184,8 @@ export function readForm(doc, opts = {}) {
     kind: 'form',
     // The div can hold a warning block and the page's name after it; the name is
     // what a title means. See `titledTextOf`.
-    title: titledTextOf(qs(doc, '.formTitle')) || 'Edit',
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    title: titledTitleOf(doc) || 'Edit',
+    breadcrumb: breadcrumbOf(doc),
     rows,
     fields,
     // Other tables on the page — the seasons list beside its editor. Only when

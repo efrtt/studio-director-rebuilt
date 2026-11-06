@@ -14,6 +14,8 @@
 // page has — the same reason the season picker and the nav icons are read at
 // mount time.
 
+import { CONTENT_INFO } from '../model/appdom.js';
+
 const VIEW_LINK = /^(daily staff|week|month)$/i;
 // The dates the toolbar is showing: "8/24/26 - 8/30/26" for a week, "Aug 2026"
 // for a month.
@@ -26,7 +28,7 @@ function textOfAnchor(anchor) {
 
 export function readCalendarNav(root) {
   if (!root || !root.querySelector) return null;
-  const scope = root.querySelector('.contentInfo') || root;
+  const scope = root.querySelector(CONTENT_INFO) || root;
 
   let prev = null;
   let next = null;

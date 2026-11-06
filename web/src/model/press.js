@@ -18,6 +18,7 @@
 
 import { qs, qsa, textOf } from '../lib/shell.js';
 import { CHROME } from './root.js';
+import { BUTTONS, SEARCH_SPAN } from './appdom.js';
 
 // What counts as a control. The crawl shows the app's buttons as `a.Btn` and
 // `a.BtnOutln`, but the screens it builds with its own JS (the enroll step) use
@@ -31,7 +32,7 @@ import { CHROME } from './root.js';
 // in place. Those are parts of a screen, not its submit: a tab is read by
 // tabs.js, an icon by nothing, and a form control is read as a field. So the
 // element has to look like a button, and the known non-buttons are excluded.
-const CONTROL = 'a, button, input[type="submit"], input[type="button"], div[onclick], span[onclick], li[onclick], .Btn, .BtnOutln';
+const CONTROL = 'a, button, input[type="submit"], input[type="button"], div[onclick], span[onclick], li[onclick], ' + BUTTONS;
 const NOT_ACTION = '.tab, .tabButton, .selectedTab, .table-field-icon, .menuLink, .Tooltip';
 
 // The record panel's own pager. Its arrows are `<< Prev` / `Next >>` and belong
@@ -47,7 +48,7 @@ function labelOf(el) {
 }
 
 function isChrome(el) {
-  return !!(el.closest && el.closest(CHROME + ', #idSearchSpan'));
+  return !!(el.closest && el.closest(CHROME + ', ' + SEARCH_SPAN));
 }
 
 // A tab, an icon, a menu toggle: part of the page, not a control of it.

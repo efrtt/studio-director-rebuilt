@@ -1,0 +1,108 @@
+{
+  "name": "confirm",
+  "reader": "confirmation",
+  "url": "/srvda/admin.sd?page=Unenroll&sident=1711558201653&cident=1782910697458",
+  "note": "An Unenroll question page. Both builds route it to the settings view, so this freezes the confirmation guard rejecting a typed page rather than the confirm view itself.",
+  "current": {
+    "url": "/srvda/admin.sd?page=Unenroll&sident=1711558201653&cident=1782910697458",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": ".contentContainer",
+      "source": "controls",
+      "controls": 5,
+      "links": 5,
+      "tables": {
+        "form": 0,
+        "data": 0,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 0,
+        "repeated": 0,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "settings": {
+        "count": 4,
+        "labels": [
+          "Drop charge date",
+          "Drop classes date",
+          "Drop reason",
+          "Drop notes"
+        ],
+        "controls": 4
+      },
+      "kind": "settings",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 0,
+        "rows": 0
+      }
+    },
+    "detected": true,
+    "digest": "b822f1bb",
+    "version": "0.31.29"
+  },
+  "reference": {
+    "url": "/srvda/admin.sd?page=Unenroll&sident=1711558201653&cident=1782910697458",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": "#mainContent",
+      "source": "controls",
+      "controls": 5,
+      "links": 5,
+      "tables": {
+        "form": 0,
+        "data": 0,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 0,
+        "repeated": 0,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "settings": {
+        "count": 4,
+        "labels": [
+          "Drop charge date",
+          "Drop classes date",
+          "Drop reason",
+          "Drop notes"
+        ],
+        "controls": 4
+      },
+      "kind": "settings",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 0,
+        "rows": 0
+      }
+    },
+    "detected": true,
+    "digest": "c97da4ee",
+    "version": "0.28.83"
+  }
+}

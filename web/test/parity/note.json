@@ -1,0 +1,103 @@
+{
+  "name": "note",
+  "reader": "note",
+  "url": "/srvda/admin.sd?page=EmailClass&cident=1782910697458",
+  "current": {
+    "url": "/srvda/admin.sd?page=EmailClass&cident=1782910697458",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": ".contentContainer",
+      "source": "controls",
+      "controls": 2,
+      "links": 5,
+      "tables": {
+        "form": 0,
+        "data": 0,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 0,
+        "repeated": 0,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "note": {
+        "title": "",
+        "buttons": [
+          "Report Cards",
+          "An Email Note"
+        ],
+        "links": 0
+      },
+      "kind": "other",
+      "detected": false,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 0,
+        "rows": 0
+      }
+    },
+    "detected": false,
+    "digest": "5275d91e",
+    "version": "0.31.29"
+  },
+  "reference": {
+    "url": "/srvda/admin.sd?page=EmailClass&cident=1782910697458",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": "#mainContent",
+      "source": "controls",
+      "controls": 2,
+      "links": 5,
+      "tables": {
+        "form": 0,
+        "data": 0,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 0,
+        "repeated": 0,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "note": {
+        "title": "",
+        "buttons": [
+          "Report Cards",
+          "An Email Note"
+        ],
+        "links": 0
+      },
+      "kind": "other",
+      "detected": false,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 0,
+        "rows": 0
+      }
+    },
+    "detected": false,
+    "digest": "64a572b7",
+    "version": "0.28.83"
+  }
+}

@@ -22,7 +22,7 @@ test('the registry order is the contract, most specific first', () => {
     // the week reader, which would otherwise take the class editor's hidden
     // Calendar tab, or by the list reader, which would take its record panel.
     'editor',
-    'confirmation', 'week', 'list',
+    'confirmation', 'week', 'list', 'payment',
     // The app's own attendance field names the register, so it is read before
     // the form readers that would otherwise take a dateless register as a task.
     'attendance',

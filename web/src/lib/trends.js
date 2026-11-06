@@ -15,9 +15,10 @@
 // what was left was a nearly empty table. The images are the screen, so they are
 // carried as images — from the app's own URL, which is where they live.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, titleOf } from './shell.js';
 import { contentRoot } from '../model/root.js';
 import { readTable } from '../model/table.js';
+import { hasHeadings, hasRows } from '../model/rows.js';
 import { pageRegions } from '../model/regions.js';
 import { readPageTabs } from './pagetabs.js';
 
@@ -74,7 +75,7 @@ export function readTrends(doc) {
     if (outer && outer !== table && outer !== layout) continue;
 
     const read = readTable(table);
-    if (!read.headings.length || !read.rows.length) continue;
+    if (!hasHeadings(read) || !hasRows(read)) continue;
 
     const cell = table.closest('td');
     tables.push({
@@ -94,7 +95,7 @@ export function readTrends(doc) {
 
   return {
     kind: 'trends',
-    title: textOf(qs(doc, '.formTitle, h1')) || 'Trends',
+    title: titleOf(doc, 'heading') || 'Trends',
     charts,
     tables,
     links,

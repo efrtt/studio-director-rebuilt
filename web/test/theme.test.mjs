@@ -19,7 +19,7 @@ const fakeStore = () => ({
   setItem(k, v) { this.map.set(k, String(v)); }
 });
 
-test('a fresh install keeps the dark look it has always had', () => {
+test('a fresh install gets the dark theme', () => {
   assert.equal(readTheme(fakeStore()), 'dark');
   // A stored value from some future or broken version is not trusted.
   const bad = fakeStore();
@@ -27,6 +27,10 @@ test('a fresh install keeps the dark look it has always had', () => {
   assert.equal(readTheme(bad), 'dark');
   // No storage at all (private mode) is still a usable answer.
   assert.equal(readTheme(null), 'dark');
+  // A real choice is honoured.
+  const light = fakeStore();
+  light.setItem('sd.theme', 'light');
+  assert.equal(readTheme(light), 'light');
 });
 
 test('the choice is remembered, and only a real choice is stored', () => {
@@ -47,6 +51,7 @@ test('one button cycles all three, and wraps', () => {
   assert.deepEqual(seen, ['light', 'auto', 'dark']);
   assert.deepEqual(THEMES, ['dark', 'light', 'auto']);
   assert.equal(THEME_LABEL.auto, 'Auto');
+  assert.equal(THEME_LABEL.dark, 'Dark');
 });
 
 test('auto follows the machine, and the other two do not', () => {

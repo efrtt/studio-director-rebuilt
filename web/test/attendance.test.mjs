@@ -22,7 +22,7 @@ const { clickActionInApp } = await import('../src/model/press.js');
 
 const parseHtml = (html) => new DOMParser().parseFromString(html, 'text/html');
 
-const cell = (sid, iso, { checked = true, reason = '', notes = '', mark = '' } = {}) => `
+const cell = (sid, iso, { checked = true, reason = '', notes = '', mark = '', family = '' } = {}) => `
   <td>
     <input type="checkbox" id="${sid}_${iso}_0" onclick="StudioDir.Attendance.onChange(this);"${checked ? ' checked' : ''}>${mark ? `<sup>${mark}</sup>` : ''}
     <span style="display:none" id="${sid}_${iso}_0_reasoninfo">
@@ -34,7 +34,8 @@ const cell = (sid, iso, { checked = true, reason = '', notes = '', mark = '' } =
         <option value="3">Out of Town</option>
       </select><br>
       Studio notes:<br>
-      <textarea rows="2" cols="20" name="${sid}_${iso}_0_notes">${notes}</textarea>
+      <textarea rows="2" cols="20" name="${sid}_${iso}_0_notes">${notes}</textarea>${family ? `
+      <br>Family notes: <textarea rows="2" cols="20" name="${sid}_${iso}_0_family" disabled>${family}</textarea>` : ''}
       <input type="hidden" name="${sid}_${iso}_0_absent" value="${checked ? '0' : '1'}">
     </span>
   </td>`;

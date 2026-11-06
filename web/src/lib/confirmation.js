@@ -14,10 +14,11 @@
 // pages, which are full of the words "required" and "invalid", from being
 // mistaken for an outcome screen.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, titleOf, breadcrumbOf } from './shell.js';
 import { CONTROLS } from '../model/controls.js';
 import { pageRegions } from '../model/regions.js';
-import { CHROME, CONTENT_BLOCK, NAV } from '../model/appdom.js';
+import { BREADCRUMB_LINK, CHROME, NAV, SEARCH_SPAN } from '../model/appdom.js';
+import { contentBlockOf } from '../model/root.js';
 
 // `scheduled` and `cancelled` are the drop flow's own outcomes: "Lily has been
 // scheduled to drop in on class …" when it is booked, "… session in … has been
@@ -100,7 +101,10 @@ function sentenceOf(node) {
 // button, because pressing anything else would be inventing a save this page
 // does not have.
 export function pendingConfirmation(doc) {
-  const root = qs(doc, CONTENT_BLOCK) || qs(doc, '#mainContent') || (doc && doc.body);
+  // The screen's own block, or its content root: resolved once in `model/root.js`
+  // instead of the `.Content || #mainContent || body` ladder this file used to
+  // carry in four places.
+  const root = contentBlockOf(doc);
   if (!root) return null;
 
   const buttons = qsa(root, 'a, button').filter((el) => SUBMITS.test(el.getAttribute('onclick') || ''));
@@ -115,12 +119,12 @@ export function pendingConfirmation(doc) {
   if (hasTable(doc)) return null;
 
   const links = qsa(root, 'a[href]')
-    .filter((a) => !(a.closest && a.closest(CHROME + ', #idSearchSpan')));
+    .filter((a) => !(a.closest && a.closest(CHROME + ', ' + SEARCH_SPAN)));
   if (links.length > QUESTION_LINKS) return null;
 
   const button = buttons[0];
   const label = textOf(button);
-  const title = textOf(qs(doc, '.formTitle, .ReportName, h1'));
+  const title = titleOf(doc);
   const lines = qsa(root, 'p, li')
     .map((node) => sentenceOf(node))
     .filter((text) => text && text !== label && text.length <= MAX_LENGTH);
@@ -135,7 +139,7 @@ export function pendingConfirmation(doc) {
     message: lines[0],
     lines,
     title,
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    breadcrumb: breadcrumbOf(doc),
     // The question's own answer bar, not everything the page links to: see
     // `exitsOf`.
     links: exitsOf(button),
@@ -180,12 +184,12 @@ const MAX_LINKS = 3;
 
 function linksOf(doc, root, opts = {}) {
   const inside = opts.inside || null;
-  const crumbs = new Set(qsa(doc, '.Breadcrumb a'));
+  const crumbs = new Set(qsa(doc, BREADCRUMB_LINK));
   const seen = new Set();
   const commands = [];
 
   for (const anchor of qsa(root, 'a[href]')) {
-    if (anchor.closest && anchor.closest(NAV + ', #idSearchSpan')) continue;
+    if (anchor.closest && anchor.closest(NAV + ', ' + SEARCH_SPAN)) continue;
     // An anchor inside the sentence is a name the sentence is about — unless it is
     // a command the app appended to that same sentence ("Review the account for …"),
     // which is an action and reads as one.
@@ -217,7 +221,7 @@ function linksOf(doc, root, opts = {}) {
 
   // Nothing is being offered, so the app's own crumb is the way back. The last
   // one names the record or the list you came from.
-  const last = qsa(doc, '.Breadcrumb a').pop();
+  const last = qsa(doc, BREADCRUMB_LINK).pop();
   const href = last && last.getAttribute('href');
   return href ? [{ label: textOf(last), href }] : [];
 }
@@ -238,7 +242,7 @@ function subjectOf(inside) {
 
 function messageIn(root, pattern) {
   const matches = qsa(root, 'div, p, span, h1, h2, h3, td, b, strong')
-    .filter((el) => !(el.closest && el.closest('#idSearchSpan')))
+    .filter((el) => !(el.closest && el.closest(SEARCH_SPAN)))
     // The outcome line often ends in a link ("Review the account for …"), and
     // the link's words are not part of the sentence the app is stating: read as
     // text they ran on from the message ("… Contemporary 1Review the account").
@@ -255,7 +259,10 @@ function messageIn(root, pattern) {
 }
 
 export function confirmationOf(doc, opts = {}) {
-  const root = qs(doc, CONTENT_BLOCK) || qs(doc, '#mainContent') || (doc && doc.body);
+  // The screen's own block, or its content root: resolved once in `model/root.js`
+  // instead of the `.Content || #mainContent || body` ladder this file used to
+  // carry in four places.
+  const root = contentBlockOf(doc);
   if (!root) return null;
 
   let ok = true;
@@ -284,8 +291,8 @@ export function confirmationOf(doc, opts = {}) {
     ok,
     message: found.text,
     // The app's own title is usually blank here; the message is the screen.
-    title: textOf(qs(doc, '.formTitle')) || '',
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    title: titleOf(doc, 'div') || '',
+    breadcrumb: breadcrumbOf(doc),
     // Where the page itself says you can go next — not the anchors inside the
     // sentence, which are the records it is talking about.
     links: linksOf(doc, root, { inside: found.el })
@@ -320,14 +327,17 @@ const ASKS_ABOUT = /are you sure\b[^?]{0,200}\?/i;
 const AFFIRM = /^(delete|remove|drop)\b/i;
 
 export function askedConfirmation(doc) {
-  const root = qs(doc, CONTENT_BLOCK) || qs(doc, '#mainContent') || (doc && doc.body);
+  // The screen's own block, or its content root: resolved once in `model/root.js`
+  // instead of the `.Content || #mainContent || body` ladder this file used to
+  // carry in four places.
+  const root = contentBlockOf(doc);
   if (!root) return null;
 
   const sentence = (String(root.textContent || '').replace(/\s+/g, ' ').match(ASKS_ABOUT) || [])[0];
   if (!sentence) return null;
 
   const links = qsa(root, 'a[href]')
-    .filter((a) => !(a.closest && a.closest(CHROME + ', #idSearchSpan')));
+    .filter((a) => !(a.closest && a.closest(CHROME + ', ' + SEARCH_SPAN)));
   // One way to say yes, and it has to be a link: that is the app's own next step.
   const yes = links.filter((a) => AFFIRM.test(textOf(a)) && (a.getAttribute('href') || ''));
   if (yes.length !== 1) return null;
@@ -354,8 +364,8 @@ export function askedConfirmation(doc) {
     // drawn over that instead — but the same question on a page with no list
     // (dropping a student from one date) came up blank.
     lines: [sentence],
-    title: textOf(qs(doc, '.formTitle')) || '',
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    title: titleOf(doc, 'div') || '',
+    breadcrumb: breadcrumbOf(doc),
     // What the modal asks, for the screen that draws it over the list.
     ask: {
       label: label || 'Delete',
@@ -387,11 +397,14 @@ const ANSWERS_YES = /^(continue|yes|ok|proceed|confirm|add|schedule|enroll|save|
 const ANSWERS_NO = /^(cancel|no|back|go back|return)\b/i;
 
 function outsideChrome(anchor) {
-  return !(anchor.closest && anchor.closest(CHROME + ', #idSearchSpan'));
+  return !(anchor.closest && anchor.closest(CHROME + ', ' + SEARCH_SPAN));
 }
 
 export function answeredQuestion(doc) {
-  const root = qs(doc, CONTENT_BLOCK) || qs(doc, '#mainContent') || (doc && doc.body);
+  // The screen's own block, or its content root: resolved once in `model/root.js`
+  // instead of the `.Content || #mainContent || body` ladder this file used to
+  // carry in four places.
+  const root = contentBlockOf(doc);
   if (!root) return null;
 
   const question = (String(root.textContent || '').replace(/\s+/g, ' ').match(ASKS_ABOUT) || [])[0];
@@ -403,7 +416,7 @@ export function answeredQuestion(doc) {
   if (typed.length) return null;
   if (hasTable(doc)) return null;
 
-  const title = textOf(qs(doc, '.formTitle, .ReportName, h1'));
+  const title = titleOf(doc);
   if (!title) return null;
 
   const links = qsa(root, 'a[href]').filter(outsideChrome);
@@ -433,7 +446,7 @@ export function answeredQuestion(doc) {
     message: question,
     lines: lines.length ? lines : [question],
     title,
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    breadcrumb: breadcrumbOf(doc),
     // Both answers are already actions; repeating Cancel as a link drew it twice
     // on the card. Nothing else on the page answers a question.
     links: [],

@@ -31,25 +31,23 @@ import { qsa, textOf } from '../lib/shell.js';
 import { CONTROLS, controlsIn, controlOf } from './controls.js';
 import { labelOfControl, leadingLabel } from './labels.js';
 import { rowLabel } from './labels.js';
-import { contentRoot, isHidden } from './root.js';
-import { CHROME, RESULT_ITEM } from './appdom.js';
+import { contentRoot, isHidden, rootName } from './root.js';
+import {
+  CHROME, OWN_ROOT, RESULT_ITEM, RESULT_LABEL, RESULT_LIST, RESULT_LIST_CLASS, RESULT_PANEL,
+  TAB_PANEL, declaredForm, gridClassOf
+} from './appdom.js';
 
-// The app's own names for "this table is a form". Data, not logic: a new app
-// class is added here and every reader that asks sees it.
-export const DECLARED_FORM = /^(Form|FormEx|FlexForm)$/i;
-
-export function declaredOf(table) {
-  return String((table && table.getAttribute && table.getAttribute('class')) || '')
-    .split(/\s+/)
-    .some((cls) => DECLARED_FORM.test(cls));
-}
+// The app's own names for "this table is a form" are `model/appdom.js`'s
+// vocabulary (`FORM_CLASSES`, `declaredForm`), with the rest of the app's own
+// classes: a new app class is added there and every reader that asks sees it.
+export const declaredOf = declaredForm;
 
 // Every table on the page that is inside the content root and that the page is
 // actually showing. `isHidden` is the page's own statement (`table-hidden`), not
 // a stylesheet guess.
 export function tablesIn(doc, root) {
   return qsa(doc, 'table')
-    .filter((table) => !(table.closest && table.closest('#sd-root')))
+    .filter((table) => !(table.closest && table.closest(OWN_ROOT)))
     .filter((table) => (root === doc.body || !root.contains ? true : root.contains(table)))
     .filter((table) => !isHidden(table));
 }
@@ -148,10 +146,6 @@ export function editorRegions(doc, root, opts = {}) {
 //   data     records: a heading row, or repeated rows of values
 //   noise    spacers, empty layout tables
 const TYPED = 'select, textarea, input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"])';
-const MONTH_CAL = /^MonthCal$/i;
-const WEEK_CAL = /^WeekCal$/i;
-const DAY_SECTION = /^TimeBlock$/i;
-const FORM_GRID = /^WeekdayCheckboxes$/i;
 const WEEKDAY = /^(sunday|monday|tuesday|wednesday|thursday|friday|saturday)$/i;
 
 function headingCells(table) {
@@ -164,12 +158,11 @@ function headingCells(table) {
 export function gridKind(table) {
   // A record page's Calendar *tab* ships hidden calendar tables; they belong to
   // the tab, not to the page's week or month view, so they are not its grid.
-  if (table && table.closest && table.closest('.tabContent')) return '';
-  const cls = String((table && table.getAttribute && table.getAttribute('class')) || '').trim();
-  if (MONTH_CAL.test(cls)) return 'month';
-  if (WEEK_CAL.test(cls)) return 'week';
-  if (DAY_SECTION.test(cls)) return 'day';
-  if (FORM_GRID.test(cls)) return 'form';
+  if (table && table.closest && table.closest(TAB_PANEL)) return '';
+  // The app's own grid classes are `model/appdom.js`'s vocabulary; which class
+  // means which grid is `GRID_CLASSES` there, not a regex kept here.
+  const known = gridClassOf(table);
+  if (known) return known;
   // Seven weekday headings are not enough: a seven-column report prints them
   // too. A month is a grid whose own cells are days (the app's `Empty` /
   // `Weekday` / `WeekendDay`), which is the row evidence the report lacks.
@@ -233,19 +226,64 @@ export function pageRegions(doc) {
 // print rows at all?" ask this, instead of counting `td`s themselves: that
 // scrape counted a layout wrapper's cells as rows and kept a second answer to a
 // question `pageRegions` already answers.
+// The page's record grids: the tables whose own rows read as records. One
+// judgement of "this table is data", asked by the sheet reader and available to
+// any reader that needs it, so a table one reader understands is a table every
+// reader understands.
+export function dataRegions(doc) {
+  return pageRegions(doc).tables.filter((entry) => entry.kind === 'data');
+}
+
+// Controls the page prints more than once under one name: a radio pair, the
+// calendar's seven weekday boxes, a run of same-named checkboxes. The settings
+// reader and the fallback editor walk both ask this here, so they cannot
+// disagree about what a group is.
+export function namedControls(scope, name) {
+  if (!scope || !name) return [];
+  return qsa(scope, '[name="' + String(name).replace(/"/g, '\\"') + '"]');
+}
+
+// A cell that names a record and says where it lives: words plus the link that
+// opens it. Every reader that asks "is this row a record?" asks it here — the
+// editor's neighbour list and the record list both scan rows this way — so a row
+// one of them understands is a row all of them understand.
+export function recordCellOf(cells) {
+  return (cells || []).find((cell) => cell && cell.href && String(cell.text || '').trim()) || null;
+}
+
+// Is this table a list of records? Judged row by row, never by a heading or
+// column count: either every row it prints names a record in its own cells, or
+// the table is a plain grid whose rows each print more than one cell. This is the
+// question the editor asks about the tables beside its form ("Existing Season
+// Dates", "Existing Vendors", "Existing Class Locations"), and the answer does
+// not depend on how wide the header row is.
+export function isRecordList(read) {
+  const rows = (read && read.rows) || [];
+  // A row with no words anywhere is a slot the app leaves for a record it does
+  // not have yet (`lident=0` on the locations list), so it is skipped row by
+  // row rather than being allowed to veto the table.
+  const shown = rows.filter((row) => (row || []).some((cell) => String((cell && cell.text) || '').trim()));
+  if (!shown.length) return false;
+  return shown.every((row) => !!recordCellOf(row))
+    || shown.every((row) => (row || []).length >= 2);
+}
+
+// How many rows the page actually shows: the field and record rows, not the
+// bands and spacers between them. The probe measurement and any predicate that
+// asks "does this page show rows?" count this, so there is one number rather
+// than a raw `tr` count kept beside the classifier.
+export function shownRowCount(doc) {
+  return pageRegions(doc).tables.reduce(
+    (n, entry) => n + entry.rows.filter((row) => row.kind === 'field' || row.kind === 'repeated').length,
+    0
+  );
+}
+
 export function rowCount(doc) {
   return pageRegions(doc).tables.reduce(
     (n, entry) => n + entry.rows.filter((row) => row.kind !== 'noise').length,
     0
   );
-}
-
-function rootName(root) {
-  if (!root) return 'none';
-  if (root === root.ownerDocument.body) return 'body';
-  if (root.id) return '#' + root.id;
-  const cls = String(root.getAttribute('class') || '').trim().split(/\s+/)[0];
-  return cls ? '.' + cls : root.tagName.toLowerCase();
 }
 
 // Which decision produced this page, recorded for the parity dump. There is one
@@ -256,9 +294,9 @@ export function decisionOf(doc) {
   const page = pageRegions(doc);
   const root = page.root;
   // The rebuild's own overlay is not page evidence: when the content root is
-  // the document body (a print window), counting `#sd-root` would make the
+  // the document body (a print window), counting our own overlay would make the
   // classifier judge its own markup as tables and controls of the page.
-  const mine = (el) => !(el.closest && el.closest('#sd-root'));
+  const mine = (el) => !(el.closest && el.closest(OWN_ROOT));
   const controls = root ? qsa(root, CONTROLS).filter(mine).length : 0;
   const links = root ? qsa(root, 'a[href]').filter(mine).length : 0;
   const tables = page.counts.form + page.counts.data + page.counts.grid;
@@ -330,9 +368,6 @@ export function monthWeeks(doc) {
 // `.searchResultItem` per record. They are classified here, by the same
 // evidence as a table (`repeated` = a row carrying a record and its own link),
 // so a reader never scrapes links itself.
-// The panel's row selector is the app's vocabulary, not this file's: it is
-// declared in `appdom.js` beside the rest of it.
-const PANEL_SELECTOR = '.searchResultPanel, #idSearchSpan';
 const ITEM_COUNT = /^\s*(\d[\d,]*)\s+items?\s*$/i;
 
 function itemKind(el) {
@@ -349,13 +384,13 @@ export function panelRows(panel) {
 // "Search Results" or states a count is the result set; a panel named after one
 // record type is the list carried over from the page that was searched. Ties go
 // to the later panel, which is the one the app just drew.
+// What one panel says about itself. These are flags, not weights: the panel's
+// own words and its own rows either show one of them or do not, and
+// `resultPanel` walks them in a fixed order. Nothing counts rows.
 function panelEvidence(panel) {
   const rows = panelRows(panel);
   const counts = kindsCount(rows);
-  const heading = textOf((qsa(panel, '.searchResultLabel')[0]) || panel);
-  let score = 0;
-  if (/search/i.test(heading)) score += 3;
-  if (ITEM_COUNT.test(heading.trim())) score += 2;
+  const heading = textOf((qsa(panel, RESULT_LABEL)[0]) || panel);
   const types = new Set();
   for (const row of rows) {
     const anchor = row.el.tagName === 'A' ? row.el : qsa(row.el, 'a[href]')[0];
@@ -363,8 +398,16 @@ function panelEvidence(panel) {
     const m = href.match(/[?&]page=([A-Za-z]+)/);
     if (m) types.add(m[1].toLowerCase());
   }
-  if (types.size > 1) score += 1;
-  return { panel, rows, counts, score };
+  return {
+    panel,
+    rows,
+    counts,
+    evidence: {
+      search: /search/i.test(heading),
+      count: ITEM_COUNT.test(heading.trim()),
+      mixed: types.size > 1
+    }
+  };
 }
 
 export function panelRegions(doc) {
@@ -377,11 +420,11 @@ export function panelRegions(doc) {
   // A panel wrapper is the usual shape; a confirmation page can print the record
   // list on its own, so a bare `.searchResultList` is its own panel. A list
   // inside a wrapper is already covered by that wrapper.
-  for (const panel of qsa(doc, PANEL_SELECTOR + ', .searchResultList')) {
-    if (panel.closest && panel.closest('#sd-root')) continue;
+  for (const panel of qsa(doc, RESULT_PANEL + ', ' + RESULT_LIST)) {
+    if (panel.closest && panel.closest(OWN_ROOT)) continue;
     if (seen.has(panel)) continue;
-    if (panel.classList && panel.classList.contains('searchResultList')
-      && panel.closest && panel.closest(PANEL_SELECTOR)) continue;
+    if (panel.classList && panel.classList.contains(RESULT_LIST_CLASS)
+      && panel.closest && panel.closest(RESULT_PANEL)) continue;
     seen.add(panel);
     out.push(panelEvidence(panel));
   }
@@ -397,11 +440,20 @@ export function resultPanel(doc) {
   // which is why the empty page is read as an empty list, not as no page.
   const withRows = all.filter((p) => p.counts.repeated > 0);
   const panels = withRows.length ? withRows : all;
-  let best = panels[0];
-  for (const panel of panels.slice(1)) {
-    if (panel.score >= best.score) best = panel;
+  // Precedence, not arithmetic: the strongest evidence any panel shows decides,
+  // and among the panels showing it the later one wins, because that is the one
+  // the app just drew. A panel with more rows never outranks a panel that says
+  // it is the result set.
+  const ladder = [
+    (panel) => panel.evidence.search,
+    (panel) => panel.evidence.count,
+    (panel) => panel.evidence.mixed
+  ];
+  for (const step of ladder) {
+    const hits = panels.filter(step);
+    if (hits.length) return hits[hits.length - 1];
   }
-  return best;
+  return panels[panels.length - 1];
 }
 
 // A record editor printed with no form table at all: a walk of the content root,
@@ -436,7 +488,7 @@ export function formFromRoot(doc, root, title) {
       radioGroups.get(key).push(el);
       continue;
     }
-    if (type === 'checkbox' && name && qsa(doc, 'input[name="' + name + '"]').length > 1) {
+    if (type === 'checkbox' && name && namedControls(root, name).length > 1) {
       if (!checkGroups.has(name)) checkGroups.set(name, []);
       checkGroups.get(name).push(el);
       continue;

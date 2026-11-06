@@ -1,0 +1,339 @@
+{
+  "name": "editor",
+  "reader": "form",
+  "url": "/srvda/admin.sd?page=EditFamily&fident=1784123965271",
+  "current": {
+    "url": "/srvda/admin.sd?page=EditFamily&fident=1784123965271",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [
+      "Overview",
+      "Students",
+      "Ledger",
+      "Notes"
+    ],
+    "decision": {
+      "path": "rowByRow",
+      "root": ".contentContainer",
+      "source": "tables",
+      "controls": 25,
+      "links": 29,
+      "tables": {
+        "form": 1,
+        "data": 5,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 19,
+        "section": 3,
+        "repeated": 5,
+        "noise": 1
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "editor": {
+        "rows": 19,
+        "labels": [
+          "Guardian Name(s)",
+          "Last Name",
+          "Address 1",
+          "Address 2",
+          "City",
+          "State",
+          "ZIP",
+          "Home Phone",
+          "Select Phone Type",
+          "Select Phone Type",
+          "Email Reset Password",
+          "More Emails (comma separated list)",
+          "Opt-out of emails",
+          "Emergency Contact (other than parents)",
+          "Emergency Contact Phone",
+          "How did you hear about us?",
+          "How did you hear details",
+          "Enrollment Blocked",
+          "Tags"
+        ],
+        "controls": [
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "880d5945"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "e8d64b81"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "324c0ec2"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "811c9dc5"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "e3d5f7e4"
+          },
+          {
+            "t": "select",
+            "n": "811c9dc5",
+            "v": "77da14c9"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "caa02be1"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "409ba61b"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "811c9dc5"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "811c9dc5"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "63bbba2d"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "811c9dc5"
+          },
+          {
+            "t": "select",
+            "n": "811c9dc5",
+            "v": "350ca8af"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "811c9dc5"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "811c9dc5"
+          },
+          {
+            "t": "select",
+            "n": "811c9dc5",
+            "v": "350ca8af"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "811c9dc5"
+          },
+          {
+            "t": "select",
+            "n": "811c9dc5",
+            "v": "350ca8af"
+          },
+          {
+            "t": "select",
+            "n": "811c9dc5",
+            "v": "7c489a8a"
+          }
+        ]
+      },
+      "kind": "editor",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 6,
+        "rows": 28
+      }
+    },
+    "detected": true,
+    "digest": "eb3a4d0c",
+    "version": "0.31.29"
+  },
+  "reference": {
+    "url": "/srvda/admin.sd?page=EditFamily&fident=1784123965271",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [
+      "Overview",
+      "Students",
+      "Ledger",
+      "Notes"
+    ],
+    "decision": {
+      "path": "rowByRow",
+      "root": "#mainContent",
+      "source": "tables",
+      "controls": 25,
+      "links": 29,
+      "tables": {
+        "form": 1,
+        "data": 5,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 19,
+        "section": 3,
+        "repeated": 5,
+        "noise": 1
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "editor": {
+        "rows": 19,
+        "labels": [
+          "Guardian Name(s)",
+          "Last Name",
+          "Address 1",
+          "Address 2",
+          "City",
+          "State",
+          "ZIP",
+          "Home Phone",
+          "Select Phone Type",
+          "Select Phone Type",
+          "Email Reset Password",
+          "More Emails (comma separated list)",
+          "Opt-out of emails",
+          "Emergency Contact (other than parents)",
+          "Emergency Contact Phone",
+          "How did you hear about us?",
+          "How did you hear details",
+          "Enrollment Blocked",
+          "Tags"
+        ],
+        "controls": [
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "880d5945"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "e8d64b81"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "324c0ec2"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "811c9dc5"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "e3d5f7e4"
+          },
+          {
+            "t": "select",
+            "n": "811c9dc5",
+            "v": "77da14c9"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "caa02be1"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "409ba61b"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "811c9dc5"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "811c9dc5"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "63bbba2d"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "811c9dc5"
+          },
+          {
+            "t": "select",
+            "n": "811c9dc5",
+            "v": "350ca8af"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "811c9dc5"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "811c9dc5"
+          },
+          {
+            "t": "select",
+            "n": "811c9dc5",
+            "v": "350ca8af"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "811c9dc5"
+          },
+          {
+            "t": "select",
+            "n": "811c9dc5",
+            "v": "350ca8af"
+          },
+          {
+            "t": "select",
+            "n": "811c9dc5",
+            "v": "7c489a8a"
+          }
+        ]
+      },
+      "kind": "editor",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 6,
+        "rows": 28
+      }
+    },
+    "detected": true,
+    "digest": "f1583bc1",
+    "version": "0.28.83"
+  }
+}

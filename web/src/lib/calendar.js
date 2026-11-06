@@ -25,7 +25,8 @@
 // The view is built from the *times*, not from the app's pixels: one studio per
 // column, one day per section, and each block as tall as its duration.
 
-import { qsa, qs, textOf } from './shell.js';
+import { qsa, qs, textOf, titleOf, breadcrumbOf } from './shell.js';
+import { CONTENT_INFO } from '../model/appdom.js';
 import { gridTable, gridTables } from '../model/regions.js';
 
 // Vertical scale of the rebuilt week view: minutes -> pixels.
@@ -390,8 +391,8 @@ function compactWeek(doc) {
     studioCount: 0,
     hidden: 0,
     totals,
-    week: textOf(qs(doc, ".contentInfo p")) || null,
-    title: textOf(qs(doc, ".formTitle, .ReportName, h1")) || ""
+    week: textOf(qs(doc, CONTENT_INFO + ' p')) || null,
+    title: titleOf(doc) || ""
   };
 }
 
@@ -455,7 +456,7 @@ export function readWeek(doc) {
     // Classes left out of the view because the faculty pool teaches them.
     hidden,
     totals,
-    week: textOf(qs(doc, '.contentInfo p')) || null,
-    title: textOf(qs(doc, '.formTitle, .ReportName, h1')) || ''
+    week: textOf(qs(doc, CONTENT_INFO + ' p')) || null,
+    title: titleOf(doc) || ''
   };
 }

@@ -32,8 +32,11 @@ import { DOMParser } from 'linkedom';
 globalThis.DOMParser = DOMParser;
 
 const { pageRegions, editorRegions, tableKind, kindsOf } = await import('../src/model/regions.js');
-const { contentRoot } = await import('../src/model/root.js');
+const { contentRoot, pageShape, contentBlockOf } = await import('../src/model/root.js');
 const { readForm } = await import('../src/lib/form.js');
+const { readSheet } = await import('../src/lib/sheet.js');
+const { hasShell } = await import('../src/lib/shell.js');
+const { decideShellLess } = await import('../src/lib/choose.js');
 
 const docOf = (html) => new DOMParser().parseFromString('<!doctype html><html><body>' + html + '</body></html>', 'text/html');
 
@@ -175,4 +178,90 @@ test('the records are the table whose rows are records, not the layout wrapper a
   // the same judgement: one data table, sectioned by whatever heading it had.
   assert.equal((model.tables || []).length, 1);
   assert.equal(tableKind(doc.getElementById('tbl-roster')), 'data');
+});
+
+/*
+ * The page's shape, not a reader's guess.
+ *
+ * The root used to be `qs('.contentContainer, #mainContent') || body`, with each
+ * caller re-asking "is this a shell page?". For a print window that worked by
+ * accident: the sheet reader happened to accept the body, and the mount branch
+ * happened to ask for a sheet. These documents are shapes the old code never
+ * deliberately handled.
+ */
+test('a shell-free document with no tables and no shell is still a named screen', () => {
+  const doc = docOf(
+    '<div class="formTitle">Saved</div>'
+    + '<p>Your changes were saved.</p>'
+    + '<a href="admin.sd?page=HomePage">Continue</a>'
+  );
+  const shape = pageShape(doc);
+
+  assert.equal(shape.shell, false, 'no #mainContent, no .standardMainContent');
+  assert.equal(shape.shellFree, true, 'a page served on its own is shell-free');
+  assert.equal(shape.root.tagName, 'BODY', 'the body is the last rung of the root ladder');
+  assert.equal(shape.titled, true);
+  assert.equal(shape.content, true);
+  assert.equal(hasShell(doc), shape.shell, 'one answer, asked by two callers');
+
+  // The old rule asked "is it a sheet with a title?", so a shell-free notice had
+  // no decision at all. The same answer now covers whatever the chain claims.
+  assert.equal(readSheet(doc), null, 'no table: the sheet reader does not claim it');
+  assert.equal(decideShellLess({ view: 'note', hasTitle: shape.titled }), 'note');
+});
+
+test('a print window whose content is a block, not the body, is read from that block', () => {
+  const doc = docOf(
+    '<div class="screenOnly"><table id="tbl-chrome"><tr><th>Nav</th></tr><tr><td>Home</td></tr></table></div>'
+    + '<div class="contentContainer"><table id="tbl-roster">'
+    + '<tr><th>Student</th><th>Class</th></tr>'
+    + '<tr><td>A</td><td>Ballet</td></tr>'
+    + '<tr><td>B</td><td>Ballet</td></tr>'
+    + '<tr><td>C</td><td>Ballet</td></tr>'
+    + '</table></div>'
+  );
+  const shape = pageShape(doc);
+
+  assert.equal(shape.shell, false, 'a print window has no shell');
+  assert.equal(shape.shellFree, true);
+  assert.equal(shape.root.getAttribute('class'), 'contentContainer', 'the root is the printed block, not the body');
+  assert.ok(!pageRegions(doc).tables.some((entry) => entry.table.id === 'tbl-chrome'),
+    'a table outside the content root is chrome, not page content');
+
+  const sheet = readSheet(doc);
+  assert.ok(sheet, 'the print window is a sheet');
+  assert.equal(sheet.tables.length, 1);
+  assert.deepEqual(sheet.tables[0].headings, ['Student', 'Class']);
+  assert.equal(sheet.rows, 3);
+});
+
+test('a shell page whose screen starts at #mainContent is read there', () => {
+  const doc = docOf(
+    '<div class="standardMainContent">'
+    + '<div id="sideNavBar"><a class="sideNavLink" href="admin.sd?page=HomePage">Home</a></div>'
+    + '<div id="mainContent"><table id="tbl-inside"><tr><th>X</th></tr><tr><td>1</td></tr></table></div>'
+    + '</div>'
+    + '<table id="tbl-outside"><tr><th>Y</th></tr><tr><td>1</td></tr></table>'
+  );
+  const shape = pageShape(doc);
+
+  assert.equal(shape.shell, true);
+  assert.equal(shape.shellFree, false);
+  assert.equal(shape.root.id, 'mainContent', 'no .contentContainer: the main panel is the root');
+  assert.equal(hasShell(doc), true);
+  assert.ok(!pageRegions(doc).tables.some((entry) => entry.table.id === 'tbl-outside'),
+    'the page ends at its content root');
+});
+
+test('an outcome screen is read from its own .Content block', () => {
+  const doc = docOf(
+    '<div class="contentContainer">'
+    + '<div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a></div>'
+    + '<div class="Content"><p>Saved.</p></div>'
+    + '</div>'
+  );
+  const shape = pageShape(doc);
+  assert.equal(shape.root.getAttribute('class'), 'contentContainer');
+  assert.equal(contentBlockOf(doc).getAttribute('class'), 'Content',
+    'the sentence and its button live in the block, not the whole container');
 });

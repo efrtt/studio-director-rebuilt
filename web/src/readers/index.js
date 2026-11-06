@@ -34,13 +34,20 @@ import { readAttendance } from '../lib/attendance.js';
 import { readSettings } from '../lib/settings.js';
 import { confirmationOf } from '../lib/confirmation.js';
 import { readNote } from '../lib/note.js';
+import { readPayment } from '../lib/payment.js';
 
 // Most specific first, the smallest last.
 const ORDER = [
-  // The record editor. First because a record URL is the one thing the URL
-  // itself names (`isRecordPage` is the app's own contract), and it is read with
-  // `readForm` rather than through the chain: the class editor carries a hidden
-  // Calendar tab with seven TimeBlock tables, which the week reader would claim.
+  // An editor, and only on a record URL. It has to be first: the class editor
+  // ships a hidden Calendar tab holding seven TimeBlock tables, so the week
+  // reader would claim the page it is on. It is also the one reader whose model
+  // is the page rather than one key of it — an editor is not a table beside a
+  // form, it is the form, its bar and its tabs — which is why `readPage` merges
+  // this claim whole instead of filing it under a key.
+  //
+  // The URL test is the app's own contract, not a guess at the document:
+  // `?page=EditFamily&fident=…` is a record page, and a settings or report screen
+  // that happens to carry `#save` is not.
   { id: 'editor', key: 'form', merge: 'page', after: [], read: (doc, ctx) => (isRecordPage(ctx.url) ? recordModel(doc, ctx.url) : null) },
   // A sentence is the screen; the list beside it is what you carry on from.
   { id: 'confirmation', key: 'confirm', after: ['editor'], title: (value) => value.title || (value.ok ? 'Saved' : 'Not saved'), read: (doc, ctx) => confirmationOf(doc, ctx.opts) },
@@ -48,28 +55,32 @@ const ORDER = [
   { id: 'week', key: 'week', after: ['editor', 'confirmation'], read: (doc) => readWeek(doc) },
   // #idSearchSpan .searchResultList. Gated by the week only — see the note above.
   { id: 'list', key: 'list', after: ['editor', 'week'], read: (doc, ctx) => readList(doc, { allowEmpty: !!ctx.allowEmpty }) },
+  // New Payment: a FlexForm of amount/dates/notes, split blocks, and the unpaid
+  // charges table beside them. Before the table readers, which would otherwise
+  // take it as a sheet.
+  { id: 'payment', key: 'payment', after: ['editor', 'confirmation', 'week', 'list'], read: (doc, ctx) => readPayment(doc, ctx.url) },
   // A grid of controls is the app's own form, never a table of records: every
   // student on every date is a tick box with a reason and notes behind it. It is
   // here, ahead of the form readers, because the app's own attendance field is
   // what names the page even when the register has no dates to tick: that shape
   // is a form with a save, and `task` used to take it as one field.
-  { id: 'attendance', key: 'attendance', after: ['editor', 'confirmation', 'week', 'list'], read: (doc) => readAttendance(doc) },
+  { id: 'attendance', key: 'attendance', after: ['editor', 'confirmation', 'week', 'list', 'payment'], read: (doc) => readAttendance(doc) },
   // A filter form plus a run control. Late, so NewClass keeps its list view.
-  { id: 'report', key: 'report', after: ['editor', 'confirmation', 'week', 'list', 'attendance'], read: (doc) => readReport(doc) },
+  { id: 'report', key: 'report', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance'], read: (doc) => readReport(doc) },
   // A form with a control that is not Run Report.
-  { id: 'task', key: 'task', after: ['editor', 'confirmation', 'week', 'list', 'attendance', 'report'], read: (doc) => readTask(doc) },
+  { id: 'task', key: 'task', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report'], read: (doc) => readTask(doc) },
   // The dashboard's Insights tab: stat cells and a donut, no records at all.
-  { id: 'insights', key: 'insights', after: ['editor', 'confirmation', 'week', 'list', 'attendance', 'report', 'task'], read: (doc) => readInsights(doc) },
+  { id: 'insights', key: 'insights', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task'], read: (doc) => readInsights(doc) },
   // The dashboard's Trends tab: the app's own chart images in a layout table.
-  { id: 'trends', key: 'trends', after: ['editor', 'confirmation', 'week', 'list', 'attendance', 'report', 'task', 'insights'], read: (doc) => readTrends(doc) },
+  { id: 'trends', key: 'trends', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task', 'insights'], read: (doc) => readTrends(doc) },
   // Tables with rows: dashboards, print sheets, list-ish settings.
-  { id: 'sheet', key: 'sheet', after: ['editor', 'confirmation', 'week', 'list', 'attendance', 'report', 'task', 'insights', 'trends'], read: (doc) => readSheet(doc) },
+  { id: 'sheet', key: 'sheet', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task', 'insights', 'trends'], read: (doc) => readSheet(doc) },
   // Landing pages: what is left when there is nothing but links.
-  { id: 'index', key: 'index', after: ['editor', 'confirmation', 'week', 'list', 'attendance', 'report', 'task', 'insights', 'trends', 'sheet'], read: (doc) => readIndex(doc) },
+  { id: 'index', key: 'index', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task', 'insights', 'trends', 'sheet'], read: (doc) => readIndex(doc) },
   // A control and a save. After index, because a menu is not a settings card.
-  { id: 'settings', key: 'settings', after: ['editor', 'confirmation', 'week', 'list', 'attendance', 'report', 'task', 'insights', 'trends', 'sheet', 'index'], read: (doc) => readSettings(doc) },
+  { id: 'settings', key: 'settings', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task', 'insights', 'trends', 'sheet', 'index'], read: (doc) => readSettings(doc) },
   // Last of all, and the smallest: a sentence and the app's own button.
-  { id: 'note', key: 'note', after: ['editor', 'confirmation', 'week', 'list', 'attendance', 'report', 'task', 'insights', 'trends', 'sheet', 'index', 'settings'], read: (doc) => readNote(doc) }
+  { id: 'note', key: 'note', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task', 'insights', 'trends', 'sheet', 'index', 'settings'], read: (doc) => readNote(doc) }
 ];
 
 export const READERS = ORDER.map((reader) => ({
@@ -89,9 +100,9 @@ const viewOf = (id) => (id === 'confirmation' ? 'confirm' : id);
 //         editor is not a table beside a form but the form, the app's bar and
 //         the record's tabs.
 //
-// A hard-coded `if (first.id === 'editor')` used to do this, which put a reader's
-// name in the one function that must not know reader names. The reader now says
-// how it merges.
+// This used to be `if (first.id === 'editor') { …a hand-built model… }` in
+// `readPage`, which is a reader-specific branch in the one place that must not
+// know reader names. Now the reader says how it merges.
 const MERGE = {
   key: (model, reader, value) => {
     model[reader.key] = value;

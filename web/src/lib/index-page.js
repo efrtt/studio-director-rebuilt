@@ -15,7 +15,7 @@
 // Alerts list), and a page with a form is not one either — those keep whatever
 // view they already have.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, titleOf, breadcrumbOf } from './shell.js';
 import { contentRoot } from '../model/root.js';
 import { CONTROLS } from '../model/controls.js';
 import { rowCount } from '../model/regions.js';
@@ -52,14 +52,14 @@ const HEADING_LIKE = HEADING
 // The rail and the top bar are navigation, not content; the page's own title is
 // not a category, however it is marked up. Both selectors are the app's own
 // vocabulary and live in `model/appdom.js`.
-import { CHROME, PAGE_TITLE } from '../model/appdom.js';
+import { CHROME, PAGE_TITLE, SEARCH_SPAN } from '../model/appdom.js';
 
 // A menu page has no rows to read. The count is across the whole content, not
 // per table: the week calendar is one small table per day, each holding a single
 // class, so a per-table check would mistake it for a menu.
 
 function isChrome(anchor) {
-  return !!(anchor.closest && anchor.closest(CHROME + ', #idSearchSpan'));
+  return !!(anchor.closest && anchor.closest(CHROME + ', ' + SEARCH_SPAN));
 }
 
 // Each link's category: the nearest title *above it on the page*.
@@ -161,7 +161,7 @@ export function readIndex(doc) {
   // Which menu this is decides how it is drawn (lib/menu.js): the two long
   // reference pages get the grouped list, the two short ones task cards. The
   // title is the app's own name for the page, read once and used for both.
-  const title = textOf(qs(doc, PAGE_TITLE)) || 'Links';
+  const title = titleOf(doc) || 'Links';
   const menu = menuFor(title);
 
   // Two menus are filed by the app by what a link *is* rather than by what a
@@ -177,7 +177,7 @@ export function readIndex(doc) {
     title,
     menu,
     layout: layoutForTitle(title),
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    breadcrumb: breadcrumbOf(doc),
     groups: finalGroups,
     count: items.length,
     // How many tiles the view draws at once. The count above is every link.

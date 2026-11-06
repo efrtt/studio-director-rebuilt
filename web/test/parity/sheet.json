@@ -1,0 +1,132 @@
+{
+  "name": "sheet",
+  "reader": "sheet",
+  "url": "/srvda/admin.sd?page=PrintClassRoster&cident=1782910697458",
+  "note": "A print window: the class roster from a class's Print menu (PrintClassRoster&cident=…). No shell, no #mainContent — the document body is the content root, and the roster is the page's one data table.",
+  "current": {
+    "url": "/srvda/admin.sd?page=PrintClassRoster&cident=1782910697458",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": "body",
+      "source": "tables",
+      "controls": 69,
+      "links": 4,
+      "tables": {
+        "form": 0,
+        "data": 1,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 15,
+        "section": 2,
+        "repeated": 0,
+        "noise": 15
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "sheet": {
+        "tables": 1,
+        "rows": 30,
+        "digest": "93c700cb",
+        "first": {
+          "headings": [
+            "First Name",
+            "Last Name",
+            "Age",
+            "Birthday",
+            "Performing",
+            "Gender",
+            "Mon, Nov 2, 2026",
+            "Mon, Nov 9, 2026",
+            "Mon, Nov 16, 2026",
+            "Mon, Nov 23, 2026",
+            "Mon, Nov 30, 2026"
+          ],
+          "rows": 30,
+          "digest": "a192f4e4"
+        }
+      },
+      "kind": "sheet",
+      "detected": true,
+      "app": {
+        "root": "body",
+        "text": true,
+        "tables": 1,
+        "rows": 32
+      }
+    },
+    "detected": true,
+    "digest": "81620dd9",
+    "version": "0.31.29"
+  },
+  "reference": {
+    "url": "/srvda/admin.sd?page=PrintClassRoster&cident=1782910697458",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": "body",
+      "source": "tables",
+      "controls": 69,
+      "links": 4,
+      "tables": {
+        "form": 0,
+        "data": 1,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 15,
+        "section": 2,
+        "repeated": 0,
+        "noise": 15
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "sheet": {
+        "tables": 1,
+        "rows": 30,
+        "digest": "93c700cb",
+        "first": {
+          "headings": [
+            "First Name",
+            "Last Name",
+            "Age",
+            "Birthday",
+            "Performing",
+            "Gender",
+            "Mon, Nov 2, 2026",
+            "Mon, Nov 9, 2026",
+            "Mon, Nov 16, 2026",
+            "Mon, Nov 23, 2026",
+            "Mon, Nov 30, 2026"
+          ],
+          "rows": 30,
+          "digest": "a192f4e4"
+        }
+      },
+      "kind": "sheet",
+      "detected": true,
+      "app": {
+        "root": "body",
+        "text": true,
+        "tables": 1,
+        "rows": 32
+      }
+    },
+    "detected": true,
+    "digest": "81620dd9",
+    "version": "0.28.83"
+  }
+}

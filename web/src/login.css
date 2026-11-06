@@ -25,9 +25,8 @@
  * `a.LoginButton`, `.LoginPowerBy`, `.LoginSDLogo`, `.LoginCopyright`.
  */
 
-/* ---- Wii: the skin, with its gloss and its light ---- */
-body.LoginBody,
-html[data-sd-theme="wii"] body.LoginBody {
+/* ---- The base sign-in, with its gloss and its light ---- */
+body.LoginBody {
   --lg-blue: #34beed;
   --lg-light: #7fd8f7;
   --lg-deep: #117fb5;

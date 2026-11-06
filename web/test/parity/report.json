@@ -1,0 +1,155 @@
+{
+  "name": "report",
+  "reader": "report",
+  "url": "/srvda/admin.sd?page=ClassRosterForm",
+  "current": {
+    "url": "/srvda/admin.sd?page=ClassRosterForm",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": ".contentContainer",
+      "source": "tables",
+      "controls": 43,
+      "links": 3,
+      "tables": {
+        "form": 2,
+        "data": 0,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 27,
+        "section": 0,
+        "repeated": 1,
+        "noise": 2
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "report": {
+        "filters": 27,
+        "labels": [
+          "Season",
+          "Classes on or after",
+          "Classes on or before",
+          "Day",
+          "Instructor",
+          "Class Type",
+          "Location",
+          "Class Name",
+          "Student Tag",
+          "Show classes that have changed since this date. Leave blank to show all classes.",
+          "Print Family Contact Info",
+          "Print Email Addresses",
+          "Print Emergency Contact Info",
+          "Print Family Balances Due",
+          "Print Student Medical Conditions",
+          "Print Student Comments And Waiver",
+          "Print Student Line Numbers",
+          "Print Age/Birthday/Performing",
+          "Print Gender",
+          "Print Class Notes",
+          "Print Waitlists",
+          "Print School Name",
+          "Print Parent One Vehicle Make/Model",
+          "Print Parent One Vehicle License Plate Number",
+          "Add Blank Lines",
+          "Print Extra Space Between Students",
+          "Sort By - Page Break"
+        ],
+        "controls": 39,
+        "trigger": "Run Report"
+      },
+      "kind": "report",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 2,
+        "rows": 32
+      }
+    },
+    "detected": true,
+    "digest": "fd06e1ce",
+    "version": "0.31.29"
+  },
+  "reference": {
+    "url": "/srvda/admin.sd?page=ClassRosterForm",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": "#mainContent",
+      "source": "tables",
+      "controls": 43,
+      "links": 3,
+      "tables": {
+        "form": 2,
+        "data": 0,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 27,
+        "section": 0,
+        "repeated": 1,
+        "noise": 2
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "report": {
+        "filters": 27,
+        "labels": [
+          "Season",
+          "Classes on or after",
+          "Classes on or before",
+          "Day",
+          "Instructor",
+          "Class Type",
+          "Location",
+          "Class Name",
+          "Student Tag",
+          "Show classes that have changed since this date. Leave blank to show all classes.",
+          "Print Family Contact Info",
+          "Print Email Addresses",
+          "Print Emergency Contact Info",
+          "Print Family Balances Due",
+          "Print Student Medical Conditions",
+          "Print Student Comments And Waiver",
+          "Print Student Line Numbers",
+          "Print Age/Birthday/Performing",
+          "Print Gender",
+          "Print Class Notes",
+          "Print Waitlists",
+          "Print School Name",
+          "Print Parent One Vehicle Make/Model",
+          "Print Parent One Vehicle License Plate Number",
+          "Add Blank Lines",
+          "Print Extra Space Between Students",
+          "Sort By - Page Break"
+        ],
+        "controls": 39,
+        "trigger": "Run Report"
+      },
+      "kind": "report",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 2,
+        "rows": 32
+      }
+    },
+    "detected": true,
+    "digest": "caab3cef",
+    "version": "0.28.83"
+  }
+}

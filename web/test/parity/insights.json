@@ -1,0 +1,167 @@
+{
+  "name": "insights",
+  "reader": "insights",
+  "url": "/srvda/admin.sd?page=HomePage&tab=tab-insights",
+  "current": {
+    "url": "/srvda/admin.sd?page=HomePage&tab=tab-insights",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [
+      "Schedule",
+      "Insights",
+      "Trends"
+    ],
+    "decision": {
+      "path": "rowByRow",
+      "root": ".contentContainer",
+      "source": "tables",
+      "controls": 0,
+      "links": 14,
+      "tables": {
+        "form": 0,
+        "data": 1,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 0,
+        "repeated": 2,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "insights": {
+        "stats": 8,
+        "values": [
+          "2",
+          "21",
+          "274",
+          "350",
+          "52",
+          "21",
+          "3",
+          "0"
+        ],
+        "labels": [
+          "Students Starting Today/Tomorrow",
+          "Students Celebrating Birthdays",
+          "Classes with Students Enrolled",
+          "Families with Students Enrolled",
+          "Students Missing Consecutive Classes",
+          "Instructors Assigned to Classes",
+          "Classes with Waitlists and Space",
+          "Families with Unpaid Shopping Carts"
+        ],
+        "donut": true,
+        "total": "4275",
+        "parts": 3,
+        "legend": [
+          "432 Enrolled",
+          "12 Waitlisted Only",
+          "3831 Inactive"
+        ],
+        "tabs": [
+          "Schedule",
+          "Insights",
+          "Trends"
+        ]
+      },
+      "kind": "insights",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 1,
+        "rows": 2
+      }
+    },
+    "detected": true,
+    "digest": "656bd197",
+    "version": "0.31.29"
+  },
+  "reference": {
+    "url": "/srvda/admin.sd?page=HomePage&tab=tab-insights",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [
+      "Schedule",
+      "Insights",
+      "Trends"
+    ],
+    "decision": {
+      "path": "rowByRow",
+      "root": "#mainContent",
+      "source": "tables",
+      "controls": 0,
+      "links": 14,
+      "tables": {
+        "form": 0,
+        "data": 1,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 0,
+        "repeated": 2,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "insights": {
+        "stats": 8,
+        "values": [
+          "2",
+          "21",
+          "274",
+          "350",
+          "52",
+          "21",
+          "3",
+          "0"
+        ],
+        "labels": [
+          "Students Starting Today/Tomorrow",
+          "Students Celebrating Birthdays",
+          "Classes with Students Enrolled",
+          "Families with Students Enrolled",
+          "Students Missing Consecutive Classes",
+          "Instructors Assigned to Classes",
+          "Classes with Waitlists and Space",
+          "Families with Unpaid Shopping Carts"
+        ],
+        "donut": true,
+        "total": "4275",
+        "parts": 3,
+        "legend": [
+          "432 Enrolled",
+          "12 Waitlisted Only",
+          "3831 Inactive"
+        ],
+        "tabs": [
+          "Schedule",
+          "Insights",
+          "Trends"
+        ]
+      },
+      "kind": "insights",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 1,
+        "rows": 2
+      }
+    },
+    "detected": true,
+    "digest": "182210be",
+    "version": "0.28.83"
+  }
+}

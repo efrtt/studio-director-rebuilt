@@ -27,7 +27,8 @@
 // Reading it as anything else is what the skin used to do: the grid became a
 // five-row table of dates with events spilling out of their cells.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, titleOf, breadcrumbOf } from './shell.js';
+import { CONTENT_INFO } from '../model/appdom.js';
 import { gridTable, monthWeeks } from '../model/regions.js';
 
 const WEEKDAY = /^(sunday|monday|tuesday|wednesday|thursday|friday|saturday)$/i;
@@ -133,7 +134,10 @@ export function readMonth(doc) {
 
   // The toolbar: the month's name, the way to its neighbours, the season, and
   // the app's own Daily Staff / Week links.
-  const info = qs(doc, '.contentInfo') || doc.body || doc;
+  // The toolbar, or the page's content root when it prints no `.contentInfo`:
+  // the root comes from `model/root.js`, so a shell-free month page is scanned
+  // in the same place the rest of the readers look.
+  const info = qs(doc, CONTENT_INFO) || contentRoot(doc) || doc;
 
   let label = '';
   for (const span of qsa(info, 'span')) {
@@ -164,7 +168,7 @@ export function readMonth(doc) {
 
   return {
     kind: 'month',
-    title: textOf(qs(doc, '.formTitle, .ReportName, h1')) || 'Class Calendar',
+    title: titleOf(doc) || 'Class Calendar',
     label,
     weekdays,
     weeks,
@@ -174,6 +178,6 @@ export function readMonth(doc) {
     views,
     events,
     holidays: days.filter((day) => day.holiday).length,
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean)
+    breadcrumb: breadcrumbOf(doc)
   };
 }

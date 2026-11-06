@@ -153,6 +153,39 @@ export function labelledRows(table) {
   return rows;
 }
 
+// A row that prints a label and a value: a name cell and the cell its value sits
+// in. The payment screen's totals read their rows this way, and so does the
+// sheet's "this is a label/value block, not a record grid" test — one question,
+// asked from the row's own cells.
+export function isValueRow(cells) {
+  return !!(cells && cells.length >= 2);
+}
+
+// Presence on a table that has already been read. These are the three things a
+// reader actually wants to know before it draws or skips one: does it print a
+// heading row, does it print rows, and is there nothing at all in it. Every
+// reader that used to test `headings.length`/`rows.length` itself asks these.
+export function hasHeadings(read) {
+  return !!(read && read.headings && read.headings.length);
+}
+
+export function hasRows(read) {
+  return !!(read && read.rows && read.rows.length);
+}
+
+export function isEmptyTable(read) {
+  return !hasHeadings(read) && !hasRows(read);
+}
+
+// A table with no heading row whose rows each print at most a label and its
+// value: how a settings page and a payment's totals lay a form out. It is not a
+// list of records, which is the sheet reader's question about it.
+export function isValueTable(read) {
+  if (!read || hasHeadings(read)) return false;
+  const rows = read.rows || [];
+  return rows.length > 0 && rows.every((row) => isValueRow(row));
+}
+
 export function rowsOf(table) {
   const rows = [];
   const shown = [];
