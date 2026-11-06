@@ -721,6 +721,7 @@
   "model": {
     "attendance": null,
     "bar": null,
+    "charges": null,
     "confirm": null,
     "form": {
       "breadcrumb": [

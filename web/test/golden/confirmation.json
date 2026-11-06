@@ -3,6 +3,7 @@
   "form": null,
   "model": {
     "attendance": null,
+    "charges": null,
     "confirm": {
       "breadcrumb": [
         "Families",

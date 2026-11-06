@@ -298,6 +298,12 @@ function mountView(model, onOriginal, source = 'fetched') {
     model,
     state: model.view ? 'ready' : 'none',
     onOriginal,
+    // A table you type into: the values the view holds are written into the
+    // app's own fields and the app's own Save submits them. Nothing is built,
+    // exactly as on a record.
+    onSave: model.charges
+      ? (values) => saveInApp(document, changesFrom(model.charges, values))
+      : undefined,
     // New / Print / Email / Delete / More on a record page. Their ids exist on
     // the live page, which is where the app's own handlers are bound.
     onAction: (item) => clickActionInApp(document, item),
@@ -312,7 +318,7 @@ function mountView(model, onOriginal, source = 'fetched') {
       : null,
     // A table screen, a notice, or a confirmation the app is still waiting on:
     // its controls are pressed where they stand.
-    onPress: model.sheet || model.note || (model.confirm && model.confirm.pending)
+    onPress: model.sheet || model.note || model.charges || (model.confirm && model.confirm.pending)
       ? (action) => clickActionInApp(document, action)
       : null,
     // Attendance: every gesture is written into the app's own controls — a tick

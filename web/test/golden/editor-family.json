@@ -744,6 +744,7 @@
   },
   "model": {
     "attendance": null,
+    "charges": null,
     "confirm": null,
     "index": null,
     "insights": null,
