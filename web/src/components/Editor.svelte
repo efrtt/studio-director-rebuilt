@@ -6,6 +6,7 @@
   import DuePill from './DuePill.svelte';
   import { changesFrom } from '../lib/save.js';
   import RecordPage from './RecordPage.svelte';
+  import PerfTable from './PerfTable.svelte';
   import { recordsOf } from '../lib/records.js';
   import { tabpill } from '../lib/tabpill.js';
 
@@ -19,6 +20,11 @@
   export let onSave = null;
   // Presses a bar control on the live page: the app builds that request.
   export let onAction = null;
+  // The event page's performance list. Only the pages that print one carry it.
+  export let perf = null;
+  export let onPerfAct = null;
+  export let onPerfLock = null;
+  export let onPerfSave = null;
 
   // Which tab strip entry is showing. The record itself is always first, so an
   // editor without tabs looks exactly as it did before.
@@ -149,6 +155,9 @@
     {onAction}
     onSave={onSave}
   />
+  {#if perf}
+    <PerfTable {perf} onAct={onPerfAct} onLock={onPerfLock} onSave={onPerfSave} />
+  {/if}
 {:else}
 <!-- The wide skin follows the classifier: `form.tables` are the tables it called
      data beside this form (`model/regions.js`), so a page with a record list gets
@@ -387,6 +396,9 @@
           </table>
         </div>
       {/each}
+    {/if}
+    {#if perf}
+      <PerfTable {perf} onAct={onPerfAct} onLock={onPerfLock} onSave={onPerfSave} />
     {/if}
   </div>
   {/if}

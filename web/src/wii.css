@@ -1875,3 +1875,42 @@ html[data-sd-theme="wii"] #sd-root .sd-paybrand {
   background: linear-gradient(180deg, #ffffff 0%, var(--wii-w0) 100%);
   color: var(--wii-deep);
 }
+/* ---- the performance list ------------------------------------------------
+   The event page's own card, dressed like the record cards and the calendars:
+   white, keylined, glossed at the top edge. The handle and the lock pill read
+   from the same derived blues as the table around them - no blue hex here. */
+html[data-sd-theme="wii"] #sd-root .sd-perf {
+  border: 1px solid var(--wii-line);
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 10px 24px -18px color-mix(in srgb, var(--wii-deep) 70%, transparent);
+}
+html[data-sd-theme="wii"] #sd-root .sd-perfhead {
+  background: linear-gradient(180deg, var(--wii-w0) 0%, var(--wii-w2) 100%);
+  border-bottom: 1px solid var(--wii-line);
+  border-radius: 17px 17px 0 0;
+}
+html[data-sd-theme="wii"] #sd-root .sd-perfmv {
+  border-color: var(--wii-line);
+  background: var(--wii-w1);
+  color: var(--wii-deep);
+}
+html[data-sd-theme="wii"] #sd-root .sd-perfmv:hover:not(:disabled) {
+  border-color: var(--wii-blue);
+  color: var(--wii-deep);
+}
+html[data-sd-theme="wii"] #sd-root .sd-perflock {
+  border-color: var(--wii-line);
+  background: var(--wii-w1);
+  color: var(--wii-deep);
+}
+html[data-sd-theme="wii"] #sd-root .sd-perflock--on {
+  border-color: var(--wii-blue);
+  background: var(--wii-w2);
+  color: var(--wii-deep);
+}
+html[data-sd-theme="wii"] #sd-root .sd-perftable tbody tr.sd-perfrow--over > td {
+  box-shadow: inset 0 2px 0 var(--wii-blue);
+}

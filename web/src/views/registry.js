@@ -137,6 +137,12 @@ export function propsFor(view, model, handlers) {
         bar: model.bar,
         onSave: h.onSave,
         onAction: h.onAction,
+        // The event page's performance list: its own arrangement, the app's own
+        // lock toggle, its own three controls, and its own save of the order.
+        perf: model.perf || null,
+        onPerfAct: h.onPerfAct || null,
+        onPerfLock: h.onPerfLock || null,
+        onPerfSave: h.onPerfSave || null,
         url: model.url || ''
       };
     default:

@@ -31,7 +31,8 @@ import { readBar } from './lib/bar.js';
 import { confirmSubject } from './lib/deletedname.js';
 import { saveSettingsInApp } from './lib/settings.js';
 import { clickActionInApp } from './lib/actions.js';
-import { changesFrom, saveInApp } from './lib/save.js';
+import { changesFrom, saveInApp, pageSave } from './lib/save.js';
+import { applyOrder, pressLock } from './lib/perf.js';
 import { runPayment, addSplitInApp } from './lib/payment.js';
 import { unreadNote, unreadOf } from './model/coverage.js';
 import { decisionOf } from './model/regions.js';
@@ -118,6 +119,11 @@ export function mount(opts = {}) {
       onSave: opts.onSave || null,
       // A record page's own buttons: pressed on the live page, never rebuilt.
       onAction: opts.onAction || null,
+      // The performance list: the app's own controls, its own lock toggle, and
+      // the order written into the app's own hidden inputs before its Save.
+      onPerfAct: opts.onPerfAct || null,
+      onPerfLock: opts.onPerfLock || null,
+      onPerfSave: opts.onPerfSave || null,
       // Same for reports: their run control is on the live page.
       onRun: opts.onRun || null,
       // A task screen's own control: our fields, the app's own button. This was
@@ -521,6 +527,24 @@ function mountLive(onOriginal) {
   return mountView(model, onOriginal);
 }
 
+// The performance list's own save.
+//
+// The new arrangement goes into the app's own hidden order inputs - only the rows
+// that moved - and then the app's Save is pressed. Nothing is built here: the app
+// serialises its form, validates and redirects exactly as it does for a click, and
+// a row whose input has gone refuses the save rather than writing half an order.
+function savePerfOrder(doc, rows) {
+  const ordered = applyOrder(doc, rows);
+  if (ordered.missing.length) {
+    return { submitted: false, reason: 'order-missing', missing: ordered.missing };
+  }
+  if (!ordered.applied.length) return { submitted: false, reason: 'unchanged' };
+  const save = pageSave(doc);
+  if (!save) return { submitted: false, reason: 'no-save-link' };
+  save.click();
+  return { submitted: true, reason: 'ok', applied: ordered.applied };
+}
+
 // The editor's mount: the one view that saves. Every other kind goes through
 // mountView, which is why this is separate rather than a branch inside it.
 function mountEditor(model, onOriginal) {
@@ -531,6 +555,9 @@ function mountEditor(model, onOriginal) {
     state: 'ready',
     onSave: (values) => saveInApp(document, changesFrom(model.form, values)),
     onAction: (item) => clickActionInApp(document, item),
+    onPerfAct: (item) => clickActionInApp(document, item),
+    onPerfLock: (row) => pressLock(document, row),
+    onPerfSave: (rows) => savePerfOrder(document, rows),
     onLoadAll: loadAllRecords,
     onSearch: searchEverything,
     onRefresh: refreshList,

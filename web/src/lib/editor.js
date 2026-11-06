@@ -19,11 +19,14 @@ import { readBar } from './bar.js';
 import { readTabs } from './tabs.js';
 import { readList } from './list.js';
 import { pageSave } from './save.js';
+import { readPerf } from './perf.js';
 
 export function recordModel(doc, url, form = readForm(doc, { url })) {
   if (!form) return null;
 
   const tabs = readTabs(doc);
+  // Only the event pages print one, so every other editor keeps its own model.
+  const perf = readPerf(doc);
   const tabbed = !!(tabs && tabs.tabs.length > 1);
   if (!pageSave(doc) && !tabbed) return null;
 
@@ -36,6 +39,7 @@ export function recordModel(doc, url, form = readForm(doc, { url })) {
     // they are rebuilt from the same response as the form.
     tabs,
     list: readList(doc),
+    ...(perf ? { perf } : {}),
     view: 'form',
     title: form.title,
     url
