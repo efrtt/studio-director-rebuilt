@@ -22,11 +22,11 @@
   // How long the outgoing hand is squeezed before the cross-over. It must match the
   // out-animation duration in wii.css: the swap is timed, not listened for. Both are
   // short enough that a quick click still lands on the fist before letting go.
-  const SQUEEZE_MS = 45;
+  const SQUEEZE_MS = 30;
 
   // How long the incoming hand takes to settle. A swap younger than this is not
   // squeezed away again: the fist that has just landed hands straight back.
-  const SETTLE_MS = 65;
+  const SETTLE_MS = 50;
 
   const IDLE_AFTER = 900;
 
