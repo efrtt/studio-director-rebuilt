@@ -25,7 +25,7 @@ test('a fast move leans, and the lean bleeds off when the mouse stops', () => {
   let state = restPose(0, 300);
   for (let i = 0; i < 12; i += 1) state = advance(state, { x: (i + 1) * 15, y: 300 }, 1 / 60);
   const moving = poseOf(state);
-  assert.ok(moving.tilt > 6, `leans while moving: ${moving.tilt}`);
+  assert.ok(moving.tilt < -6, `leans while moving: ${moving.tilt}`);
 
   // Then hold still for a second.
   const target = { x: 180, y: 300 };
@@ -34,11 +34,11 @@ test('a fast move leans, and the lean bleeds off when the mouse stops', () => {
   assert.ok(settled(state, target, 0.5), 'and the loop may park');
 });
 
-test('the lean follows the diagonal the arrow rocks about', () => {
-  // Right: the tail swings left, a positive rotation.
-  assert.ok(poseOf({ x: 0, y: 0, vx: 600, vy: 0 }).tilt > 8);
+test('the lean tips into the travel, which is the opposite of the first pass', () => {
+  // Right: a negative rotation, i.e. leaning into the movement.
+  assert.ok(poseOf({ x: 0, y: 0, vx: 600, vy: 0 }).tilt < -8);
   // Down: it swings the other way.
-  assert.ok(poseOf({ x: 0, y: 0, vx: 0, vy: 600 }).tilt < -8);
+  assert.ok(poseOf({ x: 0, y: 0, vx: 0, vy: 600 }).tilt > 8);
   // Down-right is the arrow's own diagonal: no rock needed.
   assert.equal(poseOf({ x: 0, y: 0, vx: 500, vy: 500 }).tilt, 0);
   // And at rest it is level.
@@ -48,8 +48,8 @@ test('the lean follows the diagonal the arrow rocks about', () => {
 test('a flick is capped, and a whole second in one frame cannot fling it', () => {
   const flick = advance(restPose(0, 0), { x: 900, y: 0 }, 1);
   assert.equal(flick.x, 900, 'still exactly on the pointer');
-  assert.ok(Math.abs(poseOf(flick).tilt) <= 15, `tilt ran away: ${poseOf(flick).tilt}`);
-  assert.ok(Math.abs(poseOf({ x: 0, y: 0, vx: 9000, vy: 0 }).tilt) <= 15);
+  assert.ok(Math.abs(poseOf(flick).tilt) <= 28, `tilt ran away: ${poseOf(flick).tilt}`);
+  assert.ok(Math.abs(poseOf({ x: 0, y: 0, vx: 9000, vy: 0 }).tilt) <= 28);
 });
 
 test('a zero-length frame is not a divide by zero', () => {

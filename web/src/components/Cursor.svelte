@@ -19,9 +19,11 @@
   // Something the app would draw a hand over, if it were drawing its own cursor.
   const INTERACTIVE = 'a, button, input, select, textarea, summary, label, [role="button"], [onclick]';
 
-  // Painted height each sprite is normalised to, so the three artwork files read as
-  // one cursor rather than three sizes.
-  const HEIGHT = 24;
+  // Painted *area* each sprite is normalised to. Matching heights was what made the
+  // three look like three sizes: the arrow's artwork is tall and thin (13.3 x 9.1
+  // units) and the hand's is squat (8.6 x 9.1), so equal heights left the arrow
+  // about half the size on screen. Equal area is what reads as one cursor.
+  const AREA = 620; // px² of painted artwork
 
   const IDLE_AFTER = 900;
 
@@ -48,6 +50,7 @@
       const box = svg.getBoundingClientRect();
       let left = Infinity;
       let top = Infinity;
+      let right = -Infinity;
       let bottom = -Infinity;
       for (const path of svg.querySelectorAll('path')) {
         const style = getComputedStyle(path);
@@ -56,11 +59,12 @@
         if (!rect.width && !rect.height) continue;
         left = Math.min(left, rect.left);
         top = Math.min(top, rect.top);
+        right = Math.max(right, rect.right);
         bottom = Math.max(bottom, rect.bottom);
       }
-      const painted = bottom - top;
+      const painted = (right - left) * (bottom - top);
       if (!Number.isFinite(left) || !(painted > 0)) return;
-      const scale = HEIGHT / painted;
+      const scale = Math.sqrt(AREA / painted);
       svg.style.transformOrigin = '0 0';
       // Scaled first, then moved: the translate is in the artwork's own pixels, so
       // `left`/`top` land on the element's corner and stay there under the scale.

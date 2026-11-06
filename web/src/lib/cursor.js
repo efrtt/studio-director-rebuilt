@@ -18,8 +18,8 @@ const LEAN_TAU = 0.07; // seconds
 // A stuttered frame can hand back one huge pointer delta; the measured speed is
 // capped rather than trusted.
 const MAX_SPEED = 6000; // px/s
-const TILT_PER_SPEED = 0.016; // degrees per pixel/second along the trail axis
-const MAX_TILT = 15; // degrees
+const TILT_PER_SPEED = 0.022; // degrees per pixel/second across the rock axis
+const MAX_TILT = 28; // degrees
 
 // The glyph at rest on the pointer: no movement, so no lean.
 export function restPose(x, y) {
@@ -49,13 +49,14 @@ export function advance(state, target, dt) {
   };
 }
 
-// What to rotate by. The arrow points up-left with its tail hanging down-right, at
-// 45°; rocking about that diagonal is what the eye reads as weight. Travelling
-// right swings the tail left (a positive rotation), travelling down swings it up
-// (negative), and a diagonal move down-right needs neither — which is exactly
-// `vx - vy`, the velocity along that axis.
+// What to rotate by. The artwork points up-left, so a *positive* rotation swings
+// the tip left and the tail right; the lean leans the other way on purpose, so the
+// glyph tips into its travel rather than away from it. Travelling right gives a
+// negative angle, travelling down a positive one, and a diagonal move down-right
+// needs neither — which is `vy - vx`, the velocity across the rock axis. The range
+// is wide (±28°) because the point is to see it; at ±15° it read as a wobble.
 export function poseOf(state) {
-  const rock = (state.vx - state.vy) * TILT_PER_SPEED;
+  const rock = (state.vy - state.vx) * TILT_PER_SPEED;
   return {
     speed: Math.hypot(state.vx, state.vy),
     tilt: Math.max(-MAX_TILT, Math.min(MAX_TILT, rock))
