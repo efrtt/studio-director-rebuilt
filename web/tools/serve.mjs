@@ -74,25 +74,31 @@ server.on('error', (err) => {
 // Ready means the server answered, not that it bound: ask it for the artefact and say
 // which build it will hand out, because "is the server up" and "is my build there" are
 // the two questions this server is started to answer.
+//
+// The line is JSON after a fixed prefix so a script can wait on it instead of sleeping
+// and hoping: `until grep -qm1 '^ready ' log; do sleep 0.1; done`, then parse the rest.
+// `artefact` is null when the root has no build in it, which is not the same as the
+// server being down and is the case a caller has to notice before it injects anything.
 const ARTEFACT = 'studio-director-rebuilt.user.js';
 
 server.listen(port, '127.0.0.1', async () => {
   const url = 'http://127.0.0.1:' + port + '/' + ARTEFACT;
-  let version = '';
-  try {
-    const head = fs.readFileSync(path.join(root, ARTEFACT), 'utf8').slice(0, 4000);
-    version = (/@version\s+(\S+)/.exec(head) || [])[1] || '';
-  } catch (e) {
-    version = '';
-  }
+  const ready = { root, url: 'http://127.0.0.1:' + port + '/', artefact: null, version: null };
   let answer;
   try {
-    const res = await fetch(url, { method: 'HEAD' });
-    answer = res.ok
-      ? 'artefact ' + (version ? 'v' + version + ' ' : '') + 'at ' + url
-      : 'no built artefact: run `npm run userscript`';
+    answer = await fetch(url, { method: 'HEAD' });
   } catch (e) {
-    answer = 'itself did not answer: ' + e.message;
+    console.error('not ready: the server did not answer itself: ' + e.message);
+    process.exit(1);
   }
-  console.log('ready: root ' + root + ' on http://127.0.0.1:' + port + '/ - ' + answer);
+  if (answer.ok) {
+    ready.artefact = url;
+    try {
+      const head = fs.readFileSync(path.join(root, ARTEFACT), 'utf8').slice(0, 4000);
+      ready.version = (/@version\s+(\S+)/.exec(head) || [])[1] || null;
+    } catch (e) {
+      ready.version = null;
+    }
+  }
+  console.log('ready ' + JSON.stringify(ready));
 });
