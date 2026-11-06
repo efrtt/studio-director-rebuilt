@@ -238,7 +238,15 @@
                     ? 'Locked — the app’s auto-order leaves this one where it is'
                     : 'Unlocked — auto-order may move it'}
                   on:click={() => toggleLock(row, i)}
-                >{row.locked ? 'Locked' : 'Open'}</button>
+                >
+                  <!-- The app's own toggle is a padlock, so the control is one:
+                       the state is the glyph, and the word stays for the reader. -->
+                  <span
+                    class="sd-icon sd-icon--{row.locked ? 'lock' : 'unlock'}"
+                    aria-hidden="true"
+                  ></span>
+                  <span class="sd-sr">{row.locked ? 'Locked' : 'Unlocked'}</span>
+                </button>
               </td>
 
               <!-- The name is the row, the buttons are the way in: a linked
