@@ -187,6 +187,12 @@
       </div>
     {/each}
   {/if}
+
+  <!-- A page's own extra panel, when it has one. It belongs inside this
+       scroll box: as a flex sibling of the page it competed with the record
+       list for one viewport height, and the rows past the split were clipped
+       by #sd-root with nothing to scroll them into view. -->
+  <slot />
 </div>
 
 {#if mode !== 'none' && fields.length}
