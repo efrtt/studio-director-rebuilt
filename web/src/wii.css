@@ -542,16 +542,16 @@ html[data-sd-theme="wii"] #sd-root .sd-cursor-in--squash {
   100% { transform: scale(1, 1); }
 }
 /* The landing is quick enough to be over before you see it settle, so the hand that
- * arrives gets one loose jiggle afterwards: a decaying wobble of a couple of degrees
- * and a few percent of scale, 150ms, starting as the landing finishes. It runs as a
- * second animation because `play()` only ever puts one swap class on a wrapper, and
- * it holds with `forwards` so it leaves the hand exactly at rest. */
+ * arrives gets a jiggle behind it: two bounces of pure squash and stretch over 150ms,
+ * starting as the landing finishes. No rotation at all — the hand compresses and
+ * stretches on the spot rather than rocking — and it fills forwards so it leaves the
+ * sprite exactly at rest. */
 @keyframes sd-cursor-jiggle {
-  0% { transform: scale(1, 1) rotate(0deg); }
-  18% { transform: scale(1.035, 0.965) rotate(-1.8deg); }
-  42% { transform: scale(0.985, 1.015) rotate(1.2deg); }
-  66% { transform: scale(1.012, 0.99) rotate(-0.7deg); }
-  100% { transform: scale(1, 1) rotate(0deg); }
+  0% { transform: scale(1, 1); }
+  25% { transform: scale(1.15, 0.85); }
+  55% { transform: scale(0.9, 1.1); }
+  80% { transform: scale(1.05, 0.96); }
+  100% { transform: scale(1, 1); }
 }
 @media (prefers-reduced-motion: reduce) {
   html[data-sd-theme="wii"] #sd-root .sd-cursor-pop,
