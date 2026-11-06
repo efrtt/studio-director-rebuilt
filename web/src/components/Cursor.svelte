@@ -62,27 +62,35 @@
 
     const fitted = new Map();
 
-    function fit(svg) {
+    function fit(svg, centred) {
       const box = svg.getBoundingClientRect();
-      // The hotspot is the topmost painted thing — the fingertip — and the hand hangs
-      // below and to the right of it. Taking that one path, rather than the union of
-      // the artwork, keeps the hand's left edge from dragging the hotspot off the point
-      // you are aiming with. It is also the same point for all three sprites: the fist
-      // closes on the finger it was pointing with.
+      // The tip is the topmost painted thing — the fingertip — and the pointing hand
+      // hangs below and to the right of it. Taking that one path, rather than the union
+      // of the artwork, keeps the hand's left edge from dragging the hotspot off the
+      // point you are aiming with.
       let tip = null;
+      let left = Infinity;
+      let right = -Infinity;
       for (const path of svg.querySelectorAll('path')) {
         const style = getComputedStyle(path);
         if (style.display === 'none' || style.visibility === 'hidden') continue;
         const rect = path.getBoundingClientRect();
         if (!rect.width && !rect.height) continue;
+        left = Math.min(left, rect.left);
+        right = Math.max(right, rect.right);
         if (!tip || rect.top < tip.top - 0.5
           || (Math.abs(rect.top - tip.top) <= 0.5 && rect.left < tip.left)) {
           tip = { top: rect.top, left: rect.left };
         }
       }
       if (!tip) return;
+      // The fist is centred on the pointer rather than hanging off its own finger: its
+      // horizontal centre is the pixel you are aiming with, and its top is that pixel's
+      // own row. Only the height changes between the two shapes, so the swap reads as
+      // the hand getting shorter and longer rather than sliding sideways.
+      const x = centred ? (left + right) / 2 : tip.left;
       svg.style.transformOrigin = '0 0';
-      svg.style.transform = 'translate(' + (box.left - tip.left) + 'px, '
+      svg.style.transform = 'translate(' + (box.left - x) + 'px, '
         + (box.top - tip.top) + 'px)';
     }
 
@@ -107,7 +115,7 @@
         svg.setAttribute('width', '100%');
         svg.setAttribute('height', '100%');
         svg.style.overflow = 'visible';
-        fit(svg);
+        fit(svg, kind === 'holding');
         markup = glyph.innerHTML;
         fitted.set(kind, markup);
       }
