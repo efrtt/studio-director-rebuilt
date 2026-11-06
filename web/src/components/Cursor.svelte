@@ -19,6 +19,10 @@
   // Something the app would draw a hand over, if it were drawing its own cursor.
   const INTERACTIVE = 'a, button, input, select, textarea, summary, label, [role="button"], [onclick]';
 
+  // How long the outgoing hand is squeezed before the cross-over. It must match the
+  // out-animation duration in wii.css: the swap is timed, not listened for.
+  const SQUEEZE_MS = 90;
+
   const IDLE_AFTER = 900;
 
   onMount(() => {
@@ -38,6 +42,19 @@
     // Each sprite is fitted once, then cached as markup with the fit baked in: the
     // painted top-left becomes the element's own corner, so `transform-origin: 0 0`
     // *is* the tip and the rotation happens about the pixel you are pointing with.
+    // One animation at a time per wrapper: every one of these writes `transform`, and
+    // a class left over from the last swap would be replayed by the next one, leaving
+    // two animations fighting over the same element.
+    const SWAP_CLASSES = ['sd-cursor-pop', 'sd-cursor-in--stretch', 'sd-cursor-in--squash',
+      'sd-cursor-out--stretch', 'sd-cursor-out--squash'];
+
+    function play(el, name) {
+      el.classList.remove(...SWAP_CLASSES);
+      // Forcing a style read restarts an animation the element already ran.
+      void el.offsetWidth;
+      el.classList.add(name);
+    }
+
     const fitted = new Map();
 
     function fit(svg, centred) {
@@ -71,27 +88,23 @@
         + (box.top - tip.top) + 'px)';
     }
 
-    // Which way the hand is changing shape, so the swap can carry the volume across:
-    // the tall pointing hand flattens as it leaves and the short fist springs in
-    // stretched, and leaving the fist is that backwards.
-    function show(kind) {
-      const prev = glyph.dataset.sprite;
-      if (prev === kind) return;
-      const swapping = (prev === 'holding') !== (kind === 'holding') && Boolean(prev);
-      // The outgoing glyph has to be cloned before the new markup is written, or there
-      // is nothing left to animate out.
-      const outgoing = glyph.firstElementChild;
-      const ghost = swapping && outgoing ? outgoing.cloneNode(true) : null;
+    // The two pictures never share the screen. Changing hand is: squeeze the one that
+    // is already there, cross over, then the other lands pulled out of shape and
+    // settles into it. The squeeze is short enough to be felt rather than waited for.
+    let pending = 0;
+    let pendingKind = null;
+
+    // Writes a sprite in and hands back its wrapper. The fit is measured level: a
+    // rotated box's axis-aligned bounds are wider than the glyph and 4px higher than
+    // its tip, so fitting while leaning bakes in the error. The `draw()` that follows
+    // every `show()` puts the lean back in the same task.
+    function cross(kind) {
       let markup = fitted.get(kind);
       if (!markup) {
-        // Measure level: a rotated box's axis-aligned bounds are wider than the glyph
-        // and 4px higher than its tip, so fitting while leaning bakes in the error.
-        // The `draw()` that follows every `show()` puts the lean back in the same task,
-        // so nothing is painted in between.
         glyph.style.transform = 'translate3d(0px, 0px, 0px)';
         glyph.innerHTML = '<span class="sd-cursor-sprite">' + SPRITES[kind] + '</span>';
         const svg = glyph.querySelector('svg');
-        if (!svg) return;
+        if (!svg) return null;
         svg.setAttribute('width', '100%');
         svg.setAttribute('height', '100%');
         svg.style.overflow = 'visible';
@@ -101,26 +114,42 @@
       }
       glyph.innerHTML = markup;
       glyph.dataset.sprite = kind;
-      const wrap = glyph.firstElementChild;
-      if (!prev) return;
-      // Nothing is animated during the fit: the class goes on afterwards, and the
-      // cached markup stays plain so a re-shown sprite does not replay last time's
-      // direction.
-      if (ghost) {
-        // A clone carries whatever the wrap had, including the last swap's incoming
-        // animation: only the outgoing one may run on the ghost.
-        ghost.classList.remove('sd-cursor-pop', 'sd-cursor-in--stretch', 'sd-cursor-in--squash');
-        ghost.classList.add('sd-cursor-ghost',
-          prev === 'holding' ? 'sd-cursor-out--stretch' : 'sd-cursor-out--squash');
-        ghost.addEventListener('animationend', () => ghost.remove(), { once: true });
-        glyph.appendChild(ghost);
-        setTimeout(() => ghost.remove(), 600);
+      return glyph.firstElementChild;
+    }
+
+    function show(kind) {
+      const prev = glyph.dataset.sprite;
+      if (kind === prev || kind === pendingKind) return;
+      if (pending) {
+        // A second change arrived mid-squeeze: drop the squeeze and cross over now,
+        // so the newest state is never stale behind a timer.
+        clearTimeout(pending);
+        pending = 0;
+        pendingKind = null;
+        const busy = glyph.firstElementChild;
+        if (busy) busy.classList.remove(...SWAP_CLASSES);
+        if (kind === glyph.dataset.sprite) return;
       }
-      if (swapping) {
-        wrap.classList.add(kind === 'holding' ? 'sd-cursor-in--stretch' : 'sd-cursor-in--squash');
-      } else {
-        wrap.classList.add('sd-cursor-pop');
+      const shape = Boolean(prev) && (prev === 'holding') !== (kind === 'holding');
+      if (!shape) {
+        const wrap = cross(kind);
+        if (wrap && prev) play(wrap, 'sd-cursor-pop');
+        return;
       }
+      const out = glyph.firstElementChild;
+      if (!out) {
+        cross(kind);
+        return;
+      }
+      play(out, prev === 'holding' ? 'sd-cursor-out--stretch' : 'sd-cursor-out--squash');
+      pendingKind = kind;
+      pending = setTimeout(() => {
+        pending = 0;
+        pendingKind = null;
+        if (kind === glyph.dataset.sprite) return;
+        const wrap = cross(kind);
+        if (wrap) play(wrap, kind === 'holding' ? 'sd-cursor-in--stretch' : 'sd-cursor-in--squash');
+      }, SQUEEZE_MS);
     }
 
     let target = null;
@@ -213,6 +242,7 @@
     document.addEventListener('mouseout', onOut);
 
     return () => {
+      clearTimeout(pending);
       cancelAnimationFrame(frame);
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerdown', onDown);

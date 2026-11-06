@@ -482,70 +482,60 @@ html[data-sd-theme="wii"] #sd-root .sd-cursor svg {
   /* The fitted artwork can reach past its own box; nothing may clip it. */
   overflow: visible;
 }
-/* Swapping sprite is a change of carriage, not a new hand. The two pointing sprites
- * are one shape, so they trade with a single small squash; between a pointing hand
- * and the fist the volume is carried across: the tall one flattens hard as it leaves,
- * the short one springs in stretched and settles, and going back from the fist is
- * that in reverse.
+/* Changing hand has three beats and they do not overlap: the sprite on screen is
+ * squeezed, the mark is swapped, and the new sprite lands pulled out of shape and
+ * settles. Only ever one hand is in the DOM, so nothing is drawn on top of anything
+ * else — the squeeze is what carries the change of shape across the cut.
  *
- * Nothing fades. The outgoing copy is a ghost of the last wrapper, painted over the
- * new one, so it covers it at full strength and uncovers it by compressing — the
- * swap is read as one shape being squeezed, not as one picture dissolving into
- * another.
+ * The squeeze is timed, not listened for: Cursor.svelte holds the swap for 90ms,
+ * which is this animation's duration, so the two must be changed together.
  *
  * Every keyframe is a scale about the hotspot the fit put at the box corner, so the
- * pixel under the mouse never moves, and each one gets a single counter-bounce: the
- * exaggeration is in the amplitude, not in the wobble. */
+ * pixel under the mouse never moves. One counter-bounce on the way in, none on the
+ * way out: the exaggeration is in the amplitude, not in the wobble. */
 html[data-sd-theme="wii"] #sd-root .sd-cursor-sprite {
   display: block;
   transform-origin: 0 0;
 }
-html[data-sd-theme="wii"] #sd-root .sd-cursor-ghost {
-  position: absolute;
-  left: 0;
-  top: 0;
-  pointer-events: none;
-  transform-origin: 0 0;
-}
 html[data-sd-theme="wii"] #sd-root .sd-cursor-pop {
-  animation: sd-cursor-pop 200ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation: sd-cursor-pop 140ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 @keyframes sd-cursor-pop {
   0% { transform: scale(1, 1); }
-  45% { transform: scale(1.1, 0.92); }
+  45% { transform: scale(1.08, 0.94); }
   100% { transform: scale(1, 1); }
 }
-/* Pointing hand -> fist: the long hand is squeezed flat out from under the incoming
- * fist, which arrives pulled tall and narrow. */
+/* Pointing hand -> fist: the long hand is squeezed flat off the screen... */
 html[data-sd-theme="wii"] #sd-root .sd-cursor-out--squash {
-  animation: sd-cursor-out-squash 240ms cubic-bezier(0.3, 0, 0.6, 1) both;
+  animation: sd-cursor-out-squash 90ms cubic-bezier(0.4, 0, 1, 1) both;
 }
 @keyframes sd-cursor-out-squash {
   0% { transform: scale(1, 1); }
-  100% { transform: scale(1.32, 0.64); }
+  100% { transform: scale(1.3, 0.66); }
 }
+/* ...and the fist lands stretched, over-corrects once, and is home. */
 html[data-sd-theme="wii"] #sd-root .sd-cursor-in--stretch {
-  animation: sd-cursor-in-stretch 240ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation: sd-cursor-in-stretch 110ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 @keyframes sd-cursor-in-stretch {
-  0% { transform: scale(0.7, 1.36); }
-  55% { transform: scale(1.04, 0.97); }
+  0% { transform: scale(0.76, 1.3); }
+  60% { transform: scale(1.03, 0.98); }
   100% { transform: scale(1, 1); }
 }
-/* Fist -> pointing hand: the same journey backwards. */
+/* Fist -> pointing hand: the same three beats backwards. */
 html[data-sd-theme="wii"] #sd-root .sd-cursor-out--stretch {
-  animation: sd-cursor-out-stretch 240ms cubic-bezier(0.3, 0, 0.6, 1) both;
+  animation: sd-cursor-out-stretch 90ms cubic-bezier(0.4, 0, 1, 1) both;
 }
 @keyframes sd-cursor-out-stretch {
   0% { transform: scale(1, 1); }
-  100% { transform: scale(0.68, 1.36); }
+  100% { transform: scale(0.7, 1.32); }
 }
 html[data-sd-theme="wii"] #sd-root .sd-cursor-in--squash {
-  animation: sd-cursor-in-squash 240ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation: sd-cursor-in-squash 110ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 @keyframes sd-cursor-in-squash {
-  0% { transform: scale(1.3, 0.68); }
-  55% { transform: scale(0.97, 1.03); }
+  0% { transform: scale(1.26, 0.74); }
+  60% { transform: scale(0.98, 1.02); }
   100% { transform: scale(1, 1); }
 }
 @media (prefers-reduced-motion: reduce) {
