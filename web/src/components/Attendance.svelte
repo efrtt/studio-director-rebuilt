@@ -179,10 +179,25 @@
     {#if attendance.actions.length}
       <p class="sd-attlinks">
         {#each attendance.actions as action}
-          <button class="sd-action" type="button" title={action.onclick} on:click={() => press(action)}>
-            {action.label}
-          </button>
+          {#if action.href && !action.onclick}
+            <!-- The app's own link: it goes where the app goes, so it stays a link.
+                 A control that carries a handler is pressed instead, even when it
+                 also prints a placeholder `#` (the timesheet line does). -->
+            <a class="sd-action" href={action.href} title={`Open ${action.label}`}>{action.label}</a>
+          {:else}
+            <button class="sd-action" type="button" title={action.onclick} on:click={() => press(action)}>
+              {action.label}
+            </button>
+          {/if}
         {/each}
+      </p>
+    {/if}
+
+    <!-- A class whose dates all fall outside this view: the page still has its
+         own links and its notes, so it is still a screen, just not a grid. -->
+    {#if !attendance.dates.length}
+      <p class="sd-panelnote">
+        This class has no dates in this view. Prev and Next move through the class’s dates.
       </p>
     {/if}
 
@@ -299,6 +314,17 @@
                   ></textarea>
                 </td>
               </tr>
+              {#if cells[editing.index][editing.dateKey].family && cells[editing.index][editing.dateKey].family.value}
+                <!-- The family's own note, when they are the ones who marked the
+                     absence. The app disables that field, so this is text: there
+                     is nothing here to edit, and nothing is claimed. -->
+                <tr>
+                  <th scope="row">Family notes</th>
+                  <td>
+                    <p class="sd-attfamily">{cells[editing.index][editing.dateKey].family.value}</p>
+                  </td>
+                </tr>
+              {/if}
             </tbody>
           </table>
         </div>

@@ -1054,6 +1054,15 @@ a.sd-stat:hover { background: var(--panel-2); }
   margin: 0 0 var(--space-4);
 }
 
+/* The family's own note on an absence. Shown, never edited: the app disables the
+   field it comes from. Text rather than an input, so a long note wraps. */
+.sd-attfamily {
+  margin: 0;
+  white-space: pre-wrap;
+  color: var(--dim);
+  font-size: var(--fs-sm);
+}
+
 /* The round icon control: the shape a table cell already gives Drop is the
    shape a date's own Cancel Class wants. `.sd-pill--icon` is scoped to a table
    cell, so the shape itself is named once here and used wherever a control is an

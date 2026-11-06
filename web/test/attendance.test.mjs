@@ -73,6 +73,7 @@ const page = (opts = {}) => parseHtml(`<form id="idForm"><div class="contentCont
     <table class="Layout"><tr><td class="Top">
       <p>The maximum class size for this class is 15.</p>
       <p><a href="#" onclick="StudioDir.onSubmitToMethod('Attendance', 'addMakeupWeeklySeries');;return false;">Schedule a make-up for this class</a></p>
+      ${opts.hrefActions || ''}
       <p>1. <input type="hidden" name="args1" value="111"><a href="#" onclick="StudioDir.onCallMethodSubmit('Attendance','editStudentNotes','args1');;return false;">Make-up/Trial/Drop-in Student: Trial</a><br>
       2. <input type="hidden" name="args2" value="222"><a href="#" onclick="StudioDir.onCallMethodSubmit('Attendance','editStudentNotes','args2');;return false;">Make-up/Trial/Drop-in Student: Trial Class</a></p>
       <textarea name="att_notes" rows="6" cols="120">Bring water.</textarea>
@@ -124,6 +125,90 @@ test('a grid of the app’s own attendance controls is a register', () => {
   assert.match(read.save.onclick, /'Attendance','save'/);
 });
 
+test('the page’s own href links are controls too, not just its onclick ones', () => {
+  // The live page (2026-11-06) puts these two in the notes cell as plain links
+  // to the app's own pages, with no handler at all. They used to be dropped.
+  const doc = page({
+    hrefActions: `
+      <a href="admin.sd?page=AddStudentMakeup&amp;cident=1&amp;sident=11">Schedule a make-up class for Ada</a>
+      <p><a href="admin.sd?page=AddStudentDropIn&amp;sident=11">Add a trial/drop-in for Ada</a></p>
+      <p><a href="#">A link with nowhere to go</a></p>`
+  });
+  const read = readAttendance(doc);
+  const labels = read.actions.map((a) => a.label);
+
+  assert.ok(labels.includes('Schedule a make-up class for Ada'), 'the make-up link is a control');
+  assert.ok(labels.includes('Add a trial/drop-in for Ada'), 'so is the drop-in link');
+  assert.equal(labels.includes('A link with nowhere to go'), false, 'a bare # goes nowhere');
+
+  // The destination is the app's own, carried so the view can link to it.
+  const makeup = read.actions.find((a) => a.label === 'Schedule a make-up class for Ada');
+  assert.equal(makeup.href, 'admin.sd?page=AddStudentMakeup&cident=1&sident=11');
+  assert.equal(makeup.onclick, '');
+
+  // The onclick control is still read as a press, and keeps the handler that
+  // names it.
+  const weekly = read.actions.find((a) => a.label === 'Schedule a make-up for this class');
+  assert.equal(weekly.href, '#');
+  assert.match(weekly.onclick, /addMakeupWeeklySeries/);
+});
+
+// The live page (2026-11-06) for a class whose dates all fall outside the view:
+// the register prints its two name columns and nothing else, while the class's
+// own links and its notes sit beside it. That is still the attendance page, and
+// the reader has to claim it before the ladder turns it into a form.
+const emptyRegister = () => parseHtml(`<form id="idForm"><div class="contentContainer"><div class="Content">
+  <div class="Breadcrumb">
+    <a href="admin.sd?page=HomePage">Home</a>
+    <a href="admin.sd?page=EditClass&amp;cident=1">818 Ballet</a>
+  </div>
+  <div class="formTitle">Attendance</div>
+  <div class="contentInfo">
+    <table class="SimpleSD"><tr class="freezetoprow"><th class="freezecolumn">First Name</th><th>Last Name</th></tr></table>
+    <table class="Layout"><tr><td class="Top">
+      <a href="admin.sd?page=AddStudentMakeup&amp;cident=1&amp;sident=11">Schedule a make-up class for Ada</a>
+      <p><a href="admin.sd?page=AddStudentDropIn&amp;sident=11">Add a trial/drop-in for Ada</a></p>
+      <p><a href="#" onclick="StudioDir.onCallMethodSubmit('Attendance','enterTimesheet','');;return false;">Enter instructor timesheet info / substitute teachers for this class</a></p>
+      <div class="MultiTable">Attendance Notes</div>
+      <textarea name="att_notes" rows="6" cols="120"></textarea>
+    </td></tr></table>
+    <a id="save" href="#" onclick="StudioDir.onSubmitToMethod('Attendance','save');">Save</a>
+    <a href="#" onclick="StudioDir.onSubmitToMethod('Attendance', 'prev');;return false;">&lt;&lt; Prev</a>
+    <a href="#" onclick="StudioDir.onSubmitToMethod('Attendance', 'next');;return false;">Next &gt;&gt;</a>
+  </div>
+</div></div></form>`);
+
+test('a register with no dates is still the attendance page, links and all', () => {
+  const read = readAttendance(emptyRegister());
+  assert.ok(read, 'the notes field is what names the page');
+  assert.equal(read.title, 'Attendance');
+
+  // No columns, so no register rows — but the page is still here.
+  assert.deepEqual(read.dates, []);
+  assert.deepEqual(read.students, []);
+  assert.deepEqual(read.notes, { name: 'att_notes', value: '' });
+
+  // The class's own controls, in the page's order: two links and one handler.
+  assert.deepEqual(read.actions.map((a) => a.label), [
+    'Schedule a make-up class for Ada',
+    'Add a trial/drop-in for Ada',
+    'Enter instructor timesheet info / substitute teachers for this class'
+  ]);
+  assert.equal(read.actions[0].href, 'admin.sd?page=AddStudentMakeup&cident=1&sident=11');
+  assert.equal(read.actions[1].href, 'admin.sd?page=AddStudentDropIn&sident=11');
+  assert.match(read.actions[2].onclick, /enterTimesheet/);
+  assert.deepEqual(read.nav.map((a) => a.label), ['<< Prev', 'Next >>']);
+  assert.equal(read.save.id, 'save');
+});
+
+test('the ladder reads that shape as attendance, not as a form with one field', () => {
+  const model = readPage(emptyRegister(), 'https://app.thestudiodirector.com/studio1/admin.sd?page=Attendance');
+  assert.equal(model.view, 'attendance', 'the app’s own attendance field names the screen');
+  assert.ok(model.attendance, 'and carries its links and notes');
+  assert.equal(model.attendance.actions.length, 3);
+  assert.equal(model.task, null, 'the form reader does not take it as a task');
+});
+
 test('a make-up, drop-in or trial registration is named by the page’s own key', () => {
   const read = readAttendance(page());
 
@@ -163,6 +248,30 @@ test('a printed roster of tick boxes is still a table, not a register', () => {
     </table></div></div>`);
   assert.equal(readAttendance(roster), null, 'no onChange, no register');
   assert.ok(readSheet(roster), 'and the sheet still reads it');
+});
+
+test('a family’s own note on an absence is read as text, and never written', () => {
+  // Measured live (2026-11-06): when the family marks the absence themselves the
+  // app prints their note after the studio's, as a `disabled` textarea named
+  // `…_family`. There is no write to offer, so the reader keeps it as text.
+  const markup = page().documentElement.innerHTML.replace(
+    '<input type="hidden" name="12_2026-11-09_0_absent"',
+    '<br>Family notes: <textarea rows="2" cols="20" name="12_2026-11-09_0_family" disabled>Practice ran late.</textarea>'
+      + '<input type="hidden" name="12_2026-11-09_0_absent"'
+  );
+  const doc = parseHtml(markup);
+  const read = readAttendance(doc);
+  const out = read.students[1].cells['2026-11-09'];
+
+  assert.deepEqual(out.family, { name: '12_2026-11-09_0_family', value: 'Practice ran late.' });
+  // The studio's own notes are still the studio's, and still the first textarea.
+  assert.equal(out.notes.value, 'Home with a fever.');
+  assert.equal(read.students[0].cells['2026-11-02'].family, null, 'an ordinary absence has none');
+
+  // Writing the reason and the studio notes leaves the family's words alone.
+  assert.deepEqual(writeAbsenceInApp(doc, out, '2', 'Late call.'), { ok: true });
+  assert.equal(doc.querySelector('[name="12_2026-11-09_0_family"]').textContent, 'Practice ran late.');
+  assert.equal(doc.querySelector('[name="12_2026-11-09_0_family"]').hasAttribute('disabled'), true);
 });
 
 test('a tick presses the app’s own checkbox, so its onChange runs', () => {
