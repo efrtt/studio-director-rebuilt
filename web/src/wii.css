@@ -462,8 +462,11 @@ html[data-sd-theme="wii"] #sd-root .sd-cursor {
   position: fixed;
   left: 0;
   top: 0;
-  width: 28px;
-  height: 28px;
+  /* The artwork's whole 76-unit canvas: all three files are exported on it, so one
+   * size here is what keeps the pointer, the highlight and the closed hand in the
+   * proportions they were drawn in. */
+  width: 56px;
+  height: 56px;
   pointer-events: none;
   z-index: 95;
   opacity: 0;
