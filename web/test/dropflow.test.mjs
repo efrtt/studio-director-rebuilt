@@ -110,6 +110,34 @@ test('a scheduled drop-in is an outcome, not a page with no view', () => {
   assert.ok(onward.includes('Go to Graduating Seniors'), 'the class it joined');
 });
 
+// The drop question as the live app draws it (2026-11-06): a bare `admin.sd`
+// whose first paragraph is the question and whose answer bar is `Drop` (a
+// scripted button) beside `Cancel` (a link). Every anchor on the page used to
+// become a button, so the card offered five for a two-answer dialog: Home, the
+// student, the class, Drop and Cancel.
+const dropAskLive = doc(`<body><div class="Content">
+  <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a></div>
+  <div class="formTitle">Drop Student</div>
+  <div class="ButtonBar"></div>
+  <div class="contentInfo">
+    <p>Are you sure you want to drop <a href="admin.sd?page=EditStudent&sident=2">Lily</a> from
+      <a href="admin.sd?page=EditClass&cident=1">Graduating Seniors</a> ?</p>
+    <p><input type="hidden" name="args9" value="2,1,">
+      <a class="Btn" id="drop" href="#" onclick="StudioDir.onCallMethodSubmit('Unenroll','doUnenroll','args9');;return false;">Drop</a>
+      <span style="margin-right:10px"></span>
+      <a class="BtnOutln" id="cancel" href="admin.sd?page=EditStudent&sident=2&tab=enrollment">Cancel</a></p>
+  </div>
+</div></body>`);
+
+test('the drop question is answered by two buttons, not every link on the page', () => {
+  const model = pendingConfirmation(dropAskLive);
+
+  assert.ok(model, 'the page is a question');
+  assert.deepEqual(model.actions.map((a) => a.label), ['Drop'], 'the app\u2019s own button');
+  assert.deepEqual(model.links.map((l) => l.label), ['Cancel'], 'the way out beside it');
+  assert.equal(model.links[0].href, 'admin.sd?page=EditStudent&sident=2&tab=enrollment');
+});
+
 // Dropping a student from a single date, measured live (2026-11-05):
 // `page=DropStudentMakeup` asks the same question with two plain links, Drop and
 // Cancel, and no list beside it. `askedConfirmation` recognised it, but its model

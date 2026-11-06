@@ -9,7 +9,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DOMParser } from 'linkedom';
 
-import { searchSettled, searchReady, sameRecordSet } from '../src/lib/choose.js';
+import { searchSettled, searchReady, searchReadyOrLate, sameRecordSet } from '../src/lib/choose.js';
 import { keepWidest, isComplete } from '../src/lib/follow.js';
 import { readPage } from '../src/readers/index.js';
 
@@ -95,6 +95,22 @@ test('the same count of a different record set is the results too', () => {
   const first = carried(1, 1);
   const done = { list: { label: '1 Items', title: 'Search Results for "lily"', total: 1, items: [{ label: 'Ada Student', href: 'admin.sd?page=EditStudent&sident=9' }] } };
   assert.equal(searchReady(done, first), true, 'a different first record is a different set');
+});
+
+test('the results page is not made to wait for a change that never comes', () => {
+  // The app serves the results page already holding the results (a fresh GET, or
+  // searching for the same thing twice), so `searchReady`'s "different record
+  // set" never happens. That ran the whole eight-second budget and left the page
+  // unskinned — the "sometimes global search shows the original" report.
+  const already = { list: { label: '8281 Items', title: 'Search Results for "a"', total: 8281, items: [{ label: 'Class (JS) 116', href: 'admin.sd?page=EditClass&cident=1' }] } };
+
+  assert.equal(searchReady(already, already), false, 'nothing changed, so the strict rule waits');
+  assert.equal(searchReadyOrLate(already, already, 400), false, 'and it still waits out the grace period');
+  assert.equal(searchReadyOrLate(already, already, 1500), true, 'then takes the page as it stands');
+
+  // A page that does not name itself as the results is never taken late.
+  const other = { list: { label: 'Families', title: 'New Family', total: 4291, items: [{ label: 'Lovelace', href: 'admin.sd?page=EditFamily&fident=1' }] } };
+  assert.equal(searchReadyOrLate(other, other, 5000), false);
 });
 
 test('a page without the results title is never ready', () => {

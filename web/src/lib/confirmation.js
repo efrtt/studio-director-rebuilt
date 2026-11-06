@@ -136,7 +136,9 @@ export function pendingConfirmation(doc) {
     lines,
     title,
     breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
-    links: linksOf(doc, root),
+    // The question's own answer bar, not everything the page links to: see
+    // `exitsOf`.
+    links: exitsOf(button),
     actions: [{
       label,
       id: button.getAttribute('id') || '',
@@ -145,38 +147,93 @@ export function pendingConfirmation(doc) {
   };
 }
 
+// The app puts the way out beside the question's own button: on the live Drop
+// Student page `Drop` and `Cancel` sit in one paragraph, and that paragraph is
+// the answer bar. Every other anchor on the page is not an answer — the
+// breadcrumb, and the names the sentence asks about ("…drop Lily from 520
+// Contemporary 1") — and reading them all as buttons gave a two-answer dialog a
+// row of five, three of which only made sense beside the original page.
+function exitsOf(button) {
+  const bar = button.parentElement;
+  if (!bar) return [];
+  return qsa(bar, 'a[href]')
+    .filter((a) => a !== button && ANSWERS_NO.test(textOf(a)))
+    .map((a) => ({ label: textOf(a), href: a.getAttribute('href') || '' }))
+    .filter((link) => link.href && link.href !== '#');
+}
+
 // The page's own way onward, as destinations rather than prose.
 //
-// A confirmation states what happened and then lists where you can go: the
-// breadcrumb ("Families > Hopper Family"), "Review the account for …", "Back to
-// the student". Those are the app's links, so they are offered as buttons - and a
-// referrer link is only a fallback, because the page before a save can be one step
-// short of where you want to return to.
-// The page's own ways onward, kept in the page's order: the breadcrumb first,
-// then the record it changed and where to go next. Five cut the drop-in's outcome
-// short — three crumbs and "Return to Lily" / "Review the account" used the budget
-// and "Go to Graduating Seniors", the link that screen exists to offer, fell off.
-const MAX_LINKS = 8;
+// A confirmation states what happened and then offers where to go: "Review the
+// account for …", "Return to Lily", "Go to Graduating Seniors". Those are
+// commands, and a command is a thing a button can do.
+//
+// What it must not turn into buttons is everything else the app links to. The
+// outcome sentence names its records with anchors ("[Lily] has been dropped from
+// [520 Contemporary 1]"), every page prints its breadcrumb, and a response that
+// also carries a list brings every row's link with it — offered as buttons that is
+// the row of random buttons these pages were showing. So: the sentence's own
+// anchors are excluded, the breadcrumb is not an option, and only command-shaped
+// labels survive. A page with no command at all falls back to its last crumb, so
+// there is always one way back and never a wall of names.
+const MAX_LINKS = 3;
 
-function linksOf(doc, root) {
+function linksOf(doc, root, opts = {}) {
+  const inside = opts.inside || null;
+  const crumbs = new Set(qsa(doc, '.Breadcrumb a'));
   const seen = new Set();
-  const out = [];
+  const commands = [];
 
   for (const anchor of qsa(root, 'a[href]')) {
     if (anchor.closest && anchor.closest(NAV + ', #idSearchSpan')) continue;
+    // An anchor inside the sentence is a name the sentence is about — unless it is
+    // a command the app appended to that same sentence ("Review the account for …"),
+    // which is an action and reads as one.
+    if (inside && inside.contains && inside.contains(anchor)
+      && !COMMAND.test(textOf(anchor))) continue;
+    if (crumbs.has(anchor)) continue;
 
     const label = textOf(anchor);
     const href = anchor.getAttribute('href');
     if (!label || !href || href === '#' || /^javascript:/i.test(href)) continue;
+    if (!COMMAND.test(label)) continue;
 
     const key = href + '|' + label;
     if (seen.has(key)) continue;
     seen.add(key);
-    out.push({ label, href });
-    if (out.length >= MAX_LINKS) break;
+    commands.push({ label, href });
   }
 
-  return out;
+  // The sentence's first anchor is the record the page is about. It is a name in
+  // prose and it stays one, but after a drop the student it names is exactly where
+  // you want to go back to, so it is offered once, as one button - not a row.
+  // A command that already points at the same record keeps its own wording
+  // ("Return to Lily"), so the name is dropped rather than duplicating it.
+  const out = [];
+  const subject = subjectOf(inside);
+  if (subject && !commands.some((link) => link.href === subject.href)) out.push(subject);
+  for (const link of commands) out.push(link);
+  if (out.length) return out.slice(0, MAX_LINKS);
+
+  // Nothing is being offered, so the app's own crumb is the way back. The last
+  // one names the record or the list you came from.
+  const last = qsa(doc, '.Breadcrumb a').pop();
+  const href = last && last.getAttribute('href');
+  return href ? [{ label: textOf(last), href }] : [];
+}
+
+// "Back to Lily" from "[Lily] has been dropped from [Graduating Seniors]": the
+// app links the subject of its own sentence, and that link is the way back to the
+// record the outcome is about. Only the first one, so the card still reads as an
+// answer with somewhere to go rather than a list of everything the page mentions.
+function subjectOf(inside) {
+  if (!inside) return null;
+  const anchor = qsa(inside, 'a[href]')[0];
+  if (!anchor) return null;
+  const label = textOf(anchor);
+  const href = anchor.getAttribute('href') || '';
+  if (!label || !href || href === '#' || /^javascript:/i.test(href)) return null;
+  return { label: 'Back to ' + label, href };
 }
 
 function messageIn(root, pattern) {
@@ -191,8 +248,10 @@ function messageIn(root, pattern) {
   if (!matches.length) return null;
 
   // Prefer the deepest match: the outer .Content also contains the sentence.
+  // The element is kept as well as the text, because the anchors inside it are
+  // the names the sentence is about and must not come back as buttons.
   const deepest = matches.find(({ el }) => !matches.some((other) => other !== el && el.contains(other.el)));
-  return (deepest || matches[0]).text;
+  return deepest || matches[0];
 }
 
 export function confirmationOf(doc, opts = {}) {
@@ -200,14 +259,14 @@ export function confirmationOf(doc, opts = {}) {
   if (!root) return null;
 
   let ok = true;
-  let message = messageIn(root, CONFIRMED);
+  let found = messageIn(root, CONFIRMED);
 
-  if (!message && opts.allowRefused) {
+  if (!found && opts.allowRefused) {
     ok = false;
-    message = messageIn(root, REFUSED);
+    found = messageIn(root, REFUSED);
   }
 
-  if (!message) {
+  if (!found) {
     // No outcome sentence: this may be the same screen one step earlier, waiting
     // for the app's own button.
     const pending = pendingConfirmation(doc);
@@ -223,12 +282,13 @@ export function confirmationOf(doc, opts = {}) {
   return {
     kind: 'confirm',
     ok,
-    message,
+    message: found.text,
     // The app's own title is usually blank here; the message is the screen.
     title: textOf(qs(doc, '.formTitle')) || '',
     breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
-    // Where the page itself says you can go next.
-    links: linksOf(doc, root)
+    // Where the page itself says you can go next — not the anchors inside the
+    // sentence, which are the records it is talking about.
+    links: linksOf(doc, root, { inside: found.el })
   };
 }
 
@@ -374,7 +434,9 @@ export function answeredQuestion(doc) {
     lines: lines.length ? lines : [question],
     title,
     breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
-    links: [action(no)],
+    // Both answers are already actions; repeating Cancel as a link drew it twice
+    // on the card. Nothing else on the page answers a question.
+    links: [],
     actions: [action(yes[0]), action(no)]
   };
 }

@@ -94,8 +94,10 @@
       </p>
       {#if confirm.links && confirm.links.length}
         <div class="sd-editor-actions sd-confirm-actions">
-          {#each confirm.links as link}
-            <a class="sd-btn" href={link.href} title={link.href}>{link.label}</a>
+          <!-- The first is the record the outcome is about ("Back to Lily"), or
+               the page's own crumb when it offers nothing else: the way on. -->
+          {#each confirm.links as link, i}
+            <a class="sd-btn" class:sd-primary={i === 0} href={link.href} title={link.href}>{link.label}</a>
           {/each}
         </div>
       {:else if back && back.href}

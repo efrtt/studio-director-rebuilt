@@ -57,5 +57,10 @@ export const FURNITURE = '.formTitle, .Breadcrumb, .ButtonBar, .ButtonArea, .men
 // The page's own title, in the order the app uses it.
 export const PAGE_TITLE = '.formTitle, .ReportName, h1';
 
+// One record in the app's result panel. Named here because two readers and the
+// search route's wait all ask for it, and the panel's vocabulary belongs in one
+// place rather than in whichever file needed it first.
+export const RESULT_ITEM = '.searchResultItem';
+
 // A subtitle or band above a table.
 export const HEADING = '.formTitle, .ReportTableSubtitle, .sectionHeader, .sectionTitle, h2, h3, h4';

@@ -18,8 +18,9 @@
 // order therefore showed the family list and *then* the results, so the panel is
 // chosen by what it says about itself rather than by where it sits.
 
-import { pageName, qs, qsa, textOf } from './shell.js';
+import { pageName, qs, qsa, textOf, titleOf } from './shell.js';
 import { resultPanel, panelRows } from '../model/regions.js';
+import { RESULT_ITEM } from '../model/appdom.js';
 
 // What a row is. The link says it best (`?page=EditFamily`), and the app's own
 // label often says it too ("Family: Hopper Family"); the label prefix is then
@@ -74,6 +75,41 @@ function totalOf(doc, list) {
   const m = String((filter && filter.getAttribute('placeholder')) || '')
     .match(/(\d[\d,]*)\s+items?/i);
   return m ? Number(m[1].replace(/,/g, '')) : null;
+}
+
+// A cheap look at the panel, in the shape the search wait asks its questions of.
+//
+// The wait needs to know three things: what the page calls itself, how many
+// records the panel claims, and which record it starts with. A whole `readList`
+// answers those and walks every row to do it — thousands of them on a live
+// search — so asking it every 120ms starved the page the wait was for, and the
+// skin could appear ten seconds late, or not at all.
+//
+// The first row and the stated total are enough: a different first record or a
+// different total is a different record set (`lib/choose.js`), and the rest of
+// the rows are read once, after the panel has said what it is.
+export function panelPeek(doc) {
+  const title = titleOf(doc, 'div') || '';
+  const list = pickList(doc);
+  if (!list) return { view: null, title, list: null };
+
+  const heading = textOf(headingOf(list, doc));
+  const total = totalOf(doc, list);
+  const row = qs(list, RESULT_ITEM);
+  const anchor = row ? (row.tagName === 'A' ? row : qs(row, 'a[href]')) : null;
+  const label = textOf(anchor || row);
+
+  return {
+    view: 'list',
+    title,
+    list: {
+      title,
+      // The same naming rule as `readList`: a count is not a name.
+      label: heading && !COUNT.test(heading) ? heading : title,
+      total,
+      items: label ? [{ label, href: anchor ? anchor.getAttribute('href') : null }] : []
+    }
+  };
 }
 
 export function readList(doc, opts = {}) {

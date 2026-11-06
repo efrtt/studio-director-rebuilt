@@ -32,7 +32,7 @@ import { CONTROLS, controlsIn, controlOf } from './controls.js';
 import { labelOfControl, leadingLabel } from './labels.js';
 import { rowLabel } from './labels.js';
 import { contentRoot, isHidden } from './root.js';
-import { CHROME } from './appdom.js';
+import { CHROME, RESULT_ITEM } from './appdom.js';
 
 // The app's own names for "this table is a form". Data, not logic: a new app
 // class is added here and every reader that asks sees it.
@@ -330,7 +330,8 @@ export function monthWeeks(doc) {
 // `.searchResultItem` per record. They are classified here, by the same
 // evidence as a table (`repeated` = a row carrying a record and its own link),
 // so a reader never scrapes links itself.
-const RESULT_ITEM = '.searchResultItem';
+// The panel's row selector is the app's vocabulary, not this file's: it is
+// declared in `appdom.js` beside the rest of it.
 const PANEL_SELECTOR = '.searchResultPanel, #idSearchSpan';
 const ITEM_COUNT = /^\s*(\d[\d,]*)\s+items?\s*$/i;
 
