@@ -85,13 +85,19 @@
       // The `draw()` that follows every `show()` puts the lean back in the same task,
       // so nothing is painted in between.
       glyph.style.transform = 'translate3d(0px, 0px, 0px)';
-      glyph.innerHTML = SPRITES[kind];
+      // The sprite sits in its own wrapper so a swap can pop it: an animation on the
+      // glyph itself would fight the transform that carries the position and the lean.
+      glyph.innerHTML = '<span class="sd-cursor-sprite">' + SPRITES[kind] + '</span>';
+      const wrap = glyph.firstElementChild;
       const svg = glyph.querySelector('svg');
       if (!svg) return;
       svg.setAttribute('width', '100%');
       svg.setAttribute('height', '100%');
       svg.style.overflow = 'visible';
       fit(svg, kind === 'holding');
+      // Added after the fit, so the measuring happens at rest rather than on whatever
+      // frame of the bounce the browser had already reached.
+      wrap.classList.add('sd-cursor-pop');
       fitted.set(kind, glyph.innerHTML);
       glyph.dataset.sprite = kind;
     }
