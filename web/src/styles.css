@@ -1348,6 +1348,63 @@ html[data-sd-theme="light"][data-sd-accent="rose"] #sd-root { --accent: #a3305a;
 .sd-rail--collapsed .sd-navinitial { display: block; margin: 0 auto; }
 .sd-rail--collapsed .sd-railtoggle { justify-content: center; padding: 0; }
 
+/* ---- the rail, in dark and light ---------------------------------------
+ * The rail is the one control on every page, and 13px labels at 34px were small
+ * for something read every day. Dark and light get the wider, larger rail: 15px
+ * labels at 42px rows with 18px icons, and the active section moves from the
+ * grey a hover uses to the accent's own tint, so "where am I" survives the
+ * pointer passing over it.
+ *
+ * Scoped to the two themes, never the skin: the skin's rail is the channel menu
+ * and pins its own width, padding and fills, so none of this may reach it — and
+ * changing the base rules instead would have moved the skin too. Written as an
+ * `:is()` of the two names rather than a `:not()` of the third because the
+ * artefact check reads the skin's theme name in the bundle as a skinned build. */
+html:is([data-sd-theme="dark"], [data-sd-theme="light"]) #sd-root {
+  --rail-w: 248px;
+}
+html:is([data-sd-theme="dark"], [data-sd-theme="light"]) #sd-root .sd-rail {
+  gap: var(--space-1);
+}
+html:is([data-sd-theme="dark"], [data-sd-theme="light"]) #sd-root .sd-brand {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+html:is([data-sd-theme="dark"], [data-sd-theme="light"]) #sd-root .sd-navlink {
+  min-height: 42px;
+  padding: 0 10px;
+  gap: 10px;
+  border-radius: var(--radius-md);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+}
+/* A min-width rather than a width: Font Awesome's glyphs differ in width, and a
+   fixed box would clip the wide ones. */
+html:is([data-sd-theme="dark"], [data-sd-theme="light"]) #sd-root .sd-navicon {
+  flex: 0 0 auto;
+  min-width: 18px;
+  font-size: 18px;
+  text-align: center;
+}
+/* `!important` here is not decoration: further down this file the app's own
+   repaints set the active fill and clear its edge with `!important`, and a plain
+   rule loses to them however specific it is. The selector carries one class more
+   than those, so this wins without reordering anything — and it stays inside the
+   `:not` so the skin's channel menu never sees it. */
+html:is([data-sd-theme="dark"], [data-sd-theme="light"]) #sd-root .sd-navlink--active {
+  background: var(--accent-soft) !important;
+  color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent) !important;
+}
+/* Pointing at the page you are on must not repaint it as an ordinary row:
+   `.sd-navlink:hover` is more specific than the active rule, so the accent tint
+   is restated here, deeper rather than grey. */
+html:is([data-sd-theme="dark"], [data-sd-theme="light"]) #sd-root .sd-navlink--active:hover {
+  background: color-mix(in srgb, var(--accent) 20%, transparent) !important;
+  color: var(--accent);
+}
+
 /* ---- header ---- */
 .sd-top { gap: var(--space-4); padding: var(--space-3) var(--page-gutter); }
 .sd-heading { min-width: 0; }
