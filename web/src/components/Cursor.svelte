@@ -63,29 +63,43 @@
 
     const fitted = new Map();
 
+    // One canvas, one hotspot. The three files are exported on the same 76-unit canvas
+    // with the same group transform, so the offset that puts the pointing hand's tip on
+    // the box corner puts every other sprite's tip there as well. Measuring each sprite
+    // on its own was the bug: the topmost painted path is not the same one in all three
+    // (the closed hand's finger line is shorter, so a different path wins), and browsers
+    // round and expand stroke extents differently — Chrome agreed with itself, Firefox
+    // put the two a pixel apart, and the change of hand slid sideways.
+    //
+    // The offset is measured once, from whichever sprite first has a size, and reused.
+    // Returns false when nothing could be measured (the glyph can be inserted before the
+    // stylesheet gives it a size), so the caller does not cache an unfitted sprite.
+    let sharedOffset = null;
+
     function fit(svg) {
-      const box = svg.getBoundingClientRect();
-      // One rule for all three sprites: the hotspot is the topmost painted thing, and
-      // the hand hangs below and to the right of it. Taking that single path, rather
-      // than the union of the artwork, keeps the hand's left edge from dragging the
-      // hotspot off the point you are aiming with — and because the three files are
-      // exported on the same canvas, it also puts the pointing hand and the fist on the
-      // same x, so a change of hand only ever moves vertically.
-      let tip = null;
-      for (const path of svg.querySelectorAll('path')) {
-        const style = getComputedStyle(path);
-        if (style.display === 'none' || style.visibility === 'hidden') continue;
-        const rect = path.getBoundingClientRect();
-        if (!rect.width && !rect.height) continue;
-        if (!tip || rect.top < tip.top - 0.5
-          || (Math.abs(rect.top - tip.top) <= 0.5 && rect.left < tip.left)) {
-          tip = { top: rect.top, left: rect.left };
+      if (!sharedOffset) {
+        const box = svg.getBoundingClientRect();
+        // The tip is the topmost painted thing: taking that one path, rather than the
+        // union of the artwork, keeps the hand's left edge from dragging the hotspot off
+        // the point you are aiming with.
+        let tip = null;
+        for (const path of svg.querySelectorAll('path')) {
+          const style = getComputedStyle(path);
+          if (style.display === 'none' || style.visibility === 'hidden') continue;
+          const rect = path.getBoundingClientRect();
+          if (!rect.width && !rect.height) continue;
+          if (!tip || rect.top < tip.top - 0.5
+            || (Math.abs(rect.top - tip.top) <= 0.5 && rect.left < tip.left)) {
+            tip = { top: rect.top, left: rect.left };
+          }
         }
+        if (!tip) return false;
+        sharedOffset = { x: box.left - tip.left, y: box.top - tip.top };
       }
-      if (!tip) return;
       svg.style.transformOrigin = '0 0';
-      svg.style.transform = 'translate(' + (box.left - tip.left) + 'px, '
-        + (box.top - tip.top) + 'px)';
+      svg.style.transform = 'translate(' + sharedOffset.x + 'px, '
+        + sharedOffset.y + 'px)';
+      return true;
     }
 
     // The two pictures never share the screen. Changing hand is: squeeze the one that
@@ -109,9 +123,9 @@
         svg.setAttribute('width', '100%');
         svg.setAttribute('height', '100%');
         svg.style.overflow = 'visible';
-        fit(svg);
+        const measured = fit(svg);
         markup = glyph.innerHTML;
-        fitted.set(kind, markup);
+        if (measured) fitted.set(kind, markup);
       }
       glyph.innerHTML = markup;
       glyph.dataset.sprite = kind;
