@@ -51,7 +51,7 @@ test('a label it cannot place keeps its word', () => {
 });
 
 test('the icons are masks, not a webfont', () => {
-  for (const name of ['edit', 'drop', 'done', 'dates', 'attendance']) {
+  for (const name of ['edit', 'drop', 'done', 'dates', 'attendance', 'lock', 'unlock']) {
     assert.match(css, new RegExp('\\.sd-icon--' + name + ' \\{ --glyph: url\\("data:image/svg\\+xml,'), name);
   }
   assert.match(css, /mask: var\(--glyph\) center \/ contain no-repeat/);
