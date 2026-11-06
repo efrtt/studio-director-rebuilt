@@ -17,6 +17,7 @@
 //   npm run sync:main                 sync, strip, build, test, goldens
 //   npm run sync:main -- --check      report the difference, write nothing
 //   npm run sync:main -- --no-build   strip only
+//   npm run sync:main -- --force      the same, replacing uncommitted work
 //   npm run sync:main -- --in <path>  use that checkout of main
 //   npm run sync:main -- --from <ref> strip from another ref (default wii-skin)
 //
@@ -41,6 +42,7 @@ const opt = (name, fallback) => {
 const FROM = opt('from', 'wii-skin');
 const CHECK = flag('check');
 const BUILD = !flag('no-build');
+const FORCE = flag('force');
 const ARTEFACT = 'studio-director-rebuilt.user.js';
 
 // The skin, exactly: these files exist only to carry it.
@@ -391,7 +393,9 @@ if (CHECK) {
 }
 
 const dirty = git(main, 'status', '--porcelain');
-if (dirty) throw new Error('the main checkout has changes; commit or stash them first:\n' + dirty);
+if (dirty && !FORCE) {
+  throw new Error('the main checkout has changes, and syncing replaces the tree: commit them first, or pass --force:\n' + dirty);
+}
 
 console.log('syncing ' + main + ' from ' + FROM);
 git(main, 'checkout', FROM, '--', '.');
