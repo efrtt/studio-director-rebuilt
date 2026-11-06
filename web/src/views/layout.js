@@ -27,7 +27,9 @@ export const LAYOUT = {
   sheet: { width: 'wide' },
   // A date card is 210px, and a month can hold five of them side by side.
   attendance: { width: 'wide' },
-  report: { width: 'wide' }
+  report: { width: 'wide' },
+  // An editable table of four controls a row needs the window, not a column.
+  charges: { width: 'wide' }
 };
 
 export const DEFAULT_LAYOUT = Object.freeze({

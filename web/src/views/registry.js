@@ -21,6 +21,7 @@ import Index from '../components/Index.svelte';
 import Note from '../components/Note.svelte';
 import Confirmed from '../components/Confirmed.svelte';
 import Payment from '../components/Payment.svelte';
+import Charges from '../components/Charges.svelte';
 
 export const VIEWS = {
   week: Week,
@@ -33,6 +34,7 @@ export const VIEWS = {
   insights: Insights,
   trends: Trends,
   attendance: Attendance,
+  charges: Charges,
   sheet: Sheet,
   settings: Settings,
   note: Note,
@@ -59,6 +61,7 @@ export function viewOf(model) {
   if (m.insights) return 'insights';
   if (m.trends) return 'trends';
   if (m.attendance) return 'attendance';
+  if (m.charges) return 'charges';
   if (m.sheet) return 'sheet';
   if (m.index) return 'index';
   if (m.settings) return 'settings';
@@ -122,6 +125,13 @@ export function propsFor(view, model, handlers) {
       // Every gesture in this view is a gesture on the app's own control, so it
       // is handed one object rather than six callbacks.
       return { attendance: model.attendance, onAttend: h.onAttend || null };
+    case 'charges':
+      // Fields in the app's own cells; Save is the page's Save.
+      return {
+        charges: model.charges,
+        onSave: h.onSave || null,
+        onPress: h.onPress || null
+      };
     case 'sheet':
       return { sheet: model.sheet, onPress: h.onPress };
     case 'settings':
@@ -173,6 +183,7 @@ export function titleOf(model) {
   const task = m.task;
   const sheet = m.sheet;
   const attendance = m.attendance;
+  const charges = m.charges;
   const insights = m.insights;
   const trends = m.trends;
   const index = m.index;
@@ -184,6 +195,7 @@ export function titleOf(model) {
   return (form && form.title) || (report && report.title) || (task && task.title)
     || (insights && insights.title) || (trends && trends.title)
     || (attendance && attendance.title)
+    || (charges && charges.title)
     || (sheet && sheet.title) || (index && index.title) || (settings && settings.title)
     || (note && note.title)
     || (m.month && m.month.title)
@@ -203,6 +215,7 @@ export function footerOf(model) {
     const insights = m.insights;
     const trends = m.trends;
     const attendance = m.attendance;
+    const charges = m.charges;
     const settings = m.settings;
     const note = m.note;
     const confirm = m.confirm;
@@ -247,6 +260,8 @@ export function footerOf(model) {
   } else if (view === 'trends' && trends) {
     left = plural(trends.charts.length, 'chart', 'charts');
     if (trends.tables.length) left += ` \u00b7 ${plural(trends.tables.length, 'table', 'tables')}`;
+  } else if (view === 'charges' && charges) {
+    left = `${plural(charges.rows.length, 'charge', 'charges')} \u00b7 ${plural(charges.fields.length, 'field', 'fields')}`;
   } else if (view === 'attendance' && attendance) {
     // Dates only. The present count belongs to the register's own bar, which
     // follows every tick; a second copy of it here would be the model's number,

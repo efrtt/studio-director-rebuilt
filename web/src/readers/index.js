@@ -35,6 +35,7 @@ import { readSettings } from '../lib/settings.js';
 import { confirmationOf } from '../lib/confirmation.js';
 import { readNote } from '../lib/note.js';
 import { readPayment } from '../lib/payment.js';
+import { readCharges } from '../lib/chargeedit.js';
 
 // Most specific first, the smallest last.
 const ORDER = [
@@ -65,22 +66,27 @@ const ORDER = [
   // what names the page even when the register has no dates to tick: that shape
   // is a form with a save, and `task` used to take it as one field.
   { id: 'attendance', key: 'attendance', after: ['editor', 'confirmation', 'week', 'list', 'payment'], read: (doc) => readAttendance(doc) },
+  // A table you type into: `ManageAddtlClassCharges` prints its records as the
+  // cells of its own controls, so no other reader can see records in it at all
+  // (the rows are typed into, which makes the table a form). Reads the controls
+  // by their own ids, so the save writes into the page rather than around it.
+  { id: 'charges', key: 'charges', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance'], read: (doc) => readCharges(doc) },
   // A filter form plus a run control. Late, so NewClass keeps its list view.
-  { id: 'report', key: 'report', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance'], read: (doc) => readReport(doc) },
+  { id: 'report', key: 'report', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'charges'], read: (doc) => readReport(doc) },
   // A form with a control that is not Run Report.
-  { id: 'task', key: 'task', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report'], read: (doc) => readTask(doc) },
+  { id: 'task', key: 'task', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'charges', 'report'], read: (doc) => readTask(doc) },
   // The dashboard's Insights tab: stat cells and a donut, no records at all.
-  { id: 'insights', key: 'insights', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task'], read: (doc) => readInsights(doc) },
+  { id: 'insights', key: 'insights', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'charges', 'report', 'task'], read: (doc) => readInsights(doc) },
   // The dashboard's Trends tab: the app's own chart images in a layout table.
-  { id: 'trends', key: 'trends', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task', 'insights'], read: (doc) => readTrends(doc) },
+  { id: 'trends', key: 'trends', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'charges', 'report', 'task', 'insights'], read: (doc) => readTrends(doc) },
   // Tables with rows: dashboards, print sheets, list-ish settings.
-  { id: 'sheet', key: 'sheet', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task', 'insights', 'trends'], read: (doc) => readSheet(doc) },
+  { id: 'sheet', key: 'sheet', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'charges', 'report', 'task', 'insights', 'trends'], read: (doc) => readSheet(doc) },
   // Landing pages: what is left when there is nothing but links.
-  { id: 'index', key: 'index', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task', 'insights', 'trends', 'sheet'], read: (doc) => readIndex(doc) },
+  { id: 'index', key: 'index', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'charges', 'report', 'task', 'insights', 'trends', 'sheet'], read: (doc) => readIndex(doc) },
   // A control and a save. After index, because a menu is not a settings card.
-  { id: 'settings', key: 'settings', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task', 'insights', 'trends', 'sheet', 'index'], read: (doc) => readSettings(doc) },
+  { id: 'settings', key: 'settings', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'charges', 'report', 'task', 'insights', 'trends', 'sheet', 'index'], read: (doc) => readSettings(doc) },
   // Last of all, and the smallest: a sentence and the app's own button.
-  { id: 'note', key: 'note', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'report', 'task', 'insights', 'trends', 'sheet', 'index', 'settings'], read: (doc) => readNote(doc) }
+  { id: 'note', key: 'note', after: ['editor', 'confirmation', 'week', 'list', 'payment', 'attendance', 'charges', 'report', 'task', 'insights', 'trends', 'sheet', 'index', 'settings'], read: (doc) => readNote(doc) }
 ];
 
 export const READERS = ORDER.map((reader) => ({
@@ -114,7 +120,7 @@ const MERGE = {
 
 // Titles come from the model, except for the two readers that have none of their
 // own (a week and a list take the page's own title).
-const TITLED = ['report', 'task', 'insights', 'trends', 'attendance', 'sheet', 'index', 'settings', 'note'];
+const TITLED = ['report', 'task', 'insights', 'trends', 'attendance', 'charges', 'sheet', 'index', 'settings', 'note'];
 
 export function readPage(doc, url, opts = {}) {
   const ctx = {
@@ -146,6 +152,7 @@ export function readPage(doc, url, opts = {}) {
     insights: null,
     trends: null,
     attendance: null,
+    charges: null,
     sheet: null,
     index: null,
     settings: null,

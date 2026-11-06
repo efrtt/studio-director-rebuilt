@@ -2802,3 +2802,45 @@ html[data-sd-theme="light"] #sd-root .sd-asktext { color: var(--dim); }
   position: absolute; width: 1px; height: 1px; overflow: hidden;
   clip-path: inset(50%); white-space: nowrap;
 }
+
+/* ---- charges: the app's table, typed into -------------------------------
+   One screen in the app is a table you edit rather than read: every row is a
+   class, and amount, due date, category and notes are the app's own controls in
+   the app's own cells. The view writes only what changed into those controls and
+   presses the page's Save, so nothing here builds a request.
+
+   The date is three selects and nothing else — the app draws a calendar glyph
+   beside them that only opens its own picker, and three selects already pick the
+   date — so they are given one width per part and one baseline, which is what
+   makes the figures in a column line up as a column. */
+.sd-charges { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+.sd-charges .sd-listbar { border-bottom: 0; padding-bottom: 4px; }
+.sd-charges .sd-table td { vertical-align: middle; }
+.sd-chargename { color: var(--text); font-weight: 600; text-decoration: none; }
+.sd-chargename:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+.sd-chargesub {
+  display: block;
+  margin-top: 2px;
+  color: var(--dim);
+  font-size: var(--fs-sm);
+  line-height: 1.3;
+}
+.sd-chargeamount { width: 92px; text-align: right; font-variant-numeric: tabular-nums; }
+.sd-chargenotes { min-width: 120px; }
+.sd-chargecat { min-width: 170px; }
+.sd-chargedate { display: inline-flex; align-items: center; gap: 4px; }
+/* A second `.sd-input` in a field column stacks with a 6px top margin, and a
+   margin on a centred flex item lifts it: that was the month box sitting 3px
+   above the day and year beside it. Cancelled, so the three share one baseline. */
+.sd-chargedate .sd-input + .sd-input { margin-top: 0; }
+/* The date boxes keep every other field's own size (min-height, padding,
+   font-size) and only pin their width. Pinning a 26px height here is what made
+   them sit 5px below the Amount and Notes boxes in the same row and read as a
+   low, small control rather than part of the line. */
+.sd-chargedate .sd-input {
+  width: auto;
+  vertical-align: middle;
+}
+.sd-chargedate .sd-input--mon { width: 68px; }
+.sd-chargedate .sd-input--day { width: 52px; }
+.sd-chargedate .sd-input--year { width: 74px; }

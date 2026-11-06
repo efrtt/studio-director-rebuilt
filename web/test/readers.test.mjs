@@ -26,6 +26,10 @@ test('the registry order is the contract, most specific first', () => {
     // The app's own attendance field names the register, so it is read before
     // the form readers that would otherwise take a dateless register as a task.
     'attendance',
+    // A table you type into: its cells are the app's own controls, so it is
+    // records no other reader can see (the rows are typed into, which makes the
+    // table a form). Read before the form readers, which would take it as a task.
+    'charges',
     'report', 'task', 'insights', 'trends',
     'sheet', 'index', 'settings', 'note'
   ]);
@@ -62,7 +66,7 @@ test('the model keeps one key per reader, all present', () => {
   const model = readPage(doc('<body><div class="contentContainer"><p>nothing here</p></div></body>'),
     'https://app.thestudiodirector.com/studio1/admin.sd?page=Whatever');
 
-  for (const key of ['nav', 'week', 'list', 'report', 'task', 'insights', 'trends', 'sheet', 'index', 'settings', 'note', 'confirm']) {
+  for (const key of ['nav', 'week', 'list', 'report', 'task', 'insights', 'trends', 'attendance', 'charges', 'sheet', 'index', 'settings', 'note', 'confirm']) {
     assert.ok(key in model, key + ' is present');
   }
   assert.equal(model.view, null, 'an unclaimed page is left to the app');
