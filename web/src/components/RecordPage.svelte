@@ -15,7 +15,6 @@
   import { cellKind } from '../lib/cellclass.js';
   import CellHeading from './CellHeading.svelte';
   import CellAction from './CellAction.svelte';
-  import CellLink from './CellLink.svelte';
   import DuePill from './DuePill.svelte';
   import { rememberDeleted } from '../lib/deletedname.js';
   import {
@@ -134,12 +133,16 @@
             </thead>
           {/if}
           <tbody>
+            <!-- A row that carries its own Edit control is not also a link: the
+                 name cell says what the row is and the Edit cell is the way in.
+                 Linking both made two targets for one destination, and a link cell
+                 trades the cell's padding for the anchor's - which is what put these
+                 names flush in the corner while the columns beside them kept theirs. -->
             {#each found.rows as row}
               <tr class:sd-recordrow--open={open === row}>
                 {#each row.cells as cell}
                   <td
                     class:sd-cell--right={cell.right}
-                    class:sd-cell--link={cellKind(cell) === 'link'}
                     class:sd-cell--action={cellKind(cell) === 'action'}
                   >
                     {#if cell.actions && cell.actions.length > 1}
@@ -149,7 +152,6 @@
                         {/each}
                       </span>
                     {:else if cellKind(cell) === 'action' && cell.text}<CellAction href={cell.href || '#'} label={cell.text} />
-                    {:else if cell.href}<CellLink href={cell.href} text={cell.text} due={cell.due || ''} />
                     {:else}{cell.text}{#if cell.due}<DuePill due={cell.due} />{/if}{/if}
                   </td>
                 {/each}
