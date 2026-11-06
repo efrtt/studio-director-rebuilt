@@ -483,15 +483,19 @@ html[data-sd-theme="wii"] #sd-root .sd-cursor svg {
   overflow: visible;
 }
 /* Swapping sprite is a change of carriage, not a new hand. The two pointing sprites
- * are one shape, so they trade with a single quiet overshoot; between a pointing hand
- * and the fist the shapes differ, so the volume is carried across: the tall one
- * flattens as it leaves, the short one springs in stretched and settles, and going
- * back from the fist is that in reverse. The outgoing copy is a ghost of the last
- * wrapper, absolutely placed over the new one and faded out, so the two overlap
- * instead of cutting.
+ * are one shape, so they trade with a single small squash; between a pointing hand
+ * and the fist the volume is carried across: the tall one flattens hard as it leaves,
+ * the short one springs in stretched and settles, and going back from the fist is
+ * that in reverse.
  *
- * Every one is a scale about the hotspot the fit put at the box corner, so the pixel
- * under the mouse never moves. Nothing here is a loop: one pass and a settle. */
+ * Nothing fades. The outgoing copy is a ghost of the last wrapper, painted over the
+ * new one, so it covers it at full strength and uncovers it by compressing — the
+ * swap is read as one shape being squeezed, not as one picture dissolving into
+ * another.
+ *
+ * Every keyframe is a scale about the hotspot the fit put at the box corner, so the
+ * pixel under the mouse never moves, and each one gets a single counter-bounce: the
+ * exaggeration is in the amplitude, not in the wobble. */
 html[data-sd-theme="wii"] #sd-root .sd-cursor-sprite {
   display: block;
   transform-origin: 0 0;
@@ -508,41 +512,40 @@ html[data-sd-theme="wii"] #sd-root .sd-cursor-pop {
 }
 @keyframes sd-cursor-pop {
   0% { transform: scale(1, 1); }
-  40% { transform: scale(1.05, 0.96); }
+  45% { transform: scale(1.1, 0.92); }
   100% { transform: scale(1, 1); }
 }
-/* Pointing hand -> fist: the long hand flattens away under the incoming fist. */
+/* Pointing hand -> fist: the long hand is squeezed flat out from under the incoming
+ * fist, which arrives pulled tall and narrow. */
 html[data-sd-theme="wii"] #sd-root .sd-cursor-out--squash {
-  animation: sd-cursor-out-squash 240ms ease-out both;
+  animation: sd-cursor-out-squash 240ms cubic-bezier(0.3, 0, 0.6, 1) both;
 }
 @keyframes sd-cursor-out-squash {
-  0% { transform: scale(1, 1); opacity: 1; }
-  100% { transform: scale(1.16, 0.82); opacity: 0; }
+  0% { transform: scale(1, 1); }
+  100% { transform: scale(1.32, 0.64); }
 }
-/* ...and the fist arrives stretched, so the two read as one shape with the volume
- * moved from height to width. */
 html[data-sd-theme="wii"] #sd-root .sd-cursor-in--stretch {
   animation: sd-cursor-in-stretch 240ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 @keyframes sd-cursor-in-stretch {
-  0% { transform: scale(0.86, 1.15); }
-  55% { transform: scale(1.02, 0.985); }
+  0% { transform: scale(0.7, 1.36); }
+  55% { transform: scale(1.04, 0.97); }
   100% { transform: scale(1, 1); }
 }
 /* Fist -> pointing hand: the same journey backwards. */
 html[data-sd-theme="wii"] #sd-root .sd-cursor-out--stretch {
-  animation: sd-cursor-out-stretch 240ms ease-out both;
+  animation: sd-cursor-out-stretch 240ms cubic-bezier(0.3, 0, 0.6, 1) both;
 }
 @keyframes sd-cursor-out-stretch {
-  0% { transform: scale(1, 1); opacity: 1; }
-  100% { transform: scale(0.86, 1.15); opacity: 0; }
+  0% { transform: scale(1, 1); }
+  100% { transform: scale(0.68, 1.36); }
 }
 html[data-sd-theme="wii"] #sd-root .sd-cursor-in--squash {
   animation: sd-cursor-in-squash 240ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 @keyframes sd-cursor-in-squash {
-  0% { transform: scale(1.14, 0.85); }
-  55% { transform: scale(0.99, 1.015); }
+  0% { transform: scale(1.3, 0.68); }
+  55% { transform: scale(0.97, 1.03); }
   100% { transform: scale(1, 1); }
 }
 @media (prefers-reduced-motion: reduce) {
