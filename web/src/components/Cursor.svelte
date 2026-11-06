@@ -23,6 +23,10 @@
   // out-animation duration in wii.css: the swap is timed, not listened for.
   const SQUEEZE_MS = 90;
 
+  // How long the incoming hand takes to settle. A swap younger than this is not
+  // squeezed away again: the fist that has just landed hands straight back.
+  const SETTLE_MS = 110;
+
   const IDLE_AFTER = 900;
 
   onMount(() => {
@@ -57,34 +61,27 @@
 
     const fitted = new Map();
 
-    function fit(svg, centred) {
+    function fit(svg) {
       const box = svg.getBoundingClientRect();
-      // The tip is the topmost painted thing: everything else hangs below it. Taking
-      // that one path, rather than the union, keeps the hand's left edge from dragging
-      // the hotspot sideways off the point you are aiming with.
+      // The hotspot is the topmost painted thing — the fingertip — and the hand hangs
+      // below and to the right of it. Taking that one path, rather than the union of
+      // the artwork, keeps the hand's left edge from dragging the hotspot off the point
+      // you are aiming with. It is also the same point for all three sprites: the fist
+      // closes on the finger it was pointing with.
       let tip = null;
-      let left = Infinity;
-      let right = -Infinity;
       for (const path of svg.querySelectorAll('path')) {
         const style = getComputedStyle(path);
         if (style.display === 'none' || style.visibility === 'hidden') continue;
         const rect = path.getBoundingClientRect();
         if (!rect.width && !rect.height) continue;
-        left = Math.min(left, rect.left);
-        right = Math.max(right, rect.right);
         if (!tip || rect.top < tip.top - 0.5
           || (Math.abs(rect.top - tip.top) <= 0.5 && rect.left < tip.left)) {
           tip = { top: rect.top, left: rect.left };
         }
       }
       if (!tip) return;
-      // The pointing sprites hang to the right of their tip, so their own top-left is
-      // the hotspot. The fist is a closed shape and is centred instead — hanging it off
-      // its fingertip threw the whole hand to the right of the pointer. Its y still
-      // starts at the topmost edge, so the vertical position is unchanged.
-      const x = centred ? (left + right) / 2 : tip.left;
       svg.style.transformOrigin = '0 0';
-      svg.style.transform = 'translate(' + (box.left - x) + 'px, '
+      svg.style.transform = 'translate(' + (box.left - tip.left) + 'px, '
         + (box.top - tip.top) + 'px)';
     }
 
@@ -92,7 +89,8 @@
     // is already there, cross over, then the other lands pulled out of shape and
     // settles into it. The squeeze is short enough to be felt rather than waited for.
     let pending = 0;
-    let pendingKind = null;
+    let want = null;
+    let swappedAt = 0;
 
     // Writes a sprite in and hands back its wrapper. The fit is measured level: a
     // rotated box's axis-aligned bounds are wider than the glyph and 4px higher than
@@ -108,47 +106,62 @@
         svg.setAttribute('width', '100%');
         svg.setAttribute('height', '100%');
         svg.style.overflow = 'visible';
-        fit(svg, kind === 'holding');
+        fit(svg);
         markup = glyph.innerHTML;
         fitted.set(kind, markup);
       }
       glyph.innerHTML = markup;
       glyph.dataset.sprite = kind;
+      swappedAt = performance.now();
       return glyph.firstElementChild;
     }
 
     function show(kind) {
-      const prev = glyph.dataset.sprite;
-      if (kind === prev || kind === pendingKind) return;
-      if (pending) {
-        // A second change arrived mid-squeeze: drop the squeeze and cross over now,
-        // so the newest state is never stale behind a timer.
-        clearTimeout(pending);
-        pending = 0;
-        pendingKind = null;
-        const busy = glyph.firstElementChild;
-        if (busy) busy.classList.remove(...SWAP_CLASSES);
-        if (kind === glyph.dataset.sprite) return;
+      // Whatever the page wants now. A squeeze in flight crosses over to this, never to
+      // the state that started it, so a click released mid-squeeze lands on the hand
+      // that is under the pointer and the fist is never left behind.
+      want = kind;
+      const current = glyph.dataset.sprite;
+      if (kind === current || !current) {
+        // Back where it started: drop the squeeze, no swap.
+        if (pending) {
+          clearTimeout(pending);
+          pending = 0;
+          const busy = glyph.firstElementChild;
+          if (busy) busy.classList.remove(...SWAP_CLASSES);
+        }
+        if (!current) cross(kind);
+        return;
       }
-      const shape = Boolean(prev) && (prev === 'holding') !== (kind === 'holding');
+      const shape = (current === 'holding') !== (kind === 'holding');
       if (!shape) {
+        if (pending) {
+          clearTimeout(pending);
+          pending = 0;
+          const busy = glyph.firstElementChild;
+          if (busy) busy.classList.remove(...SWAP_CLASSES);
+        }
         const wrap = cross(kind);
-        if (wrap && prev) play(wrap, 'sd-cursor-pop');
+        if (wrap) play(wrap, 'sd-cursor-pop');
         return;
       }
+      if (pending) return;
+      // A fist that has only just landed is not worth squeezing back out: a quick click
+      // gets the pointing hand straight away instead of waiting out another squeeze.
+      const fresh = performance.now() - swappedAt < SETTLE_MS;
       const out = glyph.firstElementChild;
-      if (!out) {
-        cross(kind);
-        return;
-      }
-      play(out, prev === 'holding' ? 'sd-cursor-out--stretch' : 'sd-cursor-out--squash');
-      pendingKind = kind;
-      pending = setTimeout(() => {
-        pending = 0;
-        pendingKind = null;
-        if (kind === glyph.dataset.sprite) return;
+      if (!out || fresh) {
         const wrap = cross(kind);
         if (wrap) play(wrap, kind === 'holding' ? 'sd-cursor-in--stretch' : 'sd-cursor-in--squash');
+        return;
+      }
+      play(out, current === 'holding' ? 'sd-cursor-out--stretch' : 'sd-cursor-out--squash');
+      pending = setTimeout(() => {
+        pending = 0;
+        const next = want;
+        if (!next || next === glyph.dataset.sprite) return;
+        const wrap = cross(next);
+        if (wrap) play(wrap, next === 'holding' ? 'sd-cursor-in--stretch' : 'sd-cursor-in--squash');
       }, SQUEEZE_MS);
     }
 
