@@ -2653,3 +2653,72 @@ html[data-sd-theme="light"] #sd-root .sd-asktext { color: var(--dim); }
 @media (max-width: 900px) {
   .sd-paygrid { grid-template-columns: minmax(0, 1fr); }
 }
+/* ---- the event page's performance list -----------------------------------
+   One row per performance, in the order the show will run. The order is the
+   data: the app keeps it in a hidden input per row, so the handle, the number
+   and the two arrows only arrange the rows on screen until Save order writes
+   the new numbers into those inputs and presses the app's own Save. */
+.sd-perf {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  margin-top: var(--space-3);
+}
+.sd-perfhead {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.sd-perf-title { margin: 0; font-size: var(--fs-base); font-weight: 700; }
+.sd-perfcount { color: var(--dim); font-size: var(--fs-sm); }
+.sd-perfdirty { color: var(--warn); font-size: var(--fs-sm); font-weight: 600; }
+.sd-perfactions { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sd-perfwrap { margin: 0; border: 0; border-radius: 0; background: transparent; }
+.sd-perforder { width: 106px; }
+.sd-perflockcol { width: 82px; }
+.sd-perfmove { display: flex; align-items: center; gap: 6px; }
+.sd-perfhandle {
+  color: var(--dim);
+  cursor: grab;
+  letter-spacing: -2px;
+  line-height: 1;
+  padding: 0 1px;
+  user-select: none;
+}
+.sd-perfhandle:active { cursor: grabbing; }
+.sd-perfnum { min-width: 2ch; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+/* The arrows wait for the row: they are a second way to do what the handle does,
+   so they do not earn permanent space in the order column. */
+.sd-perfbtns { display: inline-flex; gap: 2px; opacity: 0; transition: opacity .12s ease; }
+.sd-perftable tbody tr:hover .sd-perfbtns,
+.sd-perftable tbody tr:focus-within .sd-perfbtns { opacity: 1; }
+.sd-perfmv {
+  width: 20px; height: 20px; padding: 0;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--panel-2); color: var(--dim);
+  font-size: 11px; line-height: 1;
+}
+.sd-perfmv:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.sd-perfmv:disabled { opacity: .3; }
+.sd-perftable tbody tr.sd-perfrow--dragging { opacity: .45; }
+.sd-perftable tbody tr.sd-perfrow--over > td { box-shadow: inset 0 2px 0 var(--accent); }
+.sd-perflock {
+  padding: 2px 9px;
+  border: 1px solid var(--line); border-radius: var(--radius-pill);
+  background: var(--panel-2); color: var(--dim);
+  font-size: var(--fs-micro); font-weight: 600;
+}
+.sd-perflock--on { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.sd-perflink { font-weight: 600; }
+.sd-perfdel { color: var(--danger); font-size: var(--fs-sm); font-weight: 600; }
+.sd-perfnote { max-width: 26ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sd-perfempty { margin: 0; padding: 14px 16px; color: var(--dim); }
+.sd-perfstatus {
+  margin: 0; padding: 8px 14px;
+  border-top: 1px solid var(--line);
+  color: var(--warn); font-size: var(--fs-sm);
+}
+.sd-perfhide {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}

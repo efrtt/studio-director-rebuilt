@@ -23,6 +23,11 @@ import { readRail, writeRail } from './lib/rail.js';
   export let onRun = null;
   export let onAct = null;
   export let onPress = null;
+  // The event page's performance list: its arrangement, the app's own lock
+  // toggle, the app's three controls and the app's own Save of the order.
+  export let onPerfAct = null;
+  export let onPerfLock = null;
+  export let onPerfSave = null;
   // Attendance's own gestures (a tick, a reason, Save): every one of them is
   // written into the app's live controls, which is why they arrive as one object.
   export let onAttend = null;
@@ -108,6 +113,7 @@ import { readRail, writeRail } from './lib/rail.js';
   $: entry = view ? VIEWS[view] || null : null;
   $: props = entry ? propsFor(view, model, {
     onRun, onAct, onPress, onAttend, onSave, onSaveSettings, onAction, onOriginal, onLoadAll, canLoadAll, onRefresh, period, onPeriod, nav, back,
+    onPerfAct, onPerfLock, onPerfSave,
     onSubmitPayment, onAddSplit
   }) : {};
   $: layout = layoutFor(view, !!model.list);
