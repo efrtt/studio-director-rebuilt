@@ -1115,14 +1115,17 @@ a.sd-stat:hover { background: var(--panel-2); }
 }
 
 /* ---- confirmation (the page the app returns after a save) ---- */
+/* Anchored near the top rather than centred: the answer is short, and centring it
+   left a band of empty page above it the height of half the window. It still keeps
+   clear of the header — the offset is a share of the viewport, not zero. */
 .sd-confirm {
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 32px 24px;
+  padding: clamp(20px, 10vh, 96px) 24px 32px;
 }
 .sd-confirm-card {
   display: flex;
