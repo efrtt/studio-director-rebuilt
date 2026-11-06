@@ -279,6 +279,30 @@ const TRANSFORMS = [
       + '});'
   },
   {
+    file: 'web/test/cardframe.test.mjs',
+    find: "const SHEETS = { 'styles.css': src('styles.css'), 'wii.css': src('wii.css') };",
+    replace: "const SHEETS = { 'styles.css': src('styles.css') };"
+  },
+  {
+    file: 'web/test/cardframe.test.mjs',
+    find: '  // Under the skin the generic `.sd-tablewrap` rule is id-scoped, so it outranks\n'
+      + '  // the base rules above. The skin therefore has to flatten each pair itself.\n'
+      + "  const wii = rules(SHEETS['wii.css']);\n"
+      + "  const skin = (selector) => wii.find((r) => r.selector.split(',').map((s) => s.trim()).includes(selector));\n"
+      + '  for (const selector of [\n'
+      + '    \'html[data-sd-theme="wii"] #sd-root .sd-perf > .sd-tablewrap\',\n'
+      + '    \'html[data-sd-theme="wii"] #sd-root .sd-recordcard > .sd-tablewrap\'\n'
+      + '  ]) {\n'
+      + '    const rule = skin(selector);\n'
+      + "    assert.ok(rule, selector + ' exists');\n"
+      + "    for (const prop of ['border', 'border-radius', 'box-shadow', 'background']) {\n"
+      + '      assert.equal(drawsNothing(value(rule, prop)), true, `${selector} flattens ${prop}`);\n'
+      + '    }\n'
+      + '  }\n',
+    replace: '  // The skin wraps the same rule in its own id-scoped selector, which outranks\n'
+      + '  // the base rules above; both copies are checked on the `wii-skin` branch.\n'
+  },
+  {
     file: 'README.md',
     find: '# Studio Director, rebuilt — Wii skin',
     replace: '# Studio Director, rebuilt'
