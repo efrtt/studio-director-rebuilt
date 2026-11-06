@@ -542,15 +542,13 @@ html[data-sd-theme="wii"] #sd-root .sd-cursor-in--squash {
   100% { transform: scale(1, 1); }
 }
 /* The landing is quick enough to be over before you see it settle, so the hand that
- * arrives gets a jiggle behind it: two small bounces of pure squash and stretch, 140ms,
- * starting as the landing finishes. No rotation at all — the hand compresses and
- * stretches on the spot rather than rocking — and it fills forwards so it leaves the
- * sprite exactly at rest. */
+ * arrives gets one bounce behind it: compress, stretch past, home — pure scale, no
+ * rotation, 140ms, starting as the landing finishes. It fills forwards so it leaves
+ * the sprite exactly at rest. */
 @keyframes sd-cursor-jiggle {
   0% { transform: scale(1, 1); }
-  25% { transform: scale(1.08, 0.93); }
-  55% { transform: scale(0.96, 1.04); }
-  80% { transform: scale(1.02, 0.99); }
+  38% { transform: scale(1.08, 0.93); }
+  74% { transform: scale(0.97, 1.03); }
   100% { transform: scale(1, 1); }
 }
 @media (prefers-reduced-motion: reduce) {
