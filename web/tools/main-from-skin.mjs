@@ -49,6 +49,9 @@ const ARTEFACT = 'studio-director-rebuilt.user.js';
 const SKIN_FILES = [
   'web/src/wii.css',
   'web/src/components/Menu.svelte',
+  'web/src/components/Cursor.svelte',
+  'web/src/lib/cursor.js',
+  'web/test/cursor.test.mjs',
   'web/src/lib/mesh.js',
   'web/src/lib/clock.js',
   'web/test/clock.test.mjs',
@@ -61,6 +64,11 @@ const TRANSFORMS = [
     file: 'web/package.json',
     find: '"userscriptBranch": "wii-skin",',
     replace: '"userscriptBranch": "main",'
+  },
+  {
+    file: 'web/package.json',
+    find: 'node test/cursor.test.mjs && ',
+    replace: ''
   },
   {
     file: 'web/src/lib/styles.js',
@@ -172,6 +180,16 @@ const TRANSFORMS = [
     find: '\n{#if menuOpen}\n'
       + "  <Menu nav={model.nav} icons={icons} current={model.url} onClose={() => (menuOpen = false)} />\n"
       + '{/if}\n',
+    replace: ''
+  },
+  {
+    file: 'web/src/App.svelte',
+    find: "\n{#if resolvedTheme === 'wii'}\n  <Cursor />\n{/if}\n",
+    replace: ''
+  },
+  {
+    file: 'web/src/App.svelte',
+    find: "  import Cursor from './components/Cursor.svelte';\n",
     replace: ''
   },
   {

@@ -13,6 +13,7 @@ import { readRail, writeRail } from './lib/rail.js';
   import { menuFor } from './lib/menu.js';
 import Menu from './components/Menu.svelte';
   import { runMesh } from './lib/mesh.js';
+  import Cursor from './components/Cursor.svelte';
 
   export let model = { nav: [], week: null, list: null, form: null, view: null, title: '', url: '' };
   export let state = 'ready';
@@ -281,3 +282,7 @@ import Menu from './components/Menu.svelte';
 {/if}
 
 <Palette nav={model.nav} here={here} />
+
+{#if resolvedTheme === 'wii'}
+  <Cursor />
+{/if}
