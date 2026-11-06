@@ -27,8 +27,9 @@
 // `#save`. The page stays the record; this is a reading and writing surface for
 // it, dated by `--page-gutter` like every other view.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, titleOf, breadcrumbOf } from './shell.js';
 import { pageSave } from './save.js';
+import { pageRegions } from '../model/regions.js';
 
 // The app's own handler is the marker: a printed roster's tick boxes carry none,
 // and it must keep reading as a sheet.
@@ -122,7 +123,14 @@ function readLegend(doc) {
 const MOVES = /["']Attendance["']\s*,\s*["'](prev|next)["']/i;
 
 export function readAttendance(doc) {
-  const table = qsa(doc, 'table').find((candidate) => qs(candidate, BOX));
+  // Which table is the register is the page-wide judgement's: the one inside the
+  // content root that carries the app's own tick box. It used to be the first
+  // `table` in the whole document — a scrape around the classifier that could
+  // pick a table outside the screen (a layout wrapper, a rail panel).
+  const found = pageRegions(doc).tables
+    .filter((entry) => entry.kind !== 'chrome')
+    .find((entry) => qs(entry.table, BOX));
+  const table = found ? found.table : null;
   if (!table) return null;
 
   const head = qsa(table, 'tr').find((tr) => qs(tr, 'th'));
@@ -222,11 +230,11 @@ export function readAttendance(doc) {
     ? { id: 'save', label: textOf(saveLink) || 'Save', onclick: saveLink.getAttribute('onclick') || '' }
     : null;
 
-  const breadcrumb = qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean);
+  const breadcrumb = breadcrumbOf(doc);
 
   return {
     kind: 'attendance',
-    title: textOf(qs(doc, '.formTitle')) || 'Attendance',
+    title: titleOf(doc, 'div') || 'Attendance',
     breadcrumb,
     // The class this attendance belongs to, named the way the page names it.
     className: breadcrumb.length ? breadcrumb[breadcrumb.length - 1] : '',

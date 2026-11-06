@@ -21,6 +21,7 @@ import { qsa } from '../lib/shell.js';
 import { CONTROLS } from './controls.js';
 import { NON_FIELD_TYPES } from './fields.js';
 import { isHidden } from './root.js';
+import { BREADCRUMB, OWN_ROOT, RESULT_LIST, SEARCH_SPAN } from './appdom.js';
 
 // What counts as a control, and which controls are never a field, are the shared
 // policy: this check exists to say what a *reader* left out, not to have its own
@@ -34,8 +35,8 @@ import { isHidden } from './root.js';
 // not showing at all (`display:none`, `table-hidden`) is handled by `isHidden`
 // separately: a hidden panel is storage, not a shortfall, while a *visible* panel
 // this screen does not draw is exactly what this check is for.
-const NOT_OURS = '#sideNavBar, #sd-root, .topBarContainer, .topBar, .copyright, .Breadcrumb,'
-  + ' .List, #idSearchSpan, .searchResultList, .menu, .ButtonBar, .ButtonArea';
+const NOT_OURS = '#sideNavBar, ' + OWN_ROOT + ', .topBarContainer, .topBar, .copyright, ' + BREADCRUMB + ','
+  + ' .List, ' + SEARCH_SPAN + ', ' + RESULT_LIST + ', .menu, .ButtonBar, .ButtonArea';
 
 const inOurs = (el) => {
   try {

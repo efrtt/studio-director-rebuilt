@@ -15,11 +15,14 @@
 // live controls and its own Run Report is clicked, exactly like Save. The app
 // decides what request to make and what the result looks like.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, titleOf, breadcrumbOf } from './shell.js';
+import { inReportTable } from '../model/appdom.js';
 import { readForm } from './form.js';
 import { diffFields, applyFields } from '../model/diff.js';
 import { readTable } from '../model/table.js';
+import { isEmptyTable } from '../model/rows.js';
 import { contentRoot } from '../model/root.js';
+import { pageRegions } from '../model/regions.js';
 
 // The app's own label on every report page seen so far.
 const RUN = /^(run|generate|create|show|view|update|apply)\s+(the\s+)?report$|^run$/i;
@@ -47,11 +50,22 @@ export function reportTrigger(root) {
 
 // A report's output is `table.ReportTable`; a page that has run already shows
 // one with rows in it.
+//
+// Which of those are records is `model/regions.js`'s judgement, asked once for
+// the whole page like every other reader asks it. The report's own label — the
+// app's class on its output — is `model/appdom.js`'s vocabulary, and
+// `inReportTable` is the one test for it.
+function isReportTable(table) {
+  return inReportTable(table);
+}
+
 function readResults(doc) {
   const tables = [];
-  for (const table of qsa(doc, 'table.ReportTable, .ReportTable table')) {
+  for (const { table, kind } of pageRegions(doc).tables) {
+    if (kind !== 'data') continue;
+    if (!isReportTable(table)) continue;
     const read = readTable(table);
-    if (read.headings.length || read.rows.length) tables.push(read);
+    if (!isEmptyTable(read)) tables.push(read);
   }
   return {
     tables,
@@ -65,7 +79,7 @@ export function readReport(doc) {
 
   const trigger = reportTrigger(doc);
   const results = readResults(doc);
-  const heading = textOf(qs(doc, '.ReportName'));
+  const heading = titleOf(doc, 'report');
 
   // No run control and no report heading means this is not a report screen: a
   // settings form must not grow a Run Report button it does not have.
@@ -75,8 +89,8 @@ export function readReport(doc) {
 
   return {
     kind: 'report',
-    title: heading || textOf(qs(doc, '.formTitle')) || 'Report',
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    title: heading || titleOf(doc, 'div') || 'Report',
+    breadcrumb: breadcrumbOf(doc),
     // The editor's own field reader: reports and record pages share the shape.
     rows: form ? form.rows : [],
     fields: form ? form.fields : [],

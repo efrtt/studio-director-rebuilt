@@ -14,38 +14,26 @@
 //   table.Form > tr > td     the label ("Guardian", "State", ...)
 //                    > td     one or more controls (input / select / textarea)
 //
-// `NewClass` uses `table.FormEx` with the same row shape, so both table classes
-// are accepted. Each row is classified on its own evidence: a row with a label
-// and at least one control this reader can address is a field row; a row with no
-// label is the record's key (not a field); a row this reader cannot address is
-// still on the page, so its controls are reported as passed rather than lost.
+// Each row is classified on its own evidence: a row with a label and controls is
+// a field row; a row with no label is the record's key (not a field); a row this
+// reader cannot address is still on the page, so its controls are reported as
+// passed rather than lost. `model/regions.js` owns that classification (and the
+// question of which tables are the editor); this module turns the field rows it
+// finds into fields.
 //
 // Nothing here decides whether a page is an editor — that is `pageSave` plus the
-// rows found here. Nothing here ranks tables by size.
+// rows found here. Nothing here ranks tables by size, and there is no selector
+// list here to keep in step with the app: the regions module knows them.
 
 import { qsa, textOf } from '../lib/shell.js';
 import { controlsIn, CONTROLS } from './controls.js';
 import { rowLabel } from './labels.js';
-import { isHidden } from './root.js';
 
-export const FORM_SELECTOR = 'table.Form, table.FormEx';
 export { CONTROLS };
 
-// Every form table the page is showing inside its content root, in document
-// order. A table the page itself calls hidden (`table-hidden`, `hidden`) is
-// storage, not a field row — see `isHidden` for why `display:none` is not a
-// signal here.
-//
-// The query runs from the document and is then narrowed to the content root.
-// Asking the root instead reads better and is what this did first, but a
-// `<body>` is not always the node that holds its children (a parsed fragment has
-// a detached one), and an editor there came back empty. When the root *is* the
-// body the whole document is the screen, so there is nothing to narrow.
-export function formTablesIn(doc, root) {
-  return qsa(doc, FORM_SELECTOR)
-    .filter((table) => (root === doc.body || !root.contains ? true : root.contains(table)))
-    .filter((table) => !isHidden(table));
-}
+// Which tables are the editor, and what each of their rows is, moved to
+// `model/regions.js`: this module reads one table row by row, and the region
+// question (declared, structural, or no table at all) is answered there.
 
 // This editor prints one select bound to one value, so a multi-choice select
 // (which `model/controls.js` reads as a set, for the settings card that draws it)
@@ -163,6 +151,39 @@ export function labelledRows(table) {
     rows.push({ label: textOf(cells[0]).slice(0, 120), cell: cells[1] });
   }
   return rows;
+}
+
+// A row that prints a label and a value: a name cell and the cell its value sits
+// in. The payment screen's totals read their rows this way, and so does the
+// sheet's "this is a label/value block, not a record grid" test — one question,
+// asked from the row's own cells.
+export function isValueRow(cells) {
+  return !!(cells && cells.length >= 2);
+}
+
+// Presence on a table that has already been read. These are the three things a
+// reader actually wants to know before it draws or skips one: does it print a
+// heading row, does it print rows, and is there nothing at all in it. Every
+// reader that used to test `headings.length`/`rows.length` itself asks these.
+export function hasHeadings(read) {
+  return !!(read && read.headings && read.headings.length);
+}
+
+export function hasRows(read) {
+  return !!(read && read.rows && read.rows.length);
+}
+
+export function isEmptyTable(read) {
+  return !hasHeadings(read) && !hasRows(read);
+}
+
+// A table with no heading row whose rows each print at most a label and its
+// value: how a settings page and a payment's totals lay a form out. It is not a
+// list of records, which is the sheet reader's question about it.
+export function isValueTable(read) {
+  if (!read || hasHeadings(read)) return false;
+  const rows = read.rows || [];
+  return rows.length > 0 && rows.every((row) => isValueRow(row));
 }
 
 export function rowsOf(table) {

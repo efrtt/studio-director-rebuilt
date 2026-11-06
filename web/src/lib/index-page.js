@@ -15,9 +15,10 @@
 // Alerts list), and a page with a form is not one either — those keep whatever
 // view they already have.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, titleOf, breadcrumbOf } from './shell.js';
 import { contentRoot } from '../model/root.js';
 import { CONTROLS } from '../model/controls.js';
+import { rowCount } from '../model/regions.js';
 import { MENU_LINKS, TABLE_ROWS } from './thresholds.js';
 import { menuFor, layoutForTitle } from './menu.js';
 import { groupCharges } from './charges.js';
@@ -48,18 +49,17 @@ const HEADING = 'h1, h2, h3, h4, h5, h6, .sectionHeader, .sectionTitle, .groupTi
 // short, no links inside, and not one link's own caption.
 const HEADING_LIKE = HEADING
   + ', b, strong, [class*="Header"], [class*="Title"], [style*="font-weight"]';
-// The page's own title is not a category, however it is marked up.
-const PAGE_TITLE = '.formTitle, .ReportName';
-
-// The rail and the top bar are navigation, not content.
-const CHROME = '#sideNavBar, .topBarContainer, .topBar, .Breadcrumb, .copyright';
+// The rail and the top bar are navigation, not content; the page's own title is
+// not a category, however it is marked up. Both selectors are the app's own
+// vocabulary and live in `model/appdom.js`.
+import { CHROME, PAGE_TITLE, SEARCH_SPAN } from '../model/appdom.js';
 
 // A menu page has no rows to read. The count is across the whole content, not
 // per table: the week calendar is one small table per day, each holding a single
 // class, so a per-table check would mistake it for a menu.
 
 function isChrome(anchor) {
-  return !!(anchor.closest && anchor.closest(CHROME + ', #idSearchSpan'));
+  return !!(anchor.closest && anchor.closest(CHROME + ', ' + SEARCH_SPAN));
 }
 
 // Each link's category: the nearest title *above it on the page*.
@@ -110,12 +110,11 @@ export function readIndex(doc) {
   const root = contentRoot(doc);
   if (!root) return null;
 
-  // Rows mean this page shows data, not a menu.
-  const rows = qsa(root, 'table').reduce(
-    (n, table) => n + Array.from(table.querySelectorAll('tr')).filter((tr) => tr.querySelector('td')).length,
-    0
-  );
-  if (rows >= TABLE_ROWS) return null;
+  // Rows mean this page shows data, not a menu — and which rows those are is
+  // the page-wide judgement's (`model/regions.js`). This used to count `td`s
+  // across every table on the page itself: a layout wrapper's cells counted as
+  // rows, and a calendar's cells were read as a list of records.
+  if (rowCount(doc) >= TABLE_ROWS) return null;
 
   const seen = new Set();
   const items = [];
@@ -162,7 +161,7 @@ export function readIndex(doc) {
   // Which menu this is decides how it is drawn (lib/menu.js): the two long
   // reference pages get the grouped list, the two short ones task cards. The
   // title is the app's own name for the page, read once and used for both.
-  const title = textOf(qs(doc, '.formTitle, .ReportName, h1')) || 'Links';
+  const title = titleOf(doc) || 'Links';
   const menu = menuFor(title);
 
   // Two menus are filed by the app by what a link *is* rather than by what a
@@ -178,7 +177,7 @@ export function readIndex(doc) {
     title,
     menu,
     layout: layoutForTitle(title),
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    breadcrumb: breadcrumbOf(doc),
     groups: finalGroups,
     count: items.length,
     // How many tiles the view draws at once. The count above is every link.

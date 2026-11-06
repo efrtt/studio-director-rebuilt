@@ -25,7 +25,9 @@
 // The view is built from the *times*, not from the app's pixels: one studio per
 // column, one day per section, and each block as tall as its duration.
 
-import { qsa, qs, textOf } from './shell.js';
+import { qsa, qs, textOf, titleOf, breadcrumbOf } from './shell.js';
+import { CONTENT_INFO } from '../model/appdom.js';
+import { gridTable, gridTables } from '../model/regions.js';
 
 // Vertical scale of the rebuilt week view: minutes -> pixels.
 export const PX_PER_MIN = 2;
@@ -366,7 +368,8 @@ function weekCalDays(table) {
 }
 
 function compactWeek(doc) {
-  const table = qsa(doc, "table.WeekCal").find((t) => !(t.closest && t.closest(".tabContent"))) || null;
+  // The compact week is the page's week grid, found by `gridKind`.
+  const table = gridTable(doc, 'week');
   if (!table) return null;
   const days = weekCalDays(table);
   if (!days) return null;
@@ -388,16 +391,16 @@ function compactWeek(doc) {
     studioCount: 0,
     hidden: 0,
     totals,
-    week: textOf(qs(doc, ".contentInfo p")) || null,
-    title: textOf(qs(doc, ".formTitle, .ReportName, h1")) || ""
+    week: textOf(qs(doc, CONTENT_INFO + ' p')) || null,
+    title: titleOf(doc) || ""
   };
 }
 
 export function readWeek(doc) {
   // A record page's Calendar *tab* is also seven TimeBlock tables, shipped
-  // hidden in the record's HTML. Those belong to the tab, not to the week view:
-  // reading them would turn an editor into a calendar.
-  const tables = qsa(doc, 'table.TimeBlock').filter((table) => !(table.closest && table.closest('.tabContent')));
+  // hidden in the record's HTML. `tableKind` calls anything inside a tab panel
+  // chrome, so those belong to the tab, not to the week view.
+  const tables = gridTables(doc, 'day');
   // No studio timeline: the app may still be drawing the week, compactly. A week
   // with no classes at all is that same compact table with nothing in it.
   if (!tables.length) return compactWeek(doc);
@@ -453,7 +456,7 @@ export function readWeek(doc) {
     // Classes left out of the view because the faculty pool teaches them.
     hidden,
     totals,
-    week: textOf(qs(doc, '.contentInfo p')) || null,
-    title: textOf(qs(doc, '.formTitle, .ReportName, h1')) || ''
+    week: textOf(qs(doc, CONTENT_INFO + ' p')) || null,
+    title: titleOf(doc) || ''
   };
 }

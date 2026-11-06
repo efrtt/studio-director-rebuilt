@@ -64,6 +64,10 @@ export function probeEnabled(href, store) {
   return !!(s && s.getItem(FLAG) === '1');
 }
 
+import { contentRoot } from '../model/root.js';
+import { shownRowCount } from '../model/regions.js';
+import { PAGE_TITLE } from '../model/appdom.js';
+
 // The crawl's own naming: `EmailClass(cident)`, `Enroll(cident,sident)`. The
 // navigation parameters are the ones the shape deliberately ignores — and so is
 // `sdprobe`, which is this reader's own switch and not part of the screen.
@@ -86,14 +90,14 @@ export function shapeOf(href) {
 
 // What the page is, right now, in the numbers that decide which reader owns it.
 export function measure(doc) {
-  const root = doc.querySelector('.contentContainer')
-    || doc.querySelector('#mainContent')
-    || doc.body;
+  // The page's content root, resolved where every reader resolves it: the probe
+  // measures the same screen the readers read, including a print window's body.
+  const root = contentRoot(doc);
   const count = (sel) => (root ? root.querySelectorAll(sel).length : 0);
-  const rows = root
-    ? Array.from(root.querySelectorAll('tr')).filter((tr) => tr.querySelector('td')).length
-    : 0;
-  const titleEl = doc.querySelector('.formTitle, .ReportName, h1');
+  // Rows are the page's record rows, judged by the shared classifier — the same
+  // number the readers route on, not a raw `tr` count kept here.
+  const rows = shownRowCount(doc);
+  const titleEl = doc.querySelector(PAGE_TITLE);
   const text = root ? String(root.textContent || '').replace(/\s+/g, ' ').trim() : '';
   return {
     controls: count('input, select, textarea'),

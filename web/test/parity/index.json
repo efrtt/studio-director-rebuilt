@@ -1,0 +1,86 @@
+{
+  "name": "index",
+  "reader": "index-page",
+  "url": "/srvda/admin.sd?page=ChargesHome",
+  "current": {
+    "url": "/srvda/admin.sd?page=ChargesHome",
+    "mounted": true,
+    "theme": "wii",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": ".contentContainer",
+      "source": "links",
+      "controls": 0,
+      "links": 18,
+      "tables": {
+        "form": 0,
+        "data": 0,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 0,
+        "repeated": 0,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "index": {
+        "groups": [],
+        "links": 17,
+        "cards": 5
+      },
+      "kind": "index",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 0,
+        "rows": 0
+      }
+    },
+    "detected": true,
+    "digest": "1cfcea60",
+    "version": "0.31.20"
+  },
+  "reference": {
+    "url": "/srvda/admin.sd?page=ChargesHome",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "",
+      "root": "",
+      "source": "",
+      "controls": 0,
+      "links": 0,
+      "tables": null,
+      "rows": null,
+      "fallback": ""
+    },
+    "panel": null,
+    "view": {
+      "index": {
+        "groups": [],
+        "links": 17,
+        "cards": 5
+      },
+      "kind": "index",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 0,
+        "rows": 0
+      }
+    },
+    "detected": true,
+    "digest": "b59d7286",
+    "version": "0.28.76"
+  }
+}

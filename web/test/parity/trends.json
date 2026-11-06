@@ -1,0 +1,172 @@
+{
+  "name": "trends",
+  "reader": "trends",
+  "url": "/srvda/admin.sd?page=HomePage&tab=tab-trends",
+  "current": {
+    "url": "/srvda/admin.sd?page=HomePage&tab=tab-trends",
+    "mounted": true,
+    "theme": "wii",
+    "tabs": [
+      "Schedule",
+      "Insights",
+      "Trends"
+    ],
+    "decision": {
+      "path": "rowByRow",
+      "root": ".contentContainer",
+      "source": "tables",
+      "controls": 0,
+      "links": 25,
+      "tables": {
+        "form": 0,
+        "data": 1,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 1
+      },
+      "rows": {
+        "field": 0,
+        "section": 2,
+        "repeated": 14,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "trends": {
+        "charts": 11,
+        "titles": [
+          "Class Hours per Week",
+          "Enrolled Student Hours per Week",
+          "Enrollment %",
+          "Attendance %",
+          "Students Enrolled",
+          "Drops (no switches)",
+          "Switches",
+          "New Student Sign-ups",
+          "A/R Balance Due",
+          "Average Monthly Charges per Student",
+          "Monthly Tuition Charges"
+        ],
+        "captions": [
+          "7e413a6d",
+          "18055ed8",
+          "b1210a22",
+          "fa54cb4a",
+          "617ec679",
+          "d8b36199",
+          "d6b35e73",
+          "d9b3632c",
+          "03e61eb8",
+          "e2182bad",
+          "84ff671a"
+        ],
+        "images": 11,
+        "sections": [
+          "CLASS TRENDS",
+          "STUDENT TRENDS",
+          "FINANCIAL TRENDS",
+          "Top 10 Customers (last 60 days)"
+        ],
+        "tables": 1,
+        "headings": [
+          "Guardian",
+          "Last Name",
+          "Payments"
+        ],
+        "rows": 10,
+        "links": 1
+      },
+      "kind": "trends",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 2,
+        "rows": 27
+      }
+    },
+    "detected": true,
+    "digest": "749a6d5e",
+    "version": "0.31.20"
+  },
+  "reference": {
+    "url": "/srvda/admin.sd?page=HomePage&tab=tab-trends",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [
+      "Schedule",
+      "Insights",
+      "Trends"
+    ],
+    "decision": {
+      "path": "",
+      "root": "",
+      "source": "",
+      "controls": 0,
+      "links": 0,
+      "tables": null,
+      "rows": null,
+      "fallback": ""
+    },
+    "panel": null,
+    "view": {
+      "trends": {
+        "charts": 11,
+        "titles": [
+          "Class Hours per Week",
+          "Enrolled Student Hours per Week",
+          "Enrollment %",
+          "Attendance %",
+          "Students Enrolled",
+          "Drops (no switches)",
+          "Switches",
+          "New Student Sign-ups",
+          "A/R Balance Due",
+          "Average Monthly Charges per Student",
+          "Monthly Tuition Charges"
+        ],
+        "captions": [
+          "7e413a6d",
+          "18055ed8",
+          "b1210a22",
+          "fa54cb4a",
+          "617ec679",
+          "d8b36199",
+          "d6b35e73",
+          "d9b3632c",
+          "03e61eb8",
+          "e2182bad",
+          "84ff671a"
+        ],
+        "images": 11,
+        "sections": [
+          "CLASS TRENDS",
+          "STUDENT TRENDS",
+          "FINANCIAL TRENDS",
+          "Top 10 Customers (last 60 days)"
+        ],
+        "tables": 1,
+        "headings": [
+          "Guardian",
+          "Last Name",
+          "Payments"
+        ],
+        "rows": 10,
+        "links": 1
+      },
+      "kind": "trends",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 2,
+        "rows": 27
+      }
+    },
+    "detected": true,
+    "digest": "3dd76dcb",
+    "version": "0.28.76"
+  }
+}

@@ -19,7 +19,9 @@
 // written — a selector that missed the live page produced "saved" for an edit
 // that never happened. A missing field now refuses, and says which one.
 
+import { qs } from './shell.js';
 import { diffFields, applyFields } from '../model/diff.js';
+import { SAVE_LINK } from '../model/appdom.js';
 
 // The page's own Save, once.
 //
@@ -30,7 +32,9 @@ import { diffFields, applyFields } from '../model/diff.js';
 // is and the writer that presses its Save cannot drift apart — every write here
 // ends by clicking the element this returns.
 export function pageSave(doc) {
-  return (doc && doc.getElementById && doc.getElementById('save')) || null;
+  // Accepts a document or any element root, and nothing else: the attendance
+  // tests hand it a stub with no query engine at all.
+  return doc && typeof doc.querySelector === 'function' ? qs(doc, SAVE_LINK) : null;
 }
 
 // Kept for the editor view, which asks "what changed?" to enable its button.

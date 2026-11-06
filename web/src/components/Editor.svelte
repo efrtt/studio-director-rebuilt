@@ -150,6 +150,9 @@
     onSave={onSave}
   />
 {:else}
+<!-- The wide skin follows the classifier: `form.tables` are the tables it called
+     data beside this form (`model/regions.js`), so a page with a record list gets
+     the two-column layout and a page with none does not. -->
 <div class="sd-editor" class:sd-editor--wide={form.tables && form.tables.length > 0}>
   <div class="sd-editorbar">
     <span class="sd-dirty">{dirty ? `${changes.length} unsaved change${changes.length === 1 ? '' : 's'}` : 'No changes'}</span>

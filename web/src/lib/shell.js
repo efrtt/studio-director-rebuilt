@@ -6,6 +6,11 @@
 //   .standardMainContent > #sideNavBar (a.sideNavLink ...) + #mainContent
 //   #mainContent > .contentContainer > .Content > .formTitle / .contentInfo
 
+import {
+  BREADCRUMB_LINK, LOGIN, LOGIN_FORM, OWN_ROOT, RAIL_LINK, REPORT_CRUMB, TAB_PANEL, TAB_STRIP, TITLES
+} from '../model/appdom.js';
+import { contentRoot, pageShape } from '../model/root.js';
+
 export function parseHtml(html) {
   return new DOMParser().parseFromString(html, 'text/html');
 }
@@ -21,6 +26,41 @@ export function qs(root, sel) {
 
 export function qsa(root, sel) {
   return root ? Array.from(root.querySelectorAll(sel)) : [];
+}
+
+// The frame the page's chrome is read in: the content root every reader already
+// asks for, except on a page the app served without its shell (a fragment, a
+// capture). There `pageShape` answers `BODY`, and the markup can sit beside that
+// body, so the frame is the document the caller handed us.
+function pageFrame(doc) {
+  const root = contentRoot(doc);
+  if (!root) return doc;
+  return String(root.tagName || '').toUpperCase() === 'BODY' ? doc : root;
+}
+
+// The app's tab strip, read once. It sits in the content mount on every captured
+// page, so it comes from the same root resolver as the page's tables; the two tab
+// readers used to query the whole document for it.
+export function tabStrip(doc) {
+  return qs(pageFrame(doc), TAB_STRIP);
+}
+
+// The panels the strip opens, from the same frame as the strip.
+export function tabPanels(doc) {
+  return qsa(pageFrame(doc), TAB_PANEL);
+}
+
+// A report's name is the last crumb of `div.ReportBreadcrumb`, followed by the
+// moment the report ran — "Business Insights - Tue, Nov 3, 2026 1:48 PM". The
+// crumbs are page chrome the app prints outside the content mount on some
+// screens, which is the same reason `breadcrumbOf` walks the document for them.
+export function reportTitle(doc) {
+  const crumb = qs(doc, REPORT_CRUMB);
+  if (!crumb) return '';
+  const named = crumb.querySelector('span[style]') || crumb.lastElementChild || crumb;
+  return textOf(named)
+    .replace(/\s+[-–]\s+(?=[A-Z][a-z]{2},\s).*$/, '')
+    .trim();
 }
 
 export function pageName(href) {
@@ -47,7 +87,7 @@ export function pageName(href) {
 // kind of thing: they say which week or season to draw, not which record you are
 // editing. Left out, every dated calendar URL was a "record page", and its
 // compact week grid was read as a data table instead of as a calendar.
-const NAV_PARAMS = new Set([
+export const NAV_PARAMS = new Set([
   'page', 'clicktab', 'filter', 'searchtext', 'sdprobe',
   'season', 'datespec_view', 'datespec_view_date',
   // The Home dashboard's own tabs (`?page=HomePage&tab=tab-insights`). A tab is
@@ -110,19 +150,43 @@ export function isRecordPage(href) {
   return /^Edit/i.test(pageName(href));
 }
 
-export function titleOf(doc) {
-  return textOf(qs(doc, '.formTitle, .ReportName, h1'));
+// The page's name, through the one vocabulary in `model/appdom.js`. A reader
+// that needs a narrower set asks for it by name (`'div'`, `'heading'`, `'report'`)
+// rather than carrying its own literal, so the selectors stay in one place and a
+// reader cannot quietly invent a fourth set.
+// `kind` names the title the reader means: `'page'` (the default order), `'div'`
+// (the named div only), `'heading'` (the div, or a bare heading) or `'report'`
+// (the report header alone). The selectors live in `model/appdom.js`, so a
+// reader asks a question about the page instead of handing over CSS.
+export function titleOf(doc, kind = 'page') {
+  return textOf(qs(doc, TITLES[kind] || TITLES.page));
+}
+
+// The title read the way the app means it: the div can hold a warning block and
+// the page's own name after it (see `titledTextOf`), which is what a record
+// editor shows as its name.
+export function titledTitleOf(doc, kind = 'div') {
+  return titledTextOf(qs(doc, TITLES[kind] || TITLES.div));
+}
+
+// The page's breadcrumb links, in the app's own order. Every reader that reports
+// a breadcrumb asks this instead of carrying `.Breadcrumb a` itself.
+export function breadcrumbOf(doc) {
+  return qsa(doc, BREADCRUMB_LINK).map(textOf).filter(Boolean);
 }
 
 // The sign-in screen is never replaced: that is where the session is created.
 export function isLoginPage(doc) {
-  const form = qs(doc, 'form#idForm');
+  const form = qs(doc, LOGIN_FORM);
   if (form && /login\.sd/i.test(form.getAttribute('action') || '')) return true;
-  return !!qs(doc, '.LoginContainer');
+  return !!qs(doc, LOGIN);
 }
 
+// The page's own shell, as `model/root.js` resolves it. One shape, asked once, so
+// a reader and the mount path cannot disagree about whether this is an admin
+// page or a shell-free document served on its own.
 export function hasShell(doc) {
-  return !!(qs(doc, '#mainContent') || qs(doc, '.standardMainContent'));
+  return pageShape(doc).shell;
 }
 
 // Is there nothing on this page a reader could claim? Asked of the *live*
@@ -135,10 +199,10 @@ export function hasShell(doc) {
 export function liveIsBare(doc) {
   if (!doc) return true;
   // Our own overlay is in the tree once a view is mounted; it is not content.
-  if (qs(doc, '#sd-root')) return true;
-  const root = qs(doc, '.contentContainer') || qs(doc, '#mainContent');
-  if (!root) return true;
-  return !root.querySelector('table tr, input, select, textarea, a[href], p');
+  if (qs(doc, OWN_ROOT)) return true;
+  // "Bare" is the shape's own question about its own root, asked here rather
+  // than re-derived: a print window's body is its content root like any other.
+  return !pageShape(doc).content;
 }
 
 // The app prints each rail label twice ("HomeHome", "Class CalendarClass
@@ -153,7 +217,7 @@ export function oneLabel(label) {
 export function railLinks(doc) {
   const out = [];
   const seen = new Set();
-  for (const a of qsa(doc, '#sideNavBar a.sideNavLink')) {
+  for (const a of qsa(doc, RAIL_LINK)) {
     const href = a.getAttribute('href') || '';
     const label = oneLabel(textOf(a));
     if (!href || !label) continue;

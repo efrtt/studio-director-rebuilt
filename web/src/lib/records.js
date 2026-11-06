@@ -20,15 +20,15 @@
 // and which link each row and button points at, so the app keeps owning the
 // navigation and the save.
 
-import { pageName, recordParams } from './shell.js';
+import { NAV_PARAMS, pageName, recordParams } from './shell.js';
+import { recordCellOf } from '../model/regions.js';
+import { hasRows } from '../model/rows.js';
 
-// Query keys the app uses to draw a screen rather than to name a record. The
-// rest of `shell.js`'s NAV_PARAMS plus `content`, which picks which form a
-// `NewEditArchive` page shows — dropping it would land on a broken URL.
-const KEEP = new Set([
-  'page', 'clicktab', 'filter', 'searchtext', 'sdprobe', 'content', 'state',
-  'season', 'datespec_view', 'datespec_view_date'
-]);
+// Query keys the app uses to draw a screen rather than to name a record: the page
+// navigation `shell.js` already names, plus `content`, which picks which form a
+// `NewEditArchive` page shows — dropping it would land on a broken URL — and
+// `state`, the archive pages' spelling of New.
+const KEEP = new Set([...NAV_PARAMS, 'content', 'state']);
 
 function paramsOf(url) {
   try {
@@ -82,10 +82,13 @@ export function isRecordHref(href, url) {
 export function recordsOf(source, url) {
   const tables = (source && source.tables) || [];
   for (const block of tables) {
-    if (!block || !block.rows || !block.rows.length) continue;
+    if (!hasRows(block)) continue;
     const rows = [];
     for (const cells of block.rows) {
-      const cell = (cells || []).find((c) => c && isRecordHref(c.href, url));
+      // The row's own record cell, found by the shared judge, then confirmed to
+      // be a link back to this page: a row that names no record is not one.
+      const named = recordCellOf(cells);
+      const cell = named && isRecordHref(named.href, url) ? named : null;
       // The app's own list opens with an unlabelled placeholder row
       // (`vendor_ident=0` and no text). It is a slot, not a record, and drawing
       // it put an empty line at the top of the list to click into.

@@ -7,7 +7,7 @@ import FONTS from './fonts.css?inline';
 import LOGIN from './login.css?inline';
 import { readTheme, applyTheme } from './lib/theme.js';
 import {
-  fetchPage, hasShell, liveIsBare, parseHtml, SessionExpired, railLinks
+  fetchPage, liveIsBare, parseHtml, SessionExpired, railLinks
 } from './lib/shell.js';
 import { routeOf } from './lib/route.js';
 import { readList } from './lib/list.js';
@@ -34,6 +34,8 @@ import { clickActionInApp } from './lib/actions.js';
 import { changesFrom, saveInApp } from './lib/save.js';
 import { runPayment, addSplitInApp } from './lib/payment.js';
 import { unreadNote, unreadOf } from './model/coverage.js';
+import { decisionOf } from './model/regions.js';
+import { pageShape } from './model/root.js';
 import { probeTick, recordView } from './lib/probe.js';
 import { contradictsNote } from './lib/note.js';
 import { wantsLiveLook, decideMount, decideShellLess, chooseSource, searchReady } from './lib/choose.js';
@@ -82,6 +84,27 @@ export function mount(opts = {}) {
 
   const root = document.createElement('div');
   root.id = 'sd-root';
+  // Which decision produced this page: the content root and the row judgement,
+  // recorded where the parity probe can read it. A dump that cannot name its
+  // path cannot tell a real read from a fallback that quietly did the work.
+  const stampDecision = () => {
+    try {
+      const decision = decisionOf(document);
+      root.dataset.sdPath = decision.path;
+      root.dataset.sdRoot = decision.root;
+      root.dataset.sdSource = decision.source;
+      root.dataset.sdControls = String(decision.controls);
+      root.dataset.sdLinks = String(decision.links);
+      root.dataset.sdTables = JSON.stringify(decision.tables);
+      root.dataset.sdRows = JSON.stringify(decision.rows);
+      root.dataset.sdFallback = decision.fallback;
+    } catch (e) { /* a page mid-load still mounts */ }
+  };
+  stampDecision();
+  // The app reveals its tab panels after load; a decision measured at mount can
+  // see them still hidden. The probe asks for a fresh stamp against the page as
+  // it stands when measured, so "which path decided this" describes that page.
+  if (globalThis.sdProbe) globalThis.sdProbe.refreshDecision = stampDecision;
   (opts.container || document.body).appendChild(root);
 
   const app = new App({
@@ -192,7 +215,7 @@ export async function autoMount(opts = {}) {
   const liveModel = readPage(document, location.href);
   const source = chooseSource({
     liveView: liveModel && liveModel.view ? liveModel : null,
-    liveHasShell: hasShell(document),
+    liveHasShell: pageShape(document).shell,
     liveIsEmpty: liveIsBare(document)
   });
   if (source === 'live') return mountView(liveModel, onOriginal, 'live');
@@ -208,22 +231,20 @@ export async function autoMount(opts = {}) {
     });
   }
 
-  // A print window has no shell at all: `PrintClassRoster` is a title, one
-  // table and the browser's own extension roots, with no rail and no top bar
-  // (confirmed by a dump of the real page). That is still a screen worth
-  // reading, and the only thing that must not happen is covering it with "no
-  // view for this page".
-  if (!hasShell(page.doc)) {
-    const print = readSheet(page.doc);
-    // The rule is in choose.js, where it has a test: a print window is a screen
-    // only when a reader claims it and the page names itself.
-    const bare = decideShellLess({
-      hasSheet: !!print,
-      hasTitle: !!page.doc.querySelector('.formTitle, .ReportName')
-    });
-    if (bare === 'sheet') {
-      return mountView({ nav: [], sheet: print, view: 'sheet', title: print.title, url: page.finalUrl }, onOriginal);
-    }
+  // A page with no shell is a document of its own: a print window, a popup, the
+  // outcome screen the app returns to. It is read by exactly the same chain as an
+  // admin page — `model/root.js` says where its content is, the chain says what it
+  // is — and the only thing that must not happen is covering it with "no view for
+  // this page".
+  //
+  // This branch used to read a sheet specifically and mount only that, so a
+  // shell-free list, report or notice was a coin flip. Now the shape asks the one
+  // question it can answer (is there a shell?) and the chain answers the rest.
+  const shape = pageShape(page.doc);
+  if (shape.shellFree) {
+    const shellFree = readPage(page.doc, page.finalUrl);
+    const decision = decideShellLess({ view: shellFree.view, hasTitle: shape.titled });
+    if (decision !== 'none') return mountView(shellFree, onOriginal);
     return mount({ state: 'none', onOriginal });
   }
 

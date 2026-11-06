@@ -23,10 +23,12 @@
 // navigates. `readActions` drops plain links on purpose — on every other screen
 // a link is navigation — so this reader adds the page's own in-content links.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, titleOf, breadcrumbOf } from './shell.js';
+import { CONTENT_INFO, TITLE_DIV, TITLE_REPORT } from '../model/appdom.js';
 import { readActions, primaryAction } from './actions.js';
 import { contentRoot, CHROME, FURNITURE } from '../model/root.js';
 import { CONTROLS } from '../model/controls.js';
+import { rowCount } from '../model/regions.js';
 import { MENU_LINKS, TABLE_ROWS } from './thresholds.js';
 
 // How many lines of instruction to keep. These pages say one thing; a page that
@@ -47,15 +49,11 @@ function onlyLabels(text, labels) {
 // The one content-root definition (model/root.js), under this reader's name.
 const rootOf = contentRoot;
 
-function dataRows(root) {
-  let rows = 0;
-  for (const table of qsa(root, 'table')) {
-    for (const tr of qsa(table, 'tr')) {
-      if (tr.querySelector('td')) rows += 1;
-    }
-  }
-  return rows;
-}
+// Two rows of records mean a table, which is another reader's screen. Which rows
+// those are is the page-wide judgement's (`model/regions.js`): this used to
+// count every `td` on the page itself, which counted a layout wrapper's cells as
+// rows and kept a second answer to a question the classifier already answers.
+const dataRows = rowCount;
 
 // The three refusals, as one question. Exported because the live page is asked
 // it too — see main.js and choose.js.
@@ -63,7 +61,7 @@ export function contradictsNote(doc) {
   const root = rootOf(doc);
   if (!root) return false;
   if (qsa(root, CONTROLS).length > 0) return true;
-  if (dataRows(root) >= TABLE_ROWS) return true;
+  if (dataRows(doc) >= TABLE_ROWS) return true;
   return qsa(root, 'a[href]').length >= MENU_LINKS;
 }
 
@@ -141,7 +139,7 @@ function hasScriptedAction(doc) {
 // `contentInfo` block carrying bare text and no paragraphs is the fallback.
 function linesOf(root, actions) {
   const paragraphs = qsa(root, 'p, li');
-  const nodes = paragraphs.length ? paragraphs : qsa(root, '.contentInfo');
+  const nodes = paragraphs.length ? paragraphs : qsa(root, CONTENT_INFO);
   const labels = new Set(actions.map((a) => a.label));
   const seen = new Set();
   const lines = [];
@@ -170,7 +168,7 @@ function linesOf(root, actions) {
     const copy = root.cloneNode(true);
     if (copy && copy.querySelectorAll) {
       // Everything the app draws a control - or a piece of page chrome - with.
-      copy.querySelectorAll('script, style, .formTitle, .ReportName, .Breadcrumb, .ButtonBar, '
+      copy.querySelectorAll('script, style, ' + TITLE_DIV + ', ' + TITLE_REPORT + ', .Breadcrumb, .ButtonBar, '
         + 'a, ol, ul, li, input, select, textarea, button, .Btn, .BtnOutln, [onclick]')
         .forEach((el) => el.remove());
     }
@@ -192,7 +190,7 @@ export function readNote(doc) {
     const relaxable = !!root
       && onlyHiddenInputs(doc)
       && hasScriptedAction(doc)
-      && dataRows(root) < TABLE_ROWS
+      && dataRows(doc) < TABLE_ROWS
       && qsa(root, 'a[href]').length < MENU_LINKS;
     if (!relaxable) return null;
   }
@@ -205,8 +203,8 @@ export function readNote(doc) {
 
   return {
     kind: 'note',
-    title: textOf(qs(doc, '.formTitle, .ReportName, h1')) || 'Notice',
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    title: titleOf(doc) || 'Notice',
+    breadcrumb: breadcrumbOf(doc),
     lines,
     actions,
     primary: primaryAction(actions)

@@ -1,0 +1,79 @@
+{
+  "name": "payment",
+  "reader": "payment",
+  "url": "/srvda/admin.sd?page=NewPayment&fident=1784123965271&meth=onNewPayment_gateway",
+  "current": {
+    "url": "/srvda/admin.sd?page=NewPayment&fident=1784123965271&meth=onNewPayment_gateway",
+    "mounted": true,
+    "theme": "wii",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": ".contentContainer",
+      "source": "tables",
+      "controls": 4,
+      "links": 5,
+      "tables": {
+        "form": 1,
+        "data": 1,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 1
+      },
+      "rows": {
+        "field": 5,
+        "section": 2,
+        "repeated": 4,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "editor": {
+        "rows": 4,
+        "labels": [
+          "Family",
+          "Amount",
+          "Dates",
+          "Notes"
+        ],
+        "controls": [
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "7695508b"
+          },
+          {
+            "t": "date",
+            "n": "811c9dc5",
+            "v": "6d1e1b30"
+          },
+          {
+            "t": "date",
+            "n": "811c9dc5",
+            "v": "6d1e1b30"
+          },
+          {
+            "t": "text",
+            "n": "811c9dc5",
+            "v": "811c9dc5"
+          }
+        ]
+      },
+      "kind": "editor",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 3,
+        "rows": 21
+      }
+    },
+    "detected": true,
+    "digest": "2ea79323",
+    "version": "0.31.20"
+  },
+  "reference": null,
+  "reason": "main (0.28.x) has no payment reader: no Payment component and no paid_toward handling, so it reads the New Payment screen as a sheet. The current dump is frozen so the reading is recorded; there is nothing to compare it against."
+}

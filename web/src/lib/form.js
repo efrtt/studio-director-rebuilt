@@ -20,22 +20,20 @@
 // Nothing here submits anything. Values are written back into the app's own
 // controls and its own Save link is clicked — see save.js.
 
-import { qs, qsa, textOf, titledTextOf } from './shell.js';
+import { qs, qsa, textOf, titledTitleOf, isRecordPage, breadcrumbOf } from './shell.js';
 import { readTable } from '../model/table.js';
 import { contentRoot } from '../model/root.js';
+import { CHROME, HEADING, PANELS } from '../model/appdom.js';
 import { coverageOf } from '../model/coverage.js';
 // The row judgement — which tables are the form, which rows are field rows,
 // which controls belong to which row — is shared with every form-shaped reader.
-import { formTablesIn, rowsOf, fieldsOfRows } from '../model/rows.js';
-
-// Tables that are structure rather than content: the form itself, the layout
-// table the app wraps whole screens in, the weekday checkbox grid, the calendar
-// grids. Everything else beside a form is a list the page is showing.
-const NOT_DATA = /^(Form|FormEx|Layout|WeekdayCheckboxes|TimeBlock|WeekCal|MonthCal)$/i;
+import { rowsOf, fieldsOfRows } from '../model/rows.js';
+import { editorRegions, formFromRoot, isRecordList, pageRegions } from '../model/regions.js';
 
 // Where a table's own heading sits: `<div class="formTitle">Existing Season
-// Dates</div><table class="SimpleSD">` is the shape on the seasons page.
-const HEADING = '.formTitle, .ReportTableSubtitle, .sectionHeader, .sectionTitle, h2, h3, h4';
+// Dates</div><table class="SimpleSD">` is the shape on the seasons page. The
+// selector is `model/appdom.js`'s `HEADING`, the same one every other reader
+// asks for; this module used to keep its own copy of the same list.
 
 // Tables that sit *beside* a form, which the editor used to drop.
 //
@@ -61,41 +59,37 @@ function headingFor(table) {
   return '';
 }
 
-// Two shapes count as a table beside a form:
-//   - a grid: column headings and at least one row ("Existing Season Dates");
-//   - a one-column list of links ("Existing Class Locations" on `NewEditDel`,
-//     which has no heading row at all — just a link per location).
-// Anything else is a spacer, an empty grid, or a two-column label/value block,
-// which is a form or another reader's business.
-function isSideTable(read) {
-  if (!read.rowTotal) return false;
-  if (read.headings.length >= 2) return true;
-  // One column is enough when its cells are records. Two shapes are real:
-  //   - "Existing Vendors" prints one heading ("Vendor") over a link per vendor;
-  //   - "Existing Class Locations" prints no heading at all, just a link per
-  //     location.
-  // The heading used to be a refusal, which dropped the vendor list from the
-  // page entirely: the form rendered and the list it manages never appeared.
-  if (read.headings.length > 1) return false;
-  return read.rows.every((row) => row.length === 1)
-    && read.rows.some((row) => row[0] && row[0].href);
-}
+// Which tables display beside the editor is `model/regions.js#isRecordList`: a
+// list of records, judged from each row's own cells. This module used to decide
+// it from heading and column counts — the same question asked twice, with a
+// different answer for a heading-less grid.
 
 function tablesBeside(doc, formTables) {
   const root = contentRoot(doc);
   if (!root) return [];
   const skip = new Set(Array.isArray(formTables) ? formTables : [formTables]);
 
+  // Which of these are records is `model/regions.js`'s judgement — the same one
+  // the sheet asks — not a second list kept here. This used to carry its own
+  // classes to skip (`Layout`, `Form`, `FormEx`, `TimeBlock`, `WeekCal`, …),
+  // which is a copy of what `tableKind` decides: the form itself, a layout
+  // wrapper, a calendar grid and the weekday box grid are each classified on
+  // their own evidence now, and everything the classifier calls data is a list
+  // the page is showing beside its form. That is also what the editor's wide
+  // skin keys off (`Editor.svelte`), so the skin follows the judgement rather
+  // than a class list of its own.
   const tables = [];
-  for (const table of qsa(root, 'table')) {
+  for (const entry of pageRegions(doc).tables) {
+    const table = entry.table;
+    if (entry.kind !== 'data') continue;
     if (skip.has(table)) continue;
     // A table inside another table's cell is that table's cell content.
     if (table.closest && table.closest('table') !== table) continue;
-    if (table.closest && table.closest('.tabContent, .menu, .ButtonBar, #sideNavBar, .List')) continue;
-    if (NOT_DATA.test(String(table.getAttribute('class') || '').trim())) continue;
+    // Panels carry their own reader (a tab, the record list, the menu).
+    if (table.closest && table.closest(PANELS)) continue;
 
     const read = readTable(table);
-    if (!isSideTable(read)) continue;
+    if (!isRecordList(read)) continue;
     tables.push({ ...read, section: headingFor(table) });
   }
   return tables;
@@ -129,17 +123,40 @@ function tablesBeside(doc, formTables) {
 //
 // There is no floor either — `NewEditDel` is a location name and a link, and a
 // report's two-filter form is a form.
-export function readForm(doc) {
+export function readForm(doc, opts = {}) {
   const root = contentRoot(doc);
   if (!root) return null;
 
-  // Every table the page is showing, and rows inside each one stand on their
-  // own: a table the page itself calls hidden (`table-hidden`) is storage, not
-  // part of the editor, and a row with no label is the record's key rather than
-  // a field. Both are the page's own statements, not a size guess.
-  const chosen = formTablesIn(doc, root);
+  // The regions are the page's, not a score's: what it declares to be a form,
+  // or — on a record route with nothing declared — the tables that are
+  // field-shaped by their own rows. Each region is then walked row by row, so a
+  // section band, a list of records beside the form and the record's own key
+  // row are each classified on their own evidence (`model/regions.js`).
+  const routeSaysEditor = !!(opts.url && isRecordPage(opts.url));
+  const chosen = editorRegions(doc, root, { routeSaysEditor });
 
-  if (!chosen.length) return null;
+  // No editor table at all: an editor printed as plain divs (or a skin that
+  // prints one differently) is read by the same root walk the settings card
+  // uses, but only where the route says this page is a record editor. Shape
+  // alone cannot decide it — a settings card is two labelled controls too.
+  if (!chosen.length) {
+    if (!routeSaysEditor) return null;
+    const loose = formFromRoot(doc, root, titledTitleOf(doc) || 'Edit');
+    if (!loose) return null;
+    const unread = coverageOf(root, loose.shown, loose.passed);
+    // Coverage consumes the element lists; they are not part of the model. The
+    // loose walk's `shown`/`passed` used to be spread into it, which put live DOM
+    // nodes on the page the view renders — the same shape the table reader's
+    // explicit object already avoids.
+    return {
+      kind: loose.kind,
+      title: loose.title,
+      breadcrumb: breadcrumbOf(doc),
+      rows: loose.rows,
+      fields: loose.fields,
+      ...(unread.length ? { unread } : {})
+    };
+  }
 
   const rows = [];
   const shown = [];
@@ -167,8 +184,8 @@ export function readForm(doc) {
     kind: 'form',
     // The div can hold a warning block and the page's name after it; the name is
     // what a title means. See `titledTextOf`.
-    title: titledTextOf(qs(doc, '.formTitle')) || 'Edit',
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    title: titledTitleOf(doc) || 'Edit',
+    breadcrumb: breadcrumbOf(doc),
     rows,
     fields,
     // Other tables on the page — the seasons list beside its editor. Only when

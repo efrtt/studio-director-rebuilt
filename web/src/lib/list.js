@@ -18,7 +18,10 @@
 // order therefore showed the family list and *then* the results, so the panel is
 // chosen by what it says about itself rather than by where it sits.
 
-import { pageName, qs, qsa, textOf } from './shell.js';
+import { pageName, qs, qsa, textOf, titleOf, breadcrumbOf } from './shell.js';
+import { RESULT_BAR, RESULT_LABEL, RESULT_PANEL_CLASS, SEARCH_SPAN } from '../model/appdom.js';
+import { resultPanel, panelRows } from '../model/regions.js';
+import { contentRoot } from '../model/root.js';
 
 // What a row is. The link says it best (`?page=EditFamily`), and the app's own
 // label often says it too ("Family: Hopper Family"); the label prefix is then
@@ -46,55 +49,26 @@ const COUNT = /^\s*(\d[\d,]*)\s+items?\s*$/i;
 
 function panelOf(list) {
   try {
-    return (list.closest && (list.closest('.searchResultPanel') || list.closest('#idSearchSpan'))) || null;
+    return (list.closest && (list.closest(RESULT_PANEL_CLASS) || list.closest(SEARCH_SPAN))) || null;
   } catch (e) {
     return null;
   }
 }
 
+// The panel's own label first; then the label the content root prints, which is
+// the same root every other reader asks. The document is never searched, so a
+// panel belonging to a screen you are not on cannot name this one.
 function headingOf(list, doc) {
+  const root = contentRoot(doc);
   const panel = panelOf(list);
-  const heading = (panel && qs(panel, '.searchResultLabel')) || qs(doc, '.searchResultBar .searchResultLabel') || qs(doc, '.searchResultLabel');
-  return heading;
-}
-
-function typesIn(list) {
-  const types = new Set();
-  for (const node of qsa(list, '.searchResultItem')) {
-    const anchor = node.tagName === 'A' ? node : qs(node, 'a[href]');
-    const href = anchor ? anchor.getAttribute('href') : '';
-    const type = TYPE_BY_PAGE[pageName(href || '').toLowerCase()];
-    if (type) types.add(type);
-  }
-  return types;
-}
-
-// How much a panel looks like the screen the page is about. A panel that names
-// itself "Search Results", or that states a count, is the result set; a panel
-// named after one record type is the one carried over from the page searched
-// from. Ties go to the later panel, because that is the one the app just drew.
-function scoreOf(list, doc) {
-  const heading = textOf(headingOf(list, doc));
-  let score = 0;
-  if (/search/i.test(heading)) score += 3;
-  if (COUNT.test(heading)) score += 2;
-  if (typesIn(list).size > 1) score += 1;
-  return score;
+  return (panel && qs(panel, RESULT_LABEL))
+    || qs(root, RESULT_BAR + ' ' + RESULT_LABEL)
+    || qs(root, RESULT_LABEL);
 }
 
 function pickList(doc) {
-  const lists = qsa(doc, '.searchResultList');
-  if (!lists.length) return null;
-  let best = lists[0];
-  let bestScore = scoreOf(best, doc);
-  for (const list of lists.slice(1)) {
-    const score = scoreOf(list, doc);
-    if (score >= bestScore) {
-      best = list;
-      bestScore = score;
-    }
-  }
-  return best;
+  const found = resultPanel(doc);
+  return found ? found.panel : null;
 }
 
 function totalOf(doc, list) {
@@ -103,7 +77,7 @@ function totalOf(doc, list) {
   if (fromHeading) return Number(fromHeading[1].replace(/,/g, ''));
 
   const panel = panelOf(list);
-  const filter = (panel && qs(panel, '#filter')) || qs(doc, '#filter');
+  const filter = (panel && qs(panel, '#filter')) || qs(contentRoot(doc), '#filter');
   const m = String((filter && filter.getAttribute('placeholder')) || '')
     .match(/(\d[\d,]*)\s+items?/i);
   return m ? Number(m[1].replace(/,/g, '')) : null;
@@ -116,7 +90,7 @@ export function readList(doc, opts = {}) {
   const seen = new Set();
   const items = [];
 
-  for (const node of qsa(list, '.searchResultItem')) {
+  for (const { el: node } of panelRows(list).filter((row) => row.kind === 'repeated')) {
     const anchor = node.tagName === 'A' ? node : qs(node, 'a[href]');
     let label = textOf(anchor || node);
     if (!label) continue;
@@ -158,12 +132,12 @@ export function readList(doc, opts = {}) {
     // page title stands in.
     label: headingText && !COUNT.test(headingText)
       ? headingText
-      : (textOf(qs(doc, '.formTitle')) || 'Records'),
+      : (titleOf(doc, 'div') || 'Records'),
     items,
     // null when the page does not say, so a caller cannot "know" a total it
     // was never given.
     total: total != null && total >= items.length ? total : null,
     truncated: total != null && total > items.length,
-    title: textOf(qs(doc, '.formTitle, .ReportName, h1')) || ''
+    title: titleOf(doc) || ''
   };
 }

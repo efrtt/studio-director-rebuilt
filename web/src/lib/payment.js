@@ -27,16 +27,18 @@
 // app's live controls and clicks the app's own anchor, exactly as `saveInApp`
 // does for the editor.
 
-import { qs, qsa, textOf, pageName } from './shell.js';
+import { qs, qsa, textOf, pageName, breadcrumbOf } from './shell.js';
+import { BUTTONS as APP_BUTTONS, OWN_ROOT } from '../model/appdom.js';
 import { contentRoot } from '../model/root.js';
 import { coverageOf } from '../model/coverage.js';
 import { controlOf } from '../model/controls.js';
-import { labelledRows, rowCells } from '../model/rows.js';
+import { declaredFormTables, pageRegions } from '../model/regions.js';
+import { isValueRow, labelledRows, rowCells } from '../model/rows.js';
 import { diffFields, applyFields } from '../model/diff.js';
 
 // The app's own controls. Anchors carry their word as text; a submit input
 // carries it in `value`.
-const BUTTONS = 'a, button, input[type="submit"], input[type="button"], .Btn, .BtnOutln';
+const BUTTONS = 'a, button, input[type="submit"], input[type="button"], ' + APP_BUTTONS;
 
 // A control as the view needs it: a key, a live selector, what it holds now.
 //
@@ -121,14 +123,19 @@ function methodOf(table) {
 
 // The three totals under "Current Unpaid Charges". The app prints them as
 // label/value rows with no headings, so the last cell of the row is the figure.
-function totalsOf(root) {
-  const table = qs(root, 'table.ReportTable');
+function totalsOf(doc) {
+  // Which table holds the totals is the page-wide judgement's: the one the
+  // classifier calls data on this screen, rather than a class this reader looks
+  // up itself (`table.ReportTable`) — a second way to answer "which table is
+  // this page's records".
+  const found = pageRegions(doc).tables.find((entry) => entry.kind === 'data');
+  const table = found ? found.table : null;
   if (!table) return [];
 
   const out = [];
   for (const tr of qsa(table, 'tr')) {
     const cells = rowCells(tr, table);
-    if (cells.length < 2) continue;
+    if (!isValueRow(cells)) continue;
     const label = textOf(cells[0]);
     const value = textOf(cells[cells.length - 1]);
     if (!label || !value) continue;
@@ -243,7 +250,14 @@ export function readPayment(doc, url) {
   // Without an amount this is not the payment screen, whatever else it has.
   if (!amount) return null;
 
-  const baseTable = qs(root, 'table.FlexForm');
+  // The declared form classes are `model/regions.js`'s list; `FlexForm` is the
+  // payment screen's member of it, so which tables are forms is the shared
+  // judgement's. Which of them is this screen's *base* form is the fact the
+  // screen states: the one carrying the amount control. This used to re-test the
+  // class string here, a second copy of the app vocabulary that would have kept
+  // working (wrongly) after the classifier's list changed.
+  const baseTable = declaredFormTables(doc, root)
+    .find((table) => qs(table, '[name="amount"]')) || null;
   const rows = labelledRows(baseTable);
 
   const due = take(qs(root, '[name="due_date"]'));
@@ -284,7 +298,7 @@ export function readPayment(doc, url) {
   }
   splits.sort((a, b) => a.idx - b.idx);
 
-  const totals = totalsOf(root);
+  const totals = totalsOf(doc);
   if (!splits.length && !totals.length) return null;
 
   // "Split Payment" is what makes the app draw its split rows: on a fresh page
@@ -308,7 +322,7 @@ export function readPayment(doc, url) {
     // 'url' when the app named the screen, 'label' when the words decided,
     // 'none' when neither did. A crawl can ask which pages are being guessed at.
     modeSource: primary.source,
-    breadcrumb: qsa(doc, '.Breadcrumb a').map(textOf).filter(Boolean),
+    breadcrumb: breadcrumbOf(doc),
     // Shown, never edited: the family is the page's subject, not one of its inputs.
     family: familyRow ? textOf(familyRow.cell) : '',
     base,
@@ -352,7 +366,7 @@ function press(doc, action) {
   }
 
   const matches = qsa(doc, BUTTONS)
-    .filter((el) => !(el.closest && el.closest('#sd-root')))
+    .filter((el) => !(el.closest && el.closest(OWN_ROOT)))
     .filter((el) => ((textOf(el) || el.getAttribute('value') || '').trim() === action.label));
   if (!matches.length) return { ok: false, reason: 'missing' };
 

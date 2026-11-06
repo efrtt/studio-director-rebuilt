@@ -1,0 +1,119 @@
+{
+  "name": "week",
+  "reader": "calendar",
+  "url": "/srvda/admin.sd?page=CalendarPage&DATASPEC_VIEW=WEEK",
+  "note": "The Calendar page forced to its week view with DATASPEC_VIEW=WEEK, which is deliberate: the calendar's chosen view is session state, so a bare CalendarPage URL renders whichever view the session last used (verified — a bare URL returned the week after the week was viewed, and the month earlier in the same session; the two readings differed only in their recorded URL). The parameter is what makes this capture repeatable; the pair freezes the real week grid — seven weekday columns, the 11/2–11/8 range line and the two time rows — not the month view.",
+  "current": {
+    "url": "/srvda/admin.sd?page=CalendarPage&DATASPEC_VIEW=WEEK",
+    "mounted": true,
+    "theme": "wii",
+    "tabs": [],
+    "decision": {
+      "path": "rowByRow",
+      "root": ".contentContainer",
+      "source": "tables",
+      "controls": 1,
+      "links": 15,
+      "tables": {
+        "form": 0,
+        "data": 0,
+        "grid": 1,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 1,
+        "repeated": 1,
+        "noise": 0
+      },
+      "fallback": "none"
+    },
+    "panel": null,
+    "view": {
+      "week": {
+        "columns": 0,
+        "blocks": 0,
+        "names": [],
+        "rows": 2,
+        "rowTimes": [
+          "2:45 - 3:45",
+          "4:30 - 7:30"
+        ],
+        "days": [
+          "Monday 11/2",
+          "Tuesday 11/3",
+          "Wednesday 11/4",
+          "Thursday 11/5",
+          "Friday 11/6",
+          "Saturday 11/7",
+          "Sunday 11/8"
+        ],
+        "range": "11/2/26 - 11/8/26",
+        "totals": ""
+      },
+      "kind": "week",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 1,
+        "rows": 2
+      }
+    },
+    "detected": true,
+    "digest": "e489f857",
+    "version": "0.31.20"
+  },
+  "reference": {
+    "url": "/srvda/admin.sd?page=CalendarPage&DATASPEC_VIEW=WEEK",
+    "mounted": true,
+    "theme": "dark",
+    "tabs": [],
+    "decision": {
+      "path": "",
+      "root": "",
+      "source": "",
+      "controls": 0,
+      "links": 0,
+      "tables": null,
+      "rows": null,
+      "fallback": ""
+    },
+    "panel": null,
+    "view": {
+      "week": {
+        "columns": 0,
+        "blocks": 0,
+        "names": [],
+        "rows": 2,
+        "rowTimes": [
+          "2:45 - 3:45",
+          "4:30 - 7:30"
+        ],
+        "days": [
+          "Monday 11/2",
+          "Tuesday 11/3",
+          "Wednesday 11/4",
+          "Thursday 11/5",
+          "Friday 11/6",
+          "Saturday 11/7",
+          "Sunday 11/8"
+        ],
+        "range": "11/2/26 - 11/8/26",
+        "totals": ""
+      },
+      "kind": "week",
+      "detected": true,
+      "app": {
+        "root": "#mainContent",
+        "text": true,
+        "tables": 1,
+        "rows": 2
+      }
+    },
+    "detected": true,
+    "digest": "a13e11fa",
+    "version": "0.28.76"
+  }
+}

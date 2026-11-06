@@ -7,6 +7,10 @@ web/dist/
 web/demo/
 web/studio-director-rebuilt.user.js
 
+# parity snapshots - build output, see web/tools/parity.mjs.
+# The frozen, checked-in set is web/test/parity/ (npm run parity:fixtures).
+web/parity/
+
 # workspace metadata
 .freebuff/
 

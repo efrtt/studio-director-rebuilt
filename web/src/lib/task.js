@@ -17,11 +17,12 @@
 // an `a#save` in its ButtonBar and is read here, which is why the task view also
 // prints the holiday list the page shows beside the form.
 
-import { qs, qsa, textOf } from './shell.js';
+import { qs, qsa, textOf, titleOf } from './shell.js';
 import { readForm } from './form.js';
 import { readActions, primaryAction, clickActionInApp } from './actions.js';
 import { diffFields, applyFields } from '../model/diff.js';
 import { contentRoot } from '../model/root.js';
+import { CHROME } from '../model/appdom.js';
 
 export function readTask(doc) {
   const root = contentRoot(doc);
@@ -37,7 +38,7 @@ export function readTask(doc) {
 
   return {
     kind: 'task',
-    title: textOf(qs(doc, '.formTitle')) || form.title || 'Form',
+    title: titleOf(doc, 'div') || form.title || 'Form',
     breadcrumb: form.breadcrumb,
     rows: form.rows,
     fields: form.fields,
@@ -52,7 +53,7 @@ export function readTask(doc) {
     // Links the page offers beside its buttons (a template download, a help
     // page). Shown, never pressed.
     links: qsa(root, 'a[href]')
-      .filter((a) => !(a.closest && a.closest('table, ' + '#sideNavBar, .topBarContainer, .Breadcrumb')))
+      .filter((a) => !(a.closest && a.closest('table, ' + CHROME)))
       .map((a) => ({ label: textOf(a), href: a.getAttribute('href') }))
       .filter((a) => a.label && a.href && a.href !== '#')
       .slice(0, 8)

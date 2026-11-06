@@ -30,12 +30,9 @@
 
 import { qsa, textOf } from '../lib/shell.js';
 import { humanise } from './fields.js';
+import { FURNITURE } from './appdom.js';
 
 const CONTROL = 'input, select, textarea, button';
-
-// Page furniture that is never a field's label: the title above the first
-// control, a breadcrumb, a button row.
-const FURNITURE = '.formTitle, .Breadcrumb, .ButtonBar, .ButtonArea, .menu';
 
 // A control is not a label for the control after it. Two date pickers side by
 // side with nothing between them would otherwise take turns naming each other —
@@ -75,6 +72,35 @@ function blockBefore(el) {
     before = before.previousElementSibling;
   }
   return '';
+}
+
+// Step 5, generalised to a row printed as divs: the label is the first text in
+// the control's own field row, before the control. Climbing stops at the first
+// ancestor that holds more than one control group — that ancestor is the form,
+// not a row — so a paragraph higher up the page cannot name a field, and a row
+// that names nothing still falls through to the guessed name.
+//
+// This is what makes the no-table editor (`.formRow > .formLabel +
+// .formInput`) read its labels as the page prints them, rather than as the
+// control's id: `guardian` → "Guardian" was the old reading of "Guardian
+// Name(s)". A control's group is its name, or its id, or itself.
+function groupKey(el, index) {
+  return el.getAttribute('name') || el.getAttribute('id') || '#' + index;
+}
+
+export function leadingLabel(el, boundary) {
+  for (let node = el.parentElement; node && node !== boundary && node.nodeType === 1; node = node.parentElement) {
+    const controls = qsa(node, CONTROL);
+    const groups = new Set(controls.map(groupKey));
+    if (groups.size > 1) return null;
+    for (const child of Array.from(node.children || [])) {
+      if (child === el || (child.contains && child.contains(el))) break;
+      if (child.matches && child.matches(FURNITURE)) continue;
+      const text = namingText(child);
+      if (text) return { label: text, source: 'row' };
+    }
+  }
+  return null;
 }
 
 // Steps 3–6 of the ladder, for a control or for a block that holds several.
