@@ -107,7 +107,9 @@
       // cached markup stays plain so a re-shown sprite does not replay last time's
       // direction.
       if (ghost) {
-        ghost.classList.remove('sd-cursor-pop');
+        // A clone carries whatever the wrap had, including the last swap's incoming
+        // animation: only the outgoing one may run on the ghost.
+        ghost.classList.remove('sd-cursor-pop', 'sd-cursor-in--stretch', 'sd-cursor-in--squash');
         ghost.classList.add('sd-cursor-ghost',
           prev === 'holding' ? 'sd-cursor-out--stretch' : 'sd-cursor-out--squash');
         ghost.addEventListener('animationend', () => ghost.remove(), { once: true });
