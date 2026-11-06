@@ -6,6 +6,8 @@
 //   .standardMainContent > #sideNavBar (a.sideNavLink ...) + #mainContent
 //   #mainContent > .contentContainer > .Content > .formTitle / .contentInfo
 
+import { SHELL, CONTENT, LOGIN, LOGIN_FORM, RAIL_LINK, PAGE_TITLE } from '../model/appdom.js';
+
 export function parseHtml(html) {
   return new DOMParser().parseFromString(html, 'text/html');
 }
@@ -111,18 +113,18 @@ export function isRecordPage(href) {
 }
 
 export function titleOf(doc) {
-  return textOf(qs(doc, '.formTitle, .ReportName, h1'));
+  return textOf(qs(doc, PAGE_TITLE));
 }
 
 // The sign-in screen is never replaced: that is where the session is created.
 export function isLoginPage(doc) {
-  const form = qs(doc, 'form#idForm');
+  const form = qs(doc, LOGIN_FORM);
   if (form && /login\.sd/i.test(form.getAttribute('action') || '')) return true;
-  return !!qs(doc, '.LoginContainer');
+  return !!qs(doc, LOGIN);
 }
 
 export function hasShell(doc) {
-  return !!(qs(doc, '#mainContent') || qs(doc, '.standardMainContent'));
+  return !!qs(doc, SHELL);
 }
 
 // Is there nothing on this page a reader could claim? Asked of the *live*
@@ -136,7 +138,7 @@ export function liveIsBare(doc) {
   if (!doc) return true;
   // Our own overlay is in the tree once a view is mounted; it is not content.
   if (qs(doc, '#sd-root')) return true;
-  const root = qs(doc, '.contentContainer') || qs(doc, '#mainContent');
+  const root = qs(doc, CONTENT);
   if (!root) return true;
   return !root.querySelector('table tr, input, select, textarea, a[href], p');
 }
@@ -153,7 +155,7 @@ export function oneLabel(label) {
 export function railLinks(doc) {
   const out = [];
   const seen = new Set();
-  for (const a of qsa(doc, '#sideNavBar a.sideNavLink')) {
+  for (const a of qsa(doc, RAIL_LINK)) {
     const href = a.getAttribute('href') || '';
     const label = oneLabel(textOf(a));
     if (!href || !label) continue;

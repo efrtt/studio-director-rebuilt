@@ -5,10 +5,12 @@
 // `ManageFamilyStudentMax` (two numbers), `ConfigureCalendar` (a radio pair and
 // a save), `PortalAccess` (eleven selects), `ManageAbsenceOptions` (four).
 //
-// They are *not* record editors and they have no `table.Form` to read: the crawl
+// They are *not* record editors and most have no form table to read: the crawl
 // shows the controls living in plain divs — `PageSettings` uses divs, and
-// `ManagePhoneNumbersFormat`'s one select is inside a `table.Form` too small for
-// the editor's four-field floor.
+// `ManagePhoneNumbersFormat`'s one select sits in a bare `table.Form` row with no
+// record behind it. Whether that table is a form is the shared classifier's
+// question; whether the *page* is an editor is the route's. (This comment used to
+// explain a four-field floor, which the content-root rule removed.)
 //
 // So this reader walks the controls themselves and finds each one's label the
 // way a person reading the page does:
@@ -34,6 +36,7 @@ import { labelOfControl, labelOfBlock } from '../model/labels.js';
 import { readActions, primaryAction, clickActionInApp } from './actions.js';
 import { pageSave } from './save.js';
 import { coverageOf } from '../model/coverage.js';
+import { pageRegions } from '../model/regions.js';
 
 // At most this many fields: a screen with more is a form (or a table), and the
 // editor and sheet readers own those.
@@ -56,18 +59,15 @@ export function readSettings(doc) {
   const root = contentRoot(doc);
   if (!root) return null;
 
-  // Settings pages are not data pages. A *headed* table with rows is a sheet,
-  // and that is what stops this adapter from taking one over. A layout table of
-  // "label cell / control cell" rows has no headings and is exactly how some of
-  // these pages print their settings.
-  const headed = qsa(root, 'table').reduce((n, table) => {
-    const heads = Array.from(table.children)
-      .flatMap((c) => (c.tagName === 'TBODY' || c.tagName === 'THEAD' ? Array.from(c.children) : [c]))
-      .filter((tr) => tr.tagName === 'TR' && Array.from(tr.children).some((c) => c.tagName === 'TH'));
-    if (!heads.length) return n;
-    return n + Array.from(table.querySelectorAll('tr')).filter((tr) => tr.querySelector('td')).length;
-  }, 0);
-  if (headed >= 2) return null;
+  // Settings pages are not data pages, and which tables are records is the one
+  // page-wide judgement (`model/regions.js`), not a count this reader derives
+  // itself. It used to walk every table here and count the rows under a heading
+  // row — the same question `tableKind` answers — which is a second answer to a
+  // question that already has one, and the two drift the day either changes. A
+  // layout table of "label cell / control cell" rows is a form by its own rows,
+  // which is exactly how some of these pages print their settings, so the doubt
+  // this answers is "is any of this records?", not "how many rows are there?".
+  if (pageRegions(doc).counts.data) return null;
 
   const fields = [];
   // Same accounting as the record editor and the payment screen: every control is

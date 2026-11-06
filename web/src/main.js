@@ -37,6 +37,7 @@ import { contradictsNote } from './lib/note.js';
 import { wantsLiveLook, decideMount, decideShellLess, chooseSource, searchReady } from './lib/choose.js';
 import { readRecordPage } from './lib/record.js';
 import { readLiveView } from './lib/live.js';
+import { decisionOf } from './model/regions.js';
 
 export { readPage };
 // The face has to travel with it: on a mount the fonts are in the same <style> as
@@ -72,6 +73,20 @@ export function mount(opts = {}) {
 
   const root = document.createElement('div');
   root.id = 'sd-root';
+  // Which decision produced this page: the content root and the row judgement,
+  // recorded where it can be read back. A page that cannot name its path cannot
+  // tell a real read from a fallback that quietly did the work.
+  try {
+    const decision = decisionOf(document);
+    root.dataset.sdPath = decision.path;
+    root.dataset.sdRoot = decision.root;
+    root.dataset.sdSource = decision.source;
+    root.dataset.sdControls = String(decision.controls);
+    root.dataset.sdLinks = String(decision.links);
+    root.dataset.sdTables = JSON.stringify(decision.tables);
+    root.dataset.sdRows = JSON.stringify(decision.rows);
+    root.dataset.sdFallback = decision.fallback;
+  } catch (e) { /* a page mid-load still mounts */ }
   (opts.container || document.body).appendChild(root);
 
   const app = new App({

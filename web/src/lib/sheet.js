@@ -1,4 +1,4 @@
-// Table screens: the largest group the rebuilt UI had not touched.
+// Table screens: the tables the rebuilt UI had not touched.
 //
 // The crawl found 62 of them — `HomePage`'s schedule, `Trends`, `Alerts`,
 // `ManageSizes`, `ManageVendors`, `CopyClasses`, `PrintClassRoster`, and every
@@ -21,34 +21,16 @@ import { labelAbove } from './heading.js';
 import { readTable } from '../model/table.js';
 import { readActions } from './actions.js';
 import { contentRoot } from '../model/root.js';
+import { pageRegions } from '../model/regions.js';
 import { TABLE_ROWS } from './thresholds.js';
 
-// Tables that are structure, not data: the weekday checkbox grid inside a form,
-// the form itself (label column, control column), and the layout table the app
-// wraps whole pages in.
-const NOT_DATA = /^(WeekdayCheckboxes|Layout|TimeBlock|WeekCal|MonthCal|Form|FormEx)$/i;
-
-// A table whose own cells carry controls to type into is a form drawn as a grid,
-// not a table of records. `Attendance` is the shape: for every student and every
-// date, a checkbox, a "Reason" select and a "Studio notes" textarea.
-//
-// Read as data, those controls collapsed into their labels - every option of the
-// select and the textarea's own caption - so one cell read "Reason:SickInjuryOut
-// of TownSchoolEventOtherCompetitionFamilyEventStudio notes:" and the screen
-// became a wall of text in which nobody could mark anybody present. A page that
-// edits is the app's business: it keeps its own page, controls and all.
-//
-// Checkboxes and radios are left out on purpose: a date column of tick boxes the
-// app has already decided (`PrintClassRoster`) is data about that day, and it
-// reads correctly as a cell with no words.
-const EDITS = 'select, textarea, input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"])';
-
-function isDataTable(table) {
-  for (const cls of String(table.getAttribute('class') || '').split(/\s+/)) {
-    if (NOT_DATA.test(cls)) return false;
-  }
-  return true;
-}
+// Which tables are records is `model/regions.js`'s judgement: a table is data
+// when its own rows read as records — a heading row, or repeated rows of values
+// — and not when it is the rail, a calendar grid, the weekday checkbox grid, a
+// form (declared, typed into, or field rows without headings) or a spacer.
+// That includes the attendance grid: a table of selects and notes boxes read as
+// data collapsed into "Reason:SickInjury…Studio notes:", which is why a table
+// that is typed into is a form and the app keeps it.
 
 // A heading above a table ("Class Trends") is the table's own section label.
 const SECTION = '.WithinSectionSpace, .sectionHeader, .sectionTitle, .ReportTableSubtitle, h2, h3, h4';
@@ -60,11 +42,11 @@ export function readSheet(doc) {
   const tables = [];
   let rows = 0;
 
-  for (const table of qsa(root, 'table')) {
+  const regions = pageRegions(doc);
+  for (const { table, kind } of regions.tables) {
     if (table.closest && table.closest('table') !== table) continue;
-    if (!isDataTable(table)) continue;
-    // A grid of controls is the app's own form, whatever the table is called.
-    if (qs(table, EDITS)) continue;
+    // One page-wide judgement, asked of every table: only records are read here.
+    if (kind !== 'data') continue;
 
     const read = readTable(table);
     if (!read.headings.length && !read.rows.length) continue;

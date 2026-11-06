@@ -16,6 +16,9 @@ import { DOMParser } from 'linkedom';
 import { contentRoot, CHROME } from '../src/model/root.js';
 import { weekdayOf, WEEKDAY } from '../src/model/fields.js';
 import { readForm } from '../src/lib/form.js';
+import { readPage } from '../src/lib/page.js';
+import { decisionOf } from '../src/model/regions.js';
+import { coverageOf } from '../src/model/coverage.js';
 import { diffFields, applyFields, changesFrom } from '../src/model/diff.js';
 import { saveInApp } from '../src/lib/save.js';
 
@@ -113,6 +116,8 @@ test('the app\'s own record id in an unlabelled row is not a field', () => {
   // cannot be presented, and it is a key rather than something to fill in.
   assert.deepEqual(form.fields.map((f) => f.key), ['item_style', 'color', 'deposit', 'gender']);
   assert.equal(form.rows.length, 4);
+  // Passed over on purpose, so coverage does not call it a shortfall.
+  assert.equal(form.unread, undefined, 'the id row is a decision, not an omission');
   // Leaving it out of the model does not remove it from the page: the app's own
   // Save still carries the id it shipped.
   assert.equal(d.getElementById('item_id').getAttribute('value'), '1792595222235');
@@ -174,11 +179,111 @@ test('a one-column list of links beside the form is read too', () => {
   assert.match(list.rows[1][0].href, /lident=101/);
 });
 
-test('a page without Save reads its form; being an editor is a separate fact', async () => {
-  // This used to assert a four-field floor, which is how a list page's three
-  // control stub was "not a form at all". The floor belonged to the size contest
-  // that picked an editor's biggest table: with the page read row by row, the
-  // shape is the table and being an *editor* is the page having its own Save.
+test('a page with Save joins its sibling form tables into one editor', () => {
+  // Measured live on `page=ChangeEnrollDate` (Enrollment Dates) on 2026-11-05: two
+  // one-row `table.Form`s under the same `.contentInfo`, one per date, each three
+  // selects (month, day, year) and the hidden field the calendar widget keeps.
+  // Reading only the biggest table kept the first date and dropped the second,
+  // so the rebuilt page asked for one date where the app asks for two.
+  const d = doc(`
+    <body><div class="contentContainer"><div class="contentInfo">
+      <div class="formTitle">Enrollment Dates</div>
+      <p>Charge for classes starting:</p>
+      <table class="Form"><tr>
+        <td>Charge for classes starting:</td>
+        <td>
+          <select id="a_mon"><option>Nov</option><option>Dec</option></select>
+          <select id="a_day"><option>4</option><option>5</option></select>
+          <select id="a_year"><option>2026</option><option>2027</option></select>
+          <input type="hidden" id="a_hidden" value="">
+        </td>
+      </tr></table>
+      <p>Display on roster starting:</p>
+      <table class="Form"><tr>
+        <td>Display on roster starting:</td>
+        <td>
+          <select id="b_mon"><option>Nov</option></select>
+          <select id="b_day"><option>4</option></select>
+          <select id="b_year"><option>2026</option></select>
+        </td>
+      </tr></table>
+      <a href="#" id="save">Save</a>
+    </div></div></body>`);
+
+  const form = readForm(d);
+  assert.ok(form, 'the page is an editor');
+  assert.deepEqual(form.rows.map((row) => row.label),
+    ['Charge for classes starting:', 'Display on roster starting:']);
+  assert.equal(form.fields.length, 6);
+  // The hidden date the calendar widget keeps is not a field of its own.
+  assert.equal(form.fields.some((field) => /hidden/.test(field.id)), false);
+});
+
+// The editor is chosen by what the page's tables *are*, not by which one is
+// biggest. This is the case the size contest got wrong: a small form beside a
+// long data table. The old rule took the table with the most fields, so an
+// editor printed as three rows beside a roster lost to the roster.
+test('an editor beside a much larger data table is still the editor', () => {
+  const rows = Array.from({ length: 12 }, (_, i) => `<tr><td>Record ${i}</td><td>${i}</td></tr>`).join('');
+  const d = doc(`
+    <body><div class="contentContainer">
+      <div class="formTitle">Edit Location</div>
+      <table class="Form">
+        <tr><td>Name</td><td><input id="name" value="Studio"></td></tr>
+        <tr><td>State</td><td><select id="state"><option value="CA">CA</option></select></td></tr>
+        <tr><td>Notes</td><td><textarea id="notes">hi</textarea></td></tr>
+      </table>
+      <table class="SimpleSD">
+        <tr><th>Record</th><th>Count</th></tr>${rows}
+      </table>
+      <a id="save" href="#">Save</a>
+    </div></body>`);
+
+  const form = readForm(d);
+  assert.ok(form, 'the page carries an editor');
+  // Three fields, from the table that is a form — not the twelve-row one.
+  assert.deepEqual(form.fields.map((f) => f.key), ['name', 'state', 'notes']);
+  assert.equal(form.rows.length, 3);
+
+  // The larger table is read as what it is: a list printed beside the form.
+  assert.equal(form.tables.length, 1);
+  assert.equal(form.tables[0].rowTotal, 12);
+
+  // And the page's own decision says so, with the evidence it used.
+  const decision = decisionOf(d);
+  assert.equal(decision.path, 'rowByRow');
+  assert.equal(decision.root, '.contentContainer');
+  assert.equal(decision.tables.form, 1);
+  assert.equal(decision.tables.data, 1);
+});
+
+// The other half of the same rule: a data table is not a form just because it
+// is the biggest thing on the page. Nothing here declares itself a form and the
+// route is not a record, so the page is a sheet and the form reader says no.
+test('a page whose dominant table is data is not mistaken for a form', () => {
+  const rows = Array.from({ length: 8 }, (_, i) => `<tr><td>Ada ${i}</td><td>${i}</td></tr>`).join('');
+  const d = doc(`
+    <body><div class="contentContainer">
+      <div class="formTitle">All Seasons</div>
+      <table class="SimpleSD">
+        <tr><th>Student</th><th>Classes</th></tr>${rows}
+      </table>
+    </div></body>`);
+
+  assert.equal(readForm(d), null, 'no form table, so no form');
+  assert.equal(decisionOf(d).rows.field, 0);
+
+  const model = readPage(d, 'https://x/admin.sd?page=AllSeasonRoster');
+  assert.equal(model.view, 'sheet');
+  assert.equal(model.task, null);
+  assert.equal(model.report, null);
+});
+
+test('a page without Save reads its form; it is still not an editor', async () => {
+  // This used to assert a four-field floor, so a list page's three-control stub
+  // came back as "not a form at all". The floor goes with the rest of the size
+  // contest — three labelled rows are three rows — and being an *editor* is a
+  // separate fact: the page has its own Save.
   const stub = doc(`
     <body><div class="contentContainer"><div class="formTitle">Classes</div>
       <table class="Form">
@@ -188,7 +293,7 @@ test('a page without Save reads its form; being an editor is a separate fact', a
       </table>
     </div></body>`);
   const form = readForm(stub);
-  assert.equal(form.rows.length, 3, 'three labelled rows are three rows, however few');
+  assert.ok(form, 'three labelled rows are a form');
   assert.deepEqual(form.fields.map((f) => f.key), ['a', 'b', 'c']);
 
   const { recordModel } = await import('../src/lib/record.js');
@@ -267,4 +372,254 @@ test('an unchanged form submits nothing', () => {
   const result = saveInApp(d, []);
   assert.equal(result.submitted, false);
   assert.equal(result.reason, 'unchanged');
+});
+
+// ---- coverage: a page cannot be silently half-read ----
+//
+// The Enrollment Dates page printed its editor as two one-row form tables and the
+// reader kept the biggest, so the second date vanished with nothing said. These
+// two cases pin the two halves of the answer: fragments that belong together are
+// read together, and a control that no reader reached is reported.
+
+test('a page printed as two form tables is one form, with nothing unread', () => {
+  const d = doc(`
+    <body><div class="contentContainer">
+      <div class="formTitle">Enrollment Dates</div>
+      <table class="Form"><tr><td>Charge for classes starting:</td><td>
+        <select id="charge__mon"><option>Nov</option></select>
+        <select id="charge__day"><option>4</option></select>
+        <select id="charge__year"><option>2026</option></select>
+        <input type="hidden" id="charge__hidden" value="x">
+      </td></tr></table>
+      <table class="Form"><tr><td>Display on roster starting:</td><td>
+        <select id="roster__mon"><option>Nov</option></select>
+        <select id="roster__day"><option>4</option></select>
+        <select id="roster__year"><option>2026</option></select>
+      </td></tr></table>
+      <a id="save" href="#">Save</a>
+    </div></body>`);
+  const form = readForm(d);
+  assert.ok(form, 'the editor is read');
+  assert.equal(form.fields.length, 6);
+  assert.deepEqual(form.fields.map((f) => f.key), [
+    'charge__mon', 'charge__day', 'charge__year',
+    'roster__mon', 'roster__day', 'roster__year'
+  ]);
+  // Both dates read, and the hidden calendar value is a control nobody shows on
+  // purpose - neither is a shortfall.
+  assert.equal(form.unread, undefined, 'nothing was left out');
+});
+
+test('an editor is the whole page, not its biggest table', () => {
+  // The rule this replaced: group the form tables and keep the group with the
+  // most fields. A page printing its editor across two parents lost the smaller
+  // half with nothing said. A page carrying its own Save is an editor, so every
+  // form table it contains is read, in document order.
+  const d = doc(`
+    <body><div class="contentContainer">
+      <table class="Form">
+        <tr><td>Name</td><td><input id="name" value="Ada"></td></tr>
+        <tr><td>Zip</td><td><input id="zip" value="90210"></td></tr>
+      </table>
+      <div class="aside">
+        <table class="Form"><tr><td>Note</td><td><input id="aside_note" value="x"></td></tr></table>
+      </div>
+      <a id="save" href="#">Save</a>
+    </div></body>`);
+  const form = readForm(d);
+  assert.ok(form);
+  assert.deepEqual(form.fields.map((f) => f.key), ['name', 'zip', 'aside_note']);
+  assert.equal(form.unread, undefined, 'nothing was left out, so nothing to report');
+});
+
+test('a control outside any form table is counted as unread', () => {
+  // A control the editor does not draw, on a page that says it is an editor.
+  // Coverage states the shortfall instead of the screen looking finished.
+  const d = doc(`
+    <body><div class="contentContainer">
+      <table class="Form">
+        <tr><td>Name</td><td><input id="name" value="Ada"></td></tr>
+        <tr><td>Zip</td><td><input id="zip" value="90210"></td></tr>
+      </table>
+      <div class="pane"><input id="stray" value="x"></div>
+      <a id="save" href="#">Save</a>
+    </div></body>`);
+  const form = readForm(d);
+  assert.ok(form);
+  assert.equal(form.unread.length, 1, JSON.stringify(form.unread));
+  assert.equal(form.unread[0].id, 'stray');
+});
+
+test('an id shared with a button-bar anchor is not the field\u2019s address', () => {
+  // Measured on the EditFamily capture: the page prints `<a id="email">Email</a>`
+  // in its button bar beside `input#email`. Addressing the field by id made
+  // `querySelector('#email')` return the anchor, so a save wrote the value onto an
+  // anchor, reported success, and the app submitted what it already had.
+  const d = doc(`
+    <body>
+      <a id="email" href="#">Email</a>
+      <div class="contentContainer">
+        <table class="Form">
+          <tr><td>Email</td><td><input id="email" name="email" value="old@example.test"></td></tr>
+          <tr><td>Zip</td><td><input id="zip" name="zip" value="90210"></td></tr>
+        </table>
+        <a id="save" href="#">Save</a>
+      </div>
+    </body>`);
+  const form = readForm(d);
+  const email = form.fields.find((f) => f.name === 'email');
+  assert.equal(email.selector, '[name="email"]', 'the shared id is not an address');
+
+  const changes = changesFrom(form, valuesFor(form, { email: 'new@example.test' }));
+  const { applied, missing } = applyFields(d, changes);
+  assert.deepEqual(missing, []);
+  assert.deepEqual(applied, ['email']);
+  assert.equal(d.querySelector('input[name="email"]').value, 'new@example.test');
+  assert.equal(d.querySelector('a#email').getAttribute('href'), '#');
+});
+
+test('a write aimed at something that is not a control is refused', () => {
+  // The backstop for the same shape on a page this suite has never seen: a target
+  // that is not a control means the field is not there, and the caller is told
+  // rather than shown a confirmation for a write that went nowhere.
+  const d = doc('<body><a id="email" href="#">Email</a></body>');
+  const { applied, missing } = applyFields(d, [{ selector: '#email', value: 'x', key: 'email' }]);
+  assert.deepEqual(missing, ['email']);
+  assert.deepEqual(applied, []);
+});
+
+test('coverage counts only the controls nobody accounted for', () => {
+  // The four answers coverage gives, in one page: a shown control, a control that
+  // belongs to another reader (the record list's filter), a control the app is not
+  // showing, and a posted hidden key. Only the stray one is a shortfall.
+  const d = doc(`
+    <body><div class="contentContainer">
+      <table class="Form"><tr><td>Name</td><td><input id="shown"></td></tr></table>
+      <div class="List"><input id="listfilter"></div>
+      <table class="Form table-hidden"><tr><td>Hidden</td><td><input id="storage"></td></tr></table>
+      <input type="hidden" id="key" value="1">
+      <input id="stray">
+    </div></body>`);
+  const root = d.querySelector('.contentContainer');
+  const unread = coverageOf(root, [d.querySelector('#shown')], [d.querySelector('#key')]);
+  assert.deepEqual(unread.map((u) => u.id), ['stray']);
+  assert.equal(unread[0].type, 'text');
+});
+
+test('a page with no Save reads every form table it shows, in document order', async () => {
+  // The complement of the old rule. Without a Save the page is not an editor,
+  // and the reader used to take its largest form table and leave the rest to
+  // "another screen" — which is the size contest in its last disguise, and the
+  // reason a report printed as two filter tables showed one. Every form table
+  // the page shows is read now; a control the reader still cannot place is what
+  // `unread` is for, and here there is none.
+  const d = doc(`
+    <body><div class="contentContainer">
+      <table class="Form">
+        <tr><td>Season</td><td><input id="season" value="1"></td></tr>
+        <tr><td>Type</td><td><input id="type" value="all"></td></tr>
+        <tr><td>Day</td><td><input id="day" value=""></td></tr>
+        <tr><td>Level</td><td><input id="level" value=""></td></tr>
+      </table>
+      <div class="aside">
+        <table class="Form"><tr><td>Other</td><td><input id="other" value="x"></td></tr></table>
+      </div>
+      <a id="runreport" href="#">Run Report</a>
+    </div></body>`);
+  const form = readForm(d);
+  assert.ok(form);
+  assert.deepEqual(form.fields.map((f) => f.key), ['season', 'type', 'day', 'level', 'other']);
+  assert.equal(form.unread, undefined, 'every control is either shown or knowingly passed');
+
+  const { recordModel } = await import('../src/lib/record.js');
+  assert.equal(recordModel(d, 'https://x.test/admin.sd?page=Report'), null,
+    'a report\u2019s filters are a form, not an editor');
+});
+
+test('the family editor reports the phone-type selects it does not offer', () => {
+  // Found by the check itself, on the live-capture fixture: the app prints each
+  // phone's type chooser as the row's *label* cell and the number as the value
+  // cell, so the editor reads the number and never the type. That is a real gap
+  // (you cannot set a number's type here) and it used to be invisible; now the
+  // model says which controls it left, and this pins the three by name so losing
+  // a fourth is a diff rather than a surprise.
+  const html = fs.readFileSync(new URL('./fixtures/editor-family.html', import.meta.url), 'utf8');
+  const form = readForm(doc(html));
+  assert.ok(form);
+  assert.deepEqual((form.unread || []).map((u) => u.name), ['phone1_label', 'phone2_label', 'phone3_label']);
+});
+
+test('the record panel beside an editor is not counted against it', () => {
+  // The list's own filter box belongs to the list reader; counting it would make
+  // every record page look short, and a warning that always fires is not a check.
+  const d = doc(`
+    <body><div class="contentContainer">
+      <table class="Form">
+        <tr><td>Name</td><td><input id="name" value="Ada"></td></tr>
+        <tr><td>Zip</td><td><input id="zip" value="90210"></td></tr>
+      </table>
+      <div class="List"><input id="filter" value=""><a id="searchidx" href="#">Search</a></div>
+      <a id="save" href="#">Save</a>
+    </div></body>`);
+  const form = readForm(d);
+  assert.ok(form);
+  assert.equal(form.unread, undefined, JSON.stringify(form.unread));
+});
+
+test('an editor printed with no form table at all is read through the root walk', () => {
+  // The third shape the mission names — one dominant table, several small
+  // tables, or no table at all — is the one the declared-table path can never
+  // reach. This is the app's own record-editor markup with its table removed:
+  // div rows, a label before each control, the app's Save. The route says
+  // "record editor", so the structural fallback has to run, and it has to name
+  // fields the way the page does rather than by their ids.
+  const d = doc(`<body><div class="contentContainer">
+      <div class="formTitle">Edit Family</div>
+      <div class="Breadcrumb"><a href="admin.sd?page=HomePage">Home</a><a href="admin.sd?page=Families">Families</a></div>
+      <div class="Content"><div class="ButtonBar"><a id="save" href="#">Save</a></div>
+      <div class="formRow"><div class="formLabel">Guardian Name(s)</div><div class="formInput"><input id="guardian" name="guardian" value="Ada"></div></div>
+      <div class="formRow"><div class="formLabel">State</div><div class="formInput"><select id="state" name="state"><option>NY</option><option selected>CA</option></select></div></div>
+      <div class="formRow"><div class="formLabel">Notes</div><div class="formInput"><textarea id="notes" name="notes">hello</textarea></div></div>
+      <div class="formRow"><div class="formLabel">Contact by</div><div class="formInput"><input type="radio" name="contact" value="email" checked><input type="radio" name="contact" value="phone"></div></div>
+      </div></div></body>`);
+  assert.equal(d.querySelectorAll('table').length, 0, 'the fixture must have no table at all');
+
+  const form = readForm(d, { url: 'https://app.example.test/x/admin.sd?page=EditFamily&fident=1' });
+  assert.ok(form, 'the record route must reach the root walk');
+  assert.equal(form.kind, 'form');
+  assert.equal(form.title, 'Edit Family');
+  assert.deepEqual(form.breadcrumb, ['Home', 'Families']);
+  assert.deepEqual(form.rows.map((r) => r.label), ['Guardian Name(s)', 'State', 'Notes', 'Contact by']);
+  assert.deepEqual(form.fields.map((f) => [f.key, f.label, f.value]), [
+    ['guardian', 'Guardian Name(s)', 'Ada'],
+    ['state', 'State', 'CA'],
+    ['notes', 'Notes', 'hello'],
+    ['radio:contact', 'Contact by', 'email']
+  ]);
+  assert.equal(form.fields.find((f) => f.key === 'radio:contact').options.length, 2);
+  // Coverage is computed against the elements, then dropped: the model the view
+  // renders must not carry live DOM nodes.
+  assert.equal(form.shown, undefined);
+  assert.equal(form.passed, undefined);
+
+  // The same markup on a page whose route says "settings", not "record": the
+  // root walk must not run there, or a settings card becomes an editor.
+  assert.equal(readForm(d, { url: 'https://app.example.test/x/admin.sd?page=SearchDisplayFormat' }), null);
+  assert.equal(readForm(d), null);
+});
+
+test('a declared form table wins over div controls beside it', () => {
+  // The structural fallback is for pages that declare nothing. When the app does
+  // declare a form table, that table is the editor even on a record route — a
+  // stray control outside it belongs to another reader.
+  const d = doc(`<body><div class="contentContainer">
+      <table class="Form">
+        <tr><td>Name</td><td><input id="name" value="Ada"></td></tr>
+      </table>
+      <div class="formRow"><div class="formLabel">Filter</div><div><input id="filter" value=""></div></div>
+      <a id="save" href="#">Save</a>
+    </div></body>`);
+  const form = readForm(d, { url: 'https://app.example.test/x/admin.sd?page=EditFamily&fident=1' });
+  assert.ok(form);
+  assert.deepEqual(form.fields.map((f) => f.key), ['name']);
 });

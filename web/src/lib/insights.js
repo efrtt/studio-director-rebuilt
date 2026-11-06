@@ -17,6 +17,7 @@
 
 import { qs, qsa, textOf } from './shell.js';
 import { contentRoot } from '../model/root.js';
+import { pageRegions } from '../model/regions.js';
 import { readPageTabs } from './pagetabs.js';
 
 const countOf = (text) => {
@@ -44,10 +45,14 @@ export function readInsights(doc) {
 
   // A page of records is a sheet, not a dashboard: the Alerts list carries a
   // report table with rows, and it has to keep its own view.
-  const reportRows = qsa(root, 'table.ReportTable').reduce(
-    (n, table) => n + Array.from(table.querySelectorAll('tr')).filter((tr) => tr.querySelector('td')).length,
-    0
-  );
+  // Which rows belong to a report is the page-wide judgement's (`model/regions.js`),
+  // not a `tr` count this reader does itself. The app's `ReportTable` class is
+  // what says the table is its own report output: the dashboard's stat cells are
+  // a table too, and they are not the records that make a page a sheet.
+  const reportRows = pageRegions(doc).tables
+    .filter((entry) => entry.kind === 'data')
+    .filter((entry) => /(^|\s)ReportTable(\s|$)/.test(String(entry.table.getAttribute('class') || '')))
+    .reduce((n, entry) => n + entry.rows.filter((row) => row.kind === 'repeated').length, 0);
   if (reportRows) return null;
 
   // The page's own order: the app prints four stats across, then four below.

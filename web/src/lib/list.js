@@ -19,6 +19,7 @@
 // chosen by what it says about itself rather than by where it sits.
 
 import { pageName, qs, qsa, textOf } from './shell.js';
+import { resultPanel, panelRows } from '../model/regions.js';
 
 // What a row is. The link says it best (`?page=EditFamily`), and the app's own
 // label often says it too ("Family: Hopper Family"); the label prefix is then
@@ -58,43 +59,9 @@ function headingOf(list, doc) {
   return heading;
 }
 
-function typesIn(list) {
-  const types = new Set();
-  for (const node of qsa(list, '.searchResultItem')) {
-    const anchor = node.tagName === 'A' ? node : qs(node, 'a[href]');
-    const href = anchor ? anchor.getAttribute('href') : '';
-    const type = TYPE_BY_PAGE[pageName(href || '').toLowerCase()];
-    if (type) types.add(type);
-  }
-  return types;
-}
-
-// How much a panel looks like the screen the page is about. A panel that names
-// itself "Search Results", or that states a count, is the result set; a panel
-// named after one record type is the one carried over from the page searched
-// from. Ties go to the later panel, because that is the one the app just drew.
-function scoreOf(list, doc) {
-  const heading = textOf(headingOf(list, doc));
-  let score = 0;
-  if (/search/i.test(heading)) score += 3;
-  if (COUNT.test(heading)) score += 2;
-  if (typesIn(list).size > 1) score += 1;
-  return score;
-}
-
 function pickList(doc) {
-  const lists = qsa(doc, '.searchResultList');
-  if (!lists.length) return null;
-  let best = lists[0];
-  let bestScore = scoreOf(best, doc);
-  for (const list of lists.slice(1)) {
-    const score = scoreOf(list, doc);
-    if (score >= bestScore) {
-      best = list;
-      bestScore = score;
-    }
-  }
-  return best;
+  const found = resultPanel(doc);
+  return found ? found.panel : null;
 }
 
 function totalOf(doc, list) {
@@ -116,7 +83,7 @@ export function readList(doc, opts = {}) {
   const seen = new Set();
   const items = [];
 
-  for (const node of qsa(list, '.searchResultItem')) {
+  for (const { el: node } of panelRows(list).filter((row) => row.kind === 'repeated')) {
     const anchor = node.tagName === 'A' ? node : qs(node, 'a[href]');
     let label = textOf(anchor || node);
     if (!label) continue;

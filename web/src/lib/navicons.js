@@ -14,11 +14,13 @@
 // same classes costs nothing and the rail matches the original. Keyed by href so
 // the rail can look an icon up while rendering the model's own links; a page with
 // no icons (a fixture, a print window) simply gets no entries.
+import { RAIL_LINK } from '../model/appdom.js';
+
 export function readNavIcons(root) {
   const out = {};
   if (!root || !root.querySelectorAll) return out;
 
-  for (const anchor of root.querySelectorAll('#sideNavBar a.sideNavLink')) {
+  for (const anchor of root.querySelectorAll(RAIL_LINK)) {
     const href = anchor.getAttribute && anchor.getAttribute('href');
     if (!href) continue;
 

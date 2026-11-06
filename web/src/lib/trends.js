@@ -18,6 +18,7 @@
 import { qs, qsa, textOf } from './shell.js';
 import { contentRoot } from '../model/root.js';
 import { readTable } from '../model/table.js';
+import { pageRegions } from '../model/regions.js';
 import { readPageTabs } from './pagetabs.js';
 
 const CHART = /graphs?\//i;
@@ -61,7 +62,11 @@ export function readTrends(doc) {
   // The table beside the charts (Top 10 customers) is an ordinary data table,
   // labelled by the bold line the app prints above it.
   const tables = [];
-  for (const table of qsa(root, 'table')) {
+  // Which of these are records is the page-wide judgement's (`model/regions.js`),
+  // not a scan of every table this reader does itself.
+  for (const entry of pageRegions(doc).tables) {
+    if (entry.kind !== 'data') continue;
+    const table = entry.table;
     if (table === layout) continue;
     // A table nested in another table's cell belongs to that cell; only one
     // nested in the layout table is content this screen shows.

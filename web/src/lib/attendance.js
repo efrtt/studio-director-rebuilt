@@ -28,6 +28,8 @@
 // it, dated by `--page-gutter` like every other view.
 
 import { qs, qsa, textOf } from './shell.js';
+import { pageSave } from './save.js';
+import { pageRegions } from '../model/regions.js';
 
 // The app's own handler is the marker: a printed roster's tick boxes carry none,
 // and it must keep reading as a sheet.
@@ -121,7 +123,14 @@ function readLegend(doc) {
 const MOVES = /["']Attendance["']\s*,\s*["'](prev|next)["']/i;
 
 export function readAttendance(doc) {
-  const table = qsa(doc, 'table').find((candidate) => qs(candidate, BOX));
+  // Which table is the register is the page-wide judgement's: the one inside the
+  // content root that carries the app's own tick box. It used to be the first
+  // `table` in the whole document — a scrape around the classifier that could
+  // pick a table outside the screen (a layout wrapper, a rail panel).
+  const found = pageRegions(doc).tables
+    .filter((entry) => entry.kind !== 'chrome')
+    .find((entry) => qs(entry.table, BOX));
+  const table = found ? found.table : null;
   if (!table) return null;
 
   const head = qsa(table, 'tr').find((tr) => qs(tr, 'th'));
@@ -216,7 +225,7 @@ export function readAttendance(doc) {
     nav.push({ label: textOf(anchor), onclick, exact: true });
   }
 
-  const saveLink = doc.getElementById('save');
+  const saveLink = pageSave(doc);
   const save = saveLink
     ? { id: 'save', label: textOf(saveLink) || 'Save', onclick: saveLink.getAttribute('onclick') || '' }
     : null;
@@ -332,7 +341,7 @@ export function writeNotesInApp(doc, field, value) {
 
 // The page's own Save: a full-page submit the app builds.
 export function pressAttendanceSave(doc) {
-  const save = doc.getElementById('save');
+  const save = pageSave(doc);
   if (!save || typeof save.click !== 'function') return { submitted: false, reason: 'no-save-link' };
   save.click();
   return { submitted: true };

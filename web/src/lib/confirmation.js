@@ -15,6 +15,9 @@
 // mistaken for an outcome screen.
 
 import { qs, qsa, textOf } from './shell.js';
+import { CONTROLS } from '../model/controls.js';
+import { pageRegions } from '../model/regions.js';
+import { CHROME, CONTENT_BLOCK, NAV } from '../model/appdom.js';
 
 // `scheduled` and `cancelled` are the drop flow's own outcomes: "Lily has been
 // scheduled to drop in on class …" when it is booked, "… session in … has been
@@ -45,6 +48,13 @@ const MAX_LENGTH = 240;
 // words, drop the links that are commands, and put a space between them - the app's
 // markup has none, which is how "1Review" happened.
 const COMMAND = /^(review|open|view|print|email|edit|manage|see|show|go to|back to|return)\b/i;
+
+// A table on the page is another reader's screen. Which tables are the page's is
+// the shared judgement's (`model/regions.js`); this used to ask for
+// `table tr td`, a scrape that counted a layout wrapper's cells as rows.
+function hasTable(doc) {
+  return pageRegions(doc).tables.length > 0;
+}
 
 function isCommand(el) {
   const onclick = el.getAttribute && el.getAttribute('onclick');
@@ -90,7 +100,7 @@ function sentenceOf(node) {
 // button, because pressing anything else would be inventing a save this page
 // does not have.
 export function pendingConfirmation(doc) {
-  const root = qs(doc, '.Content') || qs(doc, '#mainContent') || (doc && doc.body);
+  const root = qs(doc, CONTENT_BLOCK) || qs(doc, '#mainContent') || (doc && doc.body);
   if (!root) return null;
 
   const buttons = qsa(root, 'a, button').filter((el) => SUBMITS.test(el.getAttribute('onclick') || ''));
@@ -98,14 +108,14 @@ export function pendingConfirmation(doc) {
 
   // A control someone could type into means a form, and a form has its own
   // readers. Hidden inputs are record ids, not fields.
-  const typed = qsa(root, 'input, select, textarea')
+  const typed = qsa(root, CONTROLS)
     .filter((el) => String(el.getAttribute('type') || '').toLowerCase() !== 'hidden');
   if (typed.length) return null;
 
-  if (qs(root, 'table tr td')) return null;
+  if (hasTable(doc)) return null;
 
   const links = qsa(root, 'a[href]')
-    .filter((a) => !(a.closest && a.closest('#sideNavBar, .topBarContainer, .Breadcrumb, #idSearchSpan')));
+    .filter((a) => !(a.closest && a.closest(CHROME + ', #idSearchSpan')));
   if (links.length > QUESTION_LINKS) return null;
 
   const button = buttons[0];
@@ -153,7 +163,7 @@ function linksOf(doc, root) {
   const out = [];
 
   for (const anchor of qsa(root, 'a[href]')) {
-    if (anchor.closest && anchor.closest('#sideNavBar, .topBarContainer, #idSearchSpan')) continue;
+    if (anchor.closest && anchor.closest(NAV + ', #idSearchSpan')) continue;
 
     const label = textOf(anchor);
     const href = anchor.getAttribute('href');
@@ -186,7 +196,7 @@ function messageIn(root, pattern) {
 }
 
 export function confirmationOf(doc, opts = {}) {
-  const root = qs(doc, '.Content') || qs(doc, '#mainContent') || (doc && doc.body);
+  const root = qs(doc, CONTENT_BLOCK) || qs(doc, '#mainContent') || (doc && doc.body);
   if (!root) return null;
 
   let ok = true;
@@ -250,14 +260,14 @@ const ASKS_ABOUT = /are you sure\b[^?]{0,200}\?/i;
 const AFFIRM = /^(delete|remove|drop)\b/i;
 
 export function askedConfirmation(doc) {
-  const root = qs(doc, '.Content') || qs(doc, '#mainContent') || (doc && doc.body);
+  const root = qs(doc, CONTENT_BLOCK) || qs(doc, '#mainContent') || (doc && doc.body);
   if (!root) return null;
 
   const sentence = (String(root.textContent || '').replace(/\s+/g, ' ').match(ASKS_ABOUT) || [])[0];
   if (!sentence) return null;
 
   const links = qsa(root, 'a[href]')
-    .filter((a) => !(a.closest && a.closest('#sideNavBar, .topBarContainer, .Breadcrumb, #idSearchSpan')));
+    .filter((a) => !(a.closest && a.closest(CHROME + ', #idSearchSpan')));
   // One way to say yes, and it has to be a link: that is the app's own next step.
   const yes = links.filter((a) => AFFIRM.test(textOf(a)) && (a.getAttribute('href') || ''));
   if (yes.length !== 1) return null;
@@ -317,21 +327,21 @@ const ANSWERS_YES = /^(continue|yes|ok|proceed|confirm|add|schedule|enroll|save|
 const ANSWERS_NO = /^(cancel|no|back|go back|return)\b/i;
 
 function outsideChrome(anchor) {
-  return !(anchor.closest && anchor.closest('#sideNavBar, .topBarContainer, .Breadcrumb, #idSearchSpan'));
+  return !(anchor.closest && anchor.closest(CHROME + ', #idSearchSpan'));
 }
 
 export function answeredQuestion(doc) {
-  const root = qs(doc, '.Content') || qs(doc, '#mainContent') || (doc && doc.body);
+  const root = qs(doc, CONTENT_BLOCK) || qs(doc, '#mainContent') || (doc && doc.body);
   if (!root) return null;
 
   const question = (String(root.textContent || '').replace(/\s+/g, ' ').match(ASKS_ABOUT) || [])[0];
   if (!question) return null;
 
   // A control to type into, or a table of rows, is a screen with its own reader.
-  const typed = qsa(root, 'input, select, textarea')
+  const typed = qsa(root, CONTROLS)
     .filter((el) => String(el.getAttribute('type') || '').toLowerCase() !== 'hidden');
   if (typed.length) return null;
-  if (qs(root, 'table tr td')) return null;
+  if (hasTable(doc)) return null;
 
   const title = textOf(qs(doc, '.formTitle, .ReportName, h1'));
   if (!title) return null;

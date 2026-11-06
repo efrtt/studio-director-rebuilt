@@ -37,8 +37,15 @@ export const CONTROLS = 'input, select, textarea';
 // what the control is. A reader whose view cannot draw a set adapts it itself —
 // the editor's row prints one select bound to one value, and does that mapping
 // where its fields are built (`lib/form.js`), not here.
-export function controlOf(el, doc) {
-  if (notAField(el)) return null;
+export function controlOf(el, doc, opts = {}) {
+  const why = notAField(el);
+  // `type=hidden` is normally the app's plumbing, never a field: a record's key
+  // arrives that way and has nothing to type into. A page that prints the value
+  // beside the hidden input (the payment screen's dates: "Sep 01, 2026" in the
+  // cell, the submitted value in `input[type=hidden]`) has nowhere else to write
+  // it, so that reader asks for the exception by name rather than growing a
+  // second walk over the same page.
+  if (why && !(opts.includeHidden && why === 'type:hidden')) return null;
 
   const selector = selectorOf(el, doc);
   if (!selector) return null;
@@ -80,11 +87,13 @@ export function controlsIn(container, doc, opts = {}) {
   const ignored = [];
 
   for (const el of qsa(container, CONTROLS)) {
-    if (notAField(el) || (opts.skipClass && opts.skipClass.test(el.getAttribute('class') || ''))) {
+    const why = notAField(el);
+    const hidden = !!(why && opts.includeHidden && why === 'type:hidden');
+    if ((why && !hidden) || (opts.skipClass && opts.skipClass.test(el.getAttribute('class') || ''))) {
       ignored.push(el);
       continue;
     }
-    entries.push({ el, field: controlOf(el, doc) });
+    entries.push({ el, field: controlOf(el, doc, opts) });
   }
 
   return { entries, ignored };

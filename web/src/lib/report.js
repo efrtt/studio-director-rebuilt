@@ -20,6 +20,7 @@ import { readForm } from './form.js';
 import { diffFields, applyFields } from '../model/diff.js';
 import { readTable } from '../model/table.js';
 import { contentRoot } from '../model/root.js';
+import { pageRegions } from '../model/regions.js';
 
 // The app's own label on every report page seen so far.
 const RUN = /^(run|generate|create|show|view|update|apply)\s+(the\s+)?report$|^run$/i;
@@ -47,9 +48,24 @@ export function reportTrigger(root) {
 
 // A report's output is `table.ReportTable`; a page that has run already shows
 // one with rows in it.
+//
+// Which of those are records is `model/regions.js`'s judgement, asked once for
+// the whole page like every other reader asks it: this used to carry its own
+// `table.ReportTable, .ReportTable table` query, which is a second answer to
+// "what is this table" and the only reader left holding one. The class is still
+// the page's own label for "this is the report's output" — the classifier only
+// says whether a table under it is records or the wrapper that holds them.
+function isReportTable(table) {
+  const cls = String((table && table.getAttribute && table.getAttribute('class')) || '');
+  if (/(^|\s)ReportTable(\s|$)/.test(cls)) return true;
+  return !!(table && table.closest && table.closest('.ReportTable'));
+}
+
 function readResults(doc) {
   const tables = [];
-  for (const table of qsa(doc, 'table.ReportTable, .ReportTable table')) {
+  for (const { table, kind } of pageRegions(doc).tables) {
+    if (kind !== 'data') continue;
+    if (!isReportTable(table)) continue;
     const read = readTable(table);
     if (read.headings.length || read.rows.length) tables.push(read);
   }

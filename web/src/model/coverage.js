@@ -18,13 +18,14 @@
 // which table is the editor; it tells you when the reader stopped early.
 
 import { qsa } from '../lib/shell.js';
+import { CONTROLS } from './controls.js';
+import { NON_FIELD_TYPES } from './fields.js';
 import { isHidden } from './root.js';
 
-const CONTROLS = 'input, select, textarea';
-
-// Controls that are never a field of the screen: the app's own submit furniture,
-// the file pickers, and the hidden inputs it posts with the form.
-const NEVER_A_FIELD = /^(hidden|file|submit|button|reset|image)$/i;
+// What counts as a control, and which controls are never a field, are the shared
+// policy: this check exists to say what a *reader* left out, not to have its own
+// idea of what a field is. It had a copy of both lists, so a control could be
+// plumbing to one and a shortfall to the other.
 
 // Everything covered by another reader, or by the app's shell. The record panel
 // beside an editor is the list reader's business (`filter`, `searchidx`, its own
@@ -58,7 +59,7 @@ export function coverageOf(root, shown = [], passed = []) {
 
     const tag = el.tagName.toLowerCase();
     const type = tag === 'input' ? (el.getAttribute('type') || 'text').toLowerCase() : tag;
-    if (tag === 'input' && NEVER_A_FIELD.test(type)) continue;
+    if (tag === 'input' && NON_FIELD_TYPES.has(type)) continue;
 
     unread.push({
       tag,

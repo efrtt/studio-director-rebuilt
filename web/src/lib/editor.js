@@ -20,7 +20,7 @@ import { readTabs } from './tabs.js';
 import { readList } from './list.js';
 import { pageSave } from './save.js';
 
-export function recordModel(doc, url, form = readForm(doc)) {
+export function recordModel(doc, url, form = readForm(doc, { url })) {
   if (!form) return null;
 
   const tabs = readTabs(doc);

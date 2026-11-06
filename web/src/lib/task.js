@@ -22,6 +22,7 @@ import { readForm } from './form.js';
 import { readActions, primaryAction, clickActionInApp } from './actions.js';
 import { diffFields, applyFields } from '../model/diff.js';
 import { contentRoot } from '../model/root.js';
+import { CHROME } from '../model/appdom.js';
 
 export function readTask(doc) {
   const root = contentRoot(doc);
@@ -52,7 +53,7 @@ export function readTask(doc) {
     // Links the page offers beside its buttons (a template download, a help
     // page). Shown, never pressed.
     links: qsa(root, 'a[href]')
-      .filter((a) => !(a.closest && a.closest('table, ' + '#sideNavBar, .topBarContainer, .Breadcrumb')))
+      .filter((a) => !(a.closest && a.closest('table, ' + CHROME)))
       .map((a) => ({ label: textOf(a), href: a.getAttribute('href') }))
       .filter((a) => a.label && a.href && a.href !== '#')
       .slice(0, 8)

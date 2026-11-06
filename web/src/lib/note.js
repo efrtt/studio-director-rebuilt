@@ -26,6 +26,8 @@
 import { qs, qsa, textOf } from './shell.js';
 import { readActions, primaryAction } from './actions.js';
 import { contentRoot, CHROME, FURNITURE } from '../model/root.js';
+import { CONTROLS } from '../model/controls.js';
+import { rowCount } from '../model/regions.js';
 import { MENU_LINKS, TABLE_ROWS } from './thresholds.js';
 
 // How many lines of instruction to keep. These pages say one thing; a page that
@@ -46,23 +48,19 @@ function onlyLabels(text, labels) {
 // The one content-root definition (model/root.js), under this reader's name.
 const rootOf = contentRoot;
 
-function dataRows(root) {
-  let rows = 0;
-  for (const table of qsa(root, 'table')) {
-    for (const tr of qsa(table, 'tr')) {
-      if (tr.querySelector('td')) rows += 1;
-    }
-  }
-  return rows;
-}
+// Two rows of records mean a table, which is another reader's screen. Which rows
+// those are is the page-wide judgement's (`model/regions.js`): this used to
+// count every `td` on the page itself, which counted a layout wrapper's cells as
+// rows and kept a second answer to a question the classifier already answers.
+const dataRows = rowCount;
 
 // The three refusals, as one question. Exported because the live page is asked
 // it too — see main.js and choose.js.
 export function contradictsNote(doc) {
   const root = rootOf(doc);
   if (!root) return false;
-  if (qsa(root, 'input, select, textarea').length > 0) return true;
-  if (dataRows(root) >= TABLE_ROWS) return true;
+  if (qsa(root, CONTROLS).length > 0) return true;
+  if (dataRows(doc) >= TABLE_ROWS) return true;
   return qsa(root, 'a[href]').length >= MENU_LINKS;
 }
 
@@ -127,7 +125,7 @@ function scriptedLinks(root) {
 function onlyHiddenInputs(doc) {
   const root = rootOf(doc);
   if (!root) return false;
-  return qsa(root, 'input, select, textarea')
+  return qsa(root, CONTROLS)
     .every((el) => String(el.getAttribute('type') || '').toLowerCase() === 'hidden');
 }
 
@@ -191,7 +189,7 @@ export function readNote(doc) {
     const relaxable = !!root
       && onlyHiddenInputs(doc)
       && hasScriptedAction(doc)
-      && dataRows(root) < TABLE_ROWS
+      && dataRows(doc) < TABLE_ROWS
       && qsa(root, 'a[href]').length < MENU_LINKS;
     if (!relaxable) return null;
   }

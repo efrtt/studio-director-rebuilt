@@ -28,6 +28,7 @@
 // five-row table of dates with events spilling out of their cells.
 
 import { qs, qsa, textOf } from './shell.js';
+import { gridTable, monthWeeks } from '../model/regions.js';
 
 const WEEKDAY = /^(sunday|monday|tuesday|wednesday|thursday|friday|saturday)$/i;
 const MONTH_LABEL = /^([A-Z][a-z]{2,9})\s+(\d{4})$/;
@@ -120,23 +121,14 @@ function dayOf(td) {
 export function readMonth(doc) {
   if (!doc || !doc.querySelectorAll) return null;
 
-  let table = null;
-  let weekdays = null;
-  for (const candidate of qsa(doc, 'table')) {
-    const head = headingRow(candidate);
-    if (!head || !hasDayCells(candidate)) continue;
-    table = candidate;
-    weekdays = head;
-    break;
-  }
-  if (!table) return null;
+  // The grid, its weekday headings and its week rows are the page-wide row
+  // judgement's (`monthWeeks`), not this reader's: this only turns each cell it
+  // is given into a day.
+  const grid = monthWeeks(doc);
+  if (!grid) return null;
+  const weekdays = grid.weekdays;
 
-  const weeks = [];
-  for (const tr of qsa(table, 'tr')) {
-    const cells = qsa(tr, 'td');
-    if (cells.length !== 7) continue;
-    weeks.push(cells.map(dayOf));
-  }
+  const weeks = grid.weeks.map((cells) => cells.map((cell) => dayOf(cell.el)));
   if (!weeks.length) return null;
 
   // The toolbar: the month's name, the way to its neighbours, the season, and

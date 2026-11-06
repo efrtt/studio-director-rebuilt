@@ -10,17 +10,15 @@
 // body is the last resort rather than the first.
 
 import { qs } from '../lib/shell.js';
+import { CONTENT } from './appdom.js';
 
-// Navigation and shell furniture: never the screen being read, and never
-// something to count as one of its controls. `#sd-root` is this build's own
-// overlay, whose buttons carry the same words as the app's.
-export const CHROME = '#sideNavBar, .topBarContainer, .topBar, .Breadcrumb, .copyright, #sd-root';
-
-// Page furniture inside the content root: a title, a breadcrumb, a button row.
-export const FURNITURE = '.formTitle, .Breadcrumb, .ButtonBar, .ButtonArea, .menu';
+// The selectors themselves are `model/appdom.js`'s data, the one place the
+// app's own vocabulary is written down; re-exported here because every reader
+// that asks "where is the content" also asks "what is furniture".
+export { CHROME, FURNITURE } from './appdom.js';
 
 export function contentRoot(doc) {
-  return qs(doc, '.contentContainer') || qs(doc, '#mainContent') || (doc && doc.body) || null;
+  return qs(doc, CONTENT) || (doc && doc.body) || null;
 }
 
 // Is this element, or anything above it, something the app keeps rather than

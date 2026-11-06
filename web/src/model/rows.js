@@ -14,38 +14,26 @@
 //   table.Form > tr > td     the label ("Guardian", "State", ...)
 //                    > td     one or more controls (input / select / textarea)
 //
-// `NewClass` uses `table.FormEx` with the same row shape, so both table classes
-// are accepted. Each row is classified on its own evidence: a row with a label
-// and at least one control this reader can address is a field row; a row with no
-// label is the record's key (not a field); a row this reader cannot address is
-// still on the page, so its controls are reported as passed rather than lost.
+// Each row is classified on its own evidence: a row with a label and controls is
+// a field row; a row with no label is the record's key (not a field); a row this
+// reader cannot address is still on the page, so its controls are reported as
+// passed rather than lost. `model/regions.js` owns that classification (and the
+// question of which tables are the editor); this module turns the field rows it
+// finds into fields.
 //
 // Nothing here decides whether a page is an editor — that is `pageSave` plus the
-// rows found here. Nothing here ranks tables by size.
+// rows found here. Nothing here ranks tables by size, and there is no selector
+// list here to keep in step with the app: the regions module knows them.
 
 import { qsa, textOf } from '../lib/shell.js';
 import { controlsIn, CONTROLS } from './controls.js';
 import { rowLabel } from './labels.js';
-import { isHidden } from './root.js';
 
-export const FORM_SELECTOR = 'table.Form, table.FormEx';
 export { CONTROLS };
 
-// Every form table the page is showing inside its content root, in document
-// order. A table the page itself calls hidden (`table-hidden`, `hidden`) is
-// storage, not a field row — see `isHidden` for why `display:none` is not a
-// signal here.
-//
-// The query runs from the document and is then narrowed to the content root.
-// Asking the root instead reads better and is what this did first, but a
-// `<body>` is not always the node that holds its children (a parsed fragment has
-// a detached one), and an editor there came back empty. When the root *is* the
-// body the whole document is the screen, so there is nothing to narrow.
-export function formTablesIn(doc, root) {
-  return qsa(doc, FORM_SELECTOR)
-    .filter((table) => (root === doc.body || !root.contains ? true : root.contains(table)))
-    .filter((table) => !isHidden(table));
-}
+// Which tables are the editor, and what each of their rows is, moved to
+// `model/regions.js`: this module reads one table row by row, and the region
+// question (declared, structural, or no table at all) is answered there.
 
 // This editor prints one select bound to one value, so a multi-choice select
 // (which `model/controls.js` reads as a set, for the settings card that draws it)
@@ -138,16 +126,40 @@ export function fieldsIn(cell, doc, rowLabel) {
   return { fields, shown, passed };
 }
 
+// The cells of one row *of this table*: a field can contain a nested table (the
+// weekday checkboxes live in one), and its rows would otherwise be read a second
+// time as fields of their own, with no label. Every reader that splits a row
+// asks this, so it is asked once — the record editor's rows, a payment's base
+// form and its split blocks, and the totals beside them.
+export function rowCells(tr, table) {
+  if (!tr) return [];
+  if (tr.closest && table && tr.closest('table') !== table) return [];
+  return Array.from(tr.children || []).filter((c) => c.tagName === 'TD');
+}
+
+// Every two-cell row of a table, with the cell that names it and the cell that
+// holds its content: the plain shape a screen prints with no heading row. A
+// payment's base form is the shape outside an editor — "Family | the family",
+// "Amount | an input" — so it reads its rows here rather than keeping a second
+// copy of the split.
+export function labelledRows(table) {
+  const rows = [];
+  if (!table) return rows;
+  for (const tr of qsa(table, 'tr')) {
+    const cells = rowCells(tr, table);
+    if (cells.length < 2) continue;
+    rows.push({ label: textOf(cells[0]).slice(0, 120), cell: cells[1] });
+  }
+  return rows;
+}
+
 export function rowsOf(table) {
   const rows = [];
   const shown = [];
   const passed = [];
   for (const tr of qsa(table, 'tr')) {
-    // Only this table's own rows: a field can contain a nested table (the
-    // weekday checkboxes live in one), and its rows would otherwise be read a
-    // second time as fields of their own, with no label.
     if (tr.closest && tr.closest('table') !== table) continue;
-    const cells = Array.from(tr.children || []).filter((c) => c.tagName === 'TD');
+    const cells = rowCells(tr, table);
     if (cells.length < 2) {
       // A caption or a spacer row. Anything typed into it is still on the page,
       // so it counts as passed over rather than lost.
