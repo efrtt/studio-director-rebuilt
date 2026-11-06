@@ -19,7 +19,7 @@ const types = {
 
 const POST_LIMIT = 2 * 1024 * 1024;
 
-http.createServer((req, res) => {
+const server = http.createServer((req, res) => {
   const rel = decodeURIComponent(new URL(req.url, 'http://x').pathname);
 
   if (req.method === 'POST' && rel.startsWith('/__parity/')) {
@@ -52,7 +52,47 @@ http.createServer((req, res) => {
   if (!file.startsWith(root)) { res.writeHead(403).end('no'); return; }
   fs.readFile(file, (err, buf) => {
     if (err) { res.writeHead(404).end('not found'); return; }
-    res.writeHead(200, { 'content-type': types[path.extname(file)] || 'application/octet-stream' });
-    res.end(buf);
+    res.writeHead(200, {
+      'content-type': types[path.extname(file)] || 'application/octet-stream',
+      'content-length': buf.length
+    });
+    res.end(req.method === 'HEAD' ? undefined : buf);
   });
-}).listen(port, '127.0.0.1', () => console.log('serving ' + root + ' on http://127.0.0.1:' + port));
+});
+
+// A port already in use is what leaves a second, stale server behind on this machine,
+// so it is one line and a non-zero exit rather than a stack trace nobody reads.
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error('port ' + port + ' is already in use: stop whatever is serving it, or start on another port');
+  } else {
+    console.error((err.code || 'error') + ' on port ' + port + ': ' + err.message);
+  }
+  process.exit(1);
+});
+
+// Ready means the server answered, not that it bound: ask it for the artefact and say
+// which build it will hand out, because "is the server up" and "is my build there" are
+// the two questions this server is started to answer.
+const ARTEFACT = 'studio-director-rebuilt.user.js';
+
+server.listen(port, '127.0.0.1', async () => {
+  const url = 'http://127.0.0.1:' + port + '/' + ARTEFACT;
+  let version = '';
+  try {
+    const head = fs.readFileSync(path.join(root, ARTEFACT), 'utf8').slice(0, 4000);
+    version = (/@version\s+(\S+)/.exec(head) || [])[1] || '';
+  } catch (e) {
+    version = '';
+  }
+  let answer;
+  try {
+    const res = await fetch(url, { method: 'HEAD' });
+    answer = res.ok
+      ? 'artefact ' + (version ? 'v' + version + ' ' : '') + 'at ' + url
+      : 'no built artefact: run `npm run userscript`';
+  } catch (e) {
+    answer = 'itself did not answer: ' + e.message;
+  }
+  console.log('ready: root ' + root + ' on http://127.0.0.1:' + port + '/ - ' + answer);
+});
