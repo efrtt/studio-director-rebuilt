@@ -154,10 +154,12 @@
     {bar}
     {onAction}
     onSave={onSave}
-  />
-  {#if perf}
-    <PerfTable {perf} onAct={onPerfAct} onLock={onPerfLock} onSave={onPerfSave} />
-  {/if}
+  >
+    <!-- Inside the page, not beside it: the panel scrolls with the list. -->
+    {#if perf}
+      <PerfTable {perf} onAct={onPerfAct} onLock={onPerfLock} onSave={onPerfSave} />
+    {/if}
+  </RecordPage>
 {:else}
 <!-- The wide skin follows the classifier: `form.tables` are the tables it called
      data beside this form (`model/regions.js`), so a page with a record list gets
