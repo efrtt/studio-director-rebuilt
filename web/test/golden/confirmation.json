@@ -4,6 +4,7 @@
   "model": {
     "attendance": null,
     "charges": null,
+    "composer": null,
     "confirm": {
       "breadcrumb": [
         "Families",

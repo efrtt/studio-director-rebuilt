@@ -745,6 +745,7 @@
   "model": {
     "attendance": null,
     "charges": null,
+    "composer": null,
     "confirm": null,
     "index": null,
     "insights": null,

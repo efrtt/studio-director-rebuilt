@@ -25,6 +25,7 @@ import { readPage } from './lib/page.js';
 import { hasForm } from './lib/form.js';
 import { runReportInApp } from './lib/report.js';
 import { runTaskInApp } from './lib/task.js';
+import { runComposerInApp } from './lib/composer.js';
 import { readSheet } from './lib/sheet.js';
 import { markAttendanceInApp, writeAbsenceInApp, writeNotesInApp, pressAttendanceSave } from './lib/attendance.js';
 import { readBar } from './lib/bar.js';
@@ -313,9 +314,13 @@ function mountView(model, onOriginal, source = 'fetched') {
       ? (values) => runReportInApp(document, model.report, values)
       : null,
     // A settings/letter/mail form: our fields, the app's own button.
-    onAct: model.task
-      ? (values, action) => runTaskInApp(document, model.task, values, action)
-      : null,
+    // The composer is a task with a body we do not own: the fields are written
+    // into the app's controls, then its own Send or Schedule is pressed.
+    onAct: model.composer
+      ? (values, action) => runComposerInApp(document, model.composer, values, action)
+      : model.task
+        ? (values, action) => runTaskInApp(document, model.task, values, action)
+        : null,
     // A table screen, a notice, or a confirmation the app is still waiting on:
     // its controls are pressed where they stand.
     onPress: model.sheet || model.note || model.charges || (model.confirm && model.confirm.pending)

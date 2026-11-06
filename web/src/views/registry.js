@@ -22,6 +22,7 @@ import Note from '../components/Note.svelte';
 import Confirmed from '../components/Confirmed.svelte';
 import Payment from '../components/Payment.svelte';
 import Charges from '../components/Charges.svelte';
+import Composer from '../components/Composer.svelte';
 
 export const VIEWS = {
   week: Week,
@@ -35,6 +36,7 @@ export const VIEWS = {
   trends: Trends,
   attendance: Attendance,
   charges: Charges,
+  composer: Composer,
   sheet: Sheet,
   settings: Settings,
   note: Note,
@@ -62,6 +64,7 @@ export function viewOf(model) {
   if (m.trends) return 'trends';
   if (m.attendance) return 'attendance';
   if (m.charges) return 'charges';
+  if (m.composer) return 'composer';
   if (m.sheet) return 'sheet';
   if (m.index) return 'index';
   if (m.settings) return 'settings';
@@ -132,6 +135,9 @@ export function propsFor(view, model, handlers) {
         onSave: h.onSave || null,
         onPress: h.onPress || null
       };
+    case 'composer':
+      // Fields around the app's own editor; its bar is the page's own controls.
+      return { composer: model.composer, onAct: h.onAct || null };
     case 'sheet':
       return { sheet: model.sheet, onPress: h.onPress };
     case 'settings':
@@ -184,6 +190,7 @@ export function titleOf(model) {
   const sheet = m.sheet;
   const attendance = m.attendance;
   const charges = m.charges;
+  const composer = m.composer;
   const insights = m.insights;
   const trends = m.trends;
   const index = m.index;
@@ -195,7 +202,7 @@ export function titleOf(model) {
   return (form && form.title) || (report && report.title) || (task && task.title)
     || (insights && insights.title) || (trends && trends.title)
     || (attendance && attendance.title)
-    || (charges && charges.title)
+    || (charges && charges.title) || (composer && composer.title)
     || (sheet && sheet.title) || (index && index.title) || (settings && settings.title)
     || (note && note.title)
     || (m.month && m.month.title)
@@ -216,6 +223,7 @@ export function footerOf(model) {
     const trends = m.trends;
     const attendance = m.attendance;
     const charges = m.charges;
+    const composer = m.composer;
     const settings = m.settings;
     const note = m.note;
     const confirm = m.confirm;
@@ -262,6 +270,9 @@ export function footerOf(model) {
     if (trends.tables.length) left += ` \u00b7 ${plural(trends.tables.length, 'table', 'tables')}`;
   } else if (view === 'charges' && charges) {
     left = `${plural(charges.rows.length, 'charge', 'charges')} \u00b7 ${plural(charges.fields.length, 'field', 'fields')}`;
+  } else if (view === 'composer' && composer) {
+    // The body is not ours to count: fields and the app's own editor, nothing else.
+    left = plural(composer.fields.length, 'field', 'fields') + ' \u00b7 the app\u2019s own editor';
   } else if (view === 'attendance' && attendance) {
     // Dates only. The present count belongs to the register's own bar, which
     // follows every tick; a second copy of it here would be the model's number,

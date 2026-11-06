@@ -1423,6 +1423,17 @@ html:is([data-sd-theme="dark"], [data-sd-theme="light"]) #sd-root .sd-navlink--a
 .sd-crumbsep { opacity: .65; }
 .sd-topright { gap: var(--space-2); }
 
+/* A narrow window used to cut the header's right-hand controls off the screen:
+   `#sd-root` clips rather than scrolls, so a control past the right edge was
+   simply gone — the search box and both buttons were unreachable. The bar wraps
+   instead: the heading keeps its line, the cluster takes a line of its own when
+   the two no longer fit, and the search shrinks before anything is pushed out. */
+.sd-top { flex-wrap: wrap; row-gap: var(--space-2); }
+.sd-heading { flex: 1 1 auto; }
+.sd-topright { flex: 1 1 auto; flex-wrap: wrap; justify-content: flex-end; }
+.sd-search { flex: 0 1 230px; min-width: 120px; }
+.sd-searchinput { width: 100%; max-width: 230px; min-width: 0; }
+
 /* ---- control sizes and the spacing scale ---- */
 .sd-btn { height: var(--field-h); padding: 0 var(--space-3); border-radius: var(--radius-sm); }
 .sd-searchinput { height: var(--field-h); padding: 0 var(--space-3); border-radius: var(--radius-sm); }
@@ -2844,3 +2855,138 @@ html[data-sd-theme="light"] #sd-root .sd-asktext { color: var(--dim); }
 .sd-chargedate .sd-input--mon { width: 68px; }
 .sd-chargedate .sd-input--day { width: 52px; }
 .sd-chargedate .sd-input--year { width: 74px; }
+
+/* ---- composer: the frame, not the editor --------------------------------
+   The body on this page is a live CKEditor instance, moved into
+   `.sd-composer-editor` by the view and moved back on teardown. So this block
+   styles the frame only: it must not set anything the editor's own stylesheet
+   would fight over, which is why the editor's internals are only nudged to fill
+   the slot and never re-coloured beyond the sheet it already expects. */
+.sd-composer { display: flex; flex-direction: column; gap: 12px; }
+
+.sd-composer-fields {
+  display: grid;
+  /* One field per row rather than a long line of six: stacked, each control gets
+     the whole width, which is what makes the subject a usable input. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+}
+.sd-composer-field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+/* The shared `.sd-input` stops at 480px because it usually sits in a form column.
+   These fields are a stacked list a row wide, so the control takes the row —
+   that is the whole point of stacking them for the subject. */
+.sd-composer-field .sd-input { max-width: none; }
+.sd-composer-label {
+  font-size: var(--fs-micro);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+/* To and From are the page's, not ours: a fixed value reads as text, and the
+   dashed edge says "this is what it is", not "this is a field you can type in". */
+.sd-composer-lock {
+  margin: 0;
+  padding: 7px 9px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: var(--fs-base);
+  overflow-wrap: anywhere;
+}
+.sd-composer-when { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.sd-composer-when .sd-input { width: auto; }
+.sd-composer-hint { color: var(--dim); font-size: var(--fs-sm); }
+
+/* Only a measuring box: the app's editor is *placed over* it, never moved into
+   it. Re-parenting a CKEditor container reloads the iframe it types into, and a
+   reloaded iframe is an empty email body. */
+.sd-composer-editor {
+  /* The height is the slot's to give: 480 by default, and whatever the reader
+     drags the editor's grip to after that. min-height is only the floor, and
+     `flex: 0 0 auto` means the column above does not shrink it back, so a
+     height set by a drag is the height the frame actually gets. */
+  flex: 0 0 auto;
+  height: 480px;
+  min-height: 240px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-md);
+  background: none;
+}
+/* The shell is a fixed, clipped grid: nothing on the page scrolls by itself, and
+   a column that overflows is simply cut off. That is fine while the frame takes
+   the leftover height, but a frame the reader has dragged taller has to go
+   somewhere — so this page, and only this page, scrolls its body. */
+html.sd-composer-open .sd-body {
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+}
+
+/* The placed editor: the view hands it the slot's coordinates and height, and
+   these rules only finish the edges. Its own toolbar keeps its own colours —
+   it is the app's editor, not a skin of ours. */
+html.sd-composer-open #cke_body {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--line);
+  background: #fff;
+  /* The overlay hides the app's page underneath it, and visibility inherits:
+     the placed editor is the one part of that page that must stay visible. */
+  visibility: visible !important;
+}
+html.sd-composer-open #cke_body * { visibility: inherit; }
+/* The editor's inner column takes the height the slot gives it, not a contents
+   height CKEditor last computed for the page's old layout: with my old
+   `height: auto` here the contents fell back to min-height and the iframe's
+   `height: 100%` resolved against nothing, leaving a 150px typing window in a
+   480px frame. Flex makes the contents the leftover of a definite height, so
+   the iframe fills it and the grip has something real to drag. */
+html.sd-composer-open #cke_body .cke_inner {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+html.sd-composer-open #cke_body .cke_top,
+html.sd-composer-open #cke_body .cke_bottom { flex: 0 0 auto; }
+html.sd-composer-open #cke_body .cke_contents {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto !important;
+}
+html.sd-composer-open #cke_body .cke_contents iframe { height: 100% !important; }
+
+/* The app's attachment block, placed over its own slot the same way the editor
+   is. It cannot be flattened into the frame: the inputs must stay inside
+   `#idForm` to be submitted, so the block is positioned, not re-parented. Its
+   own rows and pickers are the app's controls; these rules only make the block
+   legible on the skin and give it an edge. */
+/* `flex: 0 0 auto` because this box has no content of its own — the app's block
+   is positioned over it, not inside it — so a shrinking flex item took it to
+   zero and the page never made room for the pickers. */
+.sd-composer-attach { flex: 0 0 auto; min-height: 0; }
+html.sd-composer-open #attachmentoptions {
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  color: var(--text);
+  font-size: var(--fs-base);
+  /* Hidden with the app's form underneath; the pickers are the reason to look. */
+  visibility: visible !important;
+}
+html.sd-composer-open #attachmentoptions b { color: var(--dim); font-weight: 600; font-size: var(--fs-sm); }
+html.sd-composer-open #attachmentoptions p { margin: 6px 0 0; }
+html.sd-composer-open #attachmentoptions input[type="file"] { color: var(--dim); font-size: var(--fs-sm); }
+
+.sd-composer-note { margin: 0; color: var(--dim); font-size: var(--fs-sm); }
