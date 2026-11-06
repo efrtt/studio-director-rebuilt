@@ -2,14 +2,10 @@
   "name": "report",
   "reader": "report",
   "url": "/srvda/admin.sd?page=ClassRosterForm",
-  "stale": {
-    "captured": "0.31.20",
-    "why": "captured at 0.31.20 against main v0.28.76; 0.31.21-27 only change the attendance reader (the page’s own href links, a register whose dates all fall outside the view, and the family’s own note) the search route’s wait, and the confirmation’s buttons (a question now offers only its own answers, not every link on the page), so every shape reads the same."
-  },
   "current": {
     "url": "/srvda/admin.sd?page=ClassRosterForm",
     "mounted": true,
-    "theme": "wii",
+    "theme": "dark",
     "tabs": [],
     "decision": {
       "path": "rowByRow",
@@ -79,7 +75,7 @@
     },
     "detected": true,
     "digest": "fd06e1ce",
-    "version": "0.31.20"
+    "version": "0.31.29"
   },
   "reference": {
     "url": "/srvda/admin.sd?page=ClassRosterForm",
@@ -87,14 +83,25 @@
     "theme": "dark",
     "tabs": [],
     "decision": {
-      "path": "",
-      "root": "",
-      "source": "",
-      "controls": 0,
-      "links": 0,
-      "tables": null,
-      "rows": null,
-      "fallback": ""
+      "path": "rowByRow",
+      "root": "#mainContent",
+      "source": "tables",
+      "controls": 43,
+      "links": 3,
+      "tables": {
+        "form": 2,
+        "data": 0,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 27,
+        "section": 0,
+        "repeated": 1,
+        "noise": 2
+      },
+      "fallback": "none"
     },
     "panel": null,
     "view": {
@@ -142,7 +149,7 @@
       }
     },
     "detected": true,
-    "digest": "2db5e4e1",
-    "version": "0.28.76"
+    "digest": "caab3cef",
+    "version": "0.28.83"
   }
 }

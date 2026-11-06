@@ -2,10 +2,6 @@
   "name": "month",
   "reader": "month",
   "url": "/web/parity/month.html",
-  "stale": {
-    "captured": "0.31.20",
-    "why": "captured at 0.31.20 against main v0.28.76; 0.31.21-27 only change the attendance reader (the page’s own href links, a register whose dates all fall outside the view, and the family’s own note) the search route’s wait, and the confirmation’s buttons (a question now offers only its own answers, not every link on the page), so every shape reads the same."
-  },
   "current": {
     "url": "/web/parity/month.html",
     "mounted": true,
@@ -67,7 +63,7 @@
     },
     "detected": true,
     "digest": "3c8e7162",
-    "version": "0.31.20"
+    "version": "0.31.29"
   },
   "reference": {
     "url": "/web/parity/month.html",
@@ -75,14 +71,25 @@
     "theme": "dark",
     "tabs": [],
     "decision": {
-      "path": "",
-      "root": "",
-      "source": "",
+      "path": "rowByRow",
+      "root": "#mainContent",
+      "source": "tables",
       "controls": 0,
-      "links": 0,
-      "tables": null,
-      "rows": null,
-      "fallback": ""
+      "links": 22,
+      "tables": {
+        "form": 0,
+        "data": 0,
+        "grid": 1,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 1,
+        "repeated": 2,
+        "noise": 0
+      },
+      "fallback": "none"
     },
     "panel": null,
     "view": {
@@ -118,7 +125,7 @@
       }
     },
     "detected": true,
-    "digest": "d0b3c3a3",
-    "version": "0.28.76"
+    "digest": "e0703041",
+    "version": "0.28.83"
   }
 }

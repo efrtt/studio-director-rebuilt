@@ -2,14 +2,10 @@
   "name": "list",
   "reader": "list",
   "url": "/srvda/admin.sd?page=SearchResults&searchText=a",
-  "stale": {
-    "captured": "0.31.20",
-    "why": "captured at 0.31.20 against main v0.28.76; 0.31.21-27 only change the attendance reader (the page’s own href links, a register whose dates all fall outside the view, and the family’s own note) the search route’s wait, and the confirmation’s buttons (a question now offers only its own answers, not every link on the page), so every shape reads the same."
-  },
   "current": {
     "url": "/srvda/admin.sd?page=SearchResults&searchText=a",
     "mounted": true,
-    "theme": "wii",
+    "theme": "dark",
     "tabs": [],
     "decision": {
       "path": "rowByRow",
@@ -36,7 +32,7 @@
     "view": {
       "list": {
         "rows": 500,
-        "count": "500 of 8339",
+        "count": "500 of 8281",
         "filters": 1,
         "columns": [],
         "letters": 0
@@ -51,8 +47,8 @@
       }
     },
     "detected": true,
-    "digest": "a0aa2d3c",
-    "version": "0.31.20"
+    "digest": "5039a2f0",
+    "version": "0.31.29"
   },
   "reference": {
     "url": "/srvda/admin.sd?page=SearchResults&searchText=a",
@@ -60,20 +56,31 @@
     "theme": "dark",
     "tabs": [],
     "decision": {
-      "path": "",
-      "root": "",
-      "source": "",
+      "path": "rowByRow",
+      "root": "#mainContent",
+      "source": "panels",
       "controls": 0,
-      "links": 0,
-      "tables": null,
-      "rows": null,
-      "fallback": ""
+      "links": 501,
+      "tables": {
+        "form": 0,
+        "data": 0,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 0,
+        "repeated": 500,
+        "noise": 0
+      },
+      "fallback": "none"
     },
     "panel": null,
     "view": {
       "list": {
         "rows": 500,
-        "count": "500 of 8339",
+        "count": "500 of 8281",
         "filters": 1,
         "columns": [],
         "letters": 0
@@ -88,7 +95,7 @@
       }
     },
     "detected": true,
-    "digest": "8557401e",
-    "version": "0.28.76"
+    "digest": "acdfc007",
+    "version": "0.28.83"
   }
 }

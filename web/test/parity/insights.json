@@ -2,14 +2,10 @@
   "name": "insights",
   "reader": "insights",
   "url": "/srvda/admin.sd?page=HomePage&tab=tab-insights",
-  "stale": {
-    "captured": "0.31.20",
-    "why": "captured at 0.31.20 against main v0.28.76; 0.31.21-27 only change the attendance reader (the page’s own href links, a register whose dates all fall outside the view, and the family’s own note) the search route’s wait, and the confirmation’s buttons (a question now offers only its own answers, not every link on the page), so every shape reads the same."
-  },
   "current": {
     "url": "/srvda/admin.sd?page=HomePage&tab=tab-insights",
     "mounted": true,
-    "theme": "wii",
+    "theme": "dark",
     "tabs": [
       "Schedule",
       "Insights",
@@ -42,9 +38,9 @@
         "stats": 8,
         "values": [
           "2",
-          "28",
-          "332",
-          "403",
+          "21",
+          "274",
+          "350",
           "52",
           "21",
           "3",
@@ -61,10 +57,10 @@
           "Families with Unpaid Shopping Carts"
         ],
         "donut": true,
-        "total": "4274",
+        "total": "4275",
         "parts": 3,
         "legend": [
-          "431 Enrolled",
+          "432 Enrolled",
           "12 Waitlisted Only",
           "3831 Inactive"
         ],
@@ -84,8 +80,8 @@
       }
     },
     "detected": true,
-    "digest": "4fd8b5de",
-    "version": "0.31.20"
+    "digest": "656bd197",
+    "version": "0.31.29"
   },
   "reference": {
     "url": "/srvda/admin.sd?page=HomePage&tab=tab-insights",
@@ -97,14 +93,25 @@
       "Trends"
     ],
     "decision": {
-      "path": "",
-      "root": "",
-      "source": "",
+      "path": "rowByRow",
+      "root": "#mainContent",
+      "source": "tables",
       "controls": 0,
-      "links": 0,
-      "tables": null,
-      "rows": null,
-      "fallback": ""
+      "links": 14,
+      "tables": {
+        "form": 0,
+        "data": 1,
+        "grid": 0,
+        "chrome": 0,
+        "noise": 0
+      },
+      "rows": {
+        "field": 0,
+        "section": 0,
+        "repeated": 2,
+        "noise": 0
+      },
+      "fallback": "none"
     },
     "panel": null,
     "view": {
@@ -112,9 +119,9 @@
         "stats": 8,
         "values": [
           "2",
-          "28",
-          "332",
-          "403",
+          "21",
+          "274",
+          "350",
           "52",
           "21",
           "3",
@@ -131,10 +138,10 @@
           "Families with Unpaid Shopping Carts"
         ],
         "donut": true,
-        "total": "4274",
+        "total": "4275",
         "parts": 3,
         "legend": [
-          "431 Enrolled",
+          "432 Enrolled",
           "12 Waitlisted Only",
           "3831 Inactive"
         ],
@@ -154,7 +161,7 @@
       }
     },
     "detected": true,
-    "digest": "37dd8315",
-    "version": "0.28.76"
+    "digest": "182210be",
+    "version": "0.28.83"
   }
 }
