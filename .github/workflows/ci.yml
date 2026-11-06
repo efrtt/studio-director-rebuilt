@@ -50,3 +50,22 @@ jobs:
       # 0.2.0 survived. If this fails, run `npm run userscript` and commit it.
       - name: The committed artifact is current
         run: git diff --exit-code -- ../studio-director-rebuilt.user.js
+
+  # main is wii-skin minus the skin: one tree, with the Wii skin taken out, kept true
+  # by `npm run sync:main`. This fails on a commit that the strip does not produce - a
+  # half-applied sync, a skin file left behind, or a skin edit the strip has not
+  # learned yet. If it fails, run the sync rather than editing main by hand, which is
+  # how the two lines drifted apart in the first place.
+  main-minus-skin:
+    # Only main is defined as the stripped tree; the other lines have nothing to be
+    # compared against.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the line this one is defined against
+        run: git fetch --depth=1 origin +refs/heads/wii-skin:refs/remotes/origin/wii-skin
+
+      - name: main is wii-skin minus the skin
+        run: node web/tools/main-from-skin.mjs --check --in . --from origin/wii-skin
