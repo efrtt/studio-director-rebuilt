@@ -40,29 +40,34 @@
     // *is* the tip and the rotation happens about the pixel you are pointing with.
     const fitted = new Map();
 
-    function fit(svg) {
+    function fit(svg, centred) {
       const box = svg.getBoundingClientRect();
-      // The tip is the topmost painted thing — the little arrow at the artwork's
-      // corner — and everything else hangs below it. Taking that one path, rather
-      // than the union of all of them, keeps the hand's left edge from dragging the
-      // hotspot sideways off the point you are aiming with.
+      // The tip is the topmost painted thing: everything else hangs below it. Taking
+      // that one path, rather than the union, keeps the hand's left edge from dragging
+      // the hotspot sideways off the point you are aiming with.
       let tip = null;
+      let left = Infinity;
+      let right = -Infinity;
       for (const path of svg.querySelectorAll('path')) {
         const style = getComputedStyle(path);
         if (style.display === 'none' || style.visibility === 'hidden') continue;
         const rect = path.getBoundingClientRect();
         if (!rect.width && !rect.height) continue;
+        left = Math.min(left, rect.left);
+        right = Math.max(right, rect.right);
         if (!tip || rect.top < tip.top - 0.5
           || (Math.abs(rect.top - tip.top) <= 0.5 && rect.left < tip.left)) {
           tip = { top: rect.top, left: rect.left };
         }
       }
       if (!tip) return;
+      // The pointing sprites hang to the right of their tip, so their own top-left is
+      // the hotspot. The fist is a closed shape and is centred instead — hanging it off
+      // its fingertip threw the whole hand to the right of the pointer. Its y still
+      // starts at the topmost edge, so the vertical position is unchanged.
+      const x = centred ? (left + right) / 2 : tip.left;
       svg.style.transformOrigin = '0 0';
-      // Moved only, never scaled. All three files are exported on the same 76-unit
-      // canvas, so the box's size sets their scale exactly as the artwork intends
-      // and the three cannot drift apart — which is what per-sprite fitting did.
-      svg.style.transform = 'translate(' + (box.left - tip.left) + 'px, '
+      svg.style.transform = 'translate(' + (box.left - x) + 'px, '
         + (box.top - tip.top) + 'px)';
     }
 
@@ -86,7 +91,7 @@
       svg.setAttribute('width', '100%');
       svg.setAttribute('height', '100%');
       svg.style.overflow = 'visible';
-      fit(svg);
+      fit(svg, kind === 'holding');
       fitted.set(kind, glyph.innerHTML);
       glyph.dataset.sprite = kind;
     }
