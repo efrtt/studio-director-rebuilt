@@ -482,27 +482,75 @@ html[data-sd-theme="wii"] #sd-root .sd-cursor svg {
   /* The fitted artwork can reach past its own box; nothing may clip it. */
   overflow: visible;
 }
-/* Every swap — pointing to lit, lit to fist and back — pops once: the hand squashes,
- * overshoots and settles. It is a scale on the sprite wrapper, whose origin is the
- * hotspot the fit placed at the box corner, so the tip stays on the pixel you are
- * hovering while the rotation above it is untouched. The cached markup carries the
- * class, so each swap builds fresh nodes and the animation runs again. */
+/* Swapping sprite is a change of carriage, not a new hand. The two pointing sprites
+ * are one shape, so they trade with a single quiet overshoot; between a pointing hand
+ * and the fist the shapes differ, so the volume is carried across: the tall one
+ * flattens as it leaves, the short one springs in stretched and settles, and going
+ * back from the fist is that in reverse. The outgoing copy is a ghost of the last
+ * wrapper, absolutely placed over the new one and faded out, so the two overlap
+ * instead of cutting.
+ *
+ * Every one is a scale about the hotspot the fit put at the box corner, so the pixel
+ * under the mouse never moves. Nothing here is a loop: one pass and a settle. */
 html[data-sd-theme="wii"] #sd-root .sd-cursor-sprite {
   display: block;
   transform-origin: 0 0;
 }
+html[data-sd-theme="wii"] #sd-root .sd-cursor-ghost {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  transform-origin: 0 0;
+}
 html[data-sd-theme="wii"] #sd-root .sd-cursor-pop {
-  animation: sd-cursor-pop 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: sd-cursor-pop 200ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 @keyframes sd-cursor-pop {
   0% { transform: scale(1, 1); }
-  22% { transform: scale(1.16, 0.9); }
-  46% { transform: scale(0.94, 1.06); }
-  70% { transform: scale(1.04, 0.98); }
+  40% { transform: scale(1.05, 0.96); }
+  100% { transform: scale(1, 1); }
+}
+/* Pointing hand -> fist: the long hand flattens away under the incoming fist. */
+html[data-sd-theme="wii"] #sd-root .sd-cursor-out--squash {
+  animation: sd-cursor-out-squash 240ms ease-out both;
+}
+@keyframes sd-cursor-out-squash {
+  0% { transform: scale(1, 1); opacity: 1; }
+  100% { transform: scale(1.16, 0.82); opacity: 0; }
+}
+/* ...and the fist arrives stretched, so the two read as one shape with the volume
+ * moved from height to width. */
+html[data-sd-theme="wii"] #sd-root .sd-cursor-in--stretch {
+  animation: sd-cursor-in-stretch 240ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+@keyframes sd-cursor-in-stretch {
+  0% { transform: scale(0.86, 1.15); }
+  55% { transform: scale(1.02, 0.985); }
+  100% { transform: scale(1, 1); }
+}
+/* Fist -> pointing hand: the same journey backwards. */
+html[data-sd-theme="wii"] #sd-root .sd-cursor-out--stretch {
+  animation: sd-cursor-out-stretch 240ms ease-out both;
+}
+@keyframes sd-cursor-out-stretch {
+  0% { transform: scale(1, 1); opacity: 1; }
+  100% { transform: scale(0.86, 1.15); opacity: 0; }
+}
+html[data-sd-theme="wii"] #sd-root .sd-cursor-in--squash {
+  animation: sd-cursor-in-squash 240ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+@keyframes sd-cursor-in-squash {
+  0% { transform: scale(1.14, 0.85); }
+  55% { transform: scale(0.99, 1.015); }
   100% { transform: scale(1, 1); }
 }
 @media (prefers-reduced-motion: reduce) {
-  html[data-sd-theme="wii"] #sd-root .sd-cursor-pop { animation: none; }
+  html[data-sd-theme="wii"] #sd-root .sd-cursor-pop,
+  html[data-sd-theme="wii"] #sd-root .sd-cursor-in--stretch,
+  html[data-sd-theme="wii"] #sd-root .sd-cursor-in--squash,
+  html[data-sd-theme="wii"] #sd-root .sd-cursor-out--stretch,
+  html[data-sd-theme="wii"] #sd-root .sd-cursor-out--squash { animation: none; }
 }
 /* The glyph *is* the pointer, so the platform must not draw a second one beside it.
  * `sd-pointer` is only on the document while the glyph exists — reduced motion and

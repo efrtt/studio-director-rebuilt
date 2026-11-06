@@ -71,35 +71,54 @@
         + (box.top - tip.top) + 'px)';
     }
 
+    // Which way the hand is changing shape, so the swap can carry the volume across:
+    // the tall pointing hand flattens as it leaves and the short fist springs in
+    // stretched, and leaving the fist is that backwards.
     function show(kind) {
-      const markup = fitted.get(kind);
-      if (markup) {
-        if (glyph.dataset.sprite !== kind) {
-          glyph.innerHTML = markup;
-          glyph.dataset.sprite = kind;
-        }
-        return;
+      const prev = glyph.dataset.sprite;
+      if (prev === kind) return;
+      const swapping = (prev === 'holding') !== (kind === 'holding') && Boolean(prev);
+      // The outgoing glyph has to be cloned before the new markup is written, or there
+      // is nothing left to animate out.
+      const outgoing = glyph.firstElementChild;
+      const ghost = swapping && outgoing ? outgoing.cloneNode(true) : null;
+      let markup = fitted.get(kind);
+      if (!markup) {
+        // Measure level: a rotated box's axis-aligned bounds are wider than the glyph
+        // and 4px higher than its tip, so fitting while leaning bakes in the error.
+        // The `draw()` that follows every `show()` puts the lean back in the same task,
+        // so nothing is painted in between.
+        glyph.style.transform = 'translate3d(0px, 0px, 0px)';
+        glyph.innerHTML = '<span class="sd-cursor-sprite">' + SPRITES[kind] + '</span>';
+        const svg = glyph.querySelector('svg');
+        if (!svg) return;
+        svg.setAttribute('width', '100%');
+        svg.setAttribute('height', '100%');
+        svg.style.overflow = 'visible';
+        fit(svg, kind === 'holding');
+        markup = glyph.innerHTML;
+        fitted.set(kind, markup);
       }
-      // Measure level: a rotated box's axis-aligned bounds are wider than the glyph
-      // and 4px higher than its tip, so fitting while leaning bakes in the error.
-      // The `draw()` that follows every `show()` puts the lean back in the same task,
-      // so nothing is painted in between.
-      glyph.style.transform = 'translate3d(0px, 0px, 0px)';
-      // The sprite sits in its own wrapper so a swap can pop it: an animation on the
-      // glyph itself would fight the transform that carries the position and the lean.
-      glyph.innerHTML = '<span class="sd-cursor-sprite">' + SPRITES[kind] + '</span>';
-      const wrap = glyph.firstElementChild;
-      const svg = glyph.querySelector('svg');
-      if (!svg) return;
-      svg.setAttribute('width', '100%');
-      svg.setAttribute('height', '100%');
-      svg.style.overflow = 'visible';
-      fit(svg, kind === 'holding');
-      // Added after the fit, so the measuring happens at rest rather than on whatever
-      // frame of the bounce the browser had already reached.
-      wrap.classList.add('sd-cursor-pop');
-      fitted.set(kind, glyph.innerHTML);
+      glyph.innerHTML = markup;
       glyph.dataset.sprite = kind;
+      const wrap = glyph.firstElementChild;
+      if (!prev) return;
+      // Nothing is animated during the fit: the class goes on afterwards, and the
+      // cached markup stays plain so a re-shown sprite does not replay last time's
+      // direction.
+      if (ghost) {
+        ghost.classList.remove('sd-cursor-pop');
+        ghost.classList.add('sd-cursor-ghost',
+          prev === 'holding' ? 'sd-cursor-out--stretch' : 'sd-cursor-out--squash');
+        ghost.addEventListener('animationend', () => ghost.remove(), { once: true });
+        glyph.appendChild(ghost);
+        setTimeout(() => ghost.remove(), 600);
+      }
+      if (swapping) {
+        wrap.classList.add(kind === 'holding' ? 'sd-cursor-in--stretch' : 'sd-cursor-in--squash');
+      } else {
+        wrap.classList.add('sd-cursor-pop');
+      }
     }
 
     let target = null;
