@@ -368,27 +368,61 @@ const files = [...new Set(TRANSFORMS.map((t) => t.file))];
 
 if (CHECK) {
   const diffs = [];
-  for (const file of files) {
-    const want = strip(file, gitRaw(main, 'show', FROM + ':' + file));
-    let have;
-    try {
-      have = fs.readFileSync(path.join(main, file), 'utf8');
-    } catch (e) {
+  const theirs = git(main, 'ls-tree', '-r', '--name-only', FROM).split('\n').filter(Boolean);
+  const ours = git(main, 'ls-files').split('\n').filter(Boolean);
+  const inFrom = new Set(theirs);
+  const inMain = new Set(ours);
+
+  // Every file, not only the ones the strip edits: a shared reader change that never
+  // reached this line is drift too, and it is the kind that used to go unnoticed.
+  for (const file of theirs) {
+    // Each line commits its own build, so the artefact is the one file that is meant
+    // to differ; it is checked below for the skin and for where it updates from.
+    if (file === ARTEFACT) continue;
+    if (SKIN_FILES.includes(file)) {
+      if (fs.existsSync(path.join(main, file))) diffs.push(file + ': the skin file is still here');
+      continue;
+    }
+    if (!inMain.has(file)) {
       diffs.push(file + ': missing from this checkout');
       continue;
     }
-    if (have !== want) diffs.push(file + ': differs from ' + FROM + ' minus the skin');
+    const source = execFileSync('git', ['show', FROM + ':' + file], { cwd: main, maxBuffer: 64 * 1024 * 1024 });
+    const have = fs.readFileSync(path.join(main, file));
+    if (TRANSFORMS.some((t) => t.file === file)) {
+      if (have.toString('utf8') !== strip(file, source.toString('utf8'))) {
+        diffs.push(file + ': differs from ' + FROM + ' minus the skin');
+      }
+    } else if (!have.equals(source)) {
+      diffs.push(file + ': differs from ' + FROM);
+    }
   }
-  for (const file of SKIN_FILES) {
-    if (fs.existsSync(path.join(main, file))) diffs.push(file + ': the skin file is still here');
+  for (const file of ours) {
+    if (!inFrom.has(file)) diffs.push(file + ': not on ' + FROM);
   }
+  // A file named for the skin that arrived after this list was written is not in
+  // SKIN_FILES, so the loop above would accept it. The name is the one thing every
+  // one of them shares.
+  for (const file of ours) {
+    if (/wii/i.test(file)) diffs.push(file + ': a path named for the skin is tracked here');
+  }
+  const artefactPath = path.join(main, ARTEFACT);
+  if (fs.existsSync(artefactPath)) {
+    try {
+      skinIn(fs.readFileSync(artefactPath, 'utf8'));
+    } catch (e) {
+      diffs.push(ARTEFACT + ': ' + e.message);
+    }
+  }
+
   if (diffs.length) {
     console.error('main is not ' + FROM + ' minus the skin:');
     for (const line of diffs) console.error('  ' + line);
     console.error('\nRun `npm run sync:main` to regenerate it.');
     process.exit(1);
   }
-  console.log('main matches ' + FROM + ' minus the skin (' + files.length + ' files, ' + SKIN_FILES.length + ' removed)');
+  console.log('main matches ' + FROM + ' minus the skin (' + theirs.length + ' files compared, '
+    + SKIN_FILES.length + ' removed, ' + files.length + ' unwired)');
   process.exit(0);
 }
 
