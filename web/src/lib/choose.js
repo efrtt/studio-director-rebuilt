@@ -171,6 +171,24 @@ export function searchReady(model, first) {
   return true;
 }
 
+// Ready, or late enough that waiting has stopped buying anything.
+//
+// `searchReady` ends on a *change*: a different record set from the one the page
+// arrived with. That is the right rule when the page is served carrying the list
+// you came from — but the app also serves the results page already holding the
+// results, on a fresh GET and on every repeat of the same search. There the
+// change never comes, so the wait ran its whole eight seconds and the page sat
+// unskinned; reported live as "sometimes global search just shows the original".
+//
+// So after a short grace period a page that names itself as the results is taken
+// as it stands. The list follows the panel afterwards (`lib/follow.js` adopts a
+// different record set when it lands), which is what corrects the one case the
+// wait was for.
+export function searchReadyOrLate(model, first, elapsed, grace = 1500) {
+  if (searchReady(model, first)) return true;
+  return elapsed >= grace && looksLikeSearchResults(model);
+}
+
 export function hasReadyView(model) {
   return !!model && READY.some((key) => !!model[key]);
 }

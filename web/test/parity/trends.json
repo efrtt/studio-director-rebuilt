@@ -4,7 +4,7 @@
   "url": "/srvda/admin.sd?page=HomePage&tab=tab-trends",
   "stale": {
     "captured": "0.31.20",
-    "why": "captured at 0.31.20 against main v0.28.76; 0.31.21-24 only change the attendance reader (the page’s own href links, a register whose dates all fall outside the view, and the family’s own note), so every other shape reads unchanged."
+    "why": "captured at 0.31.20 against main v0.28.76; 0.31.21-27 only change the attendance reader (the page’s own href links, a register whose dates all fall outside the view, and the family’s own note) the search route’s wait, and the confirmation’s buttons (a question now offers only its own answers, not every link on the page), so every shape reads the same."
   },
   "current": {
     "url": "/srvda/admin.sd?page=HomePage&tab=tab-trends",

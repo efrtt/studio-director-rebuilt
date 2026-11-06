@@ -21,7 +21,10 @@ const page = (inner, crumb) => doc(`<body>
     <div class="contentInfo">${inner}</div>
   </div></body>`);
 
-test('the page own links become the options, breadcrumb first', () => {
+// Report from the live drop question: the card offered five buttons - Home, the
+// student, the class, Drop and Cancel - because every anchor on the page became
+// one. The student and the class are words in the sentence, not things to press.
+test('an outcome offers its commands, not the names in its sentence', () => {
   const model = confirmationOf(page(
     '<div><a href="admin.sd?page=EditStudent&sident=1">Lily</a> has been dropped from ' +
     '<a href="admin.sd?page=EditClass&cident=520">520 Contemporary 1</a> ' +
@@ -30,11 +33,22 @@ test('the page own links become the options, breadcrumb first', () => {
   ), {});
 
   assert.ok(model);
-  const hrefs = model.links.map((l) => l.href);
-  assert.equal(hrefs[0], 'admin.sd?page=NewStudent', 'the breadcrumb leads');
-  assert.ok(hrefs.includes('admin.sd?page=EditStudent&sident=1'));
-  assert.ok(hrefs.includes('admin.sd?page=EditClass&cident=520'));
-  assert.ok(model.links.every((l) => l.label && l.href && l.href !== '#'));
+  assert.deepEqual(model.links.map((l) => l.label), ['Review the account for Lily'],
+    'the app\u2019s own word for that record wins over the name, and the class name is just a name');
+  assert.equal(model.links[0].href, 'admin.sd?page=EditStudent&sident=1');
+});
+
+test('the commands around the sentence are the options', () => {
+  const model = confirmationOf(page(
+    '<div><a href="admin.sd?page=EditStudent&sident=1">Lily</a> has been dropped from ' +
+    '<a href="admin.sd?page=EditClass&cident=520">520 Contemporary 1</a></div>' +
+    '<p><a href="admin.sd?page=EditStudent&sident=1">Return to Lily</a> ' +
+    '<a href="admin.sd?page=EditClass&cident=520">Go to 520 Contemporary 1</a></p>',
+    '<a href="admin.sd?page=NewStudent">Students</a>'
+  ), {});
+
+  assert.deepEqual(model.links.map((l) => l.label), ['Return to Lily', 'Go to 520 Contemporary 1'],
+    'a command that already points at the subject keeps its own wording, and the breadcrumb is not an option');
 });
 
 test('the rail and the record panel are not options', () => {

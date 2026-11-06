@@ -11,7 +11,8 @@ import assert from 'node:assert/strict';
 import { DOMParser } from 'linkedom';
 
 import { readLiveView } from '../src/lib/live.js';
-import { looksLikeSearchResults } from '../src/lib/choose.js';
+import { looksLikeSearchResults, searchReady } from '../src/lib/choose.js';
+const { panelPeek } = await import('../src/lib/list.js');
 import { readPage } from '../src/readers/index.js';
 
 const URL_OF = 'https://app.thestudiodirector.com/srvda/admin.sd?page=SearchResults&searchText=B';
@@ -44,6 +45,26 @@ test('a record panel is not search results', () => {
 
   const found = readPage(doc(results), URL_OF);
   assert.equal(looksLikeSearchResults(found), true);
+});
+
+test('the wait asks a cheap look at the panel, not a whole read', () => {
+  // The live search panel holds thousands of rows: reading all of them on every
+  // tick is what starved the page and left the skin late or missing. One row, the
+  // stated total and the page's own title answer the same question.
+  const peek = panelPeek(doc(results));
+  assert.equal(peek.view, 'list');
+  assert.equal(peek.list.title, 'Search Results for "B"');
+  assert.equal(peek.list.total, 2);
+  assert.equal(peek.list.items.length, 1, 'the first row is enough');
+  assert.equal(peek.list.items[0].href, 'admin.sd?page=EditFamily&fident=1');
+
+  // And it answers the readiness question the same way the full model does.
+  assert.equal(searchReady(peek, panelPeek(doc(leftovers))), true, 'a different record set is the results');
+  assert.equal(searchReady(panelPeek(doc(leftovers)), panelPeek(doc(leftovers))), false,
+    'the panel the page arrived with is never ready');
+
+  // A page with no panel at all is not a list.
+  assert.deepEqual(panelPeek(doc('<body><p>nothing</p></body>')).list, null);
 });
 
 test('the wait outlasts the leftovers and mounts the results', async () => {

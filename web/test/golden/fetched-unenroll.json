@@ -20,14 +20,6 @@
       ],
       "links": [
         {
-          "href": "admin.sd?page=HomePage",
-          "label": "Home"
-        },
-        {
-          "href": "admin.sd?page=SwitchClasses&cident=1782910697458&sident=1741880123629",
-          "label": "Switch Classes"
-        },
-        {
           "href": "admin.sd?page=EditStudent&sident=1741880123629",
           "label": "Back to the student"
         },

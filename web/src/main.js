@@ -10,7 +10,7 @@ import {
   fetchPage, liveIsBare, parseHtml, SessionExpired, railLinks
 } from './lib/shell.js';
 import { routeOf } from './lib/route.js';
-import { readList } from './lib/list.js';
+import { readList, panelPeek } from './lib/list.js';
 import { expandInApp, showAllTrigger } from './lib/expand.js';
 import { runSearch } from './lib/search.js';
 import { readPeriodControl, choosePeriodInApp } from './lib/period.js';
@@ -38,7 +38,7 @@ import { decisionOf } from './model/regions.js';
 import { pageShape } from './model/root.js';
 import { probeTick, recordView } from './lib/probe.js';
 import { contradictsNote } from './lib/note.js';
-import { wantsLiveLook, decideMount, decideShellLess, chooseSource, searchReady } from './lib/choose.js';
+import { wantsLiveLook, decideMount, decideShellLess, chooseSource, searchReadyOrLate } from './lib/choose.js';
 import { readRecordPage } from './lib/record.js';
 import { readLiveView } from './lib/live.js';
 
@@ -456,13 +456,46 @@ async function mountSearchResults(onOriginal) {
   // alone mounted the previous page's list under the new heading, so the wait is
   // for the panel itself — its own total reached, or a different total than the
   // one first seen.
-  const first = readPage(document, location.href, { allowEmpty: true });
-  let model = first;
+  //
+  // The question is asked of a cheap look at the panel — its title, its heading,
+  // its stated total and its first row — not of a whole read. A full read walks
+  // every result row, and a live search has thousands: asking that every 120ms
+  // starved the page it was waiting for, so the skin could appear ten seconds
+  // late, or the mount could die on a read taken mid-rewrite and leave the app's
+  // own page showing.
+  const first = panelPeek(document);
   const started = Date.now();
   while (Date.now() - started < 8000) {
-    if (searchReady(model, first)) break;
+    let now = null;
+    try {
+      now = panelPeek(document);
+    } catch (err) {
+      now = null; // a look taken mid-rewrite is not an answer to anything
+    }
+    // `searchReadyOrLate`, not `searchReady`: the results page is often served
+    // already holding the results, so a wait for a *change* never ended and the
+    // page stayed unskinned for the whole budget.
+    if (now && searchReadyOrLate(now, first, Date.now() - started)) break;
     await new Promise((resolve) => setTimeout(resolve, 120));
-    model = readPage(document, location.href, { allowEmpty: true });
+  }
+
+  // One full read, now that the panel says what it is. A read that still fails is
+  // retried and then reported, rather than thrown into the mount: an exception
+  // here used to take the whole mount with it, and the boot's own catch turns
+  // that into the app's page with no skin and no explanation.
+  let model = null;
+  for (let attempt = 0; attempt < 5 && !model; attempt += 1) {
+    try {
+      model = readPage(document, location.href, { allowEmpty: true });
+    } catch (err) {
+      console.info('[sd] search results read failed - trying again:', err && err.message ? err.message : err);
+      const pause = 120 * (attempt + 1);
+      await new Promise((resolve) => setTimeout(resolve, pause));
+    }
+  }
+  if (!model) {
+    console.info('[sd] search results could not be read - leaving the app alone');
+    return null;
   }
   return mountView(model, onOriginal, 'live');
 }
