@@ -1010,8 +1010,15 @@ html[data-sd-theme="wii"] #sd-root .sd-tile {
   50% { opacity: 0.9; transform: translateY(-10px) scale(1.03); }
 }
 
+/* `backwards`, not `both`. A filled animation keeps its last keyframe, and a
+   held transform — even the identity `scale(1)` — makes the element the
+   containing block for anything `position: fixed` inside it. The calendar's
+   tooltip is placed from `clientX/clientY`, so under the skin it measured from
+   the view's own corner and sat 62px below the pointer, while dark and light
+   (which have no entrance animation) were exact. With no fill after the end the
+   transform goes back to the element's own `none`, and the zoom plays as before. */
 html[data-sd-theme="wii"] #sd-root .sd-body > * {
-  animation: sd-wii-zoom 260ms cubic-bezier(0.2, 0.8, 0.3, 1.05) both;
+  animation: sd-wii-zoom 260ms cubic-bezier(0.2, 0.8, 0.3, 1.05) backwards;
   transform-origin: 50% 0;
 }
 
