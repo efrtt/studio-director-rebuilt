@@ -1,21 +1,28 @@
 <script>
   // The skin's pointer. The platform cursor is hidden while this is mounted and
-  // this glyph takes its place, tip on the exact pixel the pointer is on, so
-  // clicking is unchanged and only the body swings.
+  // the glyph takes its place, drawn exactly where the mouse is so a click lands on
+  // the picture of its tip; only the rotation lags, which is where the weight is.
   //
   // The element is created here, not written in markup, because it has to be a
-  // child of `#sd-root` itself: a `position: fixed` node inside an animated view
-  // is measured from that view, which is the bug that put the calendar tooltip
-  // below the pointer (see the entrance animation in wii.css).
+  // child of `#sd-root` itself: a `position: fixed` node inside an animated view is
+  // measured from that view, which is the bug that put the calendar tooltip below
+  // the pointer (see the entrance animation in wii.css).
   import { onMount } from 'svelte';
   import { advance, poseOf, restPose, settled } from '../lib/cursor.js';
+  import pointer from '../cursors/PointerP1.svg?raw';
+  import over from '../cursors/PointerP1-highlight.svg?raw';
+  import holding from '../cursors/HandClosedP1.svg?raw';
 
-  const GLYPH = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
-    + '<path d="M2 2 L2 19.4 L6.9 14.8 L10.2 21.5 L13.5 20 L10.2 13.4 L16.9 13.1 Z"/>'
-    + '</svg>';
+  // Resting on the page, over something you can click, and with the button held.
+  const SPRITES = { pointer, over, holding };
 
-  // After this long at rest the frame loop stops. The glyph stays exactly where it
-  // is drawn, so this is a saving and not a state change.
+  // Something the app would draw a hand over, if it were drawing its own cursor.
+  const INTERACTIVE = 'a, button, input, select, textarea, summary, label, [role="button"], [onclick]';
+
+  // Painted height each sprite is normalised to, so the three artwork files read as
+  // one cursor rather than three sizes.
+  const HEIGHT = 24;
+
   const IDLE_AFTER = 900;
 
   onMount(() => {
@@ -28,24 +35,80 @@
     const glyph = document.createElement('div');
     glyph.className = 'sd-cursor';
     glyph.setAttribute('aria-hidden', 'true');
-    glyph.innerHTML = GLYPH;
     host.appendChild(glyph);
     // Only now: until this glyph exists there would be no pointer at all.
     document.documentElement.classList.add('sd-pointer');
+
+    // Each sprite is fitted once, then cached as markup with the fit baked in: the
+    // painted top-left becomes the element's own corner, so `transform-origin: 0 0`
+    // *is* the tip and the rotation happens about the pixel you are pointing with.
+    const fitted = new Map();
+
+    function fit(svg) {
+      const box = svg.getBoundingClientRect();
+      let left = Infinity;
+      let top = Infinity;
+      let bottom = -Infinity;
+      for (const path of svg.querySelectorAll('path')) {
+        const style = getComputedStyle(path);
+        if (style.display === 'none' || style.visibility === 'hidden') continue;
+        const rect = path.getBoundingClientRect();
+        if (!rect.width && !rect.height) continue;
+        left = Math.min(left, rect.left);
+        top = Math.min(top, rect.top);
+        bottom = Math.max(bottom, rect.bottom);
+      }
+      const painted = bottom - top;
+      if (!Number.isFinite(left) || !(painted > 0)) return;
+      const scale = HEIGHT / painted;
+      svg.style.transformOrigin = '0 0';
+      // Scaled first, then moved: the translate is in the artwork's own pixels, so
+      // `left`/`top` land on the element's corner and stay there under the scale.
+      // (The other order moves by the unscaled offset and leaves the tip inside.)
+      svg.style.transform = 'scale(' + scale + ')'
+        + ' translate(' + (box.left - left) + 'px, ' + (box.top - top) + 'px)';
+    }
+
+    function show(kind) {
+      const markup = fitted.get(kind);
+      if (markup) {
+        if (glyph.dataset.sprite !== kind) {
+          glyph.innerHTML = markup;
+          glyph.dataset.sprite = kind;
+        }
+        return;
+      }
+      // Measure level: a rotated box's axis-aligned bounds are wider than the glyph
+      // and 4px higher than its tip, so fitting while leaning bakes in the error.
+      // The `draw()` that follows every `show()` puts the lean back in the same task,
+      // so nothing is painted in between.
+      glyph.style.transform = 'translate3d(0px, 0px, 0px)';
+      glyph.innerHTML = SPRITES[kind];
+      const svg = glyph.querySelector('svg');
+      if (!svg) return;
+      svg.setAttribute('width', '100%');
+      svg.setAttribute('height', '100%');
+      svg.style.overflow = 'visible';
+      fit(svg);
+      fitted.set(kind, glyph.innerHTML);
+      glyph.dataset.sprite = kind;
+    }
 
     let target = null;
     let state = null;
     let frame = 0;
     let last = 0;
     let moved = 0;
+    let kind = 'pointer';
+
+    function pick(x, y) {
+      const under = document.elementFromPoint(x, y);
+      return under && under.closest && under.closest(INTERACTIVE) ? 'over' : 'pointer';
+    }
 
     function draw() {
-      const pose = poseOf(state);
-      // Rotated about the tip (its `transform-origin` in wii.css), so the tip stays
-      // on the pointer and the body swings around it.
       glyph.style.transform = 'translate3d(' + state.x + 'px, ' + state.y + 'px, 0)'
-        + ' rotate(' + pose.tilt + 'deg)'
-        + ' scale(' + pose.along + ', ' + pose.across + ')';
+        + ' rotate(' + poseOf(state).tilt + 'deg)';
     }
 
     function tick(now) {
@@ -62,8 +125,19 @@
     function onMove(event) {
       target = { x: event.clientX, y: event.clientY };
       moved = performance.now();
+      // `buttons` is the truth about whether something is held: a release outside
+      // the window never delivers a pointerup, and a stuck closed hand would be a
+      // cursor that lies about the state of the page.
+      const next = event.buttons ? 'holding' : pick(event.clientX, event.clientY);
+      if (next !== kind) {
+        // A context change is not a move: start the new sprite level, so the swap
+        // does not read as a jump in the lean.
+        kind = next;
+        state = null;
+      }
+      show(kind);
       if (!state) {
-        // First sighting: start on the pointer, so it never flies in from a corner.
+        // First sighting: stand on the pointer, so it never flies in from a corner.
         state = restPose(target.x, target.y);
         draw();
       }
@@ -74,6 +148,29 @@
       }
     }
 
+    function onDown(event) {
+      kind = 'holding';
+      target = { x: event.clientX, y: event.clientY };
+      moved = performance.now();
+      show(kind);
+      state = restPose(target.x, target.y);
+      draw();
+      if (!frame) {
+        last = performance.now();
+        frame = requestAnimationFrame(tick);
+      }
+    }
+
+    // Released: back to whatever is under the pointer, level.
+    function onUp(event) {
+      kind = pick(event.clientX, event.clientY);
+      target = { x: event.clientX, y: event.clientY };
+      moved = performance.now();
+      show(kind);
+      state = restPose(target.x, target.y);
+      draw();
+    }
+
     // Out of the window there is no pointer to stand in for, and a glyph left
     // behind would sit where the pointer is not.
     function onOut(event) {
@@ -81,13 +178,17 @@
     }
 
     window.addEventListener('pointermove', onMove, { passive: true });
-    window.addEventListener('pointerdown', onMove, { passive: true });
+    window.addEventListener('pointerdown', onDown, { passive: true });
+    window.addEventListener('pointerup', onUp, { passive: true });
+    window.addEventListener('pointercancel', onUp, { passive: true });
     document.addEventListener('mouseout', onOut);
 
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('pointerdown', onMove);
+      window.removeEventListener('pointerdown', onDown);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
       document.removeEventListener('mouseout', onOut);
       document.documentElement.classList.remove('sd-pointer');
       glyph.remove();

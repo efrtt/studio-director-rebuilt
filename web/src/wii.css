@@ -444,10 +444,14 @@ html[data-sd-theme="wii"] #sd-root .sd-tip-line:first-child { color: var(--wii-i
 /* ---- the pointer ----
  *
  * The platform's cursor is hidden while this glyph is mounted and the glyph takes
- * its place: its tip sits on the exact pixel of the pointer and only the body
- * swings, so aiming is unchanged. The transform is written by `Cursor.svelte`,
- * which rocks it about that tip — `transform-origin` is the tip, which is why it
- * is a length and not `center`.
+ * its place: it is drawn exactly where the mouse is, so a click lands on the
+ * picture of its tip, and only the rotation lags — that is where the weight is.
+ * `Cursor.svelte` writes the transform, and fits the artwork so the painted tip is
+ * the box's own corner; `transform-origin: 0 0` is then the tip, whatever the
+ * sprite.
+ *
+ * The artwork is the supplied pointer set, inlined by the build, so nothing is
+ * fetched at runtime and the userscript stays one file.
  *
  * It is attached directly to `#sd-root`, never inside a view: `position: fixed`
  * inside a transformed ancestor is measured from that ancestor, which is exactly
@@ -458,32 +462,22 @@ html[data-sd-theme="wii"] #sd-root .sd-cursor {
   position: fixed;
   left: 0;
   top: 0;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   pointer-events: none;
   z-index: 95;
   opacity: 0;
-  transform-origin: 2px 2px;
+  transform-origin: 0 0;
   transition: opacity 120ms ease;
   will-change: transform;
 }
 html[data-sd-theme="wii"] #sd-root .sd-cursor--on { opacity: 1; }
 html[data-sd-theme="wii"] #sd-root .sd-cursor svg {
   display: block;
-  width: 24px;
-  height: 24px;
-  /* The stroke is centred on the path, so half of it must be allowed outside. */
+  width: 100%;
+  height: 100%;
+  /* The fitted artwork can reach past its own box; nothing may clip it. */
   overflow: visible;
-}
-/* White body with the skin's own ink outline: legible on a bright channel tile
- * and on the deep page, and it follows the accent because the ink does. */
-html[data-sd-theme="wii"] #sd-root .sd-cursor path {
-  fill: var(--wii-keyline);
-  stroke: var(--wii-ink);
-  stroke-width: 2;
-  stroke-linejoin: round;
-  paint-order: stroke;
-  filter: drop-shadow(0 2px 2px color-mix(in srgb, var(--wii-deep) 45%, transparent));
 }
 /* The glyph *is* the pointer, so the platform must not draw a second one beside it.
  * `sd-pointer` is only on the document while the glyph exists — reduced motion and
