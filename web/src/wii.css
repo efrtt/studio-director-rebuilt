@@ -487,9 +487,9 @@ html[data-sd-theme="wii"] #sd-root .sd-cursor svg {
  * settles. Only ever one hand is in the DOM, so nothing is drawn on top of anything
  * else — the squeeze is what carries the change of shape across the cut.
  *
- * The squeeze is timed, not listened for: Cursor.svelte holds the swap for 30ms,
- * which is this animation's duration, so the two must be changed together. A click
- * is usually longer than that, so the fist does get seen.
+ * The squeeze is timed, not listened for: Cursor.svelte holds the swap for 65ms, a
+ * little past this animation's 55ms, so the fully squeezed pose is painted for a frame
+ * before the swap rather than being cut by it. Change the two together.
  *
  * Every keyframe is a scale about the hotspot the fit put at the box corner, so the
  * pixel under the mouse never moves. One counter-bounce on the way in, none on the
@@ -508,7 +508,7 @@ html[data-sd-theme="wii"] #sd-root .sd-cursor-pop {
 }
 /* Pointing hand -> fist: the long hand is squeezed flat off the screen... */
 html[data-sd-theme="wii"] #sd-root .sd-cursor-out--squash {
-  animation: sd-cursor-out-squash 30ms cubic-bezier(0.4, 0, 1, 1) both;
+  animation: sd-cursor-out-squash 55ms cubic-bezier(0.4, 0, 1, 1) both;
 }
 @keyframes sd-cursor-out-squash {
   0% { transform: scale(1, 1); }
@@ -516,8 +516,8 @@ html[data-sd-theme="wii"] #sd-root .sd-cursor-out--squash {
 }
 /* ...and the fist lands stretched, over-corrects once, and is home. */
 html[data-sd-theme="wii"] #sd-root .sd-cursor-in--stretch {
-  animation: sd-cursor-in-stretch 50ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards,
-    sd-cursor-jiggle 150ms 50ms cubic-bezier(0.3, 0.7, 0.3, 1) forwards;
+  animation: sd-cursor-in-stretch 85ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards,
+    sd-cursor-jiggle 140ms 85ms cubic-bezier(0.3, 0.7, 0.3, 1) forwards;
 }
 @keyframes sd-cursor-in-stretch {
   0% { transform: scale(0.76, 1.3); }
@@ -526,15 +526,15 @@ html[data-sd-theme="wii"] #sd-root .sd-cursor-in--stretch {
 }
 /* Fist -> pointing hand: the same three beats backwards. */
 html[data-sd-theme="wii"] #sd-root .sd-cursor-out--stretch {
-  animation: sd-cursor-out-stretch 30ms cubic-bezier(0.4, 0, 1, 1) both;
+  animation: sd-cursor-out-stretch 55ms cubic-bezier(0.4, 0, 1, 1) both;
 }
 @keyframes sd-cursor-out-stretch {
   0% { transform: scale(1, 1); }
   100% { transform: scale(0.7, 1.32); }
 }
 html[data-sd-theme="wii"] #sd-root .sd-cursor-in--squash {
-  animation: sd-cursor-in-squash 50ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards,
-    sd-cursor-jiggle 150ms 50ms cubic-bezier(0.3, 0.7, 0.3, 1) forwards;
+  animation: sd-cursor-in-squash 85ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards,
+    sd-cursor-jiggle 140ms 85ms cubic-bezier(0.3, 0.7, 0.3, 1) forwards;
 }
 @keyframes sd-cursor-in-squash {
   0% { transform: scale(1.26, 0.74); }
@@ -542,15 +542,15 @@ html[data-sd-theme="wii"] #sd-root .sd-cursor-in--squash {
   100% { transform: scale(1, 1); }
 }
 /* The landing is quick enough to be over before you see it settle, so the hand that
- * arrives gets a jiggle behind it: two bounces of pure squash and stretch over 150ms,
+ * arrives gets a jiggle behind it: two small bounces of pure squash and stretch, 140ms,
  * starting as the landing finishes. No rotation at all — the hand compresses and
  * stretches on the spot rather than rocking — and it fills forwards so it leaves the
  * sprite exactly at rest. */
 @keyframes sd-cursor-jiggle {
   0% { transform: scale(1, 1); }
-  25% { transform: scale(1.15, 0.85); }
-  55% { transform: scale(0.9, 1.1); }
-  80% { transform: scale(1.05, 0.96); }
+  25% { transform: scale(1.08, 0.93); }
+  55% { transform: scale(0.96, 1.04); }
+  80% { transform: scale(1.02, 0.99); }
   100% { transform: scale(1, 1); }
 }
 @media (prefers-reduced-motion: reduce) {

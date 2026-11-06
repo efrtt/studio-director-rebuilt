@@ -19,14 +19,15 @@
   // Something the app would draw a hand over, if it were drawing its own cursor.
   const INTERACTIVE = 'a, button, input, select, textarea, summary, label, [role="button"], [onclick]';
 
-  // How long the outgoing hand is squeezed before the cross-over. It must match the
-  // out-animation duration in wii.css: the swap is timed, not listened for. Both are
-  // short enough that a quick click still lands on the fist before letting go.
-  const SQUEEZE_MS = 30;
+  // How long the outgoing hand is squeezed before the cross-over. It is deliberately a
+  // little longer than the out-animation in wii.css (55ms): the squeezed pose needs a
+  // frame of its own, or the swap cuts it before it is ever painted and the hand
+  // appears to change with no transition at all.
+  const SQUEEZE_MS = 65;
 
   // How long the incoming hand takes to settle. A swap younger than this is not
   // squeezed away again: the fist that has just landed hands straight back.
-  const SETTLE_MS = 50;
+  const SETTLE_MS = 85;
 
   const IDLE_AFTER = 900;
 
@@ -157,7 +158,10 @@
       if (pending) return;
       // A fist that has only just landed is not worth squeezing back out: a quick click
       // gets the pointing hand straight away instead of waiting out another squeeze.
-      const fresh = performance.now() - swappedAt < SETTLE_MS;
+      // Only the way out of the fist is ever shortened. A press right after a hover
+      // change must still squeeze, or pointing at a link and clicking straight away
+      // swaps to the fist with no transition at all — which is most presses.
+      const fresh = current === 'holding' && performance.now() - swappedAt < SETTLE_MS;
       const out = glyph.firstElementChild;
       if (!out || fresh) {
         const wrap = cross(kind);
