@@ -99,7 +99,7 @@ web/
   src/            readers, model, views (Svelte), themes, styles
   test/           fixtures, golden models, suites
   tools/          build, golden, capture, crawl and demo scripts
-  docs/           contract, design notes, crawl map, screenshots
+  docs/           contract, design notes, crawl map
 ```
 
 Captured pages and the models they produce are committed under `web/test/fixtures` and

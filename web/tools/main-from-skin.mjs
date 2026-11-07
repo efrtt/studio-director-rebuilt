@@ -58,8 +58,7 @@ const SKIN_FILES = [
   'web/test/cursor.test.mjs',
   'web/src/lib/mesh.js',
   'web/src/lib/clock.js',
-  'web/test/clock.test.mjs',
-  'web/docs/shots/wii-menu-live.png'
+  'web/test/clock.test.mjs'
 ];
 
 // Everything else the skin touches, as the edit that takes it back out.
@@ -314,8 +313,6 @@ const TRANSFORMS = [
       + 'default for a fresh install — big rounded panels, one bright accent, text sized to be read from across\n'
       + 'a room. The functional rebuild underneath is the same as `main`; the light and dark themes are still\n'
       + 'there if you prefer them.\n'
-      + '\n'
-      + '![The channel menu](web/docs/shots/wii-menu-live.png)\n'
       + '\n',
     replace: ''
   },
