@@ -39,6 +39,15 @@ html.sd-app form#idForm { visibility: hidden !important; }
   overflow: hidden;
 }
 #sd-root * { box-sizing: border-box; }
+/* The app's own stylesheets reach into this tree, and they carry a font family for
+   their own headings - an h3 inside a rebuilt card computed Arial. Form controls
+   do not inherit a font from their parent at all, so every rebuilt <button
+   class="sd-action"> / <button class="sd-iconbtn"> and every checkbox drew in the
+   UA's own face. One rule at id strength pins the family the theme set on
+   #sd-root; :is() keeps it at element weight, so a component that means to be
+   monospace (the code and address styles) still outranks it by class. */
+#sd-root :is(a, button, input, select, textarea, option, label, p, span, div, li, td, th,
+  h1, h2, h3, h4, h5, h6, small, strong, em, b, i, time) { font-family: inherit; }
 /* The two columns are pinned rather than left to flow order. An empty rail is
    `display: none` (a print window has none), which removes it from the grid — and
    then `.sd-main` became the first grid item, landing in the `auto` column and
