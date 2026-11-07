@@ -45,9 +45,16 @@ html.sd-app form#idForm { visibility: hidden !important; }
    class="sd-action"> / <button class="sd-iconbtn"> and every checkbox drew in the
    UA's own face. One rule at id strength pins the family the theme set on
    #sd-root; :is() keeps it at element weight, so a component that means to be
-   monospace (the code and address styles) still outranks it by class. */
+   monospace (the code and address styles) still outranks it by class.
+
+   `i` is deliberately not in the list. Every <i> in this tree is a Font Awesome
+   glyph borrowed from the app (the rail's nav icons, the channel menu's), and Font
+   Awesome *is* its font-family: pinning them to the theme family at id strength
+   beat the app's own `.fa-solid` rule, so the codepoint painted as a missing-glyph
+   box in the middle of a rail. They keep the classes' family, exactly as the app's
+   own sidebar does. */
 #sd-root :is(a, button, input, select, textarea, option, label, p, span, div, li, td, th,
-  h1, h2, h3, h4, h5, h6, small, strong, em, b, i, time) { font-family: inherit; }
+  h1, h2, h3, h4, h5, h6, small, strong, em, b, time) { font-family: inherit; }
 /* The two columns are pinned rather than left to flow order. An empty rail is
    `display: none` (a print window has none), which removes it from the grid — and
    then `.sd-main` became the first grid item, landing in the `auto` column and
