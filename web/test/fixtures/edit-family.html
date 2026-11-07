@@ -80,10 +80,10 @@
                 <tr><td>City</td><td><input id="city" name="city" type="text" value="Springfield"></td></tr>
                 <tr><td>State</td><td><select id="state" name="state"><option value="CA">California</option><option value="NY" selected>New York</option></select></td></tr>
                 <tr><td>ZIP</td><td><input id="zip" name="zip" type="text" value="10001"></td></tr>
-                <tr><td>Home Phone</td><td><input name="phone1_label" type="hidden" value="Home"><input id="phone1" class="masked" name="phone1" type="text" value="(555) 010-2000"></td></tr>
-                <tr><td>Home Phone</td><td><input name="phone2_label" type="hidden" value=""><input id="phone2" class="masked" name="phone2" type="text" value=""></td></tr>
-                <tr><td>Home Phone</td><td><input name="phone3_label" type="hidden" value=""><input id="phone3" class="masked" name="phone3" type="text" value=""></td></tr>
-                <tr><td>Email Reset Password</td><td><input id="email" name="email" type="text" value="dana@example.com"></td></tr>
+                <tr><td><select name="phone1_label"><option value="">Select Phone Type</option><option value="Home" selected>Home Phone</option><option value="Mom Cell">Mom Cell</option><option value="Phone 1">Phone 1</option><option value="Dad Cell">Dad Cell</option><option value="Phone 2">Phone 2</option><option value="Student Cell">Student Cell</option><option value="Nanny/Babysitter">Nanny/Babysitter</option><option value="Phone 3">Phone 3</option><option value="Work Phone">Work Phone</option></select></td><td><input id="phone1" class="masked" name="phone1" type="text" value="(555) 010-2000"></td></tr>
+                <tr><td><input type="hidden" name="phone2_label" value=""><span class="link" onclick="StudioDir.DynaLoad.editPhoneLabel(this, '4401', 2);">Select Phone Type</span></td><td><input id="phone2" class="masked" name="phone2" type="text" value=""></td></tr>
+                <tr><td><input type="hidden" name="phone3_label" value=""><span class="link" onclick="StudioDir.DynaLoad.editPhoneLabel(this, '4401', 3);">Select Phone Type</span></td><td><input id="phone3" class="masked" name="phone3" type="text" value=""></td></tr>
+                <tr><td>Email <span style="margin-right:10px"></span><a class="BtnOutln" href="#" onclick="StudioDir.resetPassword();">Reset Password</a></td><td><input id="email" name="email" type="text" value="dana@example.com"></td></tr>
                 <tr><td>More Emails (comma separated list)</td><td><input id="extra_emails" name="extra_emails" type="text" value=""></td></tr>
                 <tr><td>Opt-out of emails</td><td><select id="opt_out" name="opt_out"><option value="0">No</option><option value="1" selected>Yes</option></select></td></tr>
                 <tr><td>Emergency Contact (other than parents)</td><td><input id="emergency_contact" name="emergency_contact" type="text" value="Sam Rivera"></td></tr>

@@ -27,17 +27,26 @@ const PAGES = [
   { fixture: 'report-roster.html', out: 'demo/report.html', title: 'report filters' },
   { fixture: 'report-results.html', out: 'demo/report-results.html', title: 'report results' },
   { fixture: 'sheet-perf.html', out: 'demo/sheet-perf.html', title: 'performance and costumes' },
-  // Record page: no standalone demo (the rebuilt app defers to the app here),
-  // but it does get a live page to prove that deferral end to end.
+  // Record pages: the rebuilt app defers these to its own editor, so most have no
+  // demo. Edit Family gets one because the style guide frames it as the "Edit page"
+  // screen — read by the same readers, with placeholder values from the capture.
+  // The URL matters as much as the markup: a record page is only read as an
+  // editor when the address says it is one, so the demo carries the address the
+  // fixture was captured on instead of its own file:// URL.
   { fixture: 'edit-class.html', out: null, title: 'edit class' },
-  { fixture: 'edit-family.html', out: null, title: 'edit family' },
+  {
+    fixture: 'edit-family.html',
+    out: 'demo/edit-family.html',
+    title: 'edit family',
+    url: 'https://app.thestudiodirector.com/studio1/admin.sd?page=EditFamily&fident=1782910697458'
+  },
   { fixture: 'edit-student.html', out: null, title: 'edit student' }
 ];
 
 const inert = (name) => fs.readFileSync(path.join(root, 'test/fixtures', name), 'utf8')
   .replace(/<\/script/gi, '<\\/script');
 
-function pageHtml(fixture, title) {
+function pageHtml(fixture, title, url) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,10 +59,13 @@ function pageHtml(fixture, title) {
 </head>
 <body>
 <!-- The page the adapters parse. Inert: never executed, never rendered. -->
-<script type="text/plain" id="source-page">${inert(fixture)}</script>
+<script type="text/plain" id="source-page">${inert(fixture)}</script>${url ? '\n<script type="text/plain" id="source-url">' + url + '</script>' : ''}
 <script>${bundle.replace(/<\/script/gi, '<\\/script')}</script>
 <script>
-  var model = SD.modelFromHtml(document.getElementById('source-page').textContent, location.href);
+  var model = SD.modelFromHtml(
+    document.getElementById('source-page').textContent,
+    (document.getElementById('source-url') || {}).textContent || location.href
+  );
   SD.mount({
     model: model,
     state: model.view ? 'ready' : 'none',
@@ -246,15 +258,15 @@ const MODELS = [
   { out: 'demo/screen-attendance.html', title: 'attendance', model: ATTENDANCE }
 ];
 
-const emit = (out, fixture, title) => {
-  const html = pageHtml(fixture, title);
+const emit = (out, fixture, title, url) => {
+  const html = pageHtml(fixture, title, url);
   fs.writeFileSync(path.join(root, out), html);
   console.log(out, html.length, 'bytes');
 };
 
 for (const page of PAGES) {
   if (!page.out) continue;
-  emit(page.out, page.fixture, page.title);
+  emit(page.out, page.fixture, page.title, page.url);
 }
 
 for (const page of MODELS) {

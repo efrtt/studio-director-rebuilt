@@ -80,8 +80,17 @@ function labelledRows(d) {
       if (tr.closest('table') !== table) continue;
       const cells = Array.from(tr.children || []).filter((c) => c.tagName === 'TD');
       if (cells.length < 2) continue;
-      const label = (cells[0].textContent || '').replace(/\s+/g, ' ').trim();
-      if (!label) continue;
+      // The cell's own words, without a button that may sit beside them (Edit
+      // Family prints its Reset Password control in the email row's label cell).
+      const labelCell = cells[0].cloneNode(true);
+      for (const el of Array.from(labelCell.querySelectorAll('a, button, span[onclick]'))) el.remove();
+      const label = (labelCell.textContent || '').replace(/\s+/g, ' ').trim();
+      // A row whose label cell is itself a control — a phone's type select — is
+      // named by the reader from that control, so only its count is compared.
+      const choice = !!cells[0].querySelector('input, select, textarea');
+      // A choice row has no words of its own (the converted phone rows carry only
+      // a hidden input and its link), so it is counted even with an empty label.
+      if (!label && !choice) continue;
       // A control the reader is right to refuse is not a row the model owes: an
       // empty select is filled in by the app's own script (the class editor's
       // `dates__select`), and `name="-"` is its placeholder helper input.
@@ -90,7 +99,7 @@ function labelledRows(d) {
         .filter((el) => !(el.tagName === 'SELECT' && !el.querySelector('option')))
         .filter((el) => (el.getAttribute('name') || '') !== '-');
       if (!controls.length) continue;
-      rows.push({ label, controls });
+      rows.push({ label, controls, choice });
     }
   }
   return rows;
@@ -214,6 +223,7 @@ for (const file of files) {
       assert.equal(form.rows.length, rows.length,
         'an editor prints one row per labelled row of its form tables');
       for (const row of rows) {
+        if (row.choice) continue;
         assert.ok(form.rows.some((printed) => printed.label === row.label),
           'the editor prints the row "' + row.label + '" the capture has');
       }

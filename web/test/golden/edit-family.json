@@ -103,6 +103,70 @@
       },
       {
         "checked": null,
+        "compact": true,
+        "id": null,
+        "key": "name:phone1_label",
+        "label": null,
+        "masked": false,
+        "name": "phone1_label",
+        "options": [
+          {
+            "label": "Select Phone Type",
+            "selected": false,
+            "value": ""
+          },
+          {
+            "label": "Home Phone",
+            "selected": true,
+            "value": "Home"
+          },
+          {
+            "label": "Mom Cell",
+            "selected": false,
+            "value": "Mom Cell"
+          },
+          {
+            "label": "Phone 1",
+            "selected": false,
+            "value": "Phone 1"
+          },
+          {
+            "label": "Dad Cell",
+            "selected": false,
+            "value": "Dad Cell"
+          },
+          {
+            "label": "Phone 2",
+            "selected": false,
+            "value": "Phone 2"
+          },
+          {
+            "label": "Student Cell",
+            "selected": false,
+            "value": "Student Cell"
+          },
+          {
+            "label": "Nanny/Babysitter",
+            "selected": false,
+            "value": "Nanny/Babysitter"
+          },
+          {
+            "label": "Phone 3",
+            "selected": false,
+            "value": "Phone 3"
+          },
+          {
+            "label": "Work Phone",
+            "selected": false,
+            "value": "Work Phone"
+          }
+        ],
+        "selector": "[name=\"phone1_label\"]",
+        "type": "select",
+        "value": "Home"
+      },
+      {
+        "checked": null,
         "id": "phone1",
         "key": "phone1",
         "label": null,
@@ -115,6 +179,60 @@
       },
       {
         "checked": null,
+        "compact": true,
+        "id": null,
+        "key": "name:phone2_label",
+        "label": null,
+        "masked": false,
+        "name": "phone2_label",
+        "options": [
+          {
+            "label": "Select Phone Type",
+            "value": ""
+          },
+          {
+            "label": "Home Phone",
+            "value": "Home"
+          },
+          {
+            "label": "Mom Cell",
+            "value": "Mom Cell"
+          },
+          {
+            "label": "Phone 1",
+            "value": "Phone 1"
+          },
+          {
+            "label": "Dad Cell",
+            "value": "Dad Cell"
+          },
+          {
+            "label": "Phone 2",
+            "value": "Phone 2"
+          },
+          {
+            "label": "Student Cell",
+            "value": "Student Cell"
+          },
+          {
+            "label": "Nanny/Babysitter",
+            "value": "Nanny/Babysitter"
+          },
+          {
+            "label": "Phone 3",
+            "value": "Phone 3"
+          },
+          {
+            "label": "Work Phone",
+            "value": "Work Phone"
+          }
+        ],
+        "selector": "[name=\"phone2_label\"]",
+        "type": "select",
+        "value": ""
+      },
+      {
+        "checked": null,
         "id": "phone2",
         "key": "phone2",
         "label": null,
@@ -123,6 +241,60 @@
         "options": null,
         "selector": "#phone2",
         "type": "text",
+        "value": ""
+      },
+      {
+        "checked": null,
+        "compact": true,
+        "id": null,
+        "key": "name:phone3_label",
+        "label": null,
+        "masked": false,
+        "name": "phone3_label",
+        "options": [
+          {
+            "label": "Select Phone Type",
+            "value": ""
+          },
+          {
+            "label": "Home Phone",
+            "value": "Home"
+          },
+          {
+            "label": "Mom Cell",
+            "value": "Mom Cell"
+          },
+          {
+            "label": "Phone 1",
+            "value": "Phone 1"
+          },
+          {
+            "label": "Dad Cell",
+            "value": "Dad Cell"
+          },
+          {
+            "label": "Phone 2",
+            "value": "Phone 2"
+          },
+          {
+            "label": "Student Cell",
+            "value": "Student Cell"
+          },
+          {
+            "label": "Nanny/Babysitter",
+            "value": "Nanny/Babysitter"
+          },
+          {
+            "label": "Phone 3",
+            "value": "Phone 3"
+          },
+          {
+            "label": "Work Phone",
+            "value": "Work Phone"
+          }
+        ],
+        "selector": "[name=\"phone3_label\"]",
+        "type": "select",
         "value": ""
       },
       {
@@ -436,6 +608,70 @@
         "fields": [
           {
             "checked": null,
+            "compact": true,
+            "id": null,
+            "key": "name:phone1_label",
+            "label": null,
+            "masked": false,
+            "name": "phone1_label",
+            "options": [
+              {
+                "label": "Select Phone Type",
+                "selected": false,
+                "value": ""
+              },
+              {
+                "label": "Home Phone",
+                "selected": true,
+                "value": "Home"
+              },
+              {
+                "label": "Mom Cell",
+                "selected": false,
+                "value": "Mom Cell"
+              },
+              {
+                "label": "Phone 1",
+                "selected": false,
+                "value": "Phone 1"
+              },
+              {
+                "label": "Dad Cell",
+                "selected": false,
+                "value": "Dad Cell"
+              },
+              {
+                "label": "Phone 2",
+                "selected": false,
+                "value": "Phone 2"
+              },
+              {
+                "label": "Student Cell",
+                "selected": false,
+                "value": "Student Cell"
+              },
+              {
+                "label": "Nanny/Babysitter",
+                "selected": false,
+                "value": "Nanny/Babysitter"
+              },
+              {
+                "label": "Phone 3",
+                "selected": false,
+                "value": "Phone 3"
+              },
+              {
+                "label": "Work Phone",
+                "selected": false,
+                "value": "Work Phone"
+              }
+            ],
+            "selector": "[name=\"phone1_label\"]",
+            "type": "select",
+            "value": "Home"
+          },
+          {
+            "checked": null,
             "id": "phone1",
             "key": "phone1",
             "label": null,
@@ -453,6 +689,60 @@
         "fields": [
           {
             "checked": null,
+            "compact": true,
+            "id": null,
+            "key": "name:phone2_label",
+            "label": null,
+            "masked": false,
+            "name": "phone2_label",
+            "options": [
+              {
+                "label": "Select Phone Type",
+                "value": ""
+              },
+              {
+                "label": "Home Phone",
+                "value": "Home"
+              },
+              {
+                "label": "Mom Cell",
+                "value": "Mom Cell"
+              },
+              {
+                "label": "Phone 1",
+                "value": "Phone 1"
+              },
+              {
+                "label": "Dad Cell",
+                "value": "Dad Cell"
+              },
+              {
+                "label": "Phone 2",
+                "value": "Phone 2"
+              },
+              {
+                "label": "Student Cell",
+                "value": "Student Cell"
+              },
+              {
+                "label": "Nanny/Babysitter",
+                "value": "Nanny/Babysitter"
+              },
+              {
+                "label": "Phone 3",
+                "value": "Phone 3"
+              },
+              {
+                "label": "Work Phone",
+                "value": "Work Phone"
+              }
+            ],
+            "selector": "[name=\"phone2_label\"]",
+            "type": "select",
+            "value": ""
+          },
+          {
+            "checked": null,
             "id": "phone2",
             "key": "phone2",
             "label": null,
@@ -464,10 +754,64 @@
             "value": ""
           }
         ],
-        "label": "Home Phone"
+        "label": "Select Phone Type"
       },
       {
         "fields": [
+          {
+            "checked": null,
+            "compact": true,
+            "id": null,
+            "key": "name:phone3_label",
+            "label": null,
+            "masked": false,
+            "name": "phone3_label",
+            "options": [
+              {
+                "label": "Select Phone Type",
+                "value": ""
+              },
+              {
+                "label": "Home Phone",
+                "value": "Home"
+              },
+              {
+                "label": "Mom Cell",
+                "value": "Mom Cell"
+              },
+              {
+                "label": "Phone 1",
+                "value": "Phone 1"
+              },
+              {
+                "label": "Dad Cell",
+                "value": "Dad Cell"
+              },
+              {
+                "label": "Phone 2",
+                "value": "Phone 2"
+              },
+              {
+                "label": "Student Cell",
+                "value": "Student Cell"
+              },
+              {
+                "label": "Nanny/Babysitter",
+                "value": "Nanny/Babysitter"
+              },
+              {
+                "label": "Phone 3",
+                "value": "Phone 3"
+              },
+              {
+                "label": "Work Phone",
+                "value": "Work Phone"
+              }
+            ],
+            "selector": "[name=\"phone3_label\"]",
+            "type": "select",
+            "value": ""
+          },
           {
             "checked": null,
             "id": "phone3",
@@ -481,9 +825,17 @@
             "value": ""
           }
         ],
-        "label": "Home Phone"
+        "label": "Select Phone Type"
       },
       {
+        "action": {
+          "exact": true,
+          "href": "#",
+          "id": "",
+          "js": true,
+          "label": "Reset Password",
+          "onclick": "StudioDir.resetPassword();"
+        },
         "fields": [
           {
             "checked": null,
@@ -498,7 +850,7 @@
             "value": "dana@example.com"
           }
         ],
-        "label": "Email Reset Password"
+        "label": "Email"
       },
       {
         "fields": [
@@ -908,6 +1260,70 @@
         },
         {
           "checked": null,
+          "compact": true,
+          "id": null,
+          "key": "name:phone1_label",
+          "label": null,
+          "masked": false,
+          "name": "phone1_label",
+          "options": [
+            {
+              "label": "Select Phone Type",
+              "selected": false,
+              "value": ""
+            },
+            {
+              "label": "Home Phone",
+              "selected": true,
+              "value": "Home"
+            },
+            {
+              "label": "Mom Cell",
+              "selected": false,
+              "value": "Mom Cell"
+            },
+            {
+              "label": "Phone 1",
+              "selected": false,
+              "value": "Phone 1"
+            },
+            {
+              "label": "Dad Cell",
+              "selected": false,
+              "value": "Dad Cell"
+            },
+            {
+              "label": "Phone 2",
+              "selected": false,
+              "value": "Phone 2"
+            },
+            {
+              "label": "Student Cell",
+              "selected": false,
+              "value": "Student Cell"
+            },
+            {
+              "label": "Nanny/Babysitter",
+              "selected": false,
+              "value": "Nanny/Babysitter"
+            },
+            {
+              "label": "Phone 3",
+              "selected": false,
+              "value": "Phone 3"
+            },
+            {
+              "label": "Work Phone",
+              "selected": false,
+              "value": "Work Phone"
+            }
+          ],
+          "selector": "[name=\"phone1_label\"]",
+          "type": "select",
+          "value": "Home"
+        },
+        {
+          "checked": null,
           "id": "phone1",
           "key": "phone1",
           "label": null,
@@ -920,6 +1336,60 @@
         },
         {
           "checked": null,
+          "compact": true,
+          "id": null,
+          "key": "name:phone2_label",
+          "label": null,
+          "masked": false,
+          "name": "phone2_label",
+          "options": [
+            {
+              "label": "Select Phone Type",
+              "value": ""
+            },
+            {
+              "label": "Home Phone",
+              "value": "Home"
+            },
+            {
+              "label": "Mom Cell",
+              "value": "Mom Cell"
+            },
+            {
+              "label": "Phone 1",
+              "value": "Phone 1"
+            },
+            {
+              "label": "Dad Cell",
+              "value": "Dad Cell"
+            },
+            {
+              "label": "Phone 2",
+              "value": "Phone 2"
+            },
+            {
+              "label": "Student Cell",
+              "value": "Student Cell"
+            },
+            {
+              "label": "Nanny/Babysitter",
+              "value": "Nanny/Babysitter"
+            },
+            {
+              "label": "Phone 3",
+              "value": "Phone 3"
+            },
+            {
+              "label": "Work Phone",
+              "value": "Work Phone"
+            }
+          ],
+          "selector": "[name=\"phone2_label\"]",
+          "type": "select",
+          "value": ""
+        },
+        {
+          "checked": null,
           "id": "phone2",
           "key": "phone2",
           "label": null,
@@ -928,6 +1398,60 @@
           "options": null,
           "selector": "#phone2",
           "type": "text",
+          "value": ""
+        },
+        {
+          "checked": null,
+          "compact": true,
+          "id": null,
+          "key": "name:phone3_label",
+          "label": null,
+          "masked": false,
+          "name": "phone3_label",
+          "options": [
+            {
+              "label": "Select Phone Type",
+              "value": ""
+            },
+            {
+              "label": "Home Phone",
+              "value": "Home"
+            },
+            {
+              "label": "Mom Cell",
+              "value": "Mom Cell"
+            },
+            {
+              "label": "Phone 1",
+              "value": "Phone 1"
+            },
+            {
+              "label": "Dad Cell",
+              "value": "Dad Cell"
+            },
+            {
+              "label": "Phone 2",
+              "value": "Phone 2"
+            },
+            {
+              "label": "Student Cell",
+              "value": "Student Cell"
+            },
+            {
+              "label": "Nanny/Babysitter",
+              "value": "Nanny/Babysitter"
+            },
+            {
+              "label": "Phone 3",
+              "value": "Phone 3"
+            },
+            {
+              "label": "Work Phone",
+              "value": "Work Phone"
+            }
+          ],
+          "selector": "[name=\"phone3_label\"]",
+          "type": "select",
           "value": ""
         },
         {
@@ -1241,6 +1765,70 @@
           "fields": [
             {
               "checked": null,
+              "compact": true,
+              "id": null,
+              "key": "name:phone1_label",
+              "label": null,
+              "masked": false,
+              "name": "phone1_label",
+              "options": [
+                {
+                  "label": "Select Phone Type",
+                  "selected": false,
+                  "value": ""
+                },
+                {
+                  "label": "Home Phone",
+                  "selected": true,
+                  "value": "Home"
+                },
+                {
+                  "label": "Mom Cell",
+                  "selected": false,
+                  "value": "Mom Cell"
+                },
+                {
+                  "label": "Phone 1",
+                  "selected": false,
+                  "value": "Phone 1"
+                },
+                {
+                  "label": "Dad Cell",
+                  "selected": false,
+                  "value": "Dad Cell"
+                },
+                {
+                  "label": "Phone 2",
+                  "selected": false,
+                  "value": "Phone 2"
+                },
+                {
+                  "label": "Student Cell",
+                  "selected": false,
+                  "value": "Student Cell"
+                },
+                {
+                  "label": "Nanny/Babysitter",
+                  "selected": false,
+                  "value": "Nanny/Babysitter"
+                },
+                {
+                  "label": "Phone 3",
+                  "selected": false,
+                  "value": "Phone 3"
+                },
+                {
+                  "label": "Work Phone",
+                  "selected": false,
+                  "value": "Work Phone"
+                }
+              ],
+              "selector": "[name=\"phone1_label\"]",
+              "type": "select",
+              "value": "Home"
+            },
+            {
+              "checked": null,
               "id": "phone1",
               "key": "phone1",
               "label": null,
@@ -1258,6 +1846,60 @@
           "fields": [
             {
               "checked": null,
+              "compact": true,
+              "id": null,
+              "key": "name:phone2_label",
+              "label": null,
+              "masked": false,
+              "name": "phone2_label",
+              "options": [
+                {
+                  "label": "Select Phone Type",
+                  "value": ""
+                },
+                {
+                  "label": "Home Phone",
+                  "value": "Home"
+                },
+                {
+                  "label": "Mom Cell",
+                  "value": "Mom Cell"
+                },
+                {
+                  "label": "Phone 1",
+                  "value": "Phone 1"
+                },
+                {
+                  "label": "Dad Cell",
+                  "value": "Dad Cell"
+                },
+                {
+                  "label": "Phone 2",
+                  "value": "Phone 2"
+                },
+                {
+                  "label": "Student Cell",
+                  "value": "Student Cell"
+                },
+                {
+                  "label": "Nanny/Babysitter",
+                  "value": "Nanny/Babysitter"
+                },
+                {
+                  "label": "Phone 3",
+                  "value": "Phone 3"
+                },
+                {
+                  "label": "Work Phone",
+                  "value": "Work Phone"
+                }
+              ],
+              "selector": "[name=\"phone2_label\"]",
+              "type": "select",
+              "value": ""
+            },
+            {
+              "checked": null,
               "id": "phone2",
               "key": "phone2",
               "label": null,
@@ -1269,10 +1911,64 @@
               "value": ""
             }
           ],
-          "label": "Home Phone"
+          "label": "Select Phone Type"
         },
         {
           "fields": [
+            {
+              "checked": null,
+              "compact": true,
+              "id": null,
+              "key": "name:phone3_label",
+              "label": null,
+              "masked": false,
+              "name": "phone3_label",
+              "options": [
+                {
+                  "label": "Select Phone Type",
+                  "value": ""
+                },
+                {
+                  "label": "Home Phone",
+                  "value": "Home"
+                },
+                {
+                  "label": "Mom Cell",
+                  "value": "Mom Cell"
+                },
+                {
+                  "label": "Phone 1",
+                  "value": "Phone 1"
+                },
+                {
+                  "label": "Dad Cell",
+                  "value": "Dad Cell"
+                },
+                {
+                  "label": "Phone 2",
+                  "value": "Phone 2"
+                },
+                {
+                  "label": "Student Cell",
+                  "value": "Student Cell"
+                },
+                {
+                  "label": "Nanny/Babysitter",
+                  "value": "Nanny/Babysitter"
+                },
+                {
+                  "label": "Phone 3",
+                  "value": "Phone 3"
+                },
+                {
+                  "label": "Work Phone",
+                  "value": "Work Phone"
+                }
+              ],
+              "selector": "[name=\"phone3_label\"]",
+              "type": "select",
+              "value": ""
+            },
             {
               "checked": null,
               "id": "phone3",
@@ -1286,9 +1982,17 @@
               "value": ""
             }
           ],
-          "label": "Home Phone"
+          "label": "Select Phone Type"
         },
         {
+          "action": {
+            "exact": true,
+            "href": "#",
+            "id": "",
+            "js": true,
+            "label": "Reset Password",
+            "onclick": "StudioDir.resetPassword();"
+          },
           "fields": [
             {
               "checked": null,
@@ -1303,7 +2007,7 @@
               "value": "dana@example.com"
             }
           ],
-          "label": "Email Reset Password"
+          "label": "Email"
         },
         {
           "fields": [

@@ -207,10 +207,12 @@ export function readForm(doc, opts = {}) {
 // and the copy fetched only when there is no form: one request less, and the
 // tree that is read is the tree the edits are written into.
 //
-// Do not expect this to change a field count. EditFamily reports 19 fields
-// because it has 19 editable controls: its three phone-type values arrive as
-// `input[type=hidden]`, which this reader drops. The live page said so row by
-// row; see the note in docs/rebuild-plan.md.
+// Do not expect this to change a field count. EditFamily reports 22 fields
+// because it has 22 editable controls: the 19 in its value cells, and the three
+// phone-type choices the app prints in each phone row's *label* cell (a select,
+// or a hidden input beside the "Select Phone Type" link once its own JS has
+// converted the row). `model/rows.js` reads those with the row, not with the
+// value cell; see the note in docs/rebuild-plan.md.
 export function hasForm(doc) {
   return !!readForm(doc);
 }

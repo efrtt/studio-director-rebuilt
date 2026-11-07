@@ -330,7 +330,8 @@
         {#each form.rows as row}
           <tr>
             <th scope="row">{row.label}</th>
-            <td>
+            <td class:sd-fieldcell--withaction={!!row.action}>
+              <div class="sd-fieldline">
               {#each row.fields as field}
                 {#if field.type === 'checkbox'}
                   <label class="sd-check">
@@ -338,7 +339,12 @@
                     <span>{field.label || field.name || field.key}</span>
                   </label>
                 {:else if field.options}
-                  <select bind:value={values[field.key]} class="sd-input">
+                  <select
+                    bind:value={values[field.key]}
+                    class="sd-input"
+                    class:sd-input--compact={field.compact}
+                    title={field.compact ? row.label : undefined}
+                  >
                     {#each field.options as option}
                       <option value={option.value}>{option.label}</option>
                     {/each}
@@ -351,6 +357,18 @@
                   <input class="sd-input" type="text" bind:value={values[field.key]} />
                 {/if}
               {/each}
+              <!-- A button the app prints beside a field — Edit Family's Reset
+                   Password — pressed where it stands, never rebuilt as a call. -->
+              {#if row.action}
+                <button
+                  class="sd-btn sd-btn--icon"
+                  type="button"
+                  title={row.action.label}
+                  aria-label={row.action.label}
+                  on:click={() => onAction && onAction(row.action)}
+                ><span class="sd-icon sd-icon--key" aria-hidden="true"></span></button>
+              {/if}
+              </div>
             </td>
           </tr>
         {/each}

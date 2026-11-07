@@ -28,6 +28,7 @@
 import { qsa, textOf } from '../lib/shell.js';
 import { controlsIn, CONTROLS } from './controls.js';
 import { rowLabel } from './labels.js';
+import { valueOfControl } from './fields.js';
 
 export { CONTROLS };
 
@@ -126,6 +127,28 @@ export function fieldsIn(cell, doc, rowLabel) {
   return { fields, shown, passed };
 }
 
+// What a row is called, and what its label cell carries besides the name.
+//
+// The name is the row's first cell of plain text (`model/labels.js`); a row whose
+// label cell is itself a control — a phone's type select — is named by the choice
+// it holds, and a row that prints a button there is named without it: "Email Reset
+// Password" is the email field, with the button beside it. Both readers below use
+// this, so a row cannot be named one way by the editor and another by the totals.
+function nameOfRow(tr, table) {
+  const cells = rowCells(tr, table);
+  const extra = rowExtras(cells[0], tr.ownerDocument);
+  // A label cell that holds a control has no name of its own: a select's text is
+  // the whole option list, and a hidden input beside its link is plumbing. Such a
+  // row is named by the choice it holds instead.
+  const hasControl = !!(cells[0] && cells[0].querySelector && cells[0].querySelector('select, input, textarea'));
+  let label = hasControl ? '' : rowLabel(tr);
+  if (extra.action && label) {
+    label = label.replace(extra.action.label, '').replace(/[-:\s]+$/, '').trim() || label;
+  }
+  if (!label) label = extra.label;
+  return { label, extra };
+}
+
 // The cells of one row *of this table*: a field can contain a nested table (the
 // weekday checkboxes live in one), and its rows would otherwise be read a second
 // time as fields of their own, with no label. Every reader that splits a row
@@ -148,7 +171,7 @@ export function labelledRows(table) {
   for (const tr of qsa(table, 'tr')) {
     const cells = rowCells(tr, table);
     if (cells.length < 2) continue;
-    rows.push({ label: textOf(cells[0]).slice(0, 120), cell: cells[1] });
+    rows.push({ label: nameOfRow(tr, table).label, cell: cells[1] });
   }
   return rows;
 }
@@ -186,6 +209,104 @@ export function isValueTable(read) {
   return rows.length > 0 && rows.every((row) => isValueRow(row));
 }
 
+// A row can name itself with a control, and can carry a button of its own.
+//
+// A phone row prints its type in the label cell: a select whose name ends in
+// `_label`, or — after the app's own JS has run — a hidden input of that name
+// beside a "Select Phone Type" link. The email row prints its Reset Password
+// button there. Neither is a field of the value cell, so neither was read, and
+// the phone type arrived as the words of a link the reader could not type into.
+const LABEL_CONTROL = 'select[name$="_label"], input[name$="_label"]';
+
+// The app's ten phone types, in its own order, with the codes it submits —
+// captured from the live select in `editor-family.html`. Once the app's own JS has
+// converted a row, the select is gone (`StudioDir.DynaLoad.editPhoneLabel`
+// replaces it) and only the hidden value is left, so the list cannot be read from
+// the page at all. A type you can read but not choose is the gap this closes.
+const PHONE_TYPES = [
+  { value: '0', label: 'Select Phone Type' },
+  { value: '4', label: 'Home Phone' },
+  { value: '6', label: 'Mom Cell' },
+  { value: '7', label: 'Phone 1' },
+  { value: '8', label: 'Dad Cell' },
+  { value: '9', label: 'Phone 2' },
+  { value: '2', label: 'Student Cell' },
+  { value: '1', label: 'Nanny/Babysitter' },
+  { value: '3', label: 'Phone 3' },
+  { value: '5', label: 'Work Phone' }
+];
+
+// The option list a phone type offers: the row's own select when it still has
+// one, the page's when a sibling row does, and the app's vocabulary otherwise.
+function labelOptions(el, doc) {
+  const own = el.tagName === 'SELECT' ? qsa(el, 'option') : [];
+  const source = own.length ? own : qsa(doc, 'select[name$="_label"] option');
+  if (!source.length) return PHONE_TYPES.map((option) => ({ ...option }));
+  return source.map((option) => ({
+    value: option.getAttribute('value') != null ? option.getAttribute('value') : textOf(option),
+    label: textOf(option)
+  }));
+}
+
+// What a row says about itself outside its value cell: the choice that names it,
+// and the button it offers. `el` is the choice control, so coverage can count it
+// as read rather than reporting it as a control nobody looked at.
+export function rowExtras(cell, doc) {
+  const out = { field: null, label: '', action: null, el: null };
+  if (!cell || !cell.querySelector) return out;
+
+  const type = cell.querySelector(LABEL_CONTROL);
+  if (type) {
+    const name = type.getAttribute('name') || '';
+    // Read the control the way every other reader does: a select's value is its
+    // chosen option (its first when none is marked), a converted row's value is
+    // the hidden input's own.
+    const read = type.tagName === 'SELECT' ? valueOfControl(type) : null;
+    const options = read ? read.options : labelOptions(type, doc);
+    const value = read ? read.value : (type.getAttribute('value') || '');
+    const chosen = options.find((option) => String(option.value) === String(value));
+    out.el = type;
+    out.label = chosen ? chosen.label : (options[0] ? options[0].label : '');
+    if (name && options.length) {
+      const id = type.getAttribute('id');
+      out.field = {
+        // The same address rule as `model/controls.js`: an id when the app gives
+        // one, the name otherwise.
+        key: id || 'name:' + name,
+        selector: '[name="' + name + '"]',
+        id: id || null,
+        name,
+        type: 'select',
+        label: null,
+        value,
+        checked: null,
+        options,
+        masked: false,
+        // A type control is narrow: it sits on the line with the value it names.
+        compact: true
+      };
+    }
+  }
+
+  // The row's own button, by the app's wording. It is pressed where it stands
+  // (`model/press.js`), so the handler is what identifies it: this page's anchor
+  // lives inside the form table, where a label match deliberately refuses to look.
+  const button = Array.from(cell.querySelectorAll('a, button, span[onclick], div[onclick]'))
+    .find((el) => /^reset\s*password$/i.test(textOf(el)));
+  if (button) {
+    out.action = {
+      label: textOf(button),
+      id: button.getAttribute('id') || '',
+      href: button.getAttribute('href') || '',
+      js: true,
+      exact: true,
+      onclick: (button.getAttribute('onclick') || '').trim()
+    };
+  }
+
+  return out;
+}
+
 export function rowsOf(table) {
   const rows = [];
   const shown = [];
@@ -204,7 +325,7 @@ export function rowsOf(table) {
     // first cell that is text and holds no control. It is the same rule the
     // settings card uses for a control; here it names the whole row, so a row
     // whose controls sit in a nested table (the weekday boxes) still gets named.
-    const label = rowLabel(tr);
+    const { label, extra } = nameOfRow(tr, table);
     // The app ends a record editor with its own id in a row that has no label:
     // <tr><td></td><td><input id="item_id" value="1792595222235"></td></tr>.
     // Measured live on EditClass (`cident`) and ManageInventoryItems
@@ -215,16 +336,21 @@ export function rowsOf(table) {
     // save writes only the fields that changed.
     if (!label) {
       passed.push(...qsa(cells[1], CONTROLS));
+      if (extra.el) passed.push(extra.el);
       continue;
     }
     const found = fieldsIn(cells[1], table.ownerDocument, label);
-    if (!found.fields.length) {
+    // The type control prints before the value it names, in the app's own order.
+    const fields = extra.field ? [extra.field, ...found.fields] : found.fields;
+    if (!fields.length) {
       passed.push(...found.passed);
+      if (extra.el) passed.push(extra.el);
       continue;
     }
 
-    rows.push({ label, fields: found.fields });
+    rows.push({ label, fields, ...(extra.action ? { action: extra.action } : {}) });
     shown.push(...found.shown);
+    if (extra.el) shown.push(extra.el);
     passed.push(...found.passed);
   }
   return { rows, shown, passed };
