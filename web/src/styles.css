@@ -897,9 +897,10 @@ a.sd-stat:hover { background: var(--panel-2); }
 /* `.sd-input` is a full-width column control; on a line it has to size to the
    line instead, or its 100% basis pushes everything after it to the next one. */
 .sd-fieldline > .sd-input { flex: 1 1 14em; width: auto; min-width: 0; max-width: 100%; }
-/* A button beside a field takes the room it needs and the field gives it up, so
-   both stay inside the content column instead of the button hanging off its edge. */
-.sd-fieldcell--withaction > .sd-fieldline > .sd-input { flex: 0 1 22em; }
+/* A button beside a field takes the room it needs and the field grows into the
+   rest, so the pair ends on the same edge as every other control in the column —
+   the button is always a square the field's own height, the field whatever is left. */
+.sd-fieldcell--withaction > .sd-fieldline > .sd-input { flex: 1 1 0; max-width: none; }
 /* A phone's type: as wide as its longest choice, not as wide as the column. */
 .sd-fieldline > .sd-input.sd-input--compact { flex: 0 0 auto; width: auto; min-width: 10em; max-width: 16em; }
 /* A square that holds one glyph. Scoped to the root so the later sizing block's
@@ -910,8 +911,10 @@ a.sd-stat:hover { background: var(--panel-2); }
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  width: 32px;
-  min-width: 32px;
+  /* Square, and as tall as the field it sits beside, so the pair reads as one
+     control and a row of them lines up with the column's own edges. */
+  width: var(--field-h);
+  min-width: var(--field-h);
   height: var(--field-h);
   padding: 0;
 }
@@ -1261,6 +1264,12 @@ html[data-sd-theme="light"] #sd-root .sd-block {
   box-shadow: var(--shadow-sm);
 }
 html[data-sd-theme="light"] #sd-root .sd-menu { box-shadow: var(--shadow-menu); }
+/* The editor's row rules are drawn in a dark ink so they read on the dark field.
+   On paper that same line is nearly black — a table of ruled boxes rather than a
+   form — so the theme derives it from its own hairline instead. */
+html[data-sd-theme="light"] #sd-root .sd-fields tr + tr > * {
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--line) 70%, transparent);
+}
 html[data-sd-theme="light"] #sd-root .sd-note--warn { border-color: var(--warn-line); }
 html[data-sd-theme="light"] #sd-root .sd-confirm-mark { background: var(--ok-soft); }
 html[data-sd-theme="light"] #sd-root .sd-confirm-card--bad .sd-confirm-mark { background: var(--danger-soft); }
