@@ -1,6 +1,6 @@
-// Regenerate `main` from `wii-skin`: one command instead of a hand strip.
+// Regenerate `main` from `fun-themes`: one command instead of a hand strip.
 //
-// The two lines are one tree. `wii-skin` carries the Wii skin; `main` is that tree
+// The two lines are one tree. `fun-themes` carries the Wii skin; `main` is that tree
 // with the skin taken out. Keeping that true by hand is how the two lines once
 // drifted 8,427 lines apart - each shared change had to be re-typed on the other
 // line, and every retype was a chance to lose a field. So the whole strip lives
@@ -13,13 +13,13 @@
 // who installed this line would be replaced by the skinned one), and the theme
 // list. Everything else comes across untouched.
 //
-// Usage, from the wii-skin checkout - the tool finds the main worktree itself:
+// Usage, from the fun-themes checkout - the tool finds the main worktree itself:
 //   npm run sync:main                 sync, strip, build, test, goldens
 //   npm run sync:main -- --check      report the difference, write nothing
 //   npm run sync:main -- --no-build   strip only
 //   npm run sync:main -- --force      the same, replacing uncommitted work
 //   npm run sync:main -- --in <path>  use that checkout of main
-//   npm run sync:main -- --from <ref> strip from another ref (default wii-skin)
+//   npm run sync:main -- --from <ref> strip from another ref (default fun-themes)
 //
 // It leaves the work staged in main's checkout and never commits or pushes: read
 // `git diff --cached` before you commit. Nothing is staged until after the build,
@@ -40,7 +40,7 @@ const opt = (name, fallback) => {
   return value && !value.startsWith('--') ? value : fallback;
 };
 
-const FROM = opt('from', 'wii-skin');
+const FROM = opt('from', 'fun-themes');
 const CHECK = flag('check');
 const BUILD = !flag('no-build');
 const FORCE = flag('force');
@@ -65,7 +65,7 @@ const SKIN_FILES = [
 const TRANSFORMS = [
   {
     file: 'web/package.json',
-    find: '"userscriptBranch": "wii-skin",',
+    find: '"userscriptBranch": "fun-themes",',
     replace: '"userscriptBranch": "main",'
   },
   {
@@ -78,7 +78,7 @@ const TRANSFORMS = [
     find: "// The Wii skin is a theme, not a second stylesheet: it is appended so a mount\n"
       + "// injects one <style> and the userscript stays one file with nothing to fetch.\n"
       + "import WII from '../wii.css?inline';",
-    replace: "// The Wii skin lives only on `wii-skin`: it is a theme of its own, carried there by\n"
+    replace: "// The Wii skin lives only on `fun-themes`: it is a theme of its own, carried there by\n"
       + "// its own stylesheet. A build of `main` never offers it, so there is nothing on this\n"
       + "// line for a second sheet to do."
   },
@@ -89,7 +89,7 @@ const TRANSFORMS = [
   },
   {
     file: 'web/src/lib/theme.js',
-    find: "// On the wii-skin branch the Wii theme comes first and is what a fresh install\n"
+    find: "// On the fun-themes branch the Wii theme comes first and is what a fresh install\n"
       + "// gets; the other three are untouched and one press of the button away.\n"
       + "export const THEMES = ['wii', 'dark', 'light', 'auto'];\n"
       + '\n'
@@ -300,7 +300,7 @@ const TRANSFORMS = [
       + '    }\n'
       + '  }\n',
     replace: '  // The skin wraps the same rule in its own id-scoped selector, which outranks\n'
-      + '  // the base rules above; both copies are checked on the `wii-skin` branch.\n'
+      + '  // the base rules above; both copies are checked on the `fun-themes` branch.\n'
   },
   {
     file: 'README.md',
@@ -503,7 +503,7 @@ if (BUILD) {
 // Stage once, here, after everything has been generated. The checkout above put
 // the *skin's* artefact in this tree, and the build only then rewrote it; staging
 // before that point left the index holding the skinned build, so a commit taken
-// from it shipped an artefact with `wii-skin` update URLs and the whole skin in
+// from it shipped an artefact with `fun-themes` update URLs and the whole skin in
 // it. Adding afterwards means the index is the final tree, whatever BUILD did.
 git(main, 'add', '-A');
 

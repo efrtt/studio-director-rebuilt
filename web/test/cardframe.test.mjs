@@ -130,7 +130,7 @@ test('every card flattens the sheet it contains', () => {
   );
 
   // The skin wraps the same rule in its own id-scoped selector, which outranks
-  // the base rules above; both copies are checked on the `wii-skin` branch.
+  // the base rules above; both copies are checked on the `fun-themes` branch.
 });
 
 test('the cards clip, so the sheet header takes the card corners', () => {

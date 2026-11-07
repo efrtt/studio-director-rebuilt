@@ -9,7 +9,7 @@
 // first in the cascade so the face is registered before any rule asks for it.
 import FONTS from '../fonts.css?inline';
 import CSS from '../styles.css?inline';
-// The Wii skin lives only on `wii-skin`: it is a theme of its own, carried there by
+// The Wii skin lives only on `fun-themes`: it is a theme of its own, carried there by
 // its own stylesheet. A build of `main` never offers it, so there is nothing on this
 // line for a second sheet to do.
 
