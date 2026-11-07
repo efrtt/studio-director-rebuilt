@@ -1,0 +1,596 @@
+{
+  "file": "index-settings.html",
+  "form": null,
+  "model": {
+    "attendance": null,
+    "charges": null,
+    "composer": null,
+    "confirm": null,
+    "index": {
+      "breadcrumb": [
+        "Home"
+      ],
+      "count": 113,
+      "groups": [
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=NewStaffLogin",
+              "label": "Add Staff User-Account"
+            },
+            {
+              "href": "admin.sd?page=DelStaffLogin",
+              "label": "Delete Staff User-Account"
+            },
+            {
+              "href": "admin.sd?page=ResetStaffPassword",
+              "label": "Reset Admin/Staff Password"
+            },
+            {
+              "href": "admin.sd?page=ModifyLoginType",
+              "label": "Modify Admin/Staff User-Type"
+            },
+            {
+              "href": "admin.sd?page=ResetPassword",
+              "label": "Reset Family Password"
+            },
+            {
+              "href": "admin.sd?page=OfficeLoginAccess",
+              "label": "Office User Access"
+            },
+            {
+              "href": "admin.sd?page=OfficeLoginAccess&table=restricted_office_login_access",
+              "label": "Restricted Office User Access"
+            },
+            {
+              "href": "admin.sd?page=OfficeLoginAccess&table=instructor_login_access",
+              "label": "Instructor User Access"
+            }
+          ],
+          "label": "Logins / Passwords / Security"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=SetupSeasonWizard",
+              "label": "Help me set up a new season"
+            },
+            {
+              "href": "admin.sd?page=NewEditArchive&content=SeasonContent&state=new",
+              "label": "Seasons"
+            },
+            {
+              "href": "admin.sd?page=ManageHolidays",
+              "label": "Holidays"
+            },
+            {
+              "href": "admin.sd?page=ManageSessions",
+              "label": "Sessions (i.e. Billing Periods)"
+            },
+            {
+              "href": "admin.sd?page=CopyClasses",
+              "label": "Copy Classes To Another Season"
+            },
+            {
+              "href": "admin.sd?page=NewEditDel&content=ClassTypeContent&state=new",
+              "label": "Class Types"
+            },
+            {
+              "href": "admin.sd?page=NewEditDel&content=LocationsContent&state=new",
+              "label": "Class Locations"
+            },
+            {
+              "href": "admin.sd?page=ManageClassCardTypes",
+              "label": "Manage Class Card Types"
+            },
+            {
+              "href": "admin.sd?page=CancelClasses",
+              "label": "Cancel classes"
+            },
+            {
+              "href": "admin.sd?page=UncancelClasses",
+              "label": "Uncancel classes"
+            },
+            {
+              "href": "admin.sd?page=SetCancelClassReminders",
+              "label": "Set cancel class reminder emails"
+            },
+            {
+              "href": "admin.sd?page=ApproveAndLockRange",
+              "label": "Approve and lock all timesheets for a range of dates"
+            },
+            {
+              "href": "admin.sd?page=ManageClassPasswords",
+              "label": "Manage Class Passwords"
+            },
+            {
+              "href": "admin.sd?page=ManageAddtlClassCharges",
+              "label": "Manage Additional Class Charges"
+            },
+            {
+              "href": "admin.sd?page=AssignSkills",
+              "label": "Assign Skills to Classes"
+            },
+            {
+              "href": "admin.sd?page=SetOnlineRegOK",
+              "label": "Set online registration allowed"
+            },
+            {
+              "href": "admin.sd?page=ClearPreapprovedClasses",
+              "label": "Clear out pre-approved classes"
+            },
+            {
+              "href": "admin.sd?page=RestoreOldSeason",
+              "label": "Restore old season"
+            }
+          ],
+          "label": "Class / Date Administration"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=EnableMultiInstructor",
+              "label": "Multi-Instructor Support"
+            },
+            {
+              "href": "admin.sd?page=NewEditDel&content=InstructorAbsenceReasonContent&state=new",
+              "label": "Instructor Absence Reasons"
+            },
+            {
+              "href": "admin.sd?page=ManageCustomInstructorFields",
+              "label": "Custom Instructor Fields"
+            }
+          ],
+          "label": "Instructor Administration"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=NewEditDel&content=HowHeardContent&state=new",
+              "label": "How Heard"
+            },
+            {
+              "href": "admin.sd?page=ManageTags&state=new",
+              "label": "Enter Tag Descriptions"
+            },
+            {
+              "href": "admin.sd?page=ResetTags",
+              "label": "Remove Tags"
+            },
+            {
+              "href": "admin.sd?page=ManagePaymentPlans",
+              "label": "Manage Payment Plans"
+            },
+            {
+              "href": "admin.sd?page=ManagePromos",
+              "label": "Manage Promotions"
+            },
+            {
+              "href": "admin.sd?page=NewEditDel&content=AbsenceReasonContent&state=new",
+              "label": "Student Absence Reasons"
+            },
+            {
+              "href": "admin.sd?page=ManageAbsenceOptions",
+              "label": "Portal Absence Reporting Options"
+            },
+            {
+              "href": "admin.sd?page=ManageDropReasons",
+              "label": "Student/Class Drop Reasons"
+            },
+            {
+              "href": "admin.sd?page=SetPerforming",
+              "label": "Set performing field for all students"
+            },
+            {
+              "href": "admin.sd?page=SetDefaultPerforming",
+              "label": "Set default for performing field for new students"
+            },
+            {
+              "href": "admin.sd?page=RemoveStudentMeasurements",
+              "label": "Delete all student measurements"
+            },
+            {
+              "href": "admin.sd?page=ResetWaiver",
+              "label": "Set the paper waiver field for all students to no"
+            },
+            {
+              "href": "admin.sd?page=ManageGenderOptions",
+              "label": "Manage Gender Options"
+            },
+            {
+              "href": "admin.sd?page=ManagePronounOptions",
+              "label": "Manage Pronoun Options"
+            },
+            {
+              "href": "admin.sd?page=ManageCustomStudentFields",
+              "label": "Custom Student Fields"
+            },
+            {
+              "href": "admin.sd?page=ManageSkills",
+              "label": "Manage Skill Charts"
+            },
+            {
+              "href": "admin.sd?page=ManagePhoneNumbersFormat",
+              "label": "Manage Phone Numbers Format"
+            },
+            {
+              "href": "admin.sd?page=ManagePhoneLabels",
+              "label": "Manage Phone Labels"
+            }
+          ],
+          "label": "Family / Student Administration"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=StudioDirectorBillingInfo",
+              "label": "Studio Director Billing Info & License Agreement"
+            },
+            {
+              "href": "admin.sd?page=EditContactInfo",
+              "label": "Studio Contact Info"
+            },
+            {
+              "href": "admin.sd?page=SetAdminHomePageMsg",
+              "label": "Admin home page message"
+            },
+            {
+              "href": "admin.sd?page=UploadLogo",
+              "label": "Upload Logo"
+            },
+            {
+              "href": "admin.sd?page=AdminBanner",
+              "label": "Admin Banner"
+            },
+            {
+              "href": "admin.sd?page=SetRedYellowGreen",
+              "label": "Set red/yellow/green threshold values for trends"
+            },
+            {
+              "href": "admin.sd?page=ManageWeeklyInsightEmail",
+              "label": "Manage Weekly Insight Email"
+            },
+            {
+              "href": "admin.sd?page=EditEmailSignature",
+              "label": "Edit Email Signature"
+            },
+            {
+              "href": "admin.sd?page=ManageEmailTemplates",
+              "label": "Manage Email Templates"
+            },
+            {
+              "href": "admin.sd?page=ManageDripCampaigns",
+              "label": "Manage Email Drip Campaigns"
+            },
+            {
+              "href": "admin.sd?page=SearchDisplayFormat",
+              "label": "Search and Sort"
+            },
+            {
+              "href": "admin.sd?page=ConfigureCalendar",
+              "label": "Configure Class Calendar"
+            },
+            {
+              "href": "admin.sd?page=ManageUserDocuments",
+              "label": "Manage Documents"
+            },
+            {
+              "href": "admin.sd?page=ManageLegalDocuments",
+              "label": "View Legal Documents"
+            },
+            {
+              "href": "admin.sd?page=ManageAccountLedgerDisplay",
+              "label": "Manage Account Ledger Display"
+            },
+            {
+              "href": "admin.sd?page=DeleteImages",
+              "label": "Delete Images"
+            },
+            {
+              "href": "admin.sd?page=ManageGoogle",
+              "label": "Configure Google Integration"
+            },
+            {
+              "href": "admin.sd?page=ManageZapier",
+              "label": "API Information"
+            },
+            {
+              "href": "admin.sd?page=LayoutOptions",
+              "label": "Layout Options"
+            }
+          ],
+          "label": "Studio Information"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=IncreaseRatesWizard",
+              "label": "Help me increase my rates"
+            },
+            {
+              "href": "admin.sd?page=NewEditDel&content=RatesContext&state=new",
+              "label": "Auto Tuition Rates"
+            },
+            {
+              "href": "admin.sd?page=ManageFamilyStudentMax",
+              "label": "Family / Student Max"
+            },
+            {
+              "href": "admin.sd?page=ViewMissingRates",
+              "label": "View Missing Rates"
+            },
+            {
+              "href": "admin.sd?page=EditBillingGroups",
+              "label": "Change Rategroups"
+            },
+            {
+              "href": "admin.sd?page=NewEditDel&content=ChargeCatContent&state=new",
+              "label": "Charge Categories / Sales Tax Percentages"
+            },
+            {
+              "href": "admin.sd?page=ManageRegFeeRules",
+              "label": "Auto Registration Fee"
+            },
+            {
+              "href": "admin.sd?page=ManageFamilyDiscounts",
+              "label": "Auto Family Discount"
+            },
+            {
+              "href": "admin.sd?page=ManageTagTuition",
+              "label": "Tag Based Auto Tuition"
+            },
+            {
+              "href": "admin.sd?page=ListPaymentsDue&meth=enterLateFees",
+              "label": "Enter late fees for families that have a current balance due"
+            },
+            {
+              "href": "admin.sd?page=LockLedger",
+              "label": "Manage Ledger Lock Dates"
+            }
+          ],
+          "label": "Tuition Rate / Charge Administration"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=ManageSuppliers",
+              "label": "Suppliers"
+            },
+            {
+              "href": "admin.sd?page=ManageInventoryColors",
+              "label": "Colors"
+            },
+            {
+              "href": "admin.sd?page=ManageInventorySizes",
+              "label": "Sizes"
+            },
+            {
+              "href": "admin.sd?page=ManageInventoryItems",
+              "label": "Items/Products"
+            },
+            {
+              "href": "admin.sd?page=ManageInventory",
+              "label": "Manage Levels/Quantities/Prices"
+            }
+          ],
+          "label": "Inventory Administration"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=ManageEvents",
+              "label": "Events/Recitals"
+            },
+            {
+              "href": "admin.sd?page=SplitPerformances",
+              "label": "Split performances across events"
+            }
+          ],
+          "label": "Events/Recitals Administration"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=SizeCostumes",
+              "label": "Size Costumes"
+            },
+            {
+              "href": "admin.sd?page=ManageVendors",
+              "label": "Costume Vendors"
+            },
+            {
+              "href": "admin.sd?page=ManageSizeChartNames",
+              "label": "Vendor Size Charts"
+            },
+            {
+              "href": "admin.sd?page=ManageCatalogs",
+              "label": "Costume Catalogs"
+            },
+            {
+              "href": "admin.sd?page=ManageSizes",
+              "label": "Costume Sizes"
+            },
+            {
+              "href": "admin.sd?page=CostumeShipToInfo&meth=edit&ident=0",
+              "label": "Costume Ship To Info"
+            }
+          ],
+          "label": "Costume Administration"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=CheckExpDatesForm",
+              "label": "Check Expiration Dates"
+            },
+            {
+              "href": "admin.sd?page=DeleteExpiredCards",
+              "label": "Delete Payment Information for Expired Cards"
+            },
+            {
+              "href": "admin.sd?page=ListPaymentsDue&meth=quick",
+              "label": "Process credit-card payments for families on the Automatic/Recurring Payment Plan that have a current balance due"
+            },
+            {
+              "href": "admin.sd?page=ListPaymentsDue&meth=recurringBilling",
+              "label": "Process credit-card payments with more options"
+            },
+            {
+              "href": "admin.sd?page=ManageCreditCardSurcharges",
+              "label": "Manage Credit-Card Surcharges"
+            }
+          ],
+          "label": "Manage Credit-Card Payments"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=GetOnlineRegUrl",
+              "label": "Get Online Registration Link"
+            },
+            {
+              "href": "admin.sd?page=StudentWaivers",
+              "label": "Manage Student Waivers"
+            },
+            {
+              "href": "admin.sd?page=GlobalRegisterMessage",
+              "label": "Online registration messages"
+            },
+            {
+              "href": "admin.sd?page=ManageCheckoutEmail",
+              "label": "Manage checkout email"
+            },
+            {
+              "href": "admin.sd?page=UploadCheckoutEmailAttach",
+              "label": "Upload checkout email attachment"
+            },
+            {
+              "href": "admin.sd?page=ManagePortalStyles",
+              "label": "Configure portal styles"
+            },
+            {
+              "href": "admin.sd?page=UploadRegHeader",
+              "label": "Upload online registration banner image"
+            },
+            {
+              "href": "admin.sd?page=PortalAccess",
+              "label": "Online Portal Permissions"
+            },
+            {
+              "href": "admin.sd?page=OnlineRegPermissions",
+              "label": "Set what families can view online"
+            },
+            {
+              "href": "admin.sd?page=PortalPaymentWithGateway",
+              "label": "Configure Payment Behavior"
+            },
+            {
+              "href": "admin.sd?page=RegisterMakeups",
+              "label": "Online registration make-ups/trials/drop-ins"
+            },
+            {
+              "href": "admin.sd?page=SetViewRatesPoliciesLink",
+              "label": "Set View Rates/Policies link"
+            },
+            {
+              "href": "admin.sd?page=ManagePortalNotifications",
+              "label": "Notification Emails"
+            },
+            {
+              "href": "admin.sd?page=ResetAllFamilyRegisterMsgs",
+              "label": "Reset all family specific online registration messages"
+            },
+            {
+              "href": "admin.sd?page=ManageWidgets",
+              "label": "Widgets"
+            },
+            {
+              "href": "admin.sd?page=ManagePortalEnrollmentInfo",
+              "label": "Manage Portal Enrollment Information"
+            },
+            {
+              "href": "admin.sd?page=ManagePortal",
+              "label": "Enable or Disable Customer Portal"
+            }
+          ],
+          "label": "Online Registration"
+        },
+        {
+          "items": [
+            {
+              "href": "admin.sd?page=CheckinNotConfigured",
+              "label": "Go to check-in page"
+            }
+          ],
+          "label": "Student Check-In"
+        }
+      ],
+      "kind": "index",
+      "layout": "grouped",
+      "limit": 300,
+      "menu": "Settings",
+      "title": "Settings",
+      "truncated": false
+    },
+    "insights": null,
+    "list": null,
+    "nav": [
+      {
+        "href": "admin.sd?page=HomePage&clicktab=1",
+        "label": "Home"
+      },
+      {
+        "href": "admin.sd?page=CalendarPage&clicktab=1",
+        "label": "Class Calendar"
+      },
+      {
+        "href": "admin.sd?page=NewClass&clicktab=1",
+        "label": "Classes"
+      },
+      {
+        "href": "admin.sd?page=NewFamily&clicktab=1",
+        "label": "Families"
+      },
+      {
+        "href": "admin.sd?page=NewStudent&clicktab=1",
+        "label": "Students"
+      },
+      {
+        "href": "admin.sd?page=NewInstructor&clicktab=1",
+        "label": "Instructors"
+      },
+      {
+        "href": "admin.sd?page=ChargesHome&clicktab=1",
+        "label": "Charges & Payments"
+      },
+      {
+        "href": "admin.sd?page=EmailTextHome&clicktab=1",
+        "label": "Communications"
+      },
+      {
+        "href": "admin.sd?page=AdvSearch&clicktab=1",
+        "label": "Advanced Search"
+      },
+      {
+        "href": "admin.sd?page=ReportsHome&clicktab=1",
+        "label": "Reports"
+      },
+      {
+        "href": "admin.sd?page=AdminHome&clicktab=1",
+        "label": "Settings"
+      }
+    ],
+    "note": null,
+    "report": null,
+    "settings": null,
+    "sheet": null,
+    "task": null,
+    "title": "Settings",
+    "trends": null,
+    "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=AdminHome",
+    "view": "index",
+    "week": null
+  },
+  "url": "https://app.thestudiodirector.com/studio1/admin.sd?page=AdminHome",
+  "view": "index"
+}

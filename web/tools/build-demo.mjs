@@ -20,6 +20,7 @@ const PAGES = [
   { fixture: 'confirmation.html', out: 'demo/confirmation.html', title: 'saved' },
   { fixture: 'search-results.html', out: 'demo/search.html', title: 'search results' },
   { fixture: 'index-charges.html', out: 'demo/index.html', title: 'landing page' },
+  { fixture: 'index-settings.html', out: 'demo/index-settings.html', title: 'settings landing page' },
   { fixture: 'task-email-group.html', out: 'demo/task.html', title: 'mail form' },
   { fixture: 'sheet-roster.html', out: 'demo/sheet.html', title: 'print sheet' },
   { fixture: 'settings-search.html', out: 'demo/settings.html', title: 'settings' },
