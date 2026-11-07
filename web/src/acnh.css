@@ -153,26 +153,48 @@ html[data-sd-theme="acnh"] #sd-root .sd-foot {
   font-weight: 700;
 }
 
-/* ---- the rail: a column of rounded tabs, amber on the one you are on ---- */
+/* ---- the rail: a column of rounded tabs, amber on the one you are on ----
+ * A size up from the base rail. The game's own menus are generous, and at the
+ * rebuilt measurements - 13px labels, 36px tabs in a 216px column - the whole
+ * column read as small print next to the header. The wider column is a custom
+ * property rather than a width on the rail, so the collapsed state still has its
+ * 56px and the transition keeps working. */
+html[data-sd-theme="acnh"] #sd-root { --rail-w: 252px; }
 html[data-sd-theme="acnh"] #sd-root .sd-rail {
-  padding: 18px 12px;
-  gap: 3px;
+  padding: 20px 14px;
+  gap: 4px;
   border-right: var(--acnh-dash);
   background: var(--panel) !important;
 }
+/* The wordmark is not a block of its own: the markup puts it inside the fold
+   toggle, beside the chevron. The padding that gave it air under it in the rail
+   also lifted it off the chevron's line, so inside the toggle it carries none and
+   both are flex children centred on one line. */
 html[data-sd-theme="acnh"] #sd-root .sd-brand {
-  padding: 2px 14px 14px;
+  padding: 0;
   color: var(--acnh-sage);
+  font-size: var(--fs-sm);
   font-weight: 900;
   letter-spacing: .14em;
+  line-height: 1;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-railtoggleicon {
+  font-size: var(--fs-lg);
+  line-height: 1;
 }
 html[data-sd-theme="acnh"] #sd-root .sd-navlink,
 html[data-sd-theme="acnh"] #sd-root .sd-railtoggle {
-  padding: 8px 14px;
+  padding: 10px 16px;
   border-radius: var(--radius-pill);
   color: var(--text);
+  font-size: var(--fs-lg);
   font-weight: 700;
 }
+/* The tab is a row, not a line of text: 40px tall, and its glyph goes up with the
+   label so the two stay in proportion. */
+html[data-sd-theme="acnh"] #sd-root .sd-railtoggle { height: 40px; }
+html[data-sd-theme="acnh"] #sd-root .sd-navicon { font-size: 17px; }
+html[data-sd-theme="acnh"] #sd-root .sd-navinitial { font-size: var(--fs-base); }
 /* The rail's own rules pin these fills with `!important` (the app boxes anchors on
    some pages), so the theme has to answer at the same strength. */
 html[data-sd-theme="acnh"] #sd-root .sd-navlink:hover,
