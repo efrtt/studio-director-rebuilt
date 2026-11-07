@@ -5,7 +5,7 @@
   "note": "An Unenroll question page. Both builds route it to the settings view, so this freezes the confirmation guard rejecting a typed page rather than the confirm view itself.",
   "stale": {
     "captured": "0.31.29",
-    "why": "0.31.30 ships a CSS-only Wii-skin fix: the page-entrance zoom now fills backwards, so a position:fixed tooltip no longer inherits a containing block from the view. No reader, model, component or route changed, so the 0.31.29 reading still stands for both builds."
+    "why": "0.31.30 ships a CSS-only theme fix: the page-entrance zoom now fills backwards, so a position:fixed tooltip no longer inherits a containing block from the view. No reader, model, component or route changed, so the 0.31.29 reading still stands for both builds."
   },
   "current": {
     "url": "/srvda/admin.sd?page=Unenroll&sident=1711558201653&cident=1782910697458",

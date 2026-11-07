@@ -4,7 +4,7 @@
   "url": "/srvda/admin.sd?page=Attendance&cident=1782910697458",
   "stale": {
     "captured": "0.31.29",
-    "why": "Ships a CSS-only Wii-skin fix (the entrance zoom no longer holds a transform, so a fixed tooltip stays on the pointer). The attendance reader and its model are untouched on both lines, so the earlier live capture still describes what they read."
+    "why": "Ships a CSS-only theme fix (the entrance zoom no longer holds a transform, so a fixed tooltip stays on the pointer). The attendance reader and its model are untouched on both lines, so the earlier live capture still describes what they read."
   },
   "current": {
     "url": "/srvda/admin.sd?page=Attendance&cident=1782910697458",

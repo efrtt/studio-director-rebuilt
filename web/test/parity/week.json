@@ -5,7 +5,7 @@
   "note": "The Calendar page forced to its week view with DATASPEC_VIEW=WEEK, which is deliberate: the calendar's chosen view is session state, so a bare CalendarPage URL renders whichever view the session last used (verified — a bare URL returned the week after the week was viewed, and the month earlier in the same session; the two readings differed only in their recorded URL). The parameter is what makes this capture repeatable; the pair freezes the real week grid — seven weekday columns, the 11/2–11/8 range line and the two time rows — not the month view.",
   "stale": {
     "captured": "0.31.29",
-    "why": "0.31.30 ships a CSS-only Wii-skin fix: the page-entrance zoom now fills backwards, so a position:fixed tooltip no longer inherits a containing block from the view. No reader, model, component or route changed, so the 0.31.29 reading still stands for both builds."
+    "why": "0.31.30 ships a CSS-only theme fix: the page-entrance zoom now fills backwards, so a position:fixed tooltip no longer inherits a containing block from the view. No reader, model, component or route changed, so the 0.31.29 reading still stands for both builds."
   },
   "current": {
     "url": "/srvda/admin.sd?page=CalendarPage&DATASPEC_VIEW=WEEK",
