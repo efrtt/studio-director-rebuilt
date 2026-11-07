@@ -12,10 +12,11 @@
 const KEY = 'sd.theme';
 
 // On the fun-themes branch the Wii theme comes first and is what a fresh install
-// gets; the other three are untouched and one press of the button away.
-export const THEMES = ['wii', 'dark', 'light', 'auto'];
+// gets; the other three are untouched and one press of the button away. `acnh`
+// closes the cycle: the Island theme is a look of its own, not an `auto` answer.
+export const THEMES = ['wii', 'dark', 'light', 'auto', 'acnh'];
 
-export const THEME_LABEL = { wii: 'Wii', dark: 'Dark', light: 'Light', auto: 'Auto' };
+export const THEME_LABEL = { wii: 'Wii', dark: 'Dark', light: 'Light', auto: 'Auto', acnh: 'Island' };
 
 function store() {
   try {
@@ -66,6 +67,9 @@ export function themeName(theme, osPrefersDark = prefersDark()) {
   // `wii` is its own value, not a light theme: the stylesheet needs to tell the
   // two apart, because the skin has rules the light theme must not inherit.
   if (theme === 'wii') return 'wii';
+  // `acnh` is its own value for the same reason: a cream field set in Nunito is
+  // neither the dark nor the light palette, so the OS must not decide it.
+  if (theme === 'acnh') return 'acnh';
   if (theme === 'light') return 'light';
   if (theme === 'dark') return 'dark';
   return osPrefersDark ? 'dark' : 'light';

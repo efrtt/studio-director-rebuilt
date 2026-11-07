@@ -166,6 +166,67 @@ html[data-sd-theme="light"] body.LoginBody {
   color-scheme: light;
 }
 
+/* ---- Island: the paper card on a mint field, set in Nunito ----
+ * The theme's own shapes, not the guide's: a cream sheet with the game's dark
+ * cream edge instead of a cast shadow, and a pill button that carries its own
+ * lip. Nunito comes from `acnh-fonts.css`, which this page receives with FONTS.
+ */
+html[data-sd-theme="acnh"] body.LoginBody {
+  --lg-blue: #3f9d5a;
+  --lg-light: #63bb7c;
+  --lg-deep: #2b7944;
+  --lg-ink: #4b4038;
+  --lg-text: #4b4038;
+  --lg-dim: #877663;
+  --lg-line: #ded0b2;
+  --lg-line-strong: #cdbb94;
+  --lg-surface: #fffdf4;
+  --lg-wash: #f7f1de;
+  --lg-focus-bg: #fffdf4;
+  --lg-logo-filter: brightness(0);
+  --lg-logo-opacity: 0.4;
+
+  /* Mint from below, cream above: the game's menus sit on a pale field with the
+     horizon glowing through it, not on a flat page. */
+  --lg-field:
+    radial-gradient(120% 60% at 50% 108%,
+      color-mix(in srgb, #9ad9b0 42%, transparent) 0%,
+      color-mix(in srgb, #9ad9b0 15%, transparent) 46%,
+      transparent 74%),
+    linear-gradient(#eef7f1, #dceee2);
+
+  --lg-card-radius: 14px;
+  --lg-card-border: var(--lg-line-strong);
+  --lg-card-shadow: 0 3px 0 #e2d6b8, 0 18px 32px -26px rgba(75, 64, 56, 0.4);
+  --lg-card-pad: 26px 26px 28px;
+  --lg-gap: 14px;
+  --lg-field-radius: 11px;
+  --lg-field-h: 42px;
+  --lg-field-pad: 6px 12px;
+  --lg-field-font: 15px;
+  --lg-btn-radius: 999px;
+  --lg-btn-h: 44px;
+  --lg-btn-fg: #ffffff;
+  --lg-btn-border: var(--lg-deep);
+  --lg-btn-bg: var(--lg-blue);
+  --lg-btn-shadow: 0 3px 0 var(--lg-deep);
+  --lg-btn-weight: 800;
+  --lg-focus-outline: none;
+  --lg-focus-offset: 0;
+  --lg-focus-ring: 0 0 0 3px color-mix(in srgb, var(--lg-blue) 30%, transparent);
+  --lg-label-font: 11px;
+  --lg-foot-font: 12px;
+  font-family: Nunito, "Open Sans", system-ui, sans-serif;
+  color-scheme: light;
+}
+
+/* Nunito at 600 is thin beside the theme's bolder shell, so the page's small caps
+   and its foot carry the weight the app's own labels do. */
+html[data-sd-theme="acnh"] body.LoginBody .LoginLabel,
+html[data-sd-theme="acnh"] body.LoginBody .LoginPowerBy {
+  font-weight: 800;
+}
+
 body.LoginBody {
   background: var(--lg-field);
   background-attachment: fixed;

@@ -31,6 +31,10 @@ test('a fresh install gets the Wii skin on this branch', () => {
   const dark = fakeStore();
   dark.setItem('sd.theme', 'dark');
   assert.equal(readTheme(dark), 'dark');
+  // Including the newest theme: a stored `acnh` is a theme, so it is read back.
+  const island = fakeStore();
+  island.setItem('sd.theme', 'acnh');
+  assert.equal(readTheme(island), 'acnh');
 });
 
 test('the choice is remembered, and only a real choice is stored', () => {
@@ -41,17 +45,18 @@ test('the choice is remembered, and only a real choice is stored', () => {
   assert.equal(readTheme(store), 'light', 'and the old one survives');
 });
 
-test('one button cycles all four, and wraps', () => {
+test('one button cycles all five, and wraps', () => {
   let theme = 'wii';
   const seen = [];
-  for (let i = 0; i < 4; i += 1) {
+  for (let i = 0; i < 5; i += 1) {
     theme = nextTheme(theme);
     seen.push(theme);
   }
-  assert.deepEqual(seen, ['dark', 'light', 'auto', 'wii']);
-  assert.deepEqual(THEMES, ['wii', 'dark', 'light', 'auto']);
+  assert.deepEqual(seen, ['dark', 'light', 'auto', 'acnh', 'wii']);
+  assert.deepEqual(THEMES, ['wii', 'dark', 'light', 'auto', 'acnh']);
   assert.equal(THEME_LABEL.auto, 'Auto');
   assert.equal(THEME_LABEL.wii, 'Wii');
+  assert.equal(THEME_LABEL.acnh, 'Island');
 });
 
 test('auto follows the machine, and the other two do not', () => {
@@ -63,6 +68,9 @@ test('auto follows the machine, and the other two do not', () => {
   // The skin is never resolved through the OS: it is the skin.
   assert.equal(themeName('wii', true), 'wii');
   assert.equal(themeName('wii', false), 'wii');
+  // Neither is the Island theme: a cream sheet is not a dark-mode answer.
+  assert.equal(themeName('acnh', true), 'acnh');
+  assert.equal(themeName('acnh', false), 'acnh');
 });
 
 test('applying a theme writes the resolved name, not the choice', () => {

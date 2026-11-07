@@ -12,6 +12,11 @@ import CSS from '../styles.css?inline';
 // The Wii skin is a theme, not a second stylesheet: it is appended so a mount
 // injects one <style> and the userscript stays one file with nothing to fetch.
 import WII from '../wii.css?inline';
+// The Island theme does the same, and brings its own type: `acnh-fonts.css` holds
+// the Nunito faces as data: URIs, so only a build that offers the theme carries
+// them - `main` has neither the theme nor the 52 KiB of font.
+import ACNH_FONTS from '../acnh-fonts.css?inline';
+import ACNH from '../acnh.css?inline';
 
 
 export function injectStyles() {
@@ -19,7 +24,7 @@ export function injectStyles() {
   if (document.getElementById('sd-styles')) return;
   const el = document.createElement('style');
   el.id = 'sd-styles';
-  el.textContent = `${FONTS}\n${CSS}\n${WII}`;
+  el.textContent = `${FONTS}\n${CSS}\n${WII}\n${ACNH_FONTS}\n${ACNH}`;
   (document.head || document.documentElement).appendChild(el);
 }
 

@@ -21,7 +21,7 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const src = (name) => fs.readFileSync(path.join(here, '..', 'src', name), 'utf8');
 
-const SHEETS = { 'styles.css': src('styles.css'), 'wii.css': src('wii.css') };
+const SHEETS = { 'styles.css': src('styles.css'), 'wii.css': src('wii.css'), 'acnh.css': src('acnh.css') };
 
 // A container that draws a frame of its own: the record list, the event page's
 // performance panel, and every other card in the skin.
@@ -138,6 +138,22 @@ test('every card flattens the sheet it contains', () => {
     'html[data-sd-theme="wii"] #sd-root .sd-recordcard > .sd-tablewrap'
   ]) {
     const rule = skin(selector);
+    assert.ok(rule, selector + ' exists');
+    for (const prop of ['border', 'border-radius', 'box-shadow', 'background']) {
+      assert.equal(drawsNothing(value(rule, prop)), true, `${selector} flattens ${prop}`);
+    }
+  }
+
+  // The Island theme's wrapper rule carries an id too, so it has to flatten the
+  // same two pairs in its own sheet, or the cream sheet gets a cream rim inside
+  // the cream card.
+  const acnh = rules(SHEETS['acnh.css']);
+  const island = (selector) => acnh.find((r) => r.selector.split(',').map((s) => s.trim()).includes(selector));
+  for (const selector of [
+    'html[data-sd-theme="acnh"] #sd-root .sd-perf > .sd-tablewrap',
+    'html[data-sd-theme="acnh"] #sd-root .sd-recordcard > .sd-tablewrap'
+  ]) {
+    const rule = island(selector);
     assert.ok(rule, selector + ' exists');
     for (const prop of ['border', 'border-radius', 'box-shadow', 'background']) {
       assert.equal(drawsNothing(value(rule, prop)), true, `${selector} flattens ${prop}`);

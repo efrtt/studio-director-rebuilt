@@ -4,6 +4,9 @@ import { injectStyles, removeStyles } from './lib/styles.js';
 // is made — so it gets colour only, in its own <style> the userscript adds to the
 // app's own markup. Exported as text because the artefact carries everything.
 import FONTS from './fonts.css?inline';
+// The Island theme sets the sign-in page in Nunito too, and this stylesheet is the
+// only one that page receives: the face travels with it or not at all.
+import ACNH_FONTS from './acnh-fonts.css?inline';
 import LOGIN from './login.css?inline';
 import { readTheme, applyTheme } from './lib/theme.js';
 import {
@@ -47,7 +50,7 @@ import { readLiveView } from './lib/live.js';
 export { readPage };
 // The face has to travel with it: on a mount the fonts are in the same <style> as
 // everything else, and the sign-in page gets only this one.
-export const loginCss = `${FONTS}\n${LOGIN}`;
+export const loginCss = `${FONTS}\n${ACNH_FONTS}\n${LOGIN}`;
 
 // The sign-in page has no shell of its own to carry the colour scheme, and the
 // stylesheet's palettes hang off the same attribute: reading the stored choice

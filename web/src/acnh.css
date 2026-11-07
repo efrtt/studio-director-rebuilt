@@ -1,0 +1,986 @@
+/* ---- Island: the Animal Crossing theme ----
+ *
+ * Scoped to `html[data-sd-theme="acnh"] #sd-root`, like every other theme, so it
+ * can be taken out in one step.
+ *
+ * The game's own interface is softer than it first looks: cream cards floating on
+ * a pale washed field, a white rim and a soft cast shadow instead of an outline,
+ * *dashed* hairlines between rows, amber behind whatever is selected, and italic
+ * sage labels over the columns. Nothing is square and almost nothing is framed in
+ * dark ink. Nunito - embedded in `acnh-fonts.css`, never fetched - is set heavy,
+ * because the game's own type is a bold rounded sans.
+ *
+ * Three colours do the work: `--accent` (leaf) for the one confirming action,
+ * `--acnh-pick` (amber) for selection, and `--acnh-sage` for the labels and rules
+ * that hold a table together. Everything else is cream on sage.
+ *
+ * `!important` appears only where `styles.css` uses it: the app's own stylesheet
+ * repaints table cells at id specificity, and the rail pins its fills, so those
+ * need to answer at the same strength.
+ */
+
+html[data-sd-theme="acnh"] #sd-root {
+  --bg: #dfece1;
+  --panel: #fffdf4;
+  --panel-2: #f7f0dc;
+  --line: #e9e0c8;
+  --text: #6f5a3c;
+  --dim: #9a8a70;
+  --accent: #4a9e5c;
+  --ok: #2f9b7d;
+  --warn: #d08f2e;
+  --danger: #d2634b;
+
+  /* Amber: the fill behind the selected row, the tab you are on, the channel in
+     the rail. It is a highlight, not a state colour, so it is its own name. */
+  --acnh-pick: #f7e0a0;
+  --acnh-pick-deep: #e9c870;
+  /* Sage: the italic label over a column, and the rules that divide a card. */
+  --acnh-sage: #8a9c72;
+  --acnh-sage-wash: #eef3e4;
+  /* The water in the lower third of the page: the page tone, a step deeper. It is
+     the fill of the wave shape below, so it is a flat hex and never mixed. */
+  --acnh-water: #cfe4d5;
+
+  /* A hairline that reads on cream without framing it, and a dash for the rules
+     between rows — the game divides a list with dashes, never with a solid box. */
+  --acnh-rule: #ddd0b0;
+  --acnh-dash: 1px dashed var(--acnh-rule);
+
+  /* Cream does not cast a shadow so much as sit on one: soft, warm, short. */
+  --shadow-sm: 0 1px 2px rgba(111, 90, 60, .10), 0 8px 18px -14px rgba(111, 90, 60, .45);
+  --shadow-menu: 0 20px 38px -20px rgba(111, 90, 60, .45);
+  /* The dialogue box and the register's date cards are the same material, so they
+     share one deeper cast: a card sitting above the field, not a panel in it. */
+  --acnh-cast: 0 2px 6px rgba(80, 62, 38, .12), 0 22px 44px -20px rgba(80, 62, 38, .55);
+
+  /* Rounder than either built-in theme: a 44px control is a squircle, and a card
+     has no corner you could point at. */
+  --radius-xs: 10px;
+  --radius-sm: 14px;
+  --radius-md: 20px;
+  --radius-lg: 26px;
+  --radius-pill: 999px;
+
+  /* Nunito is declared with its weight beside it: the base rule sets `font:` as a
+     shorthand, which would reset the weight to normal in a face that has
+     200-1000 to give. */
+  font-family: Nunito, "Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 600;
+  color-scheme: light;
+}
+
+/* Each preset names the theme it belongs to, so a generic preset can never reach
+   in and replace this ramp - the same reason the light and dark presets are
+   written out in styles.css. Green is the theme's own leaf. */
+html[data-sd-theme="acnh"][data-sd-accent="blue"] #sd-root { --accent: #3d8fa8; }
+html[data-sd-theme="acnh"][data-sd-accent="violet"] #sd-root { --accent: #8a6ab5; }
+html[data-sd-theme="acnh"][data-sd-accent="teal"] #sd-root { --accent: #2c8a78; }
+html[data-sd-theme="acnh"][data-sd-accent="green"] #sd-root { --accent: #4a9e5c; }
+html[data-sd-theme="acnh"][data-sd-accent="amber"] #sd-root { --accent: #c98a27; }
+html[data-sd-theme="acnh"][data-sd-accent="rose"] #sd-root { --accent: #c85f7d; }
+
+/* ---- the field: two flat tones, divided by water ----
+ * A pale mint above, a slightly darker mint below, and a sine wave where they
+ * meet. Both tones are flat colours: the water is a filled shape, not a
+ * gradient, so it is exactly `--acnh-water` everywhere and nothing fades out
+ * behind the text. The sage that used to gather at the floor was a gradient doing
+ * the same job; the wave does it without one. */
+html[data-sd-theme="acnh"] #sd-root { background: var(--bg); }
+
+/* ---- the moving water ----
+ * The lower third of the window is water: one filled sine band with the curve as
+ * its top edge, drifting sideways. It is a filled path, not a border or a fade,
+ * so the tone is flat and exact on both sides of the edge, and it is a fixed layer
+ * under both grid columns, so the water belongs to the window rather than to a
+ * 6,000px document.
+ *
+ * The edge is four cubic quarters of one period of a sine: starting at `mid` with
+ * slope -0.297, it crests at P/4, crosses at P/2, troughs at 3P/4 and is back at
+ * `mid` at P with the same -0.297 slope, so the tile butts against itself with no
+ * kink. The period is deliberately long against the amplitude (720px wide, ~110px
+ * crest to trough): a short steep one reads as a sawtooth, and the same height over
+ * twice the run is the round hump this wants to be. 720px in 32s is 22px/s - slow
+ * enough to read as drift, quick enough to see it move while you watch.
+ *
+ * The fill is written out as `--acnh-water`: a `data:` URI cannot read a custom
+ * property, so the one hex appears twice and the two must stay equal.
+ */
+html[data-sd-theme="acnh"] #sd-root::before {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: -720px;
+  right: -720px;
+  height: 38vh;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='240' viewBox='0 0 720 240' preserveAspectRatio='none'%3E%3Cpath fill='%23cfe4d5' d='M0 56C60 38.19 120 22 180 22C240 22 300 38.19 360 56C420 73.81 480 90 540 90C600 90 660 73.81 720 56L720 240L0 240Z'/%3E%3C/svg%3E");
+  background-size: 720px 100%;
+  background-repeat: repeat-x;
+  animation: sd-acnh-wave 32s linear infinite;
+  will-change: transform;
+}
+@keyframes sd-acnh-wave {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(720px, 0, 0); }
+}
+/* The columns sit above the water. They are grid items, so a `z-index` is enough
+   without positioning them. */
+html[data-sd-theme="acnh"] #sd-root > * { z-index: 1; }
+/* Still water for anyone who asked the machine for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-sd-theme="acnh"] #sd-root::before { animation: none; }
+}
+
+/* ---- the header ---- */
+html[data-sd-theme="acnh"] #sd-root .sd-top {
+  padding: 13px 20px;
+  border-bottom: var(--acnh-dash);
+  background: var(--panel);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-title { font-weight: 900; letter-spacing: -.01em; color: var(--text); }
+html[data-sd-theme="acnh"] #sd-root .sd-crumbs { color: var(--acnh-sage); font-weight: 700; }
+html[data-sd-theme="acnh"] #sd-root .sd-crumbsep { opacity: .6; }
+html[data-sd-theme="acnh"] #sd-root .sd-foot {
+  padding: 9px 20px;
+  border-top: var(--acnh-dash);
+  background: var(--panel);
+  color: var(--acnh-sage);
+  font-weight: 700;
+}
+
+/* ---- the rail: a column of rounded tabs, amber on the one you are on ---- */
+html[data-sd-theme="acnh"] #sd-root .sd-rail {
+  padding: 18px 12px;
+  gap: 3px;
+  border-right: var(--acnh-dash);
+  background: var(--panel) !important;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-brand {
+  padding: 2px 14px 14px;
+  color: var(--acnh-sage);
+  font-weight: 900;
+  letter-spacing: .14em;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-navlink,
+html[data-sd-theme="acnh"] #sd-root .sd-railtoggle {
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  color: var(--text);
+  font-weight: 700;
+}
+/* The rail's own rules pin these fills with `!important` (the app boxes anchors on
+   some pages), so the theme has to answer at the same strength. */
+html[data-sd-theme="acnh"] #sd-root .sd-navlink:hover,
+html[data-sd-theme="acnh"] #sd-root .sd-railtoggle:hover {
+  background: var(--acnh-sage-wash) !important;
+  color: var(--text);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-navlink--active {
+  background: var(--acnh-pick) !important;
+  color: var(--text);
+  font-weight: 900;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-navlink--active:hover {
+  background: var(--acnh-pick-deep) !important;
+  color: var(--text);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-navlink--active .sd-navinitial { color: var(--text); }
+html[data-sd-theme="acnh"] #sd-root .sd-navtext { letter-spacing: .01em; }
+
+/* ---- controls ---- */
+/* 36px, not 34: base buttons, inputs and the search field are all 36, so a
+   toolbar that mixes a button with a field keeps one baseline. */
+html[data-sd-theme="acnh"] #sd-root .sd-btn {
+  height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  /* A step darker than the cream it sits on. With no rim left to name its edge, a
+     panel-coloured button would disappear into the bar behind it. */
+  background: var(--panel-2);
+  color: var(--text);
+  font-weight: 800;
+  box-shadow: 0 1px 3px rgba(111, 90, 60, .14);
+  transition: transform 100ms ease, box-shadow 100ms ease, background-color 130ms ease;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-btn:hover {
+  background: color-mix(in srgb, var(--acnh-pick) 45%, var(--panel-2));
+  box-shadow: 0 2px 6px rgba(111, 90, 60, .16);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-btn:active { transform: translateY(1px); box-shadow: none; }
+html[data-sd-theme="acnh"] #sd-root .sd-primary {
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 900;
+  box-shadow: 0 2px 6px -2px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-primary:hover {
+  background: color-mix(in srgb, var(--accent) 88%, #000000);
+  color: #ffffff;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-primary:active { box-shadow: none; }
+html[data-sd-theme="acnh"] #sd-root .sd-btn--danger { color: var(--danger); }
+html[data-sd-theme="acnh"] #sd-root .sd-btn--danger:hover {
+  background: color-mix(in srgb, var(--danger) 11%, var(--panel-2));
+}
+html[data-sd-theme="acnh"] #sd-root .sd-btn:disabled,
+html[data-sd-theme="acnh"] #sd-root .sd-btn:disabled:hover {
+  border: 0;
+  background: color-mix(in srgb, var(--panel-2) 62%, var(--panel));
+  color: var(--dim);
+  box-shadow: none;
+  transform: none;
+}
+
+/* ---- fields: cream wells with a soft inner lip ---- */
+html[data-sd-theme="acnh"] #sd-root .sd-searchinput,
+html[data-sd-theme="acnh"] #sd-root .sd-input,
+html[data-sd-theme="acnh"] #sd-root .sd-periodselect {
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--panel-2);
+  color: var(--text);
+  font-weight: 700;
+  /* No rim: the fill is already a step off the cream, and the inner lip is the
+     only edge the theme wants a field to have. */
+  box-shadow: inset 0 1px 2px rgba(111, 90, 60, .09);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-searchinput {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-input,
+html[data-sd-theme="acnh"] #sd-root .sd-periodselect { min-height: 36px; padding: 5px 13px; }
+html[data-sd-theme="acnh"] #sd-root .sd-searchinput::placeholder { color: var(--dim); font-weight: 600; }
+/* No outline anywhere: focus is a soft ring painted as a shadow, because a
+   shadow follows the control's rounded corner instead of drawing a square around
+   it. The field rule below adds its inner lip to the same shadow. */
+html[data-sd-theme="acnh"] #sd-root :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-searchinput:focus-visible,
+html[data-sd-theme="acnh"] #sd-root .sd-input:focus-visible,
+html[data-sd-theme="acnh"] #sd-root .sd-periodselect:focus-visible {
+  background: var(--panel);
+  box-shadow: inset 0 1px 2px rgba(111, 90, 60, .06), 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+/* ---- tables: a cream sheet, an italic sage label over each column, and a dash
+   between rows instead of a box ---- */
+html[data-sd-theme="acnh"] #sd-root .sd-tablewrap {
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-table thead th {
+  padding: 11px 16px !important;
+  background: transparent !important;
+  color: var(--acnh-sage);
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: .02em;
+  text-transform: none;
+  border-bottom: var(--acnh-dash) !important;
+  box-shadow: none;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-table tbody td {
+  padding: 11px 16px !important;
+  border-bottom: 1px dashed var(--acnh-rule) !important;
+  font-weight: 600;
+  color: var(--text);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-table tbody tr:last-child td { border-bottom: 0 !important; }
+html[data-sd-theme="acnh"] #sd-root .sd-table tbody tr:nth-child(even) td { background: transparent !important; }
+/* The cell's padding moves onto the link so the whole cell is the target. The
+   padding rule above is as specific as the base one that does that and comes
+   later, so it put the cell's padding back and made every linked row 16px taller
+   than any other row. Same correction the Wii skin carries. */
+html[data-sd-theme="acnh"] #sd-root .sd-table tbody td.sd-cell--link {
+  --cell-pad-y: 11px;
+  --cell-pad-x: 16px;
+  padding: 0 !important;
+}
+/* Rows do not answer the pointer, here as in the base sheet: the game marks a
+   row only with the cursor's own arrow, so a band that repainted under the
+   mouse read as a selection that was not one. */
+html[data-sd-theme="acnh"] #sd-root .sd-table td a { color: color-mix(in srgb, var(--accent) 82%, #5c4a2e); font-weight: 800; }
+html[data-sd-theme="acnh"] #sd-root .sd-table td.sd-cell--link,
+html[data-sd-theme="acnh"] #sd-root .sd-table td.sd-cell--link a { font-weight: 900; }
+html[data-sd-theme="acnh"] #sd-root .sd-table td.sd-cell--action a,
+html[data-sd-theme="acnh"] #sd-root .sd-table td a.sd-pill {
+  padding: 3px 12px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--panel-2);
+  color: var(--text);
+  font-weight: 800;
+  box-shadow: 0 1px 3px rgba(111, 90, 60, .14);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-table td.sd-cell--action a:hover,
+html[data-sd-theme="acnh"] #sd-root .sd-table td a.sd-pill:hover {
+  background: color-mix(in srgb, var(--acnh-pick) 45%, var(--panel-2));
+  color: var(--text);
+  text-decoration: none;
+}
+
+/* A card owns the only frame around its table: the wrapper inside it is flat, and
+   the card clips so its rounded top is the sheet's. Written per pair because the
+   wrapper rule here carries an id and outranks the base flattening. */
+html[data-sd-theme="acnh"] #sd-root .sd-perf,
+html[data-sd-theme="acnh"] #sd-root .sd-recordcard {
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-perf > .sd-tablewrap,
+html[data-sd-theme="acnh"] #sd-root .sd-recordcard > .sd-tablewrap {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-perfhead { border-bottom: var(--acnh-dash); background: transparent; padding: 12px 16px; }
+html[data-sd-theme="acnh"] #sd-root .sd-perf-title { font-weight: 900; }
+html[data-sd-theme="acnh"] #sd-root .sd-perfcount,
+html[data-sd-theme="acnh"] #sd-root .sd-count { color: var(--acnh-sage); font-weight: 700; }
+
+/* ---- notes: the dialogue box ---- */
+html[data-sd-theme="acnh"] #sd-root .sd-note {
+  padding: 14px 18px;
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  color: var(--text);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-note strong { font-weight: 900; }
+/* The game writes a warning in coral on the same cream box rather than drawing a
+   red frame, and the id-scoped `.sd-note` above would otherwise win outright. */
+html[data-sd-theme="acnh"] #sd-root .sd-note--warn {
+  background: color-mix(in srgb, var(--danger) 8%, var(--panel));
+  color: color-mix(in srgb, var(--danger) 88%, #5c4a2e);
+}
+
+/* ---- tabs: a pill bar, amber behind the one you are on ---- */
+html[data-sd-theme="acnh"] #sd-root .sd-tabs {
+  gap: 4px;
+  padding: 10px 18px;
+  border-bottom: var(--acnh-dash);
+  background: transparent;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-tab {
+  padding: 7px 16px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  color: var(--acnh-sage);
+  font-weight: 800;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-tab:not(.sd-tab--on):hover { background: var(--acnh-sage-wash); color: var(--text); }
+html[data-sd-theme="acnh"] #sd-root .sd-tab--on {
+  border-bottom-color: transparent;
+  background: var(--acnh-pick);
+  color: var(--text);
+  font-weight: 900;
+}
+/* The amber pill is the indicator, so the sliding one would be a second. */
+html[data-sd-theme="acnh"] #sd-root .sd-tabind { display: none; }
+/* A section caption is a chip, but still a block: `inline-block` would let a
+   following textarea flow up beside it (the attendance notes do exactly that).
+   Block at the caption's own width keeps the chip and the line break. */
+html[data-sd-theme="acnh"] #sd-root .sd-section {
+  display: block;
+  width: fit-content;
+  padding: 1px 8px;
+  border-radius: 7px;
+  background: var(--acnh-sage-wash);
+  color: var(--acnh-sage);
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: .02em;
+}
+
+/* ---- the toolbar and its switch ---- */
+html[data-sd-theme="acnh"] #sd-root .sd-viewswitch {
+  padding: 2px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  /* One step off the bar it lives in, for the same reason a button is. */
+  background: var(--panel-2);
+  box-shadow: 0 1px 2px rgba(111, 90, 60, .08);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-viewlink {
+  padding: 4px 13px;
+  border-radius: var(--radius-pill);
+  color: var(--acnh-sage);
+  font-weight: 800;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-viewlink + .sd-viewlink { border-left: 0; }
+html[data-sd-theme="acnh"] #sd-root .sd-viewlink:hover { background: transparent; color: var(--text); }
+html[data-sd-theme="acnh"] #sd-root .sd-viewlink--on {
+  background: var(--acnh-pick);
+  color: var(--text);
+  box-shadow: none;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-monthlabel { color: var(--text); font-weight: 900; }
+
+/* ---- lists, records, tiles ---- */
+html[data-sd-theme="acnh"] #sd-root .sd-listbar { border-bottom: var(--acnh-dash); }
+html[data-sd-theme="acnh"] #sd-root .sd-listbar:has(+ .sd-tablewrap) { border-bottom: 0; }
+html[data-sd-theme="acnh"] #sd-root .sd-records li { border-bottom: var(--acnh-dash); }
+html[data-sd-theme="acnh"] #sd-root .sd-split-side .sd-records li { border-bottom: 0; }
+html[data-sd-theme="acnh"] #sd-root .sd-records a {
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-records a:hover { background: var(--acnh-sage-wash); }
+html[data-sd-theme="acnh"] #sd-root .sd-records a.sd-record--current { background: var(--acnh-pick); }
+html[data-sd-theme="acnh"] #sd-root .sd-records a.sd-record--current .sd-record-label {
+  color: var(--text);
+  font-weight: 900;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-type { font-weight: 800; border: 0; border-radius: var(--radius-pill); background: var(--acnh-sage-wash); color: var(--acnh-sage); }
+/* A balance is the game's coral count on a cream chip. */
+html[data-sd-theme="acnh"] #sd-root .sd-due {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 7px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--danger) 10%, var(--panel));
+  color: color-mix(in srgb, var(--danger) 92%, #5c4a2e);
+  font-weight: 900;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-go { color: var(--acnh-sage); }
+/* Index tiles are the game's app icons: squircles, one step rounder than a card
+   of the same size would be. */
+html[data-sd-theme="acnh"] #sd-root .sd-tile {
+  padding: 13px 16px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+  font-weight: 800;
+  transition: transform 100ms ease, background-color 130ms ease;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-tile:hover {
+  background: color-mix(in srgb, var(--acnh-pick) 34%, var(--panel));
+  transform: translateY(-1px);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-indexhead { color: var(--text); border-bottom: var(--acnh-dash); font-weight: 900; }
+html[data-sd-theme="acnh"] #sd-root .sd-indexcount { color: var(--acnh-sage); font-weight: 700; }
+
+/* ---- editors ---- */
+html[data-sd-theme="acnh"] #sd-root .sd-split-side {
+  background: color-mix(in srgb, var(--panel) 70%, var(--acnh-sage-wash));
+  border-right: var(--acnh-dash);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-editorbar,
+html[data-sd-theme="acnh"] #sd-root .sd-editorstatus { border-bottom: var(--acnh-dash); font-weight: 700; }
+html[data-sd-theme="acnh"] #sd-root .sd-editorstatus { border-bottom: 0; border-top: var(--acnh-dash); }
+html[data-sd-theme="acnh"] #sd-root .sd-dirty { color: var(--warn); font-weight: 900; }
+html[data-sd-theme="acnh"] #sd-root .sd-fields th { color: var(--acnh-sage); font-weight: 800; }
+/* The row rules are drawn in a dark ink for the dark field; on cream that reads as
+   a table of ruled boxes, so the separator is the theme's own dash. */
+html[data-sd-theme="acnh"] #sd-root .sd-fields tr + tr > * {
+  box-shadow: inset 0 1px 0 transparent;
+  border-top: 1px dashed var(--acnh-rule);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-section { letter-spacing: .02em; }
+
+/* ---- the calendars ---- */
+html[data-sd-theme="acnh"] #sd-root .sd-dayblock,
+html[data-sd-theme="acnh"] #sd-root .sd-monthgrid {
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-dayname {
+  padding: 10px 16px;
+  border-bottom: var(--acnh-dash);
+  background: transparent;
+  color: var(--acnh-sage);
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: .03em;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-headrow {
+  background: var(--acnh-sage-wash);
+  border-bottom: var(--acnh-dash);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-studiohead { color: var(--acnh-sage); font-weight: 800; border-left: var(--acnh-dash); }
+html[data-sd-theme="acnh"] #sd-root .sd-studiocol { border-left: var(--acnh-dash); }
+html[data-sd-theme="acnh"] #sd-root .sd-studiocols {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--acnh-sage) 26%, transparent) 0 1px,
+    transparent 1px var(--hour)
+  );
+}
+html[data-sd-theme="acnh"] #sd-root .sd-gutter { border-right: var(--acnh-dash); }
+html[data-sd-theme="acnh"] #sd-root .sd-hourlabel { color: var(--acnh-sage); font-weight: 700; }
+html[data-sd-theme="acnh"] #sd-root .sd-monthhead {
+  border-bottom: var(--acnh-dash);
+  background: var(--acnh-sage-wash);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-monthweekday {
+  color: var(--acnh-sage);
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: .02em;
+  text-transform: none;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-monthweek { border-bottom: 1px dashed var(--acnh-rule); }
+html[data-sd-theme="acnh"] #sd-root .sd-day { border-right: 1px dashed var(--acnh-rule); }
+html[data-sd-theme="acnh"] #sd-root .sd-day--blank { background: color-mix(in srgb, var(--line) 22%, transparent); }
+html[data-sd-theme="acnh"] #sd-root .sd-day--weekend { background: color-mix(in srgb, var(--acnh-sage) 9%, transparent); }
+html[data-sd-theme="acnh"] #sd-root .sd-day--holiday { background: color-mix(in srgb, var(--warn) 10%, transparent); }
+html[data-sd-theme="acnh"] #sd-root .sd-day--today { background: color-mix(in srgb, var(--acnh-pick) 55%, transparent); }
+html[data-sd-theme="acnh"] #sd-root .sd-daynum { font-weight: 800; }
+html[data-sd-theme="acnh"] #sd-root a.sd-daynum:hover { color: color-mix(in srgb, var(--accent) 80%, #5c4a2e); }
+html[data-sd-theme="acnh"] #sd-root .sd-holiday { color: var(--warn); font-weight: 800; }
+html[data-sd-theme="acnh"] #sd-root .sd-event {
+  border-radius: var(--radius-xs);
+  background: color-mix(in srgb, var(--acnh-sage) 12%, var(--panel));
+  font-weight: 700;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-event:hover { background: var(--acnh-pick); }
+html[data-sd-theme="acnh"] #sd-root .sd-eventtime { font-weight: 800; }
+html[data-sd-theme="acnh"] #sd-root .sd-weekrow { border-color: transparent; }
+html[data-sd-theme="acnh"] #sd-root .sd-weekrow:hover { background: var(--acnh-sage-wash); }
+html[data-sd-theme="acnh"] #sd-root .sd-weekrow-time { color: color-mix(in srgb, var(--accent) 78%, #5c4a2e); font-weight: 900; }
+html[data-sd-theme="acnh"] #sd-root .sd-weekrow-loc { border: 0; background: var(--acnh-sage-wash); color: var(--acnh-sage); }
+html[data-sd-theme="acnh"] #sd-root .sd-weekrow-tag {
+  border-radius: var(--radius-pill);
+  background: var(--acnh-sage-wash);
+  font-weight: 800;
+}
+
+/* ---- the dialogue box ----
+ * The game never floats a panel over a dimmed page: it puts a rounded cream
+ * bubble in front of it, with the roundest corner on the screen and a warm cast
+ * shadow instead of a rim. So the overlay is a warm dim rather than a black one,
+ * the head and the foot lose their fills and their rules, and the shape and the
+ * shadow have to carry the box on their own.
+ */
+html[data-sd-theme="acnh"] #sd-root .sd-overlay {
+  background: color-mix(in srgb, #433725 48%, transparent);
+  backdrop-filter: blur(3px);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-dialog {
+  border: 0;
+  border-radius: calc(var(--radius-lg) + 6px);
+  background: var(--panel);
+  box-shadow: var(--acnh-cast);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-dialog-head {
+  padding: 20px 24px 12px;
+  border-bottom: 0;
+  background: transparent;
+}
+/* The eyebrow is the game's italic sage label over the thing it names. */
+html[data-sd-theme="acnh"] #sd-root .sd-eyebrow {
+  margin-bottom: 6px;
+  color: var(--acnh-sage);
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: none;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-dialog-title {
+  color: var(--text);
+  font-weight: 900;
+  letter-spacing: -.01em;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-dialog-lede { color: var(--acnh-sage); font-style: italic; font-weight: 700; }
+/* Close is one of the game's little round buttons, not a letter in the corner. */
+html[data-sd-theme="acnh"] #sd-root .sd-dialog-x {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--panel-2);
+  color: var(--dim);
+  font-size: var(--fs-base);
+  box-shadow: 0 1px 3px rgba(111, 90, 60, .14);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-dialog-x:hover {
+  background: color-mix(in srgb, var(--danger) 9%, var(--panel));
+  color: color-mix(in srgb, var(--danger) 90%, #5c4a2e);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-dialog-body { padding: 8px 24px 16px; }
+html[data-sd-theme="acnh"] #sd-root .sd-dialog-body .sd-fields tr + tr > * { border-top-color: var(--acnh-rule); }
+html[data-sd-theme="acnh"] #sd-root .sd-dialogstatus {
+  margin-top: 14px;
+  color: var(--acnh-sage);
+  font-style: italic;
+  font-weight: 700;
+}
+/* The foot is a band of the same cream, divided by the theme's dash rather than a
+   rim: a second cream panel would read as another card inside the bubble. */
+html[data-sd-theme="acnh"] #sd-root .sd-dialog-foot {
+  padding: 12px 24px 16px;
+  border-top: var(--acnh-dash);
+  background: color-mix(in srgb, var(--acnh-sage-wash) 55%, var(--panel));
+}
+html[data-sd-theme="acnh"] #sd-root .sd-dialog-left { gap: 10px; }
+html[data-sd-theme="acnh"] #sd-root .sd-dialog-actions { gap: 8px; }
+/* The discard question is the game's coral warning on the same cream box, sitting
+   where the next step would be. */
+html[data-sd-theme="acnh"] #sd-root .sd-dialog-ask {
+  padding: 14px 24px;
+  border-top: var(--acnh-dash);
+  background: color-mix(in srgb, var(--danger) 8%, var(--panel));
+  color: color-mix(in srgb, var(--danger) 88%, #5c4a2e);
+  font-weight: 800;
+}
+/* The secondary button stays cream on the coral band; the primary one keeps the
+   theme's accent, so it is scoped out rather than repainted cream under white
+   text. */
+html[data-sd-theme="acnh"] #sd-root .sd-dialog-ask .sd-btn:not(.sd-primary) { background: var(--panel); }
+/* The line beside the buttons in the absence dialog explains what Save will do;
+   `.sd-dirty` means "unsaved changes" in the record editor and is amber there,
+   so the quieter reading is scoped to the register's own dialog. */
+html[data-sd-theme="acnh"] #sd-root .sd-att .sd-dialog-foot .sd-dirty {
+  color: var(--acnh-sage);
+  font-style: italic;
+  font-weight: 700;
+}
+
+/* ---- the register ----
+ * One card per date, the class listed inside it. The game's own register is the
+ * closest thing to this screen: a cream card per column, the date as its title,
+ * a sage count beneath, dashes between the names, and the one absence in coral.
+ */
+html[data-sd-theme="acnh"] #sd-root .sd-attbody { padding-top: var(--space-4); }
+/* The page's own ways of adding someone read as the game's small tags, not as
+   underlined text: sage wash, a sage rim, and the deeper sage that stays legible
+   on it. */
+html[data-sd-theme="acnh"] #sd-root .sd-attlinks {
+  gap: 6px;
+  margin-bottom: var(--space-4);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-attlinks .sd-action {
+  padding: 4px 13px;
+  border: 0;
+  background: var(--acnh-sage-wash);
+  box-shadow: 0 1px 2px rgba(111, 90, 60, .10);
+  color: color-mix(in srgb, var(--acnh-sage) 52%, #4a3a24);
+  font-weight: 800;
+  box-shadow: none;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-attlinks .sd-action:hover {
+  background: var(--acnh-pick);
+  color: var(--text);
+  text-decoration: none;
+}
+
+/* The card is a small dialogue box, not a table: the same radius, the same rim
+   and cast, and a head with no band of its own - the modal's head has none, and
+   a tinted strip with a rule under it was the one thing making these look like a
+   different kind of surface. */
+html[data-sd-theme="acnh"] #sd-root .sd-attcol {
+  border: 0;
+  border-radius: calc(var(--radius-lg) + 6px);
+  background: var(--panel);
+  box-shadow: var(--acnh-cast);
+  overflow: hidden;
+}
+/* The date is the card's title, so it is the one line that is ink and not a
+   label; the count under it is the label, as the eyebrow and the title are in
+   the dialogue box. */
+html[data-sd-theme="acnh"] #sd-root .sd-attcolhead {
+  padding: 16px 18px 10px;
+  align-items: flex-start;
+  background: transparent;
+  border-bottom: 0;
+  color: var(--text);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-attdate {
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: .01em;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-attcount {
+  color: var(--acnh-sage);
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: .01em;
+}
+
+html[data-sd-theme="acnh"] #sd-root .sd-attrow {
+  padding: 8px 16px;
+  gap: 8px;
+  box-shadow: none;
+  border-bottom: 1px dashed var(--acnh-rule);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-attrow:last-child { border-bottom: 0; }
+/* The row the cursor is on lights up amber, the way a list does in the game. */
+html[data-sd-theme="acnh"] #sd-root .sd-attrow:hover {
+  background: color-mix(in srgb, var(--acnh-pick) 34%, transparent);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-attrow input[type="checkbox"] { width: 17px; height: 17px; }
+html[data-sd-theme="acnh"] #sd-root .sd-attname {
+  color: color-mix(in srgb, var(--accent) 80%, #5c4a2e);
+  font-weight: 800;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-attname:hover { text-decoration: underline; }
+html[data-sd-theme="acnh"] #sd-root .sd-attreason {
+  color: color-mix(in srgb, var(--acnh-sage) 66%, #4a3a24);
+  font-style: italic;
+  font-weight: 700;
+}
+/* An absence is the coral the game uses for a count you have not reached, not a
+   second accent: the name dims to it and the reason goes with it. */
+html[data-sd-theme="acnh"] #sd-root .sd-attrow--out {
+  background: color-mix(in srgb, var(--danger) 7%, transparent);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-attrow--out:hover {
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-attrow--out .sd-attname {
+  color: color-mix(in srgb, var(--danger) 58%, var(--text));
+}
+html[data-sd-theme="acnh"] #sd-root .sd-attrow--out .sd-attreason {
+  color: color-mix(in srgb, var(--danger) 90%, #5c4a2e);
+  font-weight: 800;
+}
+/* The make-up / trial / drop-in tag is the game's little amber sticker. */
+html[data-sd-theme="acnh"] #sd-root .sd-attmark {
+  padding: 0 7px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--acnh-pick);
+  color: #6b5327;
+  font-weight: 900;
+  line-height: 17px;
+  box-shadow: none;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-attedit {
+  padding: 3px 5px;
+  border: 0;
+  background: transparent;
+  color: var(--acnh-sage);
+  box-shadow: none;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-attedit:hover {
+  background: var(--acnh-pick);
+  color: var(--text);
+}
+/* The round control on a date is the dialogue box's Close, because that is what
+   it is: one circle per card, neutral at rest and coral only under the pointer.
+   The table's own icon buttons keep their coral ring - they sit in rows, where a
+   destructive control should say so before it is touched. */
+html[data-sd-theme="acnh"] #sd-root .sd-attcolhead .sd-iconbtn {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--panel-2);
+  color: var(--dim);
+  box-shadow: none;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-attcolhead .sd-iconbtn:hover,
+html[data-sd-theme="acnh"] #sd-root .sd-attcolhead .sd-iconbtn:focus-visible {
+  background: color-mix(in srgb, var(--danger) 9%, var(--panel));
+  color: color-mix(in srgb, var(--danger) 90%, #5c4a2e);
+  outline: 0;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-iconbtn {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--danger) 8%, var(--panel));
+  color: color-mix(in srgb, var(--danger) 88%, #5c4a2e);
+  box-shadow: none;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-iconbtn:hover,
+html[data-sd-theme="acnh"] #sd-root .sd-iconbtn:focus-visible {
+  background: color-mix(in srgb, var(--danger) 16%, var(--panel));
+  color: var(--danger);
+  outline: 0;
+}
+/* The class's own notes, in the cream box the game puts a text field in - the
+   same box as the date cards above it, so one screen does not carry two kinds of
+   card. */
+html[data-sd-theme="acnh"] #sd-root .sd-attnotes {
+  padding: 16px 18px 18px;
+  border: 0;
+  border-radius: calc(var(--radius-lg) + 6px);
+  background: var(--panel);
+  box-shadow: var(--acnh-cast);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-attnotes .sd-section { margin-bottom: 10px; }
+html[data-sd-theme="acnh"] #sd-root .sd-attnotes .sd-textarea {
+  /* The base field stops at 480px, which leaves a cream gutter inside a card this
+     wide; the game fills its dialogue box with the field. */
+  width: 100%;
+  max-width: none;
+  border: 0;
+  background: var(--panel-2);
+  box-shadow: inset 0 1px 2px rgba(111, 90, 60, .06);
+}
+/* What just happened in the toolbar: the game writes a passing note in sage. */
+html[data-sd-theme="acnh"] #sd-root .sd-attmessage {
+  font-style: italic;
+  font-weight: 700;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-attfamily {
+  color: color-mix(in srgb, var(--acnh-sage) 60%, #4a3a24);
+  font-style: italic;
+}
+
+/* ---- tick boxes ---- */
+html[data-sd-theme="acnh"] #sd-root input[type="checkbox"],
+html[data-sd-theme="acnh"] #sd-root input[type="radio"] { accent-color: var(--accent); }
+
+/* ---- the week's class blocks keep the app's own colour as their identity, and
+   get the card's soft edge so a busy day reads as cards, not patches of paint ---- */
+html[data-sd-theme="acnh"] #sd-root .sd-block {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  /* The app paints each block in its class colour, inline, so the fill cannot be
+     restyled - it is veiled instead: cream over the block's own colour leaves the
+     pastel the game uses and still says which class it is. */
+  color: #5c4a2e;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-block::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: color-mix(in srgb, var(--panel) 80%, transparent);
+  pointer-events: none;
+}
+/* Above the veil, so the labels are the block's text and not its wash. */
+html[data-sd-theme="acnh"] #sd-root .sd-block > * { position: relative; z-index: 1; }
+html[data-sd-theme="acnh"] #sd-root .sd-block .sd-block-name,
+html[data-sd-theme="acnh"] #sd-root .sd-block .sd-block-meta { color: #5c4a2e; }
+html[data-sd-theme="acnh"] #sd-root .sd-block-name { font-weight: 900; }
+html[data-sd-theme="acnh"] #sd-root .sd-block-meta { font-weight: 700; }
+html[data-sd-theme="acnh"] #sd-root .sd-tip {
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  box-shadow: var(--shadow-menu);
+  font-weight: 700;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-tip-line:first-child { color: var(--text); font-weight: 900; }
+
+/* ---- the last rims ----
+ * Components the rest of this sheet does not own still arrive with a 1px box from
+ * the base theme: another kind of card, the list toolbar's own field, the
+ * performance list's reorder and padlock controls, the index and week chips. Each
+ * loses the box here. What separates a surface is a fill one step off the cream
+ * and the theme's small cast shadow; what separates two *sections* is the dash.
+ */
+html[data-sd-theme="acnh"] #sd-root .sd-filter {
+  border: 0;
+  background: var(--panel-2);
+  box-shadow: inset 0 1px 2px rgba(111, 90, 60, .09);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-action {
+  border: 0;
+  background: var(--panel-2);
+  box-shadow: 0 1px 3px rgba(111, 90, 60, .14);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-action:hover { background: color-mix(in srgb, var(--acnh-pick) 45%, var(--panel-2)); }
+/* An action the page cannot do stays the one dashed outline in the theme: the
+   dash is the signal, and it is the only box left. */
+html[data-sd-theme="acnh"] #sd-root .sd-action--js { background: transparent; border: var(--acnh-dash); }
+html[data-sd-theme="acnh"] #sd-root .sd-chip {
+  border: 0;
+  background: var(--acnh-sage-wash);
+  color: color-mix(in srgb, var(--acnh-sage) 55%, #4a3a24);
+  box-shadow: 0 1px 2px rgba(111, 90, 60, .10);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-chip:hover { background: var(--acnh-pick); color: var(--text); }
+html[data-sd-theme="acnh"] #sd-root .sd-card {
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-confirm-card {
+  border: 0;
+  border-radius: calc(var(--radius-lg) + 6px);
+  background: var(--panel);
+  box-shadow: var(--acnh-cast);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-letterrail {
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-letterrail a.sd-letterrail--on {
+  background: var(--acnh-pick);
+  color: var(--text);
+  box-shadow: none;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-period {
+  border: 0;
+  background: var(--panel-2);
+  box-shadow: 0 1px 3px rgba(111, 90, 60, .14);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-block-init {
+  border: 0;
+  background: color-mix(in srgb, currentColor 16%, transparent);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-indexbar { border-bottom: var(--acnh-dash); }
+html[data-sd-theme="acnh"] #sd-root .sd-grouphead { border-bottom: var(--acnh-dash); }
+html[data-sd-theme="acnh"] #sd-root .sd-filterrow { border-bottom: var(--acnh-dash); }
+html[data-sd-theme="acnh"] #sd-root .sd-untimed { border-top: var(--acnh-dash); }
+html[data-sd-theme="acnh"] #sd-root .sd-perfstatus { border-top: var(--acnh-dash); }
+html[data-sd-theme="acnh"] #sd-root .sd-payplan { border-top: var(--acnh-dash); }
+html[data-sd-theme="acnh"] #sd-root .sd-perfmv {
+  border: 0;
+  background: var(--panel-2);
+  box-shadow: 0 1px 2px rgba(111, 90, 60, .12);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-perflock {
+  border: 0;
+  background: var(--panel-2);
+  box-shadow: 0 1px 2px rgba(111, 90, 60, .12);
+}
+html[data-sd-theme="acnh"] #sd-root .sd-perflock--on { background: var(--acnh-pick); color: var(--text); }
+
+/* ---- the bars that were drawn as shadows ----
+ * The base sheet marks "this one" with an inset bar on the left edge - the active
+ * rail link, the hovered table row, the open record, the letter rail, a dragged
+ * row. Those are borders in everything but name, so here the state is a wash and
+ * the edge is gone.
+ */
+html[data-sd-theme="acnh"] #sd-root .sd-navlink--active { box-shadow: none !important; }
+html[data-sd-theme="acnh"] #sd-root .sd-table td.sd-cell--link:has(a.sd-celllink:is(:hover, :focus-visible)) {
+  background: color-mix(in srgb, var(--acnh-pick) 26%, transparent) !important;
+  box-shadow: none;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-table tr.sd-recordrow--open > td {
+  background: color-mix(in srgb, var(--acnh-pick) 26%, transparent);
+  box-shadow: none;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-grprail a.on {
+  background: var(--acnh-sage-wash);
+  color: var(--text);
+  box-shadow: none;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-jump-row.on { background: var(--acnh-sage-wash); box-shadow: none; }
+html[data-sd-theme="acnh"] #sd-root .sd-day--today { box-shadow: none; }
+html[data-sd-theme="acnh"] #sd-root .sd-perftable tbody tr.sd-perfrow--over > td {
+  box-shadow: none;
+  background: color-mix(in srgb, var(--acnh-pick) 24%, transparent);
+}
