@@ -47,12 +47,15 @@ html[data-sd-theme="acnh"] #sd-root {
   --acnh-rule: #ddd0b0;
   --acnh-dash: 1px dashed var(--acnh-rule);
 
-  /* Cream does not cast a shadow so much as sit on one: soft, warm, short. */
-  --shadow-sm: 0 1px 2px rgba(111, 90, 60, .10), 0 8px 18px -14px rgba(111, 90, 60, .45);
-  --shadow-menu: 0 20px 38px -20px rgba(111, 90, 60, .45);
+  /* Cream does not cast a shadow so much as sit on one: soft, warm, short. The
+     cast is a contact shadow plus a wide, heavily eroded one, never a bloom - a
+     sheet of paper on a desk, not a panel lifted off it. */
+  --shadow-sm: 0 1px 2px rgba(111, 90, 60, .07), 0 6px 14px -12px rgba(111, 90, 60, .28);
+  --shadow-menu: 0 12px 26px -18px rgba(111, 90, 60, .32);
   /* The dialogue box and the register's date cards are the same material, so they
-     share one deeper cast: a card sitting above the field, not a panel in it. */
-  --acnh-cast: 0 2px 6px rgba(80, 62, 38, .12), 0 22px 44px -20px rgba(80, 62, 38, .55);
+     share one cast a step above the sheet's: still a contact shadow and an eroded
+     bloom, not a second, heavier kind of drop shadow. */
+  --acnh-cast: 0 1px 3px rgba(80, 62, 38, .07), 0 10px 22px -18px rgba(80, 62, 38, .28);
 
   /* Rounder than either built-in theme: a 44px control is a squircle, and a card
      has no corner you could point at. */
@@ -327,6 +330,18 @@ html[data-sd-theme="acnh"] #sd-root .sd-table td a.sd-pill:hover {
   color: var(--text);
   text-decoration: none;
 }
+/* The two icon-only controls keep the base sheet's own square: a 26px round pill
+ * in a cell, a 36px key button beside a field. The padding above is written for a
+ * pill that carries a word, and at this specificity it beat those squares - the
+ * round pill kept 24px of side padding inside 26px, so its 12px mask shrank to
+ * 2px and all but disappeared, and the key button held a 14px glyph in a 4px
+ * cell and painted it five pixels right of centre. Give both their padding back;
+ * the squares themselves, and the glyphs' sizes, are the base theme's. */
+html[data-sd-theme="acnh"] #sd-root .sd-table td.sd-cell--action a.sd-pill--icon,
+html[data-sd-theme="acnh"] #sd-root .sd-table td a.sd-pill.sd-pill--icon {
+  padding: 0;
+}
+html[data-sd-theme="acnh"] #sd-root .sd-btn--icon { padding: 0; }
 
 /* A card owns the only frame around its table: the wrapper inside it is flat, and
    the card clips so its rounded top is the sheet's. Written per pair because the
@@ -689,7 +704,10 @@ html[data-sd-theme="acnh"] #sd-root .sd-attlinks .sd-action:hover {
    different kind of surface. */
 html[data-sd-theme="acnh"] #sd-root .sd-attcol {
   border: 0;
-  border-radius: calc(var(--radius-lg) + 6px);
+  /* A register card, not a dialogue box: at the dialog's 32px the bottom row sits
+     inside the curve, and with `overflow: hidden` the last name and reason were
+     clipped by the corner. The theme's card radius leaves the row its full width. */
+  border-radius: var(--radius-md);
   background: var(--panel);
   box-shadow: var(--acnh-cast);
   overflow: hidden;
@@ -813,13 +831,17 @@ html[data-sd-theme="acnh"] #sd-root .sd-iconbtn:focus-visible {
    same box as the date cards above it, so one screen does not carry two kinds of
    card. */
 html[data-sd-theme="acnh"] #sd-root .sd-attnotes {
-  padding: 16px 18px 18px;
+  /* `padding` is the whole gap above the heading: the base `.sd-section` carries
+     a 16px top margin as well, and together they left a 32px band of empty cream
+     over the box's first line. */
+  padding: 12px 18px 16px;
   border: 0;
-  border-radius: calc(var(--radius-lg) + 6px);
+  /* The same card radius as the date cards above it, not the dialog's. */
+  border-radius: var(--radius-md);
   background: var(--panel);
   box-shadow: var(--acnh-cast);
 }
-html[data-sd-theme="acnh"] #sd-root .sd-attnotes .sd-section { margin-bottom: 10px; }
+html[data-sd-theme="acnh"] #sd-root .sd-attnotes .sd-section { margin-top: 0; margin-bottom: 10px; }
 html[data-sd-theme="acnh"] #sd-root .sd-attnotes .sd-textarea {
   /* The base field stops at 480px, which leaves a cream gutter inside a card this
      wide; the game fills its dialogue box with the field. */
@@ -839,19 +861,81 @@ html[data-sd-theme="acnh"] #sd-root .sd-attfamily {
   font-style: italic;
 }
 
-/* ---- tick boxes ---- */
+/* ---- tick boxes ----
+ * The game does not use the browser's own box: a tick is a small rounded cream
+ * well that fills with the leaf green and carries a white mark, and a radio is
+ * the same well round with a dot. `appearance: none` draws that shape while the
+ * element stays the app's own <input>, so the tick still writes the same field it
+ * always did - this is paint, not behaviour. No rim, like everything else here:
+ * the well is the fill, the inner lip is the only edge.
+ */
 html[data-sd-theme="acnh"] #sd-root input[type="checkbox"],
-html[data-sd-theme="acnh"] #sd-root input[type="radio"] { accent-color: var(--accent); }
+html[data-sd-theme="acnh"] #sd-root input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: none;
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  border: 0;
+  border-radius: 5px;
+  background: var(--panel-2) center / 11px 11px no-repeat;
+  box-shadow: inset 0 1px 2px rgba(111, 90, 60, .12);
+  cursor: pointer;
+  transition: background-color 120ms ease, box-shadow 120ms ease;
+}
+html[data-sd-theme="acnh"] #sd-root input[type="radio"] {
+  border-radius: var(--radius-pill);
+  background-size: 9px 9px;
+}
+html[data-sd-theme="acnh"] #sd-root input[type="checkbox"]:hover,
+html[data-sd-theme="acnh"] #sd-root input[type="radio"]:hover {
+  background-color: color-mix(in srgb, var(--acnh-pick) 55%, var(--panel-2));
+}
+/* The mark is the same Font Awesome path the action icons use, as a maskless
+   white fill: it has to read on the accent, not on the cream. */
+html[data-sd-theme="acnh"] #sd-root input[type="checkbox"]:checked {
+  background-color: var(--accent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23ffffff' d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5 12.5 32.8 12.5 45.3 0z'/%3E%3C/svg%3E");
+  box-shadow: none;
+}
+html[data-sd-theme="acnh"] #sd-root input[type="radio"]:checked {
+  background-color: var(--accent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4' fill='%23ffffff'/%3E%3C/svg%3E");
+  box-shadow: none;
+}
+html[data-sd-theme="acnh"] #sd-root input[type="checkbox"]:checked:hover,
+html[data-sd-theme="acnh"] #sd-root input[type="radio"]:checked:hover {
+  background-color: color-mix(in srgb, var(--accent) 88%, #000000);
+}
+/* The theme's focus ring, repeated here because this rule is as specific as the
+   generic one and comes later: without it a focused box would lose the ring. */
+html[data-sd-theme="acnh"] #sd-root input[type="checkbox"]:focus-visible,
+html[data-sd-theme="acnh"] #sd-root input[type="radio"]:focus-visible {
+  outline: 0;
+  box-shadow: inset 0 1px 2px rgba(111, 90, 60, .12), 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
+}
 
 /* ---- the week's class blocks keep the app's own colour as their identity, and
    get the card's soft edge so a busy day reads as cards, not patches of paint ---- */
 html[data-sd-theme="acnh"] #sd-root .sd-block {
-  position: relative;
+  /* Left absolute, as the base sheet places it: a block's `top` and `height` are
+     written inline by the view, and a relative block ignores them and stacks down
+     the studio column, so every class drifted away from its own hour. Being
+     absolute is also what gives the veil below its containing block. */
   isolation: isolate;
   overflow: hidden;
   border: 0;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  /* Squarer than a card: a block is only one class tall, and a card corner on a
+     30px box reads as a lozenge. */
+  border-radius: var(--radius-xs);
+  /* The base block pads its text by 3px 5px, which on a cream card leaves the name
+     all but touching the edge; a block's own label gets room instead. The short
+     variant keeps a tighter box below, because a 15-minute class is 30px tall. */
+  padding: 5px 10px;
+  /* Flat, and explicitly so: the base block carries its own 1px drop shadow, and a
+     theme with no rims on it should not have one either. */
+  box-shadow: none;
   /* The app paints each block in its class colour, inline, so the fill cannot be
      restyled - it is veiled instead: cream over the block's own colour leaves the
      pastel the game uses and still says which class it is. */
@@ -870,6 +954,7 @@ html[data-sd-theme="acnh"] #sd-root .sd-block > * { position: relative; z-index:
 html[data-sd-theme="acnh"] #sd-root .sd-block .sd-block-name,
 html[data-sd-theme="acnh"] #sd-root .sd-block .sd-block-meta { color: #5c4a2e; }
 html[data-sd-theme="acnh"] #sd-root .sd-block-name { font-weight: 900; }
+html[data-sd-theme="acnh"] #sd-root .sd-block--short { padding: 2px 9px; }
 html[data-sd-theme="acnh"] #sd-root .sd-block-meta { font-weight: 700; }
 html[data-sd-theme="acnh"] #sd-root .sd-tip {
   border: 0;
