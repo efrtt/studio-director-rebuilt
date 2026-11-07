@@ -10,8 +10,6 @@ default for a fresh install — big rounded panels, one bright accent, text size
 a room. The functional rebuild underneath is the same as `main`; the light and dark themes are still
 there if you prefer them.
 
-![The channel menu](web/docs/shots/wii-menu-live.png)
-
 It runs in your browser on top of the app you already pay for, with your existing session. No account,
 no server, no API key.
 
@@ -113,7 +111,7 @@ web/
     wii.css       the Wii theme, scoped to html[data-sd-theme="wii"] #sd-root
   test/           fixtures, golden models, suites
   tools/          build, golden, capture, crawl and demo scripts
-  docs/           contract, design notes, crawl map, screenshots
+  docs/           contract, design notes, crawl map
 ```
 
 Captured pages and the models they produce are committed under `web/test/fixtures` and
