@@ -49,6 +49,14 @@ const ARTEFACT = 'studio-director-rebuilt.user.js';
 // The skin, exactly: these files exist only to carry it.
 const SKIN_FILES = [
   'web/src/wii.css',
+  'web/src/acnh.css',
+  'web/src/acnh-fonts.css',
+  'web/src/fonts/nunito-latin-var.woff2',
+  'web/src/fonts/OFL-nunito.txt',
+  'web/test/font.test.mjs',
+  // Nothing on `main` has a theme whose type needs embedding, so the generator
+  // travels with the theme rather than sitting on both lines unused.
+  'web/tools/embed-font.mjs',
   'web/src/components/Menu.svelte',
   'web/src/components/Cursor.svelte',
   'web/src/cursors/PointerP1.svg',
@@ -74,26 +82,37 @@ const TRANSFORMS = [
     replace: ''
   },
   {
+    file: 'web/package.json',
+    find: 'node test/font.test.mjs && ',
+    replace: ''
+  },
+  {
     file: 'web/src/lib/styles.js',
     find: "// The Wii skin is a theme, not a second stylesheet: it is appended so a mount\n"
       + "// injects one <style> and the userscript stays one file with nothing to fetch.\n"
-      + "import WII from '../wii.css?inline';",
+      + "import WII from '../wii.css?inline';\n"
+      + '// The Island theme does the same, and brings its own type: `acnh-fonts.css` holds\n'
+      + '// the Nunito faces as data: URIs, so only a build that offers the theme carries\n'
+      + '// them - `main` has neither the theme nor the 52 KiB of font.\n'
+      + "import ACNH_FONTS from '../acnh-fonts.css?inline';\n"
+      + "import ACNH from '../acnh.css?inline';",
     replace: "// The Wii skin lives only on `fun-themes`: it is a theme of its own, carried there by\n"
       + "// its own stylesheet. A build of `main` never offers it, so there is nothing on this\n"
       + "// line for a second sheet to do."
   },
   {
     file: 'web/src/lib/styles.js',
-    find: 'el.textContent = `${FONTS}\\n${CSS}\\n${WII}`;',
+    find: 'el.textContent = `${FONTS}\\n${CSS}\\n${WII}\\n${ACNH_FONTS}\\n${ACNH}`;',
     replace: 'el.textContent = `${FONTS}\\n${CSS}`;'
   },
   {
     file: 'web/src/lib/theme.js',
     find: "// On the fun-themes branch the Wii theme comes first and is what a fresh install\n"
-      + "// gets; the other three are untouched and one press of the button away.\n"
-      + "export const THEMES = ['wii', 'dark', 'light', 'auto'];\n"
+      + "// gets; the other three are untouched and one press of the button away. `acnh`\n"
+      + '// closes the cycle: the Island theme is a look of its own, not an `auto` answer.\n'
+      + "export const THEMES = ['wii', 'dark', 'light', 'auto', 'acnh'];\n"
       + '\n'
-      + "export const THEME_LABEL = { wii: 'Wii', dark: 'Dark', light: 'Light', auto: 'Auto' };",
+      + "export const THEME_LABEL = { wii: 'Wii', dark: 'Dark', light: 'Light', auto: 'Auto', acnh: 'Island' };",
     replace: "// Dark first: it is the look the build has always had, so a fresh install is\n"
       + "// unchanged until somebody cycles the button.\n"
       + "export const THEMES = ['dark', 'light', 'auto'];\n"
@@ -111,6 +130,9 @@ const TRANSFORMS = [
       + "  // `wii` is its own value, not a light theme: the stylesheet needs to tell the\n"
       + '  // two apart, because the skin has rules the light theme must not inherit.\n'
       + "  if (theme === 'wii') return 'wii';\n"
+      + '  // `acnh` is its own value for the same reason: a cream field set in Nunito is\n'
+      + '  // neither the dark nor the light palette, so the OS must not decide it.\n'
+      + "  if (theme === 'acnh') return 'acnh';\n"
       + "  if (theme === 'light') return 'light';",
     replace: 'export function themeName(theme, osPrefersDark = prefersDark()) {\n'
       + "  if (theme === 'light') return 'light';"
@@ -204,6 +226,16 @@ const TRANSFORMS = [
       + 'body.LoginBody {'
   },
   {
+    // The Island palette is one contiguous region, so it is dropped between its
+    // own banner and the base rules rather than restated as an exact 70-line
+    // anchor: a marker that moves still fails loudly, a copy that drifts does not.
+    file: 'web/src/login.css',
+    // The end marker carries the base rule's first declaration: `body.LoginBody {`
+    // alone also occurs inside the region, as part of the theme's own selectors.
+    dropBetween: ['/* ---- Island: the paper card on a mint field, set in Nunito ----',
+      'body.LoginBody {\n  background: var(--lg-field);']
+  },
+  {
     file: 'web/test/theme.test.mjs',
     find: "test('a fresh install gets the Wii skin on this branch', () => {\n"
       + "  assert.equal(readTheme(fakeStore()), 'wii');\n"
@@ -217,6 +249,10 @@ const TRANSFORMS = [
       + '  const dark = fakeStore();\n'
       + "  dark.setItem('sd.theme', 'dark');\n"
       + "  assert.equal(readTheme(dark), 'dark');\n"
+      + '  // Including the newest theme: a stored `acnh` is a theme, so it is read back.\n'
+      + '  const island = fakeStore();\n'
+      + "  island.setItem('sd.theme', 'acnh');\n"
+      + "  assert.equal(readTheme(island), 'acnh');\n"
       + '});',
     replace: "test('a fresh install gets the dark theme', () => {\n"
       + "  assert.equal(readTheme(fakeStore()), 'dark');\n"
@@ -234,17 +270,18 @@ const TRANSFORMS = [
   },
   {
     file: 'web/test/theme.test.mjs',
-    find: "test('one button cycles all four, and wraps', () => {\n"
+    find: "test('one button cycles all five, and wraps', () => {\n"
       + "  let theme = 'wii';\n"
       + '  const seen = [];\n'
-      + '  for (let i = 0; i < 4; i += 1) {\n'
+      + '  for (let i = 0; i < 5; i += 1) {\n'
       + '    theme = nextTheme(theme);\n'
       + '    seen.push(theme);\n'
       + '  }\n'
-      + "  assert.deepEqual(seen, ['dark', 'light', 'auto', 'wii']);\n"
-      + "  assert.deepEqual(THEMES, ['wii', 'dark', 'light', 'auto']);\n"
+      + "  assert.deepEqual(seen, ['dark', 'light', 'auto', 'acnh', 'wii']);\n"
+      + "  assert.deepEqual(THEMES, ['wii', 'dark', 'light', 'auto', 'acnh']);\n"
       + "  assert.equal(THEME_LABEL.auto, 'Auto');\n"
       + "  assert.equal(THEME_LABEL.wii, 'Wii');\n"
+      + "  assert.equal(THEME_LABEL.acnh, 'Island');\n"
       + '});',
     replace: "test('one button cycles all three, and wraps', () => {\n"
       + "  let theme = 'dark';\n"
@@ -265,6 +302,9 @@ const TRANSFORMS = [
       + '  // The skin is never resolved through the OS: it is the skin.\n'
       + "  assert.equal(themeName('wii', true), 'wii');\n"
       + "  assert.equal(themeName('wii', false), 'wii');\n"
+      + '  // Neither is the Island theme: a cream sheet is not a dark-mode answer.\n'
+      + "  assert.equal(themeName('acnh', true), 'acnh');\n"
+      + "  assert.equal(themeName('acnh', false), 'acnh');\n"
       + '});',
     replace: "  assert.equal(themeName('light', true), 'light');\n"
       + '});'
@@ -280,7 +320,7 @@ const TRANSFORMS = [
   },
   {
     file: 'web/test/cardframe.test.mjs',
-    find: "const SHEETS = { 'styles.css': src('styles.css'), 'wii.css': src('wii.css') };",
+    find: "const SHEETS = { 'styles.css': src('styles.css'), 'wii.css': src('wii.css'), 'acnh.css': src('acnh.css') };",
     replace: "const SHEETS = { 'styles.css': src('styles.css') };"
   },
   {
@@ -301,6 +341,12 @@ const TRANSFORMS = [
       + '  }\n',
     replace: '  // The skin wraps the same rule in its own id-scoped selector, which outranks\n'
       + '  // the base rules above; both copies are checked on the `fun-themes` branch.\n'
+  },
+  {
+    // The Island theme checks the same two pairs in its own sheet, so the block
+    // leaves with the theme rather than naming a file `main` does not have.
+    file: 'web/test/cardframe.test.mjs',
+    dropBetween: ["\n  // The Island theme's wrapper rule carries an id too", '});']
   },
   {
     file: 'README.md',
@@ -358,6 +404,21 @@ const TRANSFORMS = [
     find: 'each reader exists, is in [`docs/architecture.md`](docs/architecture.md). The Wii theme is\n'
       + '`src/wii.css`, scoped to `html[data-sd-theme="wii"] #sd-root`.',
     replace: 'each reader exists, is in [`docs/architecture.md`](docs/architecture.md).'
+  },
+  {
+    file: 'web/src/main.js',
+    find: "import FONTS from './fonts.css?inline';\n"
+      + '// The Island theme sets the sign-in page in Nunito too, and this stylesheet is the\n'
+      + '// only one that page receives: the face travels with it or not at all.\n'
+      + "import ACNH_FONTS from './acnh-fonts.css?inline';\n"
+      + "import LOGIN from './login.css?inline';",
+    replace: "import FONTS from './fonts.css?inline';\n"
+      + "import LOGIN from './login.css?inline';"
+  },
+  {
+    file: 'web/src/main.js',
+    find: 'export const loginCss = `${FONTS}\\n${ACNH_FONTS}\\n${LOGIN}`;',
+    replace: 'export const loginCss = `${FONTS}\\n${LOGIN}`;'
   }
 ];
 
@@ -385,6 +446,16 @@ function targetDir() {
 function strip(file, text) {
   let out = text;
   for (const step of TRANSFORMS.filter((t) => t.file === file)) {
+    if (step.dropBetween) {
+      const [from, to] = step.dropBetween;
+      const start = out.indexOf(from);
+      const end = start < 0 ? -1 : out.indexOf(to, start + from.length);
+      if (start < 0 || end < 0) {
+        throw new Error(file + ': region not found, so the theme moved:\n  ' + from);
+      }
+      out = out.slice(0, start) + out.slice(end);
+      continue;
+    }
     const at = out.indexOf(step.find);
     if (at < 0) {
       throw new Error(file + ': anchor not found, so the skin moved:\n  ' + step.find.split('\n')[0]);
@@ -398,7 +469,8 @@ function strip(file, text) {
 }
 
 function skinIn(artefact) {
-  const hits = ['--wii-blue', 'sd-menu-cross', 'sd-channel-name', "data-sd-theme=wii"]
+  const hits = ['--wii-blue', 'sd-menu-cross', 'sd-channel-name', 'data-sd-theme=wii',
+    'acnh', 'Nunito']
     .filter((needle) => artefact.includes(needle));
   if (hits.length) throw new Error('the build still carries the skin: ' + hits.join(', '));
   if (!artefact.includes('/main/' + ARTEFACT)) {
