@@ -11,7 +11,7 @@
 
 const KEY = 'sd.theme';
 
-// On the wii-skin branch the Wii theme comes first and is what a fresh install
+// On the fun-themes branch the Wii theme comes first and is what a fresh install
 // gets; the other three are untouched and one press of the button away.
 export const THEMES = ['wii', 'dark', 'light', 'auto'];
 
