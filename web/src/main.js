@@ -392,10 +392,10 @@ function pageModel(model, doc) {
 
 // A screen that drew fewer controls than the page has says so, once, in the
 // console — the diagnostic half of `model/coverage.js`. It is not chrome: the one
-// page that reports anything today is Edit Family, whose three phone-type selects
-// sit in the row's *label* cell and are not offered yet, and a rebuild that says
-// nothing about that is the bug this exists to stop. A warning nobody looks at is
-// not a check, so it names the controls rather than counting them.
+// page that reports anything is the one whose row carries a control the reader
+// does not know, and a rebuild that says nothing about that is the bug this
+// exists to stop. A warning nobody looks at is not a check, so it names the
+// controls rather than counting them.
 function warnUnread(model) {
   const list = unreadOf(model);
   if (!list.length) return model;
@@ -599,10 +599,10 @@ function mountRecord(onOriginal) {
   if (answered.view === 'payment') return mountView(answered, onOriginal, 'live');
 
   // Live first, copy second. The form is server-rendered, but the app's JS fills
-  // part of it after the response lands (the phone-label selects start empty),
-  // and an empty select is skipped as uneditable: the fetched copy of EditFamily
-  // came back with 19 fields where the page has 22. Reading where it stands is
-  // also the tree the edits get written into.
+  // part of it after the response lands (a phone-label select it has converted
+  // keeps only a hidden value), and an empty select is skipped as uneditable: the
+  // fetched copy of EditFamily came back with fewer fields than the page has.
+  // Reading where it stands is also the tree the edits get written into.
   const live = hasForm(document);
   const source = live
     ? Promise.resolve({ doc: document, finalUrl: location.href })

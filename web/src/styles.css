@@ -881,6 +881,46 @@ a.sd-stat:hover { background: var(--panel-2); }
   vertical-align: top;
 }
 .sd-fields td { padding: 5px 0; vertical-align: top; }
+/* One row's controls on one line: a phone's type select before its number, the
+   email input before its Reset Password button. */
+.sd-fieldline {
+  /* The value cell is already a flex box (so a cell can print two controls in a
+     row), which makes this line a flex *item*: it has to grow, or it shrinks to
+     the width of its first child and the button wraps below it. */
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+/* `.sd-input` is a full-width column control; on a line it has to size to the
+   line instead, or its 100% basis pushes everything after it to the next one. */
+.sd-fieldline > .sd-input { flex: 1 1 14em; width: auto; min-width: 0; max-width: 100%; }
+/* A button beside a field takes the room it needs and the field gives it up, so
+   both stay inside the content column instead of the button hanging off its edge. */
+.sd-fieldcell--withaction > .sd-fieldline > .sd-input { flex: 0 1 22em; }
+/* A phone's type: as wide as its longest choice, not as wide as the column. */
+.sd-fieldline > .sd-input.sd-input--compact { flex: 0 0 auto; width: auto; min-width: 10em; max-width: 16em; }
+/* A square that holds one glyph. Scoped to the root so the later sizing block's
+   `.sd-btn { padding: 0 var(--space-3) }` cannot outrank it: with 12px of side
+   padding inside a 30px box the icon had 6px to live in, which is what made the
+   button look squished and the glyph sit off-centre. */
+#sd-root .sd-btn--icon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  min-width: 32px;
+  height: var(--field-h);
+  padding: 0;
+}
+/* A glyph on its own has no letter-spacing to balance it: 12px is right on a
+   text line, and reads undersized in a 32px button beside a 36px field. */
+#sd-root .sd-btn--icon .sd-icon { width: 14px; height: 14px; }
+/* Font Awesome 6.7.2 Free Solid `key`: the app's Reset Password control, drawn
+   as a mask like every other icon here, so nothing is fetched. */
+#sd-root .sd-icon--key { --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M336 352c97.2 0 176-78.8 176-176S433.2 0 336 0S160 78.8 160 176c0 18.7 2.9 36.8 8.3 53.7L7 391c-4.5 4.5-7 10.6-7 17v80c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24v-40h40c13.3 0 24-10.7 24-24v-40h40c6.4 0 12.5-2.5 17-7l33.3-33.3c16.9 5.4 35 8.3 53.7 8.3m40-256a40 40 0 1 1 0 80a40 40 0 1 1 0-80'/%3E%3C/svg%3E"); }
 .sd-fields td {
   /* One row can hold a date: month, day and year are three selects, and the app
      prints them on one line. Stacked full-width boxes read as three unrelated

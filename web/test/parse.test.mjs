@@ -608,10 +608,9 @@ test('the family editor is read field by field, with its values', () => {
   assert.equal(form.kind, 'form');
   assert.equal(form.title, 'Edit Family');
   assert.deepEqual(form.breadcrumb, ['Families', 'Lovelace']);
-  // 19 fields by id, plus the three phone-label selects, which have no id but
-  // The page's three phone types arrive as input[type=hidden], which this reader
-  // drops, so they are not fields.
-  assert.equal(form.fields.length, 19);
+  // 19 controls by id, plus the three phone-type selects, which carry a name and
+  // no id: 22 fields, with the types as editable as the numbers they name.
+  assert.equal(form.fields.length, 22);
   assert.deepEqual(form.rows.map((r) => r.label).slice(0, 6),
     ['Guardian Name(s)', 'Last Name', 'Address 1', 'Address 2', 'City', 'State']);
 
@@ -626,9 +625,9 @@ test('the family editor is read field by field, with its values', () => {
   assert.equal(byKey.phone1.value, '(555) 010-2000');
   assert.equal(byKey.tags.options.length, 3);
 
-  // The phone type is a hidden input, so it is not offered as a field and its
-  // value cannot be edited (this fixture used to invent selects for it).
-  assert.equal(byKey['name:phone1_label'], undefined);
+  // The phone type is the row's own choice: a select of the app's ten types.
+  assert.equal(byKey['name:phone1_label'].type, 'select');
+  assert.equal(byKey['name:phone1_label'].options.length, 10);
   assert.equal(byKey.fident, undefined);
   // The unnamed helper input is not a field.
   assert.equal(form.fields.some((f) => f.key === 'name:-'), false);

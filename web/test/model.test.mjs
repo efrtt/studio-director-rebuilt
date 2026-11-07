@@ -536,17 +536,38 @@ test('a page with no Save reads every form table it shows, in document order', a
     'a report\u2019s filters are a form, not an editor');
 });
 
-test('the family editor reports the phone-type selects it does not offer', () => {
-  // Found by the check itself, on the live-capture fixture: the app prints each
-  // phone's type chooser as the row's *label* cell and the number as the value
-  // cell, so the editor reads the number and never the type. That is a real gap
-  // (you cannot set a number's type here) and it used to be invisible; now the
-  // model says which controls it left, and this pins the three by name so losing
-  // a fourth is a diff rather than a surprise.
+test('the family editor offers each phone row its type as a choice', () => {
+  // The app prints a phone's type chooser in the row's *label* cell — a select
+  // until its own JS converts it, a hidden value after — and the number in the
+  // value cell. Reading only the value cell is how the type stayed words on the
+  // screen; it is a field, and it is offered beside the number it names.
   const html = fs.readFileSync(new URL('./fixtures/editor-family.html', import.meta.url), 'utf8');
   const form = readForm(doc(html));
   assert.ok(form);
-  assert.deepEqual((form.unread || []).map((u) => u.name), ['phone1_label', 'phone2_label', 'phone3_label']);
+  const types = form.fields.filter((f) => /_label$/.test(f.name));
+  assert.deepEqual(types.map((f) => f.name), ['phone1_label', 'phone2_label', 'phone3_label']);
+  assert.equal(types[0].type, 'select');
+  assert.equal(types[0].options.length, 10);
+  assert.equal(types[0].compact, true);
+  const row = form.rows.find((r) => r.fields.some((f) => f.name === 'phone1'));
+  assert.deepEqual(row.fields.map((f) => f.key), ['name:phone1_label', 'phone1'],
+    'the type sits on the row with the number, before it');
+  assert.equal(form.unread, undefined, 'every control is either shown or knowingly passed');
+});
+
+test('the email row carries the app\u2019s own Reset Password control', () => {
+  // Edit Family prints `a.BtnOutln onclick="StudioDir.resetPassword();"` beside
+  // the email field. It belongs to the row, not to its label, and it is pressed
+  // where it stands — the rebuild never constructs the request.
+  const html = fs.readFileSync(new URL('./fixtures/edit-family.html', import.meta.url), 'utf8');
+  const form = readForm(doc(html));
+  assert.ok(form);
+  const row = form.rows.find((r) => r.fields.some((f) => f.name === 'email'));
+  assert.ok(row, 'the email row is drawn');
+  assert.equal(row.label, 'Email');
+  assert.equal(row.action.label, 'Reset Password');
+  assert.equal(row.action.onclick, 'StudioDir.resetPassword();');
+  assert.equal(row.action.exact, true);
 });
 
 test('the record panel beside an editor is not counted against it', () => {
