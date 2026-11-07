@@ -56,8 +56,8 @@ Requires [Tampermonkey](https://www.tampermonkey.net/) (Chrome, Edge, Safari) or
 3. Open The Studio Director and sign in as usual. The header's theme control cycles dark, light and auto.
 
 The `@match` is `https://app.thestudiodirector.com/*/*`, so it works on any studio tenant; the tenant is
-read from the URL. The metadata block points `@updateURL` at the built file on this repo's `main`
-branch, so an installed copy picks up a new build when the version is bumped.
+read from the URL. The metadata block points `@updateURL` at the built file on the branch it was
+built from, so an installed copy picks up a new build when the version is bumped.
 
 ## Using it
 
