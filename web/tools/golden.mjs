@@ -46,6 +46,7 @@ const URLS = {
   'editor-season.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=NewEditArchive&content=SeasonContent&state=new',
   'editor-student.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=EditStudent&sident=1629799984805',
   'index-charges.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=ChargesHome',
+  'index-settings.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=AdminHome',
   'report-results.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=ClassRosterForm',
   'report-roster.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=ClassRosterForm',
   'search-results.html': 'https://app.thestudiodirector.com/studio1/admin.sd?page=SearchResults&searchText=smith',
