@@ -14,6 +14,55 @@
   $: hourHeight = 60 * PX_PER_MIN;
   $: viewLinks = nav && nav.views ? nav.views : [];
 
+  // Two classes in one studio at the same time used to draw on top of each
+  // other: the later one covered the earlier one entirely, and the only way to
+  // know the studio was double-booked was to read the tooltip. Blocks that
+  // overlap now share the column as lanes, in the order they start, each one
+  // narrower by the number of lanes running at that moment. The lane count is
+  // taken per cluster - a run of blocks connected by overlap - so a studio with
+  // one clash at four o'clock does not shrink its nine o'clock class.
+  function lanesOf(blocks) {
+    const out = blocks.map((block) => ({ ...block, laneIndex: 0, laneCount: 1 }));
+    // The end time of the last class placed in each lane, for this cluster.
+    let lanes = [];
+    let cluster = [];
+    let clusterEnd = null;
+
+    const close = () => {
+      const count = Math.max(1, lanes.length);
+      for (const block of cluster) block.laneCount = count;
+      lanes = [];
+      cluster = [];
+      clusterEnd = null;
+    };
+
+    for (const block of out) {
+      // A class starting at or after everything in the cluster has ended starts
+      // a new one: nothing there can overlap what has already been placed.
+      if (clusterEnd != null && block.startsAt >= clusterEnd) close();
+
+      let lane = lanes.findIndex((end) => end <= block.startsAt);
+      if (lane < 0) {
+        lane = lanes.length;
+        lanes.push(block.endsAt);
+      } else {
+        lanes[lane] = block.endsAt;
+      }
+      block.laneIndex = lane;
+      cluster.push(block);
+      clusterEnd = clusterEnd == null ? block.endsAt : Math.max(clusterEnd, block.endsAt);
+    }
+    close();
+    return out;
+  }
+
+  // The reader's model is left as it is; the lanes are a property of the draw,
+  // so they are worked out here rather than baked into every golden week.
+  $: days = week.days.map((day) => ({
+    ...day,
+    columns: day.columns.map((column) => ({ ...column, blocks: lanesOf(column.blocks) }))
+  }));
+
   function switchSeason(event) {
     const value = event.currentTarget.value;
     if (onPeriod) onPeriod(value);
@@ -40,7 +89,15 @@
     const text = details.length
       ? details.join(sep)
       : (source.time !== undefined ? titleOfRow(source) : titleOf(source));
-    return text.split(sep).filter(Boolean);
+    const lines = text.split(sep).filter(Boolean);
+    // The block is narrow because its studio is double-booked; say so in words,
+    // after the app's own detail lines rather than before the class name. The
+    // split itself carries the fact - nothing is drawn on the block for it.
+    if (source.laneCount > 1) {
+      const others = source.laneCount - 1;
+      lines.push(`Overlaps ${others} other class${others === 1 ? '' : 'es'} in Studio ${source.studio}`);
+    }
+    return lines;
   }
 
   // Flip the card to the left of the pointer near the right edge, and lift it
@@ -117,7 +174,7 @@
          Its columns are a class's parts, not studios, so it is drawn as a list
          rather than forced onto the studio timeline. -->
     <div class="sd-weeklist">
-      {#each week.days as day}
+      {#each days as day}
         <section class="sd-dayblock sd-dayblock--list">
           <h3 class="sd-dayname">{day.label}</h3>
 
@@ -147,7 +204,7 @@
       {/each}
     </div>
   {:else}
-    {#each week.days as day}
+    {#each days as day}
       <section class="sd-dayblock">
         <h3 class="sd-dayname">{day.label}</h3>
 
@@ -178,6 +235,10 @@
                       on:pointermove={moveTip}
                       on:pointerleave={hideTip}
                       style={`top:${block.top}px;height:${block.height}px;` +
+                        (block.laneCount > 1
+                          ? `right:auto;left:calc(${(block.laneIndex * 100) / block.laneCount}% + 2px);` +
+                            `width:calc(${100 / block.laneCount}% - 4px);`
+                          : '') +
                         `background:${block.color || 'transparent'};` +
                         `color:${block.textColor || inkFor(block.color) || 'inherit'}`}
                     >
