@@ -138,7 +138,10 @@ html[data-sd-theme="acnh"] #sd-root > * { z-index: 1; }
 
 /* ---- the header ---- */
 html[data-sd-theme="acnh"] #sd-root .sd-top {
-  padding: 13px 20px;
+  /* The header sits on the same gutter as the content below it, the way every
+     other theme's does: with a flat 20px the title and the search box ran to the
+     window's edges while the page under them started a gutter in. */
+  padding: 13px var(--page-gutter);
   border-bottom: var(--acnh-dash);
   background: var(--panel);
 }
