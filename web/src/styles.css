@@ -1367,6 +1367,35 @@ html[data-sd-theme="light"][data-sd-accent="rose"] #sd-root { --accent: #a3305a;
 /* wide views (sheets, reports) take the window; the rest sit in the column */
 .sd-body[data-sd-width="wide"] { --content-max: 100%; }
 
+/* ---- scrollbars ----
+ * Chrome paints the platform's own bar inside every scroller here: a grey trough
+ * with stepper arrows, which on the dark themes is a bright stripe down a dark
+ * panel. Each theme sets --dim and --accent, so the bar is drawn from those and
+ * follows the theme without a rule of its own: no trough, a rounded thumb that
+ * clears the edge, and the accent when the pointer is over it.
+ *
+ * Only the WebKit pseudo-elements are used. Chrome also understands
+ * `scrollbar-color`, but setting it switches the engine to the standard bar and
+ * ignores these rules entirely - so it must stay unset.
+ */
+#sd-root ::-webkit-scrollbar { width: 11px; height: 11px; }
+#sd-root ::-webkit-scrollbar-track,
+#sd-root ::-webkit-scrollbar-corner { background: transparent; }
+#sd-root ::-webkit-scrollbar-thumb {
+  /* The border is transparent and the fill is clipped to the padding box, which
+     is what insets the thumb: a plain background would fill the whole 11px. */
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--dim) 55%, transparent);
+  background-clip: padding-box;
+}
+#sd-root ::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, var(--accent) 70%, transparent);
+}
+#sd-root ::-webkit-scrollbar-thumb:active {
+  background-color: color-mix(in srgb, var(--accent) 85%, transparent);
+}
+
 /* ---- rail ---- */
 .sd-rail {
   width: var(--rail-w);
