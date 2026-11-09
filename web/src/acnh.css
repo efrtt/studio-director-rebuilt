@@ -409,7 +409,11 @@ html[data-sd-theme="acnh"] #sd-root .sd-note--warn {
 /* ---- tabs: a pill bar, amber behind the one you are on ---- */
 html[data-sd-theme="acnh"] #sd-root .sd-tabs {
   gap: 4px;
-  padding: 10px 18px;
+  /* The strip sits on the same gutter as the fields under it, with the pill's own
+     16px inset taken back out of it, so the first label lands on the content
+     column's edge rather than 87px to its left (the base rule subtracts 12px,
+     which is the underline tabs' inset, not these pills'). */
+  padding: 10px calc(var(--page-gutter) - 16px);
   border-bottom: var(--acnh-dash);
   background: transparent;
 }
