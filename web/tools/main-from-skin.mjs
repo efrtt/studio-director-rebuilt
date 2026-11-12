@@ -352,8 +352,15 @@ const TRANSFORMS = [
   },
   {
     file: 'web/test/cardframe.test.mjs',
-    find: "const SHEETS = { 'styles.css': src('styles.css'), 'wii.css': src('wii.css'), 'acnh.css': src('acnh.css') };",
-    replace: "const SHEETS = { 'styles.css': src('styles.css') };"
+    find: "const SHEETS = {\n"
+      + "  'styles.css': src('styles.css'),\n"
+      + "  'wii.css': src('wii.css'),\n"
+      + "  'acnh.css': src('acnh.css'),\n"
+      + "  'osrs.css': src('osrs.css')\n"
+      + '};',
+    replace: "const SHEETS = {\n"
+      + "  'styles.css': src('styles.css')\n"
+      + '};'
   },
   {
     file: 'web/test/cardframe.test.mjs',
