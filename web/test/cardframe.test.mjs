@@ -21,7 +21,9 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const src = (name) => fs.readFileSync(path.join(here, '..', 'src', name), 'utf8');
 
-const SHEETS = { 'styles.css': src('styles.css') };
+const SHEETS = {
+  'styles.css': src('styles.css')
+};
 
 // A container that draws a frame of its own: the record list, the event page's
 // performance panel, and every other card in the skin.

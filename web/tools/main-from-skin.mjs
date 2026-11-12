@@ -50,6 +50,9 @@ const ARTEFACT = 'studio-director-rebuilt.user.js';
 const SKIN_FILES = [
   'web/src/wii.css',
   'web/src/acnh.css',
+  'web/src/osrs.css',
+  'web/src/lib/spark.js',
+  'web/src/components/ClickSpark.svelte',
   'web/src/acnh-fonts.css',
   'web/src/fonts/nunito-latin-var.woff2',
   'web/src/fonts/OFL-nunito.txt',
@@ -95,24 +98,27 @@ const TRANSFORMS = [
       + '// the Nunito faces as data: URIs, so only a build that offers the theme carries\n'
       + '// them - `main` has neither the theme nor the 52 KiB of font.\n'
       + "import ACNH_FONTS from '../acnh-fonts.css?inline';\n"
-      + "import ACNH from '../acnh.css?inline';",
+      + "import ACNH from '../acnh.css?inline';\n"
+      + '// Old School is stone and a 1px bevel, and needs no type of its own: the game\'s\n'
+      + '// bitmap font is Jagex\'s, so the theme keeps the shell\'s family.\n'
+      + "import OSRS from '../osrs.css?inline';",
     replace: "// The Wii skin lives only on `fun-themes`: it is a theme of its own, carried there by\n"
       + "// its own stylesheet. A build of `main` never offers it, so there is nothing on this\n"
       + "// line for a second sheet to do."
   },
   {
     file: 'web/src/lib/styles.js',
-    find: 'el.textContent = `${FONTS}\\n${CSS}\\n${WII}\\n${ACNH_FONTS}\\n${ACNH}`;',
+    find: 'el.textContent = `${FONTS}\\n${CSS}\\n${WII}\\n${ACNH_FONTS}\\n${ACNH}\\n${OSRS}`;',
     replace: 'el.textContent = `${FONTS}\\n${CSS}`;'
   },
   {
     file: 'web/src/lib/theme.js',
     find: "// On the fun-themes branch the Wii theme comes first and is what a fresh install\n"
       + "// gets; the other three are untouched and one press of the button away. `acnh`\n"
-      + '// closes the cycle: the Island theme is a look of its own, not an `auto` answer.\n'
-      + "export const THEMES = ['wii', 'dark', 'light', 'auto', 'acnh'];\n"
+      + '// and `osrs` close the cycle: each is a look of its own, not an `auto` answer.\n'
+      + "export const THEMES = ['wii', 'dark', 'light', 'auto', 'acnh', 'osrs'];\n"
       + '\n'
-      + "export const THEME_LABEL = { wii: 'Wii', dark: 'Dark', light: 'Light', auto: 'Auto', acnh: 'Island' };",
+      + "export const THEME_LABEL = { wii: 'Wii', dark: 'Dark', light: 'Light', auto: 'Auto', acnh: 'Island', osrs: 'OSRS' };",
     replace: "// Dark first: it is the look the build has always had, so a fresh install is\n"
       + "// unchanged until somebody cycles the button.\n"
       + "export const THEMES = ['dark', 'light', 'auto'];\n"
@@ -133,6 +139,9 @@ const TRANSFORMS = [
       + '  // `acnh` is its own value for the same reason: a cream field set in Nunito is\n'
       + '  // neither the dark nor the light palette, so the OS must not decide it.\n'
       + "  if (theme === 'acnh') return 'acnh';\n"
+      + '  // `osrs` likewise: stone, gold and a near-black bevel are not a dark-mode\n'
+      + '  // answer, they are the interface of a game.\n'
+      + "  if (theme === 'osrs') return 'osrs';\n"
       + "  if (theme === 'light') return 'light';",
     replace: 'export function themeName(theme, osPrefersDark = prefersDark()) {\n'
       + "  if (theme === 'light') return 'light';"
@@ -218,6 +227,25 @@ const TRANSFORMS = [
     replace: ''
   },
   {
+    file: 'web/src/App.svelte',
+    find: "  // The Old School theme draws the game's click crosshair under the pointer. It\n"
+      + '  // observes only: the app\'s own click handlers are untouched.\n'
+      + "  import ClickSpark from './components/ClickSpark.svelte';\n",
+    replace: ''
+  },
+  {
+    file: 'web/src/App.svelte',
+    find: "\n{#if resolvedTheme === 'osrs'}\n  <ClickSpark />\n{/if}\n",
+    replace: ''
+  },
+  {
+    // The Old School sign-in palette is one contiguous region, so it is dropped
+    // between its own banner and the dark block's banner.
+    file: 'web/src/login.css',
+    dropBetween: ['/* ---- Old School: stone, gold and a bevel ----',
+      "/* ---- Dark: the guide's hairline controls on the app's dark field ---- */"]
+  },
+  {
     file: 'web/src/login.css',
     find: '/* ---- Wii: the skin, with its gloss and its light ---- */\n'
       + 'body.LoginBody,\n'
@@ -270,18 +298,19 @@ const TRANSFORMS = [
   },
   {
     file: 'web/test/theme.test.mjs',
-    find: "test('one button cycles all five, and wraps', () => {\n"
+    find: "test('one button cycles all six, and wraps', () => {\n"
       + "  let theme = 'wii';\n"
       + '  const seen = [];\n'
-      + '  for (let i = 0; i < 5; i += 1) {\n'
+      + '  for (let i = 0; i < 6; i += 1) {\n'
       + '    theme = nextTheme(theme);\n'
       + '    seen.push(theme);\n'
       + '  }\n'
-      + "  assert.deepEqual(seen, ['dark', 'light', 'auto', 'acnh', 'wii']);\n"
-      + "  assert.deepEqual(THEMES, ['wii', 'dark', 'light', 'auto', 'acnh']);\n"
+      + "  assert.deepEqual(seen, ['dark', 'light', 'auto', 'acnh', 'osrs', 'wii']);\n"
+      + "  assert.deepEqual(THEMES, ['wii', 'dark', 'light', 'auto', 'acnh', 'osrs']);\n"
       + "  assert.equal(THEME_LABEL.auto, 'Auto');\n"
       + "  assert.equal(THEME_LABEL.wii, 'Wii');\n"
       + "  assert.equal(THEME_LABEL.acnh, 'Island');\n"
+      + "  assert.equal(THEME_LABEL.osrs, 'OSRS');\n"
       + '});',
     replace: "test('one button cycles all three, and wraps', () => {\n"
       + "  let theme = 'dark';\n"
@@ -305,6 +334,9 @@ const TRANSFORMS = [
       + '  // Neither is the Island theme: a cream sheet is not a dark-mode answer.\n'
       + "  assert.equal(themeName('acnh', true), 'acnh');\n"
       + "  assert.equal(themeName('acnh', false), 'acnh');\n"
+      + '  // Nor Old School: stone and gold do not follow the OS either.\n'
+      + "  assert.equal(themeName('osrs', true), 'osrs');\n"
+      + "  assert.equal(themeName('osrs', false), 'osrs');\n"
       + '});',
     replace: "  assert.equal(themeName('light', true), 'light');\n"
       + '});'
@@ -470,7 +502,7 @@ function strip(file, text) {
 
 function skinIn(artefact) {
   const hits = ['--wii-blue', 'sd-menu-cross', 'sd-channel-name', 'data-sd-theme=wii',
-    'acnh', 'Nunito']
+    'acnh', 'Nunito', 'osrs', 'sd-spark']
     .filter((needle) => artefact.includes(needle));
   if (hits.length) throw new Error('the build still carries the skin: ' + hits.join(', '));
   if (!artefact.includes('/main/' + ARTEFACT)) {
