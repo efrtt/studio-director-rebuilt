@@ -81,6 +81,54 @@ html[data-sd-theme="wii"] body.LoginBody {
   color-scheme: light;
 }
 
+/* ---- Old School: stone, gold and a bevel ----
+ * The sign-in page follows the theme: a stone card on the charcoal field, square
+ * corners, a gold button whose label is the near-black the interface uses on gold.
+ * The game's bitmap font is Jagex's and is not in this artefact, so the page keeps
+ * the shell's family and gets its character from weight and spacing.
+ */
+html[data-sd-theme="osrs"] body.LoginBody {
+  --lg-blue: #e6a519;
+  --lg-light: #ffcf3f;
+  --lg-deep: #8a6a10;
+  --lg-ink: #ffcf3f;
+  --lg-text: #ffcf3f;
+  --lg-dim: #c4b48c;
+  --lg-line: #1c1612;
+  --lg-line-strong: #6b5840;
+  --lg-surface: #3e3530;
+  --lg-wash: #46433a;
+  --lg-focus-bg: #26221d;
+  --lg-logo-filter: none;
+  --lg-logo-opacity: 0.7;
+
+  --lg-field: #2e2c29;
+
+  --lg-card-radius: 0;
+  --lg-card-border: #1c1612;
+  --lg-card-shadow: 0 4px 0 #1c1612;
+  --lg-card-pad: 22px 22px 24px;
+  --lg-gap: 12px;
+  --lg-field-radius: 0;
+  --lg-field-h: 34px;
+  --lg-field-pad: 4px 9px;
+  --lg-field-font: 13px;
+  --lg-btn-radius: 0;
+  --lg-btn-h: 32px;
+  --lg-btn-fg: #1c1612;
+  --lg-btn-border: #1c1612;
+  --lg-btn-bg: #e6a519;
+  --lg-btn-shadow: inset 1px 1px 0 #f2c95e;
+  --lg-btn-weight: 700;
+  /* Cyan is the interface's "this is the thing" colour, so it is the focus ring. */
+  --lg-focus-outline: 1px solid #00ffff;
+  --lg-focus-offset: 1px;
+  --lg-focus-ring: none;
+  --lg-label-font: 11px;
+  --lg-foot-font: 12px;
+  color-scheme: dark;
+}
+
 /* ---- Dark: the guide's hairline controls on the app's dark field ---- */
 html[data-sd-theme="dark"] body.LoginBody {
   --lg-blue: #7aa2ff;

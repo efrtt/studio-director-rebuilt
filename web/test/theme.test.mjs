@@ -45,18 +45,19 @@ test('the choice is remembered, and only a real choice is stored', () => {
   assert.equal(readTheme(store), 'light', 'and the old one survives');
 });
 
-test('one button cycles all five, and wraps', () => {
+test('one button cycles all six, and wraps', () => {
   let theme = 'wii';
   const seen = [];
-  for (let i = 0; i < 5; i += 1) {
+  for (let i = 0; i < 6; i += 1) {
     theme = nextTheme(theme);
     seen.push(theme);
   }
-  assert.deepEqual(seen, ['dark', 'light', 'auto', 'acnh', 'wii']);
-  assert.deepEqual(THEMES, ['wii', 'dark', 'light', 'auto', 'acnh']);
+  assert.deepEqual(seen, ['dark', 'light', 'auto', 'acnh', 'osrs', 'wii']);
+  assert.deepEqual(THEMES, ['wii', 'dark', 'light', 'auto', 'acnh', 'osrs']);
   assert.equal(THEME_LABEL.auto, 'Auto');
   assert.equal(THEME_LABEL.wii, 'Wii');
   assert.equal(THEME_LABEL.acnh, 'Island');
+  assert.equal(THEME_LABEL.osrs, 'OSRS');
 });
 
 test('auto follows the machine, and the other two do not', () => {
@@ -71,6 +72,9 @@ test('auto follows the machine, and the other two do not', () => {
   // Neither is the Island theme: a cream sheet is not a dark-mode answer.
   assert.equal(themeName('acnh', true), 'acnh');
   assert.equal(themeName('acnh', false), 'acnh');
+  // Nor Old School: stone and gold do not follow the OS either.
+  assert.equal(themeName('osrs', true), 'osrs');
+  assert.equal(themeName('osrs', false), 'osrs');
 });
 
 test('applying a theme writes the resolved name, not the choice', () => {

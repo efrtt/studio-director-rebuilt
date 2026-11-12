@@ -17,6 +17,9 @@ import WII from '../wii.css?inline';
 // them - `main` has neither the theme nor the 52 KiB of font.
 import ACNH_FONTS from '../acnh-fonts.css?inline';
 import ACNH from '../acnh.css?inline';
+// Old School is stone and a 1px bevel, and needs no type of its own: the game's
+// bitmap font is Jagex's, so the theme keeps the shell's family.
+import OSRS from '../osrs.css?inline';
 
 
 export function injectStyles() {
@@ -24,7 +27,7 @@ export function injectStyles() {
   if (document.getElementById('sd-styles')) return;
   const el = document.createElement('style');
   el.id = 'sd-styles';
-  el.textContent = `${FONTS}\n${CSS}\n${WII}\n${ACNH_FONTS}\n${ACNH}`;
+  el.textContent = `${FONTS}\n${CSS}\n${WII}\n${ACNH_FONTS}\n${ACNH}\n${OSRS}`;
   (document.head || document.documentElement).appendChild(el);
 }
 

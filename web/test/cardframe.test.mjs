@@ -21,7 +21,12 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const src = (name) => fs.readFileSync(path.join(here, '..', 'src', name), 'utf8');
 
-const SHEETS = { 'styles.css': src('styles.css'), 'wii.css': src('wii.css'), 'acnh.css': src('acnh.css') };
+const SHEETS = {
+  'styles.css': src('styles.css'),
+  'wii.css': src('wii.css'),
+  'acnh.css': src('acnh.css'),
+  'osrs.css': src('osrs.css')
+};
 
 // A container that draws a frame of its own: the record list, the event page's
 // performance panel, and every other card in the skin.
@@ -154,6 +159,21 @@ test('every card flattens the sheet it contains', () => {
     'html[data-sd-theme="acnh"] #sd-root .sd-recordcard > .sd-tablewrap'
   ]) {
     const rule = island(selector);
+    assert.ok(rule, selector + ' exists');
+    for (const prop of ['border', 'border-radius', 'box-shadow', 'background']) {
+      assert.equal(drawsNothing(value(rule, prop)), true, `${selector} flattens ${prop}`);
+    }
+  }
+
+  // Old School frames its sheet in near-black, at id strength, so it flattens the
+  // same two pairs: a stone panel inside a stone card would show a doubled rim.
+  const osrs = rules(SHEETS['osrs.css']);
+  const stone = (selector) => osrs.find((r) => r.selector.split(',').map((s) => s.trim()).includes(selector));
+  for (const selector of [
+    'html[data-sd-theme="osrs"] #sd-root .sd-perf > .sd-tablewrap',
+    'html[data-sd-theme="osrs"] #sd-root .sd-recordcard > .sd-tablewrap'
+  ]) {
+    const rule = stone(selector);
     assert.ok(rule, selector + ' exists');
     for (const prop of ['border', 'border-radius', 'box-shadow', 'background']) {
       assert.equal(drawsNothing(value(rule, prop)), true, `${selector} flattens ${prop}`);

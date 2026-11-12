@@ -14,6 +14,9 @@ import { readRail, writeRail } from './lib/rail.js';
 import Menu from './components/Menu.svelte';
   import { runMesh } from './lib/mesh.js';
   import Cursor from './components/Cursor.svelte';
+  // The Old School theme draws the game's click crosshair under the pointer. It
+  // observes only: the app's own click handlers are untouched.
+  import ClickSpark from './components/ClickSpark.svelte';
 
   export let model = { nav: [], week: null, list: null, form: null, view: null, title: '', url: '' };
   export let state = 'ready';
@@ -291,4 +294,8 @@ import Menu from './components/Menu.svelte';
 
 {#if resolvedTheme === 'wii'}
   <Cursor />
+{/if}
+
+{#if resolvedTheme === 'osrs'}
+  <ClickSpark />
 {/if}
