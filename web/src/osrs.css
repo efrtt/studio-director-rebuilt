@@ -386,13 +386,7 @@ html[data-sd-theme="osrs"] #sd-root .sd-spark .sd-spark-f3 { animation-name: sd-
 /* The last frame is the one that leaves, and it leaves by being removed: it holds
    through its 120ms and the component takes the node away. */
 @keyframes sd-spark-f3 { 0% { opacity: 0; } 66.67% { opacity: 1; } }
-/* A machine asked for less motion still gets the click acknowledged, in one still:
-   the largest X, drawn for the spark's whole life and taken away with it. Shortening
-   the sequence is not the answer - at a millisecond it is over before it can be seen,
-   which reads as no spark at all - and the still costs nothing that moves. */
-@media (prefers-reduced-motion: reduce) {
-  html[data-sd-theme="osrs"] #sd-root .sd-spark .sd-spark-f1,
-  html[data-sd-theme="osrs"] #sd-root .sd-spark .sd-spark-f2,
-  html[data-sd-theme="osrs"] #sd-root .sd-spark .sd-spark-f3 { animation: none; }
-  html[data-sd-theme="osrs"] #sd-root .sd-spark .sd-spark-f2 { opacity: 1; }
-}
+/* The sequence plays in full on every machine, including one that asks for reduced
+   motion: it is a click acknowledgement of a third of a second, and it only ever
+   grows outwards. A shortened duration is not an option - at a millisecond it is
+   over before it can be seen, which reads as no spark at all. */
